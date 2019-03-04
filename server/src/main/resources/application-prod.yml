@@ -1,0 +1,7 @@
+db: logistics
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://47.105.107.242:3306/logistics-prod?characterEncoding=UTF-8&useSSL=false
+      username: logistics
+      password: Dongyue@123

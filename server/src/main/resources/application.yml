@@ -1,0 +1,24 @@
+db: logistics
+server:
+  port: 8888
+  servlet:
+    context-path: /api/v1
+    session:
+      cookie:
+        name: BIUSID
+spring:
+  profiles:
+    active: dev
+    include: druid,mybatisplus,shiro
+  #  redis:
+  #    host: localhost
+  #    port: 6379
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.105.107.242:3306/logistics-prod?characterEncoding=UTF-8&useSSL=false
+    username: logistics
+    password: Dongyue@123
+logging:
+  path: ./logs
+  level:
+    com.abc.dao: debug
