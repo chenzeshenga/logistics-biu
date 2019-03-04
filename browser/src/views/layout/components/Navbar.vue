@@ -20,7 +20,7 @@
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              首页
+              东岳
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item>
