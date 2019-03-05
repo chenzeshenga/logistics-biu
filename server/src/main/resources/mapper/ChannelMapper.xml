@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ChannelMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.Channel">
+        select
+            id,
+            channel_code as channelCode,
+            channel_name as channelName,
+            channel_adapter as channelAdapter,
+            cooperator_code as cooperatorCode,
+            currency_code as currencyCode,
+            min_days as minDays,
+            max_days as maxDays,
+            weight_rule_code as weightRuleCode,
+            weight_multi as weightMulti,
+            default_package_weight as defaultPackageWeight,
+            default_package_fee as defaultPackageFee,
+            fee_code_rule as feeRuleCode,
+            whether_multi_package as whetherMultiPackage,
+            whether_volume as whetherVolume,
+            whether_charge_at_first as whetherChargeAtFirst,
+            whether_charge_for_them as whetherChargeForThem,
+            whether_insurance as whetherInsurance,
+            enable,
+            remarks,
+            create_on as createOn,
+            update_on as updateOn,
+            create_by as createBy,
+            update_by as updateBy
+        from
+            l_channel
+        order by
+            id asc
+    </select>
+
+    <select id="listActiveChannel" resultType="com.abc.chenzeshenga.logistics.model.Channel">
+        select
+            id,
+            channel_code as channelCode,
+            channel_name as channelName,
+            channel_adapter as channelAdapter,
+            cooperator_code as cooperatorCode,
+            currency_code as currencyCode,
+            min_days as minDays,
+            max_days as maxDays,
+            weight_rule_code as weightRuleCode,
+            weight_multi as weightMulti,
+            default_package_weight as defaultPackageWeight,
+            default_package_fee as defaultPackageFee,
+            fee_code_rule as feeRuleCode,
+            whether_multi_package as whetherMultiPackage,
+            whether_volume as whetherVolume,
+            whether_charge_at_first as whetherChargeAtFirst,
+            enable,
+            remarks,
+            create_on as createOn,
+            update_on as updateOn,
+            create_by as createBy,
+            update_by as updateBy
+        from
+            l_channel
+        where
+            enable='Y' and channel_adapter=#{where}
+        order by
+            id asc
+    </select>
+
+    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
+        insert
+        into
+            l_channel
+            (channel_code, channel_name, channel_adapter, cooperator_code, currency_code, min_days, max_days, weight_rule_code, weight_multi, default_package_weight, default_package_fee,
+            fee_code_rule,
+            whether_multi_package,
+            whether_volume, whether_charge_at_first, whether_charge_for_them, whether_insurance, enable, remarks, create_on, create_by)
+        values
+            (#{channelCode},#{channelName},#{channelAdapter},#{cooperatorCode},#{currencyCode},#{minDays},#{maxDays},#{weightRuleCode},#{weightMulti},#{defaultPackageWeight},#{defaultPackageFee},
+            #{feeRuleCode},
+            #{whetherMultiPackage},#{whetherVolume},#{whetherChargeAtFirst},#{whetherChargeForThem},#{whetherInsurance},#{enable},#{remarks},#{createOn},#{createBy})
+    </insert>
+
+    <select id="count" resultType="java.lang.Integer">
+        select max(id)+1 as num from l_channel
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from l_channel
+        where channel_code=#{channelCode}
+    </delete>
+
+    <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
+        update l_channel
+        set
+          channel_code=#{channelCode},channel_name=#{channelName},channel_adapter=#{channelAdapter},cooperator_code=#{cooperatorCode},currency_code=#{currencyCode},min_days=#{minDays},max_days=#{maxDays},
+          weight_rule_code=#{weightRuleCode},weight_multi=#{weightMulti},default_package_weight=#{defaultPackageWeight},default_package_fee=#{defaultPackageFee},fee_code_rule=#{feeRuleCode},
+          whether_multi_package=#{whetherMultiPackage},whether_volume=#{whetherVolume},whether_charge_at_first=#{whetherChargeAtFirst},
+          whether_charge_for_them=#{whetherChargeForThem},whether_insurance=#{whetherInsurance},
+          enable=#{enable},
+          remarks=#{remarks},update_on=#{updateOn},update_by=#{updateBy}
+        where
+        id=#{id}
+    </update>
+
+</mapper>

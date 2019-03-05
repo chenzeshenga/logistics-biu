@@ -58,7 +58,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3'
 
     //lombok
-    compile 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
 
 }
 
