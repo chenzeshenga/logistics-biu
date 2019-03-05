@@ -21,6 +21,15 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item>
+          <el-col :span="11">
+            <el-form-item label="运送渠道">
+              <el-select v-model="form.channel" placeholder="请选择运送渠道">
+                <el-option v-for="item in form.channel"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
         <el-form-item label="Activity time">
           <el-col :span="11">
             <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;"/>
@@ -67,6 +76,7 @@
         form: {
           orderNo: '',
           category: '',
+          channel: [],
           name: '',
           region: '',
           date1: '',

@@ -8,3 +8,4 @@ npm-debug.log
 /server/build/
 /server/logs/
 /server/out/
+/logs/spring.log

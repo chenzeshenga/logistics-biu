@@ -5,10 +5,10 @@ buildscript {
         springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     }
     dependencies {
-        classpath ("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -30,7 +30,7 @@ compileTestJava.options.encoding = "UTF-8"
 
 //设置maven阿里云镜像
 repositories {
-    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 }
 
 //项目依赖
@@ -56,6 +56,9 @@ dependencies {
     //其他库
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'org.apache.commons:commons-lang3'
+
+    //lombok
+    compile 'org.projectlombok:lombok:1.18.4'
 
 }
 

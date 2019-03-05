@@ -88,12 +88,12 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/menu1',
+    path: '/new-order',
     component: Layout,
     children: [{
       path: 'index',
       name: 'menu1',
-      component: _import('menu/menu1'),
+      component: _import('menu/new-order'),
       meta: {perm: 'm:menu1', title: '新建订单', icon: 'icon'}
     }]
   },
