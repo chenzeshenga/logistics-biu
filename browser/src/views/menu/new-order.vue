@@ -69,6 +69,9 @@
 </template>
 
 <script>
+
+  import channelApi from '@/api/channel'
+
   export default {
     name: 'Menu1',
     data() {
@@ -88,6 +91,10 @@
         }
       }
     },
+
+    created() {
+      this.listChannel()
+    },
     methods: {
       onSubmit() {
         this.$message('submit!')
@@ -100,6 +107,9 @@
       },
       getOrdNo() {
         this.$message('submit!')
+      },
+      listChannel(current) {
+        return channelApi.queryChannel();
       }
     }
   }
