@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.AddressMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+    <select id="getKen" resultType="com.abc.chenzeshenga.logistics.model.JpAddress">
+        select distinct ken_id as id, ken_name as name
+        from ad_address
+        order by ken_id
+    </select>
+
+    <select id="getCity" parameterType="java.lang.String" resultType="com.abc.chenzeshenga.logistics.model.JpAddress">
+        select distinct city_id as id, city_name as name
+        from ad_address
+        where ken_id = #{kenId}
+        order by city_id
+    </select>
+
+    <select id="getTown" parameterType="java.lang.String" resultType="com.abc.chenzeshenga.logistics.model.JpAddress">
+        select distinct town_id as id, town_name as name
+        from ad_address
+        where city_id = #{cityId}
+          and town_name != ''
+        order by town_id
+    </select>
+
+    <select id="getAll" resultType="com.abc.chenzeshenga.logistics.model.JpDetailAddress">
+        select distinct ken_id as kenId, city_id as cityId, town_id as townId, ken_name as kenName, city_name as cityName, town_name as townName
+        from ad_address
+    </select>
+
+</mapper>

@@ -3,7 +3,7 @@
     <!--<h1>新建订单</h1>-->
     <div class="app-container">
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item>
+        <el-form-item label="订单基本信息">
           <el-col :span="12">
             <el-form-item label="订单号">
               <el-input v-model="form.orderNo" placeholder="请输入或点击按钮获取订单号">
@@ -11,7 +11,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item label="订单类型">
               <el-select v-model="form.category" placeholder="请选择订单类型">
                 <el-option label="海外仓代发订单" value="1"/>
@@ -20,9 +20,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-form-item>
-        <el-form-item>
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item label="运送渠道">
               <el-cascader
                 :options="channels"
@@ -31,29 +29,93 @@
               </el-cascader>
             </el-form-item>
           </el-col>
+        </el-form-item>
+        <el-form-item>
           <el-col :span="12">
             <el-form-item label="中国追踪单号">
               <el-input v-model="form.chinaNo" placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"></el-input>
             </el-form-item>
           </el-col>
-        </el-form-item>
-        <el-form-item>
           <el-col :span="12">
             <el-form-item label="日本追踪单号">
               <el-input v-model="form.trackNo" placeholder="您可点击按钮预先获取单号，后台操作员将根据实际情况进行调整">
-                <el-button slot="append" @click="getTrackNo">获取单号</el-button>
+                <el-button slot="append" @click="getOrdNo2">获取单号</el-button>
               </el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="Activity time">
-          <el-col :span="11">
-            <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;"/>
+        <el-form-item label="发件人信息">
+          <el-col :span="8">
+            <el-form-item label="发件人姓名">
+              <el-input v-model="form.fromName" placeholder="发件人姓名"></el-input>
+            </el-form-item>
           </el-col>
-          <el-col :span="2" class="line">-</el-col>
-          <el-col :span="11">
-            <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;"/>
+          <el-col :span="8">
+            <el-form-item label="发件人联系方式">
+              <el-input v-model="form.fromContact" placeholder="发件人联系方式"></el-input>
+            </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="发件人邮编">
+              <el-input v-model="form.fromZipCode" placeholder="发件人邮编"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="道/府/县-城市-乡">
+              <el-cascader :span="12"
+                           :options="address"
+                           v-model="form.selectedaddress"
+                           @change="handleAddressChange"
+                           style="width: 80%"
+              >
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="发件人详细地址">
+              <el-input v-model="form.fromDetailAddress" placeholder="发件人详细地址"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="收件人信息">
+          <el-col :span="8">
+            <el-form-item label="收件人姓名">
+              <el-input v-model="form.toName" placeholder="收件人姓名"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收件人联系方式">
+              <el-input v-model="form.toContact" placeholder="收件人联系方式"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收件人邮编">
+              <el-input v-model="form.toZipCode" placeholder="收件人邮编"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="道/府/县-城市-乡">
+              <el-cascader :span="12"
+                           :options="address"
+                           v-model="form.selectedtoAddress"
+                           @change="handleAddressChange2"
+                           style="width: 80%"
+              >
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="收件人详细地址">
+              <el-input v-model="form.toDetailAddress" placeholder="收件人详细地址"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="是否代收">
+          <el-switch
+            v-model="form.collect"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
         </el-form-item>
         <el-form-item label="Instant delivery">
           <el-switch v-model="form.delivery"/>
@@ -95,17 +157,31 @@
         form: {
           orderNo: '',
           category: '',
-          channel: [],
+          channel: '',
           chinaNo: '',
           trackNo: '',
+          fromName: '',
+          fromContact: '',
+          fromZipCode: '',
+          fromDetailAddress: '',
+          toName: '',
+          toContact: '',
+          toZipCode: '',
+          toDetailAddress: '',
+          address: {},
+          toAddress: {},
+          collect: false,
+          selectedAddress: [],
+          selectedtoAddress: []
         },
         channels: [],
-        selectedChannels: []
+        selectedChannels: [],
+        address: []
       }
     },
-
     created() {
-      this.listChannel()
+      this.listChannel();
+      this.getAddress();
     },
     methods: {
       onSubmit() {
@@ -125,6 +201,14 @@
           this.form.orderNo = res.data.data;
         })
       },
+      getOrdNo2() {
+        request({
+          url: "/generate/pk",
+          method: 'get'
+        }).then(res => {
+          this.form.trackNo = res.data.data;
+        })
+      },
       listChannel() {
         request({
           url: "/channel/list",
@@ -133,14 +217,28 @@
           this.channels = res.data.data
         })
       },
+      getAddress() {
+        request({
+          url: "/address/getKen",
+          method: 'get'
+        }).then(res => {
+          this.address = res.data.data
+        })
+      },
       handleChange(value) {
         console.log(value);
+        this.form.channel = value[0];
       },
-      getTrackNo() {
-        /**
-         * 从后台获取日本国内追踪单号
-         */
-
+      handleAddressChange(value) {
+        this.form.address.ken = value[0];
+        this.form.address.city = value[1];
+        this.form.address.town = value[2];
+        console.log(this.form);
+      },
+      handleAddressChange2(value) {
+        this.form.toAddress.ken = value[0];
+        this.form.toAddress.city = value[1];
+        this.form.toAddress.town = value[2];
       }
     }
   }
