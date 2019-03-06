@@ -4,14 +4,14 @@
     <div class="app-container">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item>
-          <el-col :span="11">
+          <el-col :span="12">
             <el-form-item label="订单号">
-              <el-input v-model="form.orderNo">
+              <el-input v-model="form.orderNo" placeholder="请输入或点击按钮获取订单号">
                 <el-button slot="append" @click="getOrdNo">获取单号</el-button>
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="11">
+          <el-col :span="12">
             <el-form-item label="订单类型">
               <el-select v-model="form.category" placeholder="请选择订单类型">
                 <el-option label="海外仓代发订单" value="1"/>
@@ -22,11 +22,27 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-col :span="11">
+          <el-col :span="12">
             <el-form-item label="运送渠道">
-              <el-select v-model="form.channel" placeholder="请选择运送渠道">
-                <el-option v-for="item in form.channel"></el-option>
-              </el-select>
+              <el-cascader
+                :options="channels"
+                v-model="selectedChannels"
+                @change="handleChange">
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="中国追踪单号">
+              <el-input v-model="form.chinaNo" placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="12">
+            <el-form-item label="日本追踪单号">
+              <el-input v-model="form.trackNo" placeholder="您可点击按钮预先获取单号，后台操作员将根据实际情况进行调整">
+                <el-button slot="append" @click="getTrackNo">获取单号</el-button>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -70,7 +86,7 @@
 
 <script>
 
-  import channelApi from '@/api/channel'
+  import request from '@/utils/request'
 
   export default {
     name: 'Menu1',
@@ -80,15 +96,11 @@
           orderNo: '',
           category: '',
           channel: [],
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }
+          chinaNo: '',
+          trackNo: '',
+        },
+        channels: [],
+        selectedChannels: []
       }
     },
 
@@ -106,10 +118,29 @@
         })
       },
       getOrdNo() {
-        this.$message('submit!')
+        request({
+          url: "/generate/pk",
+          method: 'get'
+        }).then(res => {
+          this.form.orderNo = res.data.data;
+        })
       },
-      listChannel(current) {
-        return channelApi.queryChannel();
+      listChannel() {
+        request({
+          url: "/channel/list",
+          method: 'get'
+        }).then(res => {
+          this.channels = res.data.data
+        })
+      },
+      handleChange(value) {
+        console.log(value);
+      },
+      getTrackNo() {
+        /**
+         * 从后台获取日本国内追踪单号
+         */
+
       }
     }
   }
