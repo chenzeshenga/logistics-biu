@@ -64,7 +64,7 @@
             <el-form-item label="道/府/县-城市-乡">
               <el-cascader :span="12"
                            :options="address"
-                           v-model="form.selectedaddress"
+                           v-model="form.selectedAddress"
                            @change="handleAddressChange"
                            style="width: 80%"
               >
@@ -145,10 +145,47 @@
             </el-form-item>
           </el-col>
           <el-col :span="2" style="margin-left: 2%">
-            <el-button type="primary" round>添加</el-button>
+            <el-button type="primary" round @click="add2Cart">添加</el-button>
           </el-col>
         </el-form-item>
+        <el-form-item>
+          <el-table
+            :data="form.contentList"
+            stripe
+            style="width: 100%">
+            <el-table-column
+              prop="sku"
+              label="sku"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="商品名称"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="price"
+              label="商品价格"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="num"
+              label="商品数量"
+              width="180">
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
       </el-form>
+
     </div>
   </div>
 </template>
@@ -193,7 +230,7 @@
         },
         myProducts: [],
         selectedProduct: [],
-        productMap: {}
+        productMap: {},
       }
     },
     created() {
@@ -248,7 +285,7 @@
           url: "/product/list",
           method: 'get'
         }).then(res => {
-          this.myProducts = res.data.data
+          this.myProducts = res.data.data;
           for (let index in this.myProducts) {
             let subProduct = this.myProducts[index];
             this.productMap[subProduct["value"].split("/")[0]] = subProduct;
@@ -275,9 +312,19 @@
         let str = value[0].split("/");
         let sku = str[0];
         let product = this.productMap[sku];
+        this.content.sku = value;
         this.content.name = product.name;
         this.content.price = product.price;
         console.log(this.selectedChannels);
+      },
+      add2Cart() {
+        let tmpContent = {};
+        tmpContent = JSON.parse(JSON.stringify(this.content));
+        this.form.contentList.push(tmpContent);
+      },
+      handleDelete(index, row) {
+        this.form.contentList.splice(index, 1);
+        console.log(this.form.contentList)
       }
     }
   }
