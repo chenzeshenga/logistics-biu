@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductMapper">
+
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
+        select sku, dy_sku as dySku, name, value as price
+        from l_productions
+        where createdBy = #{username}
+    </select>
+
+    <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
+        select sku, dy_sku as dySku, name, value as price
+        from l_productions
+    </select>
+</mapper>

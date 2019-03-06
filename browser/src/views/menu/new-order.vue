@@ -117,29 +117,36 @@
             inactive-color="#ff4949">
           </el-switch>
         </el-form-item>
-        <el-form-item label="Instant delivery">
-          <el-switch v-model="form.delivery"/>
-        </el-form-item>
-        <el-form-item label="Activity type">
-          <el-checkbox-group v-model="form.type">
-            <el-checkbox label="Online activities" name="type"/>
-            <el-checkbox label="Promotion activities" name="type"/>
-            <el-checkbox label="Offline activities" name="type"/>
-            <el-checkbox label="Simple brand exposure" name="type"/>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="Resources">
-          <el-radio-group v-model="form.resource">
-            <el-radio label="Sponsor"/>
-            <el-radio label="Venue"/>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="Activity form">
-          <el-input v-model="form.desc" type="textarea"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">Create</el-button>
-          <el-button @click="onCancel">Cancel</el-button>
+        <el-form-item label="订单内容">
+          <el-col :span="5">
+            <el-form-item label="sku">
+              <el-cascader :options="myProducts"
+                           v-model="selectedProduct"
+                           @change="handleProductChange"
+                           filterable>
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="名称">
+              <el-input disabled v-model="content.name">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="商品价值">
+              <el-input disabled v-model="content.price">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="商品数量">
+              <el-input-number v-model="content.num" :min="1"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="margin-left: 2%">
+            <el-button type="primary" round>添加</el-button>
+          </el-col>
         </el-form-item>
       </el-form>
     </div>
@@ -171,17 +178,28 @@
           address: {},
           toAddress: {},
           collect: false,
+          contentList: [],
           selectedAddress: [],
           selectedtoAddress: []
         },
         channels: [],
         selectedChannels: [],
-        address: []
+        address: [],
+        content: {
+          sku: '',
+          name: '',
+          price: '',
+          num: 0
+        },
+        myProducts: [],
+        selectedProduct: [],
+        productMap: {}
       }
     },
     created() {
       this.listChannel();
       this.getAddress();
+      this.getMyProducts();
     },
     methods: {
       onSubmit() {
@@ -225,6 +243,19 @@
           this.address = res.data.data
         })
       },
+      getMyProducts() {
+        request({
+          url: "/product/list",
+          method: 'get'
+        }).then(res => {
+          this.myProducts = res.data.data
+          for (let index in this.myProducts) {
+            let subProduct = this.myProducts[index];
+            this.productMap[subProduct["value"].split("/")[0]] = subProduct;
+          }
+          console.log(this.productMap);
+        })
+      },
       handleChange(value) {
         console.log(value);
         this.form.channel = value[0];
@@ -239,6 +270,14 @@
         this.form.toAddress.ken = value[0];
         this.form.toAddress.city = value[1];
         this.form.toAddress.town = value[2];
+      },
+      handleProductChange(value) {
+        let str = value[0].split("/");
+        let sku = str[0];
+        let product = this.productMap[sku];
+        this.content.name = product.name;
+        this.content.price = product.price;
+        console.log(this.selectedChannels);
       }
     }
   }
