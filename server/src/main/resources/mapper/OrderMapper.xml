@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.OrderMapper">
+
+    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
+                                   from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
+                                   on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel)
+        values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn}, #{creator}, #{updator},
+                #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId}, #{toCityId}, #{toTownId},
+                #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact}, #{fromName},
+                #{toName}, #{channel})
+    </insert>
+
+    <insert id="insertContent" parameterType="java.util.List">
+        insert into l_manual_order_content(ordno, sku, name, num, price)
+        values (#{saleRecNo}, #{sku}, #{name}, #{num}, #{price})
+    </insert>
+
+</mapper>

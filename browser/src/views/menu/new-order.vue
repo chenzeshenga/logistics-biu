@@ -1,6 +1,5 @@
 <template>
   <div class="login-container">
-    <!--<h1>新建订单</h1>-->
     <div class="app-container">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="订单基本信息">
@@ -148,45 +147,43 @@
             <el-button type="primary" round @click="add2Cart">添加</el-button>
           </el-col>
         </el-form-item>
-        <el-form-item>
-          <el-table
-            :data="form.contentList"
-            stripe
-            style="width: 100%">
-            <el-table-column
-              prop="sku"
-              label="sku"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="商品名称"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="price"
-              label="商品价格"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="num"
-              label="商品数量"
-              width="180">
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
+        <el-table
+          :data="form.contentList"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="sku"
+            label="sku/东岳Sku"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="商品名称"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="price"
+            label="商品价格"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="num"
+            label="商品数量"
+            width="180">
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
-
     </div>
+    <el-button @click="createOrd" type="primary" style="margin-left: 90%">确认</el-button>
   </div>
 </template>
 
@@ -294,14 +291,12 @@
         })
       },
       handleChange(value) {
-        console.log(value);
         this.form.channel = value[0];
       },
       handleAddressChange(value) {
         this.form.address.ken = value[0];
         this.form.address.city = value[1];
         this.form.address.town = value[2];
-        console.log(this.form);
       },
       handleAddressChange2(value) {
         this.form.toAddress.ken = value[0];
@@ -311,11 +306,11 @@
       handleProductChange(value) {
         let str = value[0].split("/");
         let sku = str[0];
+        let skuLabel = sku + "/" + str[1];
         let product = this.productMap[sku];
-        this.content.sku = value;
+        this.content.sku = skuLabel;
         this.content.name = product.name;
         this.content.price = product.price;
-        console.log(this.selectedChannels);
       },
       add2Cart() {
         let tmpContent = {};
@@ -324,7 +319,15 @@
       },
       handleDelete(index, row) {
         this.form.contentList.splice(index, 1);
-        console.log(this.form.contentList)
+      },
+      createOrd() {
+        request({
+          url: "/ord/add",
+          method: "post",
+          data: this.form
+        }).then(res => {
+          this.$message(res.data.data + '个订单已保存');
+        });
       }
     }
   }
