@@ -97,8 +97,71 @@ export const asyncRouterMap = [
       meta: {perm: 'm:menu1', title: '新建订单', icon: 'icon'}
     }]
   },
-
-
+  {
+    path: "/order-list/mgt",
+    name: 'order-list-mgt',
+    component: Layout,
+    meta: {
+      perm: 'm:order:list',
+      title: '订单管理',
+      icon: 'chart'
+    },
+    children: [
+      {
+        path: '/order-list/mgt/type1',
+        name: 'order-list-mgt-type1',
+        component: _import('order/type1/index'),
+        meta: {
+          perm: 'm:order:list',
+          title: '海外仓代发',
+          icon: 'chart'
+        },
+        children: [
+          {
+            path: 'status1',
+            component: _import('order/type1/list/status1'),
+            name: 'order-list-mgt-type1-status1',
+            meta: {perm: 'm:order:list', title: '待审核', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status2',
+            component: _import('order/type1/list/status2'),
+            name: 'status2',
+            meta: {perm: 'm:order:list', title: '待发货', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status3',
+            component: _import('order/type1/list/status3'),
+            name: 'status3',
+            meta: {perm: 'm:order:list', title: '已发货', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status4',
+            component: _import('order/type1/list/status4'),
+            name: 'status4',
+            meta: {perm: 'm:order:list', title: '问题件', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status5',
+            component: _import('order/type1/list/status5'),
+            name: 'status5',
+            meta: {perm: 'm:order:list', title: '已废弃', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status6',
+            component: _import('order/type1/list/status6'),
+            name: 'status6',
+            meta: {perm: 'm:order:list', title: '暂存', icon: 'chart', noCache: true}
+          },
+          {
+            path: 'status7',
+            component: _import('order/type1/list/status7'),
+            name: 'status7',
+            meta: {perm: 'm:order:list', title: '历史', icon: 'chart', noCache: true}
+          }]
+      }
+    ]
+  },
   {
     path: '/menu2',
     component: Layout,
