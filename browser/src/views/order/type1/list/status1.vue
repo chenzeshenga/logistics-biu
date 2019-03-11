@@ -3,6 +3,15 @@
     <el-table>
 
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="tablePage.current"
+      :page-sizes="[10, 20, 30, 40, 50]"
+      :page-size="tablePage.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="tablePage.total">
+    </el-pagination>
   </div>
 </template>
 
@@ -12,8 +21,16 @@
     name: 'order-list-mgt-type1-status1',
     data() {
       return {
-        pageName: '状态1'
+        tablePage: {
+          current: null,
+          pages: null,
+          size: null,
+          total: null
+        }
       }
+    },
+    created() {
+      // this.$router.push({path: '/order-list/mgt/type1/status2'})
     }
   }
 

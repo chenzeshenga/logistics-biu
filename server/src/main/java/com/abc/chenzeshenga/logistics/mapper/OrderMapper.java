@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +16,7 @@ import java.util.List;
     int add(ManualOrder manualOrder);
 
     int insertContent(List<ManualOrderContent> manualOrderContents);
+
+    List<ManualOrder> list(String cname);
 
 }
