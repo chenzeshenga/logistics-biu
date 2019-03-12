@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author chenzeshenga
@@ -54,7 +53,7 @@ import java.util.List;
         int result = orderMapper.add(manualOrder);
         List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
         if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-            manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setSaleRecNo(manualOrder.getOrderNo()));
+            manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
             orderMapper.insertContent(manualOrderContents);
         }
         return Json.succ().data(result);
@@ -89,6 +88,38 @@ import java.util.List;
         orderMapper.delete(ordNo);
         orderMapper.deleteContent(ordNo);
         return Json.succ();
+    }
+
+    @GetMapping @RequestMapping("/get/{ordNo}") public Json selectByPk(@PathVariable String ordNo) {
+        ManualOrder manualOrder = orderMapper.selectById(ordNo);
+        List<ManualOrderContent> manualOrderContents = orderMapper.listContent(ordNo);
+        manualOrder.setManualOrderContents(manualOrderContents);
+        List<String> selectedAddress = new ArrayList<>();
+        selectedAddress.add(manualOrder.getFromKenId());
+        selectedAddress.add(manualOrder.getFromCityId());
+        selectedAddress.add(manualOrder.getFromTownId());
+        manualOrder.setSelectedAddress(selectedAddress);
+        Map<String, String> address = manualOrder.getAddress();
+        if (address == null || address.isEmpty()) {
+            address = new HashMap<>();
+        }
+        address.put("ken", manualOrder.getFromKenId());
+        address.put("city", manualOrder.getFromCityId());
+        address.put("town", manualOrder.getFromTownId());
+        List<String> selectedToAddress = new ArrayList<>();
+        selectedToAddress.add(manualOrder.getToKenId());
+        selectedToAddress.add(manualOrder.getToCityId());
+        selectedToAddress.add(manualOrder.getToTownId());
+        manualOrder.setSelectedToAddress(selectedToAddress);
+        Map<String, String> toAddress = manualOrder.getToAddress();
+        if (toAddress == null || toAddress.isEmpty()) {
+            toAddress = new HashMap<>();
+        }
+        toAddress.put("ken", manualOrder.getToKenId());
+        toAddress.put("city", manualOrder.getToCityId());
+        toAddress.put("town", manualOrder.getToTownId());
+        return Json.succ().data(manualOrder);
+
     }
 
 }

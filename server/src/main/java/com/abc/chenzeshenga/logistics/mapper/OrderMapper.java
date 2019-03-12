@@ -25,4 +25,6 @@ import java.util.List;
 
     int deleteContent(String ordNo);
 
+    List<ManualOrderContent> listContent(String ordNo);
+
 }

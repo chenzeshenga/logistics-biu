@@ -18,6 +18,6 @@ import java.io.Serializable;
 
     private String price;
 
-    private String saleRecNo;
+    private String ordno;
 
 }

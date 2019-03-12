@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chenzeshenga
@@ -59,5 +60,8 @@ import java.util.List;
     private String toKenName;
     private String toCityName;
     private String toTownName;
+
+    private Map<String, String> address;
+    private Map<String, String> toAddress;
 
 }

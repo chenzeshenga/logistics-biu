@@ -231,11 +231,23 @@
       }
     },
     created() {
-      this.listChannel();
       this.getAddress();
       this.getMyProducts();
     },
     methods: {
+      initPage() {
+        let ordno = this.$route.query.ordno;
+        if (ordno != null && ordno.length > 0) {
+          request({
+            url: "ord/get/" + ordno,
+            method: "get"
+          }).then(res => {
+            console.log(res);
+            this.form = res.data.data;
+            this.selectedChannels.push(res.data.data.channel)
+          })
+        }
+      },
       onSubmit() {
         this.$message('submit!')
       },
@@ -267,6 +279,7 @@
           method: 'get'
         }).then(res => {
           this.channels = res.data.data
+          this.initPage();
         })
       },
       getAddress() {
@@ -274,7 +287,8 @@
           url: "/address/getKen",
           method: 'get'
         }).then(res => {
-          this.address = res.data.data
+          this.address = res.data.data;
+          this.listChannel();
         })
       },
       getMyProducts() {
