@@ -2,6 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.OrderMapper">
 
+    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        <result property="orderNo" column="ord_no"/>
+        <result property="category" column="category"/>
+        <result property="carrierNo" column="carrier_no"/>
+        <result property="creator" column="owner"/>
+        <result property="status" column="status"/>
+        <result property="createOn" column="create_on" jdbcType="TIMESTAMP"/>
+        <result property="updateOn" column="update_on" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="create_by"/>
+        <result property="updator" column="update_by"/>
+        <result property="fromKenId" column="from_ken_id"/>
+        <result property="fromCityId" column="from_city_id"/>
+        <result property="fromTownId" column="from_town_id"/>
+        <result property="fromDetailAddress" column="from_where"/>
+        <result property="fromZipCode" column="from_zipcode"/>
+        <result property="toKenId" column="to_ken_id"/>
+        <result property="toCityId" column="to_city_id"/>
+        <result property="toTownId" column="to_town_id"/>
+        <result property="toDetailAddress" column="to_where"/>
+        <result property="toZipCode" column="to_zipcode"/>
+        <result property="collect" column="on_behalf"/>
+        <result property="amount" column="amount"/>
+        <result property="chinaNo" column="china_no"/>
+        <result property="fromContact" column="from_contact"/>
+        <result property="toContact" column="to_contact"/>
+        <result property="fromName" column="from_whom"/>
+        <result property="toName" column="to_whom"/>
+        <result property="channel" column="channel"/>
+    </resultMap>
+
+
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
@@ -16,5 +47,35 @@
         insert into l_manual_order_content(ordno, sku, name, num, price)
         values (#{saleRecNo}, #{sku}, #{name}, #{num}, #{price})
     </insert>
+
+    <select id="list" resultMap="result">
+        select *
+        from l_manual_order ord
+        <where>
+            1=1
+            <if test="cname != null and cname != 'admin' and cname != 'operator'">
+                and ord.creator=#{cname}
+            </if>
+            <if test="type != null and type != ''">
+                and ord.category=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and ord.status=#{status}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+        delete
+        from l_manual_order
+        where ord_no = #{ordNo}
+    </delete>
+
+    <delete id="deleteContent">
+        delete
+        from l_manual_order_content
+        where ordno = #{ordNo}
+    </delete>
+
 
 </mapper>

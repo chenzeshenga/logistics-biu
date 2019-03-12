@@ -44,10 +44,20 @@ import java.util.List;
     private String toKenId;
     private String toCityId;
     private String toTownId;
-    private Date createOn;
-    private Date updateOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date updateOn;
     private String creator;
     private String updator;
     private String status;
+
+    private String carrierNo;
+    private String amount;
+
+    private String fromKenName;
+    private String fromCityName;
+    private String fromTownName;
+    private String toKenName;
+    private String toCityName;
+    private String toTownName;
 
 }
