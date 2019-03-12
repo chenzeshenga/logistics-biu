@@ -1,4 +1,4 @@
-db: logistics
+db: logistics-prod
 spring:
   datasource:
     druid:
