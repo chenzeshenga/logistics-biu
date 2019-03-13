@@ -7,7 +7,7 @@ import Code from '@/utils/code'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
-  timeout: 5000, // request timeout
+  timeout: 10000, // request timeout
   withCredentials: true //使前台能够保存cookie
 })
 
@@ -46,7 +46,7 @@ service.interceptors.response.use(
         })
       }else{
         //其它错误弹出错误信息
-        Message({ message: res.data.msg, type: 'error', duration: 5000});
+        Message({ message: res.data.msg, type: 'error', duration: 10000});
       }
       return Promise.reject('error');
     }
@@ -57,7 +57,7 @@ service.interceptors.response.use(
    */
   err => {
     console.error('request err: %o', err)// for debug
-    Message({message: error.message,type: 'error',duration: 5000})
+    Message({message: error.message,type: 'error',duration: 10000})
     return Promise.reject(error)
   }
 
