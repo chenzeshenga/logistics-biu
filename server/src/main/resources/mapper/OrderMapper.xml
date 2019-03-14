@@ -127,10 +127,10 @@
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
-        insert into l_manual_order_content(ordno, sku, name, num, price)
+        insert into l_manual_order_content(ordno, sku, name, num, price,picked)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num}, #{item.price})
+            (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num}, #{item.price},#{item.picked})
         </foreach>
     </insert>
 
@@ -170,7 +170,7 @@
     </select>
 
     <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select ordno, sku, name, num, price
+        select ordno, sku, name, num, price, picked
         from l_manual_order_content
         where ordno = #{ordNo}
     </select>

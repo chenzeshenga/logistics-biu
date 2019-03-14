@@ -8,11 +8,9 @@
     <el-col offset="1" :span="22" style="margin-top: 10px">
       <el-table
         :data="content"
-        stripe border
-        highlight-current-row
+        border
         @row-click="handleCurrentChange"
-        :row-class-name="tableRowClassName"
-      >
+        :row-class-name="tableRowClassName">
         <el-table-column
           prop="sku"
           label="sku/东岳Sku"
@@ -33,13 +31,16 @@
           label="商品数量"
           width="180">
         </el-table-column>
-        <el-table-column prop="address" label="拣货数量">
+        <el-table-column label="拣货数量">
           <template scope="content">
-            <el-input-number size="small" v-model="content.row.actual_num" placeholder="请输入内容"
-                             @change="handleEdit(scope.$index, scope.row)"></el-input-number>
+            <el-input-number size="small" v-model="content.row.picked" placeholder="请输入内容"
+                             @change="handleEdit(content.$index, content.row)"></el-input-number>
           </template>
         </el-table-column>
       </el-table>
+    </el-col>
+    <el-col>
+      <el-button @click="pickupSubmit()" type="primary" style="margin-left: 90%;margin-top: 10px">拣货完成</el-button>
     </el-col>
   </div>
 </template>
@@ -57,35 +58,53 @@
     },
     methods: {
       searchOrdContent() {
-        request({})
+        request({
+          url: "ord/pickup/" + this.search,
+          type: "get"
+        }).then(res => {
+          console.log(res);
+          this.content = res.data.data;
+        })
       },
       handleCurrentChange(row, event, column) {
-        console.log(row, event, column, event.currentTarget)
+        // console.log(row, event, column, event.currentTarget)
       },
       handleEdit(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
       },
       tableRowClassName({row, rowIndex}) {
         console.log(row);
         console.log(rowIndex);
+        console.log("tableRowClassName");
+        if (Number(row.pickup) === Number(row.num)) {
+          return "success-row";
+        } else {
+          return "danger-row";
+        }
+      },
+      pickupSubmit() {
+        request({
+          url: "ord/pickup",
+          method: "post",
+          data: this.content
+        }).then(res => {
+          console.log(res);
+          // this.content = res.data.data;
+        })
       }
     }
   }
 </script>
 
 <style>
-  .el-table .warning-row {
-    background: #e6c393;
-  }
-
   .el-table .success-row {
-    background: #94c287;
+    background: rgba(103, 194, 58, .1);
   }
 
   .el-table .danger-row {
-    background: #f599a1;
+    background: rgb(253, 226, 226);
   }
 </style>

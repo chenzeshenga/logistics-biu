@@ -20,4 +20,6 @@ import java.io.Serializable;
 
     private String ordno;
 
+    private String picked;
+
 }

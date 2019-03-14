@@ -154,4 +154,14 @@ import java.util.*;
 
     }
 
+    @GetMapping @RequestMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
+        List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
+        return Json.succ().data(contentList);
+    }
+
+    @PostMapping @RequestMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
+        log.info(manualOrderContentList.toString());
+        return Json.succ();
+    }
+
 }
