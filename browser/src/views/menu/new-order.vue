@@ -353,6 +353,7 @@
           data: this.form
         }).then(res => {
           this.$message.success('当前订单已更新');
+          this.$router.push({path: '/order-list/mgt/type1/status1'})
         });
       }
     }

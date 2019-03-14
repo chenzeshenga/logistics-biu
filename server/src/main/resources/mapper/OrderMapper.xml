@@ -40,7 +40,7 @@
     </resultMap>
 
 
-    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+    <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         update l_manual_order
         <trim prefix="set" suffixOverrides=",">
             <if test="category != null and category != ''">
@@ -55,7 +55,7 @@
             <if test="channel != null and channel != ''">
                 channel=#{channel},
             </if>
-            <if test="updateOn != null and updateOn != ''">
+            <if test="updateOn != null">
                 update_on=#{updateOn},
             </if>
             <if test="updator != null and updator != ''">
@@ -70,7 +70,7 @@
             <if test="fromTownId != null and fromTownId != ''">
                 from_town_id=#{fromTownId},
             </if>
-            <if test="fromWhere != null and fromWhere != ''">
+            <if test="fromDetailAddress != null and fromDetailAddress != ''">
                 from_where=#{fromDetailAddress},
             </if>
             <if test="fromZipCode != null and fromZipCode != ''">
@@ -85,13 +85,13 @@
             <if test="toTownId != null and toTownId != ''">
                 to_town_id=#{toTownId},
             </if>
-            <if test="toWhere != null and toWhere != ''">
+            <if test="toDetailAddress != null and toDetailAddress != ''">
                 to_where=#{toDetailAddress},
             </if>
             <if test="toZipCode != null and toZipCode != ''">
                 to_zipcode=#{toZipCode},
             </if>
-            <if test="onBehalf != null and onBehalf != ''">
+            <if test="collect != null and collect != ''">
                 on_behalf=#{collect},
             </if>
             <if test="amount != null and amount != ''">
@@ -100,23 +100,23 @@
             <if test="chinaNo != null and chinaNo != ''">
                 china_no=#{chinaNo},
             </if>
-            <if test="fromWhom != null and fromWhom != ''">
+            <if test="fromName != null and fromName != ''">
                 from_whom=#{fromName},
             </if>
-            <if test="toWhom != null and toWhom != ''">
+            <if test="toName != null and toName != ''">
                 to_whom=#{toName},
             </if>
-            <if test="fromWhom != null and fromWhom != ''">
+            <if test="fromContact != null and fromContact != ''">
                 from_contact=#{fromContact},
             </if>
-            <if test="toWhom != null and toWhom != ''">
+            <if test="toContact != null and toContact != ''">
                 to_contact=#{toContact},
             </if>
         </trim>
         where ord_no=#{orderNo}
-    </insert>
+    </update>
 
-    <insert id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
                                    on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel)

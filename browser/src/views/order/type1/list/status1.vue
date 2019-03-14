@@ -4,7 +4,6 @@
               :data="tableData"
               v-loading.body="tableLoading"
               element-loading-text="加载中"
-              max-height="500"
               stripe
               border fit highlight-current-row>
       <el-table-column type="expand">
@@ -148,7 +147,6 @@
       }
     },
     created() {
-      // this.$router.push({path: '/order-list/mgt/type1/status2'})
       this.fetchData();
     },
     methods: {
