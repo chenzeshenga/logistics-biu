@@ -17,6 +17,8 @@ import java.util.List;
 
     int add(ManualOrder manualOrder);
 
+    int update(ManualOrder manualOrder);
+
     int insertContent(List<ManualOrderContent> manualOrderContents);
 
     List<ManualOrder> list(Pagination pagination, @Param("cname") String cname, @Param("type") String type, @Param("status") String status);

@@ -5,8 +5,8 @@
         <el-form-item label="订单基本信息">
           <el-col :span="12">
             <el-form-item label="订单号">
-              <el-input v-model="form.orderNo" placeholder="请输入或点击按钮获取订单号">
-                <el-button slot="append" @click="getOrdNo">获取单号</el-button>
+              <el-input v-model="form.orderNo" v-bind:disabled="onUpdate" placeholder="请输入或点击按钮获取订单号">
+                <el-button slot="append" v-bind:disabled="onUpdate" @click="getOrdNo">获取单号</el-button>
               </el-input>
             </el-form-item>
           </el-col>
@@ -183,7 +183,8 @@
         </el-table>
       </el-form>
     </div>
-    <el-button @click="createOrd" type="primary" style="margin-left: 90%">确认</el-button>
+    <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 90%">确认</el-button>
+    <el-button @click="updateOrd" v-if="onUpdate" type="primary" style="margin-left: 90%">更新</el-button>
   </div>
 </template>
 
@@ -195,6 +196,8 @@
     name: 'Menu1',
     data() {
       return {
+        onUpdate: false,
+        onCreate: true,
         form: {
           orderNo: '',
           category: '',
@@ -242,9 +245,10 @@
             url: "ord/get/" + ordno,
             method: "get"
           }).then(res => {
-            console.log(res);
             this.form = res.data.data;
-            this.selectedChannels.push(res.data.data.channel)
+            this.selectedChannels.push(res.data.data.channel);
+            this.onUpdate = true;
+            this.onCreate = false;
           })
         }
       },
@@ -278,7 +282,7 @@
           url: "/channel/list",
           method: 'get'
         }).then(res => {
-          this.channels = res.data.data
+          this.channels = res.data.data;
           this.initPage();
         })
       },
@@ -301,7 +305,6 @@
             let subProduct = this.myProducts[index];
             this.productMap[subProduct["value"].split("/")[0]] = subProduct;
           }
-          console.log(this.productMap);
         })
       },
       handleChange(value) {
@@ -340,7 +343,16 @@
           method: "post",
           data: this.form
         }).then(res => {
-          this.$message(res.data.data + '个订单已保存');
+          this.$message.success(res.data.data + '个订单已保存');
+        });
+      },
+      updateOrd() {
+        request({
+          url: "/ord/update",
+          method: "post",
+          data: this.form
+        }).then(res => {
+          this.$message.success('当前订单已更新');
         });
       }
     }

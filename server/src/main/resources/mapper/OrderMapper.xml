@@ -30,10 +30,93 @@
         <result property="fromName" column="from_whom"/>
         <result property="toName" column="to_whom"/>
         <result property="channel" column="channel"/>
+        <collection property="manualOrderContents" ofType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+            <result column="sku" property="sku"/>
+            <result column="name" property="name"/>
+            <result column="num" property="num"/>
+            <result column="price" property="price"/>
+            <result column="ordno" property="ordno"/>
+        </collection>
     </resultMap>
 
 
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        update l_manual_order
+        <trim prefix="set" suffixOverrides=",">
+            <if test="category != null and category != ''">
+                category=#{category},
+            </if>
+            <if test="carrierNo != null and carrierNo != ''">
+                carrier_no=#{carrierNo},
+            </if>
+            <if test="trackNo != null and trackNo != ''">
+                track_no=#{trackNo},
+            </if>
+            <if test="channel != null and channel != ''">
+                channel=#{channel},
+            </if>
+            <if test="updateOn != null and updateOn != ''">
+                update_on=#{updateOn},
+            </if>
+            <if test="updator != null and updator != ''">
+                update_by=#{updator},
+            </if>
+            <if test="fromKenId != null and fromKenId != ''">
+                from_ken_id=#{fromKenId},
+            </if>
+            <if test="fromCityId != null and fromCityId != ''">
+                from_city_id=#{fromCityId},
+            </if>
+            <if test="fromTownId != null and fromTownId != ''">
+                from_town_id=#{fromTownId},
+            </if>
+            <if test="fromWhere != null and fromWhere != ''">
+                from_where=#{fromDetailAddress},
+            </if>
+            <if test="fromZipCode != null and fromZipCode != ''">
+                from_zipcode=#{fromZipCode},
+            </if>
+            <if test="toKenId != null and toKenId != ''">
+                to_ken_id=#{toKenId},
+            </if>
+            <if test="toCityId != null and toCityId != ''">
+                to_city_id=#{toCityId},
+            </if>
+            <if test="toTownId != null and toTownId != ''">
+                to_town_id=#{toTownId},
+            </if>
+            <if test="toWhere != null and toWhere != ''">
+                to_where=#{toDetailAddress},
+            </if>
+            <if test="toZipCode != null and toZipCode != ''">
+                to_zipcode=#{toZipCode},
+            </if>
+            <if test="onBehalf != null and onBehalf != ''">
+                on_behalf=#{collect},
+            </if>
+            <if test="amount != null and amount != ''">
+                amount=#{amount},
+            </if>
+            <if test="chinaNo != null and chinaNo != ''">
+                china_no=#{chinaNo},
+            </if>
+            <if test="fromWhom != null and fromWhom != ''">
+                from_whom=#{fromName},
+            </if>
+            <if test="toWhom != null and toWhom != ''">
+                to_whom=#{toName},
+            </if>
+            <if test="fromWhom != null and fromWhom != ''">
+                from_contact=#{fromContact},
+            </if>
+            <if test="toWhom != null and toWhom != ''">
+                to_contact=#{toContact},
+            </if>
+        </trim>
+        where ord_no=#{orderNo}
+    </insert>
+
+    <insert id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
                                    on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel)
@@ -45,12 +128,15 @@
 
     <insert id="insertContent" parameterType="java.util.List">
         insert into l_manual_order_content(ordno, sku, name, num, price)
-        values (#{ordno}, #{sku}, #{name}, #{num}, #{price})
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num}, #{item.price})
+        </foreach>
     </insert>
 
     <select id="list" resultMap="result">
         select *
-        from l_manual_order ord
+        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
         <where>
             1=1
             <if test="cname != null and cname != 'admin' and cname != 'operator'">

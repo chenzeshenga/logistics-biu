@@ -17,7 +17,9 @@ import java.util.Map;
 @Data public class ManualOrder implements Serializable {
 
     private String category;
+    private String categoryName;
     private String channel;
+    private String channelDesc;
     private String chinaNo;
     @JsonProperty("contentList") private List<ManualOrderContent> manualOrderContents;
     private String collect;
@@ -42,26 +44,25 @@ import java.util.Map;
     private String fromKenId;
     private String fromCityId;
     private String fromTownId;
+    private String fromAddressDesc;
     private String toKenId;
     private String toCityId;
     private String toTownId;
+    private String toAddressDesc;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date updateOn;
     private String creator;
     private String updator;
     private String status;
-
+    private String statusDesc;
     private String carrierNo;
     private String amount;
-
     private String fromKenName;
     private String fromCityName;
     private String fromTownName;
     private String toKenName;
     private String toCityName;
     private String toTownName;
-
     private Map<String, String> address;
     private Map<String, String> toAddress;
-
 }

@@ -1,6 +1,8 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
+import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
@@ -12,6 +14,7 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +25,7 @@ import java.util.*;
  * @author chenzeshenga
  * @version 1.0
  */
-@RestController @RequestMapping("/ord") public class OrderController {
+@Slf4j @RestController @RequestMapping("/ord") public class OrderController {
 
     @Resource private OrderMapper orderMapper;
 
@@ -30,19 +33,12 @@ import java.util.*;
 
     @Autowired private JapanAddressCache japanAddressCache;
 
+    @Autowired private LabelCache labelCache;
+
+    @Autowired private ChannelCache channelCache;
+
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody ManualOrder manualOrder) {
-        List<String> fromAddress = manualOrder.getSelectedAddress();
-        if (fromAddress != null && !fromAddress.isEmpty()) {
-            manualOrder.setFromKenId(fromAddress.get(0));
-            manualOrder.setFromCityId(fromAddress.get(1));
-            manualOrder.setFromTownId(fromAddress.get(2));
-        }
-        List<String> toAddress = manualOrder.getSelectedToAddress();
-        if (toAddress != null && !toAddress.isEmpty()) {
-            manualOrder.setToKenId(toAddress.get(0));
-            manualOrder.setToCityId(toAddress.get(1));
-            manualOrder.setToTownId(toAddress.get(2));
-        }
+        setAddress(manualOrder);
         manualOrder.setStatus("1");
         Date curr = new Date();
         manualOrder.setCreateOn(curr);
@@ -59,6 +55,38 @@ import java.util.*;
         return Json.succ().data(result);
     }
 
+    @PostMapping @RequestMapping("/update") public Json update(@RequestBody ManualOrder manualOrder) {
+        log.info(manualOrder.toString());
+        setAddress(manualOrder);
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        int result = orderMapper.update(manualOrder);
+        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
+        if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
+            orderMapper.deleteContent(manualOrder.getOrderNo());
+            manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
+            orderMapper.insertContent(manualOrderContents);
+        }
+        return Json.succ().data(result);
+    }
+
+    private void setAddress(@RequestBody ManualOrder manualOrder) {
+        List<String> fromAddress = manualOrder.getSelectedAddress();
+        if (fromAddress != null && !fromAddress.isEmpty()) {
+            manualOrder.setFromKenId(fromAddress.get(0));
+            manualOrder.setFromCityId(fromAddress.get(1));
+            manualOrder.setFromTownId(fromAddress.get(2));
+        }
+        List<String> toAddress = manualOrder.getSelectedToAddress();
+        if (toAddress != null && !toAddress.isEmpty()) {
+            manualOrder.setToKenId(toAddress.get(0));
+            manualOrder.setToCityId(toAddress.get(1));
+            manualOrder.setToTownId(toAddress.get(2));
+        }
+    }
+
     @PostMapping @RequestMapping("/list/{type}/{status}")
     public Json list(@RequestBody String body, @PathVariable String type, @PathVariable String status) {
         String cname = UserUtils.getUserName();
@@ -73,14 +101,18 @@ import java.util.*;
             manualOrder.setFromKenName(from.getKenName());
             manualOrder.setFromCityName(from.getCityName());
             manualOrder.setFromTownName(from.getTownName());
+            manualOrder.setFromAddressDesc(from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
             JpDetailAddress to = japanAddressCache
                 .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
                     Integer.valueOf(manualOrder.getToTownId()));
             manualOrder.setToKenName(to.getKenName());
             manualOrder.setToCityName(to.getCityName());
             manualOrder.setToTownName(to.getTownName());
+            manualOrder.setToAddressDesc(to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
+            manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
+            manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
+            manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
         });
-
         return Json.succ().data("page", manualOrderPage);
     }
 
