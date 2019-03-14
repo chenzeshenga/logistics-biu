@@ -11,10 +11,15 @@
 **效果图：**
 
 ![p1](_doc/image/preview_1.png)
+
 ![p2](_doc/image/preview_2.png)
+
 ![p3](_doc/image/preview_3.png)
+
 ![p4](_doc/image/preview_4.png)
+
 ![p5](_doc/image/preview_5.png)
+
 ![p6](_doc/image/preview_6.png)
 
 ## 如何开始开发
