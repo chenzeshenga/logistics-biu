@@ -195,7 +195,7 @@
           console.log(row);
           console.log(index);
           request({
-            url: "ord/update/" + row.orderNo + "/7",
+            url: "ord/update/1/" + row.orderNo + "/7",
             method: "get"
           }).then(res => {
             this.fetchData();

@@ -170,7 +170,7 @@
     </select>
 
     <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select ordno, sku, name, num, price, picked
+        select ordno, sku, name, num, price, picked, satisfied
         from l_manual_order_content
         where ordno = #{ordNo}
     </select>

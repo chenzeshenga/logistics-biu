@@ -192,15 +192,13 @@
       },
       statusUpdate(index, row) {
         this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
-          console.log(row);
-          console.log(index);
           request({
-            url: "ord/update/" + row.orderNo + "/3",
+            url: "ord/update/1/" + row.orderNo + "/3",
             method: "get"
           }).then(res => {
             this.fetchData();
             this.$message.success("提交成功");
-          })
+          });
         }).catch(() => {
           this.$message.info("已取消提交")
         })

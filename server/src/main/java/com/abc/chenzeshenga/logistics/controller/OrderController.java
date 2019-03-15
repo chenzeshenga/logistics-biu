@@ -172,8 +172,25 @@ import java.util.*;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/update/{ordno}/{status}") public Json statusUpdate(@PathVariable String ordno, @PathVariable String status) {
+    @GetMapping @RequestMapping("/update/{category}/{ordno}/{status}")
+    public Json statusUpdate(@PathVariable String category, @PathVariable String ordno, @PathVariable String status) {
+        if ("1".equals(category) && "3".equals(status)) {
+            List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
+            boolean satisfied = false;
+            for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+                if ("1".equals(manualOrderContent.isSatisfied())) {
+                    satisfied = true;
+                } else {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) {
+                return Json.fail().msg("有商品未拣货完成");
+            }
+        }
         orderMapper.statusUpdate(ordno, status);
+
         return Json.succ();
     }
 
