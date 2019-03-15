@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
-    <el-col offset="2" :span="18" style="margin-top: 20px">
+    <el-col :offset="2" :span=18 style="margin-top: 20px">
       <el-input placeholder="请输入订单号" v-model="search" class="input-with-select">
         <el-button slot="append" icon="el-icon-search" @click="searchOrdContent()"></el-button>
       </el-input>
     </el-col>
-    <el-col offset="1" :span="22" style="margin-top: 10px">
+    <el-col :offset="1" :span=22 style="margin-top: 10px">
       <el-table
         :data="content"
         border
@@ -32,7 +32,7 @@
           width="180">
         </el-table-column>
         <el-table-column label="拣货数量">
-          <template scope="content">
+          <template slot-scope="content">
             <el-input-number size="small" v-model="content.row.picked" placeholder="请输入内容"
                              @change="handleEdit(content.$index, content.row)"></el-input-number>
           </template>
@@ -76,24 +76,42 @@
         // console.log(index, row);
       },
       tableRowClassName({row, rowIndex}) {
-        console.log(row);
-        console.log(rowIndex);
-        console.log("tableRowClassName");
-        if (Number(row.pickup) === Number(row.num)) {
+        if (Number(row.picked) === Number(row.num)) {
+          row.satisfied = true;
           return "success-row";
         } else {
+          row.satisfied = false;
           return "danger-row";
         }
       },
       pickupSubmit() {
-        request({
-          url: "ord/pickup",
-          method: "post",
-          data: this.content
-        }).then(res => {
-          console.log(res);
-          // this.content = res.data.data;
-        })
+        let flag = false;
+        for (let index in this.content) {
+          let subContent = this.content[index];
+          console.log(subContent);
+          flag = subContent.satisfied;
+        }
+        if (flag) {
+          request({
+            url: "ord/pickup",
+            method: "post",
+            data: this.content
+          }).then(res => {
+            this.$message.success("拣货完成");
+          });
+        } else {
+          this.$confirm('当前订单有商品未完全拣货', '提示', confirm).then(() => {
+            request({
+              url: "ord/pickup",
+              method: "post",
+              data: this.content
+            }).then(res => {
+              this.$message.success("拣货完成");
+            })
+          }).catch(() => {
+            this.$message.info("请拣货");
+          })
+        }
       }
     }
   }

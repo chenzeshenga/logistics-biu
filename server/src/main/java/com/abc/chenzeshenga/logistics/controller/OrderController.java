@@ -161,6 +161,19 @@ import java.util.*;
 
     @PostMapping @RequestMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
         log.info(manualOrderContentList.toString());
+        String ordno;
+        if (!manualOrderContentList.isEmpty()) {
+            ordno = manualOrderContentList.get(0).getOrdno();
+            orderMapper.deleteContent(ordno);
+            orderMapper.insertContent(manualOrderContentList);
+        } else {
+            return Json.fail();
+        }
+        return Json.succ();
+    }
+
+    @GetMapping @RequestMapping("/update/{ordno}/{status}") public Json statusUpdate(@PathVariable String ordno, @PathVariable String status) {
+        orderMapper.statusUpdate(ordno, status);
         return Json.succ();
     }
 

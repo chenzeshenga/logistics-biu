@@ -29,4 +29,6 @@ import java.util.List;
 
     List<ManualOrderContent> listContent(String ordNo);
 
+    int statusUpdate(String ordno, String status);
+
 }

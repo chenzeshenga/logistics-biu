@@ -104,8 +104,8 @@
       ></el-table-column>
       <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip content="提交" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>
+          <el-tooltip content="提交拣货" placement="top">
+            <el-button @click="statusUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>
           </el-tooltip>
           <el-tooltip content="编辑" placement="top">
             <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle plain></el-button>
@@ -162,7 +162,6 @@
         }).then(res => {
           this.tableData = res.data.page.records;
           this.tableLoading = false;
-          console.log(JSON.stringify(this.tableData));
         })
       },
       handleSizeChange(val) {
@@ -188,6 +187,21 @@
         }).catch(() => {
           this.$message.info("已取消删除")
         });
+      },
+      statusUpdate(index, row) {
+        this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
+          console.log(row);
+          console.log(index);
+          request({
+            url: "ord/update/" + row.orderNo + "/2",
+            method: "get"
+          }).then(res => {
+            this.fetchData();
+            this.$message.success("提交成功");
+          })
+        }).catch(() => {
+          this.$message.info("已取消提交")
+        })
       }
     }
   }

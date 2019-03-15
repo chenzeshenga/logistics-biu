@@ -22,4 +22,6 @@ import java.io.Serializable;
 
     private String picked;
 
+    private boolean satisfied;
+
 }

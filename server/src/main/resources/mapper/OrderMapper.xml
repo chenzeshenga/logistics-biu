@@ -127,10 +127,10 @@
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
-        insert into l_manual_order_content(ordno, sku, name, num, price,picked)
+        insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num}, #{item.price},#{item.picked})
+            (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num}, #{item.price},#{item.picked},#{item.satisfied})
         </foreach>
     </insert>
 
@@ -174,5 +174,11 @@
         from l_manual_order_content
         where ordno = #{ordNo}
     </select>
+
+    <update id="statusUpdate" parameterType="java.lang.String">
+        update l_manual_order
+        set status=#{arg1}
+        where ord_no = #{arg0};
+    </update>
 
 </mapper>
