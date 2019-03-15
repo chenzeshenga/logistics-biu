@@ -231,6 +231,7 @@
         myProducts: [],
         selectedProduct: [],
         productMap: {},
+        status: ""
       }
     },
     created() {
@@ -240,6 +241,7 @@
     methods: {
       initPage() {
         let ordno = this.$route.query.ordno;
+        this.status = this.$route.query.status;
         if (ordno != null && ordno.length > 0) {
           request({
             url: "ord/get/" + ordno,
@@ -353,7 +355,8 @@
           data: this.form
         }).then(res => {
           this.$message.success('当前订单已更新');
-          this.$router.push({path: '/order-list/mgt/type1/status1'})
+          console.log('/order-list/mgt/type' + this.form.category + '/status' + this.status);
+          this.$router.push({path: '/order-list/mgt/type' + this.form.category + '/status' + this.status})
         });
       }
     }
