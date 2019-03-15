@@ -8,6 +8,7 @@ import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.service.OrderService;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -93,6 +95,24 @@ import java.util.*;
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Page<ManualOrder> manualOrderPage = orderService.list(page, cname, type, status);
+        enrichOrd(manualOrderPage);
+        return Json.succ().data("page", manualOrderPage);
+    }
+
+    @PostMapping @RequestMapping("/list/{type}/{status}/{fromDate}/{toDate}")
+    public Json listByRange(@RequestBody String body, @PathVariable String type, @PathVariable String status, @PathVariable String fromDate,
+        @PathVariable String toDate) throws ParseException {
+        String cname = UserUtils.getUserName();
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        Date fromDate1 = DateUtil.getDateFromStr(fromDate);
+        Date toDate1 = DateUtil.getDateFromStr(toDate);
+        Page<ManualOrder> manualOrderPage = orderService.listByRange(page, cname, type, status, fromDate1, toDate1);
+        enrichOrd(manualOrderPage);
+        return Json.succ().data("page", manualOrderPage);
+    }
+
+    private void enrichOrd(Page<ManualOrder> manualOrderPage) {
         List<ManualOrder> manualOrderList = manualOrderPage.getRecords();
         manualOrderList.forEach(manualOrder -> {
             JpDetailAddress from = japanAddressCache
@@ -113,7 +133,6 @@ import java.util.*;
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
         });
-        return Json.succ().data("page", manualOrderPage);
     }
 
     @GetMapping @RequestMapping("/delete/{ordNo}") public Json delete(@PathVariable String ordNo) {

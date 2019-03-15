@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,9 @@ import java.util.List;
     int insertContent(List<ManualOrderContent> manualOrderContents);
 
     List<ManualOrder> list(Pagination pagination, @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
+
+    List<ManualOrder> listByRange(Pagination pagination, @Param("cname") String cname, @Param("type") String type, @Param("status") String status,
+        @Param("from") Date from, @Param("to") Date to);
 
     int delete(String ordNo);
 

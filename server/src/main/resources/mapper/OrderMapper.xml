@@ -151,6 +151,29 @@
         </where>
     </select>
 
+    <select id="listByRange" resultMap="result">
+        select *
+        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
+        <where>
+            1=1
+            <if test="cname != null and cname != 'admin' and cname != 'operator'">
+                and ord.creator=#{cname}
+            </if>
+            <if test="type != null and type != ''">
+                and ord.category=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and ord.status=#{status}
+            </if>
+            <if test="from != null">
+                and ord.create_on >= #{from}
+            </if>
+            <if test="to != null">
+                and ord.create_on &lt;= #{to}
+            </if>
+        </where>
+    </select>
+
     <delete id="delete">
         delete
         from l_manual_order
