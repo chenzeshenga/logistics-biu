@@ -67,4 +67,6 @@ import java.util.Map;
     private String toTownName;
     private Map<String, String> address;
     private Map<String, String> toAddress;
+    private String abnormalReason;
+
 }

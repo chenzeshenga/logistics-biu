@@ -37,4 +37,6 @@ import java.util.List;
 
     int fillInTrackNo(ManualOrder manualOrder);
 
+    int abnormal(ManualOrder manualOrder);
+
 }

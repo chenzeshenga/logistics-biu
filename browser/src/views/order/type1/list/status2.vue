@@ -10,11 +10,12 @@
       <el-table-column type="expand">
         <template slot-scope="tableData">
           <el-col :span="12">
-            <el-table :data="tableData.row.contentList" stripe border>
+            <el-table :data="tableData.row.contentList" stripe border :row-class-name="tableRowClassName">
               <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
               <el-table-column prop="name" label="商品名称" width="250"></el-table-column>
               <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
               <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
+              <el-table-column prop="picked" label="已拣货数量" width="180"></el-table-column>
             </el-table>
           </el-col>
         </template>
@@ -162,8 +163,27 @@
         }).catch(() => {
           this.$message.info("已取消提交")
         })
-      }
+      },
+      tableRowClassName({row, rowIndex}) {
+        if (Number(row.picked) === Number(row.num)) {
+          row.satisfied = true;
+          return "success-row";
+        } else {
+          row.satisfied = false;
+          return "danger-row";
+        }
+      },
     }
   }
 
 </script>
+
+<style>
+  .el-table .success-row {
+    background: rgba(103, 194, 58, .1);
+  }
+
+  .el-table .danger-row {
+    background: rgb(253, 226, 226);
+  }
+</style>

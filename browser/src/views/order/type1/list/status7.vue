@@ -102,19 +102,19 @@
         width="80"
         label="是否代收商品费用"
       ></el-table-column>
-      <el-table-column label="操作" width="250" fixed="right">
-        <template slot-scope="scope">
-          <el-tooltip content="提交" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>
-          </el-tooltip>
-          <el-tooltip content="编辑" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle plain></el-button>
-          </el-tooltip>
-          <el-tooltip content="删除" placement="top">
-            <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle plain></el-button>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+      <!--<el-table-column label="操作" width="250" fixed="right">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-tooltip content="提交" placement="top">-->
+      <!--<el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>-->
+      <!--</el-tooltip>-->
+      <!--<el-tooltip content="编辑" placement="top">-->
+      <!--<el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle plain></el-button>-->
+      <!--</el-tooltip>-->
+      <!--<el-tooltip content="删除" placement="top">-->
+      <!--<el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle plain></el-button>-->
+      <!--</el-tooltip>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"

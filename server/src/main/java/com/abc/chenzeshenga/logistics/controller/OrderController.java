@@ -243,7 +243,7 @@ import java.util.*;
             List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
             boolean satisfied = false;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-                if ("1".equals(String.valueOf(manualOrderContent.isSatisfied()))) {
+                if (manualOrderContent.isSatisfied()) {
                     satisfied = true;
                 } else {
                     satisfied = false;
@@ -269,6 +269,11 @@ import java.util.*;
             commonLabelList.add(commonLabel);
         });
         return Json.succ().data(commonLabelList);
+    }
+
+    @PostMapping @RequestMapping("/abnormal") public Json abnormal(@RequestBody ManualOrder manualOrder) {
+        orderMapper.abnormal(manualOrder);
+        return Json.succ();
     }
 
 }

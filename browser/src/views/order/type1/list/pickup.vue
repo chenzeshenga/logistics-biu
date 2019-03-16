@@ -136,12 +136,23 @@
         }
       },
       abnormalReasonFun() {
-        this.$confirm('订单发货异常标记', '提示', confirm).then(() => {
-
+        this.$confirm('订单发货是否标记异常', '提示', confirm).then(() => {
+          this.dialogVisible = true;
         })
       },
       abnormalUpdate() {
-        this.$message.info("abnormalUpdate")
+        request({
+          url: "ord/abnormal",
+          method: "post",
+          data: {
+            orderNo: this.search,
+            abnormalReason: this.abnormalReason
+          }
+        }).then(res => {
+          console.log(res);
+          this.$message.success("异常标记成功");
+          this.dialogVisible = false;
+        })
       }
     }
   }

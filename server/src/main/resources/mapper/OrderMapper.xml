@@ -37,6 +37,8 @@
             <result column="num" property="num"/>
             <result column="price" property="price"/>
             <result column="ordno" property="ordno"/>
+            <result column="picked" property="picked"/>
+            <result column="satisfied" property="satisfied"/>
         </collection>
     </resultMap>
 
@@ -198,7 +200,8 @@
         from l_manual_order_content content
                  inner join l_manual_order ord on (content.ordno = ord.ord_no)
         where ordno = #{ordNo}
-          and ord.status = 2
+          and (ord.status = 2
+            or ord.status = 7)
     </select>
 
     <update id="statusUpdate" parameterType="java.lang.String">
@@ -213,6 +216,13 @@
             track_no=#{trackNo},
             update_by=#{updator},
             update_on=#{updateOn}
+        where ord_no = #{orderNo}
+    </update>
+
+    <update id="abnormal" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        update l_manual_order
+        set abnormalReason=#{abnormalReason},
+            status=4
         where ord_no = #{orderNo}
     </update>
 
