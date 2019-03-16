@@ -6,6 +6,7 @@
         <result property="orderNo" column="ord_no"/>
         <result property="category" column="category"/>
         <result property="carrierNo" column="carrier_no"/>
+        <result property="trackNo" column="track_no"/>
         <result property="creator" column="owner"/>
         <result property="status" column="status"/>
         <result property="createOn" column="create_on" jdbcType="TIMESTAMP"/>
@@ -202,6 +203,15 @@
         update l_manual_order
         set status=#{arg1}
         where ord_no = #{arg0};
+    </update>
+
+    <update id="fillInTrackNo" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        update l_manual_order
+        set carrier_no=#{carrierNo},
+            track_no=#{trackNo},
+            update_by=#{updator},
+            update_on=#{updateOn}
+        where ord_no = #{orderNo}
     </update>
 
 </mapper>

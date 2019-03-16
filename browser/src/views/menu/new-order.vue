@@ -21,11 +21,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="运送渠道">
-              <el-cascader
-                :options="channels"
-                v-model="selectedChannels"
-                @change="handleChange">
-              </el-cascader>
+              <el-cascader :options="channels" v-model="selectedChannels" @change="handleChange"></el-cascader>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -43,6 +39,7 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item style="color: #606266;font-size: 14px;">发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)] 发件人 [东岳物流]</el-form-item>
         <el-form-item label="发件人信息">
           <el-col :span="8">
             <el-form-item label="发件人姓名">
@@ -346,6 +343,8 @@
           data: this.form
         }).then(res => {
           this.$message.success(res.data.data + '个订单已保存');
+        }).catch(err => {
+          console.log(err);
         });
       },
       updateOrd() {

@@ -4,9 +4,7 @@ import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
-import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
-import com.abc.chenzeshenga.logistics.model.ManualOrder;
-import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -16,10 +14,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.*;
 
@@ -31,15 +34,30 @@ import java.util.*;
 
     @Resource private OrderMapper orderMapper;
 
-    @Autowired private OrderService orderService;
+    private OrderService orderService;
 
-    @Autowired private JapanAddressCache japanAddressCache;
+    private JapanAddressCache japanAddressCache;
 
-    @Autowired private LabelCache labelCache;
+    private LabelCache labelCache;
 
-    @Autowired private ChannelCache channelCache;
+    private ChannelCache channelCache;
 
-    @PostMapping @RequestMapping("/add") public Json add(@RequestBody ManualOrder manualOrder) {
+    @Autowired
+    public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache) {
+        this.orderService = orderService;
+        this.japanAddressCache = japanAddressCache;
+        this.labelCache = labelCache;
+        this.channelCache = channelCache;
+    }
+
+    @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errMsg = new StringBuilder();
+            for (ObjectError objectError : bindingResult.getAllErrors()) {
+                errMsg.append(objectError.getDefaultMessage()).append(";");
+            }
+            return Json.fail().msg(errMsg.toString());
+        }
         setAddress(manualOrder);
         manualOrder.setStatus("1");
         Date curr = new Date();
@@ -48,6 +66,15 @@ import java.util.*;
         String cname = UserUtils.getUserName();
         manualOrder.setCreator(cname);
         manualOrder.setUpdator(cname);
+        if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
+            manualOrder.setFromKenId("");
+            manualOrder.setFromCityId("");
+            manualOrder.setFromTownId("");
+            manualOrder.setFromDetailAddress("日本岡山仓(okayama)");
+        }
+        if (StringUtils.isEmpty(manualOrder.getFromName())) {
+            manualOrder.setFromName("东岳物流");
+        }
         int result = orderMapper.add(manualOrder);
         List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
         if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
@@ -71,6 +98,17 @@ import java.util.*;
             manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
             orderMapper.insertContent(manualOrderContents);
         }
+        return Json.succ().data(result);
+    }
+
+    @PostMapping @RequestMapping("/trackno") public Json fillInTrackNo(@RequestBody ManualOrder manualOrder) {
+        log.info(manualOrder.toString());
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        manualOrder.setCarrierNo(manualOrder.getCarrierNo().replace("carrier_", ""));
+        int result = orderMapper.fillInTrackNo(manualOrder);
         return Json.succ().data(result);
     }
 
@@ -115,13 +153,17 @@ import java.util.*;
     private void enrichOrd(Page<ManualOrder> manualOrderPage) {
         List<ManualOrder> manualOrderList = manualOrderPage.getRecords();
         manualOrderList.forEach(manualOrder -> {
-            JpDetailAddress from = japanAddressCache
-                .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()), Integer.valueOf(manualOrder.getFromCityId()),
-                    Integer.valueOf(manualOrder.getFromTownId()));
-            manualOrder.setFromKenName(from.getKenName());
-            manualOrder.setFromCityName(from.getCityName());
-            manualOrder.setFromTownName(from.getTownName());
-            manualOrder.setFromAddressDesc(from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
+            if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
+                manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
+            } else {
+                JpDetailAddress from = japanAddressCache
+                    .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()), Integer.valueOf(manualOrder.getFromCityId()),
+                        Integer.valueOf(manualOrder.getFromTownId()));
+                manualOrder.setFromKenName(from.getKenName());
+                manualOrder.setFromCityName(from.getCityName());
+                manualOrder.setFromTownName(from.getTownName());
+                manualOrder.setFromAddressDesc(from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
+            }
             JpDetailAddress to = japanAddressCache
                 .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
                     Integer.valueOf(manualOrder.getToTownId()));
@@ -132,6 +174,7 @@ import java.util.*;
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
+            manualOrder.setCarrierName(labelCache.getLabel("carrier_" + manualOrder.getCarrierNo()));
         });
     }
 
@@ -152,7 +195,7 @@ import java.util.*;
         manualOrder.setSelectedAddress(selectedAddress);
         Map<String, String> address = manualOrder.getAddress();
         if (address == null || address.isEmpty()) {
-            address = new HashMap<>();
+            address = new HashMap<>(3);
         }
         address.put("ken", manualOrder.getFromKenId());
         address.put("city", manualOrder.getFromCityId());
@@ -164,7 +207,7 @@ import java.util.*;
         manualOrder.setSelectedToAddress(selectedToAddress);
         Map<String, String> toAddress = manualOrder.getToAddress();
         if (toAddress == null || toAddress.isEmpty()) {
-            toAddress = new HashMap<>();
+            toAddress = new HashMap<>(3);
         }
         toAddress.put("ken", manualOrder.getToKenId());
         toAddress.put("city", manualOrder.getToCityId());
@@ -197,7 +240,7 @@ import java.util.*;
             List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
             boolean satisfied = false;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-                if ("1".equals(manualOrderContent.isSatisfied())) {
+                if ("1".equals(String.valueOf(manualOrderContent.isSatisfied()))) {
                     satisfied = true;
                 } else {
                     satisfied = false;
@@ -211,6 +254,18 @@ import java.util.*;
         orderMapper.statusUpdate(ordno, status);
 
         return Json.succ();
+    }
+
+    @GetMapping @RequestMapping("/carrier/distinct") public Json getCarrierList() {
+        List<Label> carrierList = labelCache.getLabelList("carrier_");
+        List<CommonLabel> commonLabelList = new ArrayList<>(4);
+        carrierList.forEach(carrier -> {
+            CommonLabel commonLabel = new CommonLabel();
+            commonLabel.setLabel(carrier.getValue());
+            commonLabel.setValue(carrier.getKey());
+            commonLabelList.add(commonLabel);
+        });
+        return Json.succ().data(commonLabelList);
     }
 
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -16,12 +17,12 @@ import java.util.Map;
  */
 @Data public class ManualOrder implements Serializable {
 
-    private String category;
+    @NotEmpty(message = "订单类型必选") private String category;
     private String categoryName;
     private String channel;
     private String channelDesc;
     private String chinaNo;
-    @JsonProperty("contentList") private List<ManualOrderContent> manualOrderContents;
+    @NotEmpty(message = "订单内容必选") @JsonProperty("contentList") private List<ManualOrderContent> manualOrderContents;
     private String collect;
     private String fromContact;
     private String fromDetailAddress;
@@ -30,15 +31,15 @@ import java.util.Map;
     /**
      * pk
      */
-    private String orderNo;
+    @NotEmpty(message = "订单号必填，且长度大于3个字符") @Size(min = 3, max = 255) private String orderNo;
     /**
      * selected from address
      */
     private List<String> selectedAddress;
     @JsonProperty("selectedtoAddress") private List<String> selectedToAddress;
     private String toContact;
-    private String toDetailAddress;
-    private String toName;
+    @NotEmpty(message = "收件人地址必填") private String toDetailAddress;
+    @NotEmpty(message = "收件人姓名必填") private String toName;
     private String toZipCode;
     private String trackNo;
     private String fromKenId;
@@ -56,6 +57,7 @@ import java.util.Map;
     private String status;
     private String statusDesc;
     private String carrierNo;
+    private String carrierName;
     private String amount;
     private String fromKenName;
     private String fromCityName;
