@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -254,8 +253,10 @@ import java.util.*;
                 return Json.fail().msg("有商品未拣货完成");
             }
         }
-        orderMapper.statusUpdate(ordno, status);
-
+        ManualOrder manualOrder = new ManualOrder();
+        manualOrder.setOrderNo(ordno);
+        manualOrder.setStatus(status);
+        orderMapper.statusUpdate(manualOrder);
         return Json.succ();
     }
 

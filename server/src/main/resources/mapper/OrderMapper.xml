@@ -204,10 +204,10 @@
             or ord.status = 7)
     </select>
 
-    <update id="statusUpdate" parameterType="java.lang.String">
+    <update id="statusUpdate" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         update l_manual_order
-        set status=#{arg1}
-        where ord_no = #{arg0};
+        set status=#{status}
+        where ord_no = #{orderNo};
     </update>
 
     <update id="fillInTrackNo" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">

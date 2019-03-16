@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-col :offset="6" :span="22" style="margin-top: 10px;margin-bottom: 10px" class="block">
+    <el-col :offset="6" :span="16" style="margin-top: 10px;margin-bottom: 10px" class="block">
       <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
                       end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
       </el-date-picker>
@@ -40,7 +40,7 @@
       <el-table-column width="170" prop="updateOn" label="修改时间"></el-table-column>
       <el-table-column width="150" prop="creator" label="创建人"></el-table-column>
       <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
-      <el-table-column label="操作" width="250" fixed="right">
+      <el-table-column label="操作" width="300" fixed="right">
         <template slot-scope="scope">
           <el-tooltip content="提交拣货" placement="top">
             <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle plain></el-button>
