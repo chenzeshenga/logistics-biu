@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.*;
@@ -13,11 +14,10 @@ import java.util.*;
 /**
  * created by CaiBaoHong at 2018/4/17 14:55<br>
  */
-@TableName("sys_user")
-public class SysUser extends Model<SysUser> {
+@TableName("sys_user") @Data public class SysUser extends Model<SysUser> {
 
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String uid;     // 用户id
+    // 用户id
+    @TableId(type = IdType.ID_WORKER_STR) private String uid;
     private String uname;   // 登录名，不可改
     private String nick;    // 用户昵称，可改
     private String pwd;     // 已加密的登录密码
@@ -26,15 +26,11 @@ public class SysUser extends Model<SysUser> {
     private Date created;   // 创建时间
     private Date updated;   // 修改时间
 
-    @TableField(exist = false)
-    private List<SysRole> roleList = new ArrayList<>();    //用户所有角色值，在管理后台显示用户的角色
-    @TableField(exist = false)
-    private Set<AuthVo> roles = new HashSet<>();    //用户所有角色值，用于shiro做角色权限的判断
-    @TableField(exist = false)
-    private Set<AuthVo> perms = new HashSet<>();    //用户所有权限值，用于shiro做资源权限的判断
+    @TableField(exist = false) private List<SysRole> roleList = new ArrayList<>();    //用户所有角色值，在管理后台显示用户的角色
+    @TableField(exist = false) private Set<AuthVo> roles = new HashSet<>();    //用户所有角色值，用于shiro做角色权限的判断
+    @TableField(exist = false) private Set<AuthVo> perms = new HashSet<>();    //用户所有权限值，用于shiro做资源权限的判断
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
         return uid;
     }
 

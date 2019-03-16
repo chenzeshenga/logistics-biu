@@ -124,7 +124,6 @@
         }).then(res => {
           this.tableData = res.data.page.records;
           this.tableLoading = false;
-          console.log(JSON.stringify(this.tableData));
         })
       },
       handleSizeChange(val) {
