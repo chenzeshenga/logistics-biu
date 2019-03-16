@@ -57,7 +57,6 @@
           <el-tooltip content="废弃" placement="top">
             <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
           </el-tooltip>
-
         </template>
       </el-table-column>
     </el-table>
@@ -278,10 +277,12 @@
         return sums;
       },
       print(index, row) {
-        request({
-          url: "pdf/ord/" + row.orderNo,
-          method: 'get'
-        })
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
       }
     }
   }

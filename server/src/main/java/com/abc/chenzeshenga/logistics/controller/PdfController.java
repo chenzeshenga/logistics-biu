@@ -30,30 +30,35 @@ import java.util.List;
     @Resource private OrderMapper orderMapper;
 
     @GetMapping("/ord/{ordno}") public void pdf(HttpServletResponse response, @PathVariable String ordno) throws IOException {
-        //        OutputStream outputStream = new ByteArrayOutputStream();
+        OutputStream outputStream = new ByteArrayOutputStream();
         List<ManualOrderContent> manualOrderContentList = orderMapper.listContent2(ordno);
-        File file = new File("D:\\test.pdf");
-        PdfWriter writer = new PdfWriter(file);
-        PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf, PageSize.A4.rotate());
-        document.setMargins(20, 20, 20, 20);
-        PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
-        Table table = new Table(new float[] {4, 8, 4, 4, 4, 4});
-        table.setWidth(UnitValue.createPercentValue(100));
-        table.addHeaderCell(new Cell().add(new Paragraph("sku/东岳sku")).setFont(font))
-            .addHeaderCell(new Cell().add(new Paragraph("商品名称")).setFont(font)).addHeaderCell(new Cell().add(new Paragraph("货架位置")).setFont(font))
-            .addHeaderCell(new Cell().add(new Paragraph("商品价格(JPY)")).setFont(font))
-            .addHeaderCell(new Cell().add(new Paragraph("商品数量")).setFont(font)).addHeaderCell(new Cell().add(new Paragraph("已拣货数量")).setFont(font));
-        manualOrderContentList.forEach(manualOrderContent ->
+        //        File file = new File("D:\\test.pdf");
+        PdfWriter writer = new PdfWriter(outputStream);
+        try (PdfDocument pdf = new PdfDocument(writer)) {
+            try (Document document = new Document(pdf, PageSize.A4.rotate())) {
+                document.setMargins(20, 20, 20, 20);
+                PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+                Table table = new Table(new float[] {4, 8, 4, 4, 4, 4});
+                table.setWidth(UnitValue.createPercentValue(100));
+                table.addHeaderCell(new Cell().add(new Paragraph("sku/东岳sku")).setFont(font))
+                    .addHeaderCell(new Cell().add(new Paragraph("商品名称")).setFont(font))
+                    .addHeaderCell(new Cell().add(new Paragraph("货架位置")).setFont(font))
+                    .addHeaderCell(new Cell().add(new Paragraph("商品价格(JPY)")).setFont(font))
+                    .addHeaderCell(new Cell().add(new Paragraph("商品数量")).setFont(font))
+                    .addHeaderCell(new Cell().add(new Paragraph("已拣货数量")).setFont(font));
+                manualOrderContentList.forEach(manualOrderContent ->
 
-            table.addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getSku()))).setFont(font))
-                .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getName()))).setFont(font))
-                .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getLocation()))).setFont(font))
-                .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPrice()))).setFont(font))
-                .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font))
-                .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPicked()))).setFont(font)));
-        document.add(table);
-        document.close();
+                    table.addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getSku()))).setFont(font))
+                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getName()))).setFont(font))
+                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getLocation()))).setFont(font))
+                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPrice()))).setFont(font))
+                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font))
+                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPicked()))).setFont(font)));
+                document.add(table);
+            }
+        }
+        response.setContentType("application/pdf");
+        response.getOutputStream().write(((ByteArrayOutputStream)outputStream).toByteArray());
     }
 
 }
