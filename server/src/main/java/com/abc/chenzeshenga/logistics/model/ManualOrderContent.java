@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.model;
 
 import lombok.Data;
+import lombok.NonNull;
 
 import java.io.Serializable;
 
@@ -25,5 +26,7 @@ import java.io.Serializable;
     private boolean satisfied;
 
     private Double totalPrice;
+
+    private String location;
 
 }

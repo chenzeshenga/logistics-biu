@@ -204,6 +204,13 @@
             or ord.status = 7)
     </select>
 
+    <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        from l_manual_order_content content
+                 inner join l_manual_order ord on (content.ordno = ord.ord_no)
+        where ordno = #{ordNo}
+    </select>
+
     <update id="statusUpdate" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         update l_manual_order
         set status=#{status}

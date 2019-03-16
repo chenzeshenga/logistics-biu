@@ -63,6 +63,13 @@ dependencies {
     compile 'org.apache.commons:commons-lang3'
     compile 'net.sf.barcode4j:barcode4j:2.1'
 
+    compile 'com.itextpdf:kernel:7.1.4'
+    compile 'com.itextpdf:io:7.1.4'
+    compile 'com.itextpdf:layout:7.1.4'
+    compile 'com.itextpdf:forms:7.1.4'
+    compile 'com.itextpdf:pdfa:7.1.4'
+    compile 'com.itextpdf:font-asian:7.1.4'
+
     //lombok
     compileOnly 'org.projectlombok:lombok:1.18.4'
 

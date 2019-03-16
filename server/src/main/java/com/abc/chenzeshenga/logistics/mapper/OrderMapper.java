@@ -33,6 +33,8 @@ import java.util.List;
 
     List<ManualOrderContent> listContent(String ordNo);
 
+    List<ManualOrderContent> listContent2(String ordNo);
+
     int statusUpdate(ManualOrder manualOrder);
 
     int fillInTrackNo(ManualOrder manualOrder);

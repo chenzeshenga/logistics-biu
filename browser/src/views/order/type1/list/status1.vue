@@ -51,9 +51,13 @@
           <el-tooltip content="编辑" placement="top">
             <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
           </el-tooltip>
+          <el-tooltip content="打印配货单" placement="top">
+            <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle plain></el-button>
+          </el-tooltip>
           <el-tooltip content="废弃" placement="top">
             <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
           </el-tooltip>
+
         </template>
       </el-table-column>
     </el-table>
@@ -234,7 +238,6 @@
         this.dialogVisible = true;
       },
       handleCarrierChange(value) {
-        console.log(value);
         this.form.carrierNo = value[0];
       },
       getOrdNo2() {
@@ -260,7 +263,6 @@
         })
       },
       getSummary(param) {
-        console.log(param);
         const {columns, data} = param;
         const sums = [];
         columns.forEach(
@@ -274,6 +276,12 @@
         );
         sums[3] = data[0].totalPrice;
         return sums;
+      },
+      print(index, row) {
+        request({
+          url: "pdf/ord/" + row.orderNo,
+          method: 'get'
+        })
       }
     }
   }
