@@ -218,6 +218,9 @@ import java.util.*;
 
     @GetMapping @RequestMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
         List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
+        if (contentList.isEmpty()) {
+            return Json.fail().msg("该订单无法拣货");
+        }
         return Json.succ().data(contentList);
     }
 

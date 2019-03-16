@@ -42,6 +42,13 @@
     <el-col>
       <el-button @click="pickupSubmit()" type="primary" style="margin-left: 90%;margin-top: 10px">拣货完成</el-button>
     </el-col>
+    <el-dialog title="标记异常" :visible.sync="dialogVisible" width="30%">
+      <el-input v-model="abnormalReason" placeholder="请填写未拣货完全的原因"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="abnormalUpdate">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,11 +60,17 @@
     data() {
       return {
         search: "",
-        content: []
+        content: [],
+        abnormalReason: "",
+        dialogVisible: false
       }
     },
     methods: {
       searchOrdContent() {
+        if (this.search.length <= 0) {
+          this.$message.warning("请填写订单号");
+          return;
+        }
         request({
           url: "ord/pickup/" + this.search,
           type: "get"
@@ -85,6 +98,10 @@
         }
       },
       pickupSubmit() {
+        if (this.search.length <= 0) {
+          this.$message.warning("请输入订单号");
+          return;
+        }
         let flag = false;
         for (let index in this.content) {
           let subContent = this.content[index];
@@ -97,21 +114,34 @@
             method: "post",
             data: this.content
           }).then(res => {
+            console.log(res);
             this.$message.success("拣货完成");
+            this.search = "";
+            this.content = [];
           });
         } else {
-          this.$confirm('当前订单有商品未完全拣货', '提示', confirm).then(() => {
+          this.$confirm('当前订单有商品未完全拣货，是否提交', '提示', confirm).then(() => {
             request({
               url: "ord/pickup",
               method: "post",
               data: this.content
             }).then(res => {
+              console.log(res);
               this.$message.success("拣货完成");
+              this.abnormalReasonFun();
             })
           }).catch(() => {
-            this.$message.info("请拣货");
+            this.abnormalReasonFun();
           })
         }
+      },
+      abnormalReasonFun() {
+        this.$confirm('订单发货异常标记', '提示', confirm).then(() => {
+
+        })
+      },
+      abnormalUpdate() {
+        this.$message.info("abnormalUpdate")
       }
     }
   }

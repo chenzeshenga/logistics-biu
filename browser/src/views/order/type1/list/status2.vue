@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-col :offset="8" :span="22" style="margin-top: 10px;margin-bottom: 10px" class="block">
+    <el-col :offset="8" :span="16" style="margin-top: 10px;margin-bottom: 10px" class="block">
       <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
                       end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
       </el-date-picker>
