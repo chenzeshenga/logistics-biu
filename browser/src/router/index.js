@@ -10,7 +10,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '../views/layout/Layout'
 
-/** note: submenu only apppear when children.length>=1
+/** note: submenu only appear when children.length>=1
  *   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
  **/
 
@@ -19,7 +19,7 @@ import Layout from '../views/layout/Layout'
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
  *                                if not set alwaysShow, only more than one route under the children
  *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
+ * redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
     roles: ['admin','editor']     will control the page roles (you can set multiple roles)
@@ -44,7 +44,7 @@ export const constantRouterMap = [
       meta: {title: '东岳', icon: 'dashboard', noCache: true}
     }]
   },
-]
+];
 
 export default new Router({
   // mode: 'history', // require service support
@@ -193,36 +193,6 @@ export const asyncRouterMap = [
       {path: 'menu3_3', component: _import('menu/menu3_3'), name: 'menu3_3', meta: {perm: 'm:menu3:3', title: '菜单3-3', icon: 'chart', noCache: true}}
     ]
   },
-  // {
-  //   path: '/menu5',
-  //   name: 'menu5',
-  //   component: Layout,
-  //   redirect: '/menu5/menu5_1/a',
-  //   meta: {
-  //     perm: 'm:menu5',
-  //     title: '新建订单',
-  //     icon: 'example'
-  //   },
-  //   children: [
-  //     {
-  //       path: '/menu4/menu4_1',
-  //       name: 'menu4_1',
-  //       component: _import('menu/menu4_1/index'),
-  //       redirect: '/menu4/menu4_1/a',
-  //       meta: {
-  //         perm: 'm:menu4:1',
-  //         title: '海外仓代发',
-  //         icon: 'table'
-  //       },
-  //       children: [
-  //         {path: 'a', name: 'menu4_1_a', component: _import('menu/menu4_1/a'), meta: {perm: 'm:menu4:1:a', title: '菜单4-1-a'}},
-  //         {path: 'b', name: 'menu4_1_b', component: _import('menu/menu4_1/b'), meta: {perm: 'm:menu4:1:b', title: '菜单4-1-b'}},
-  //         {path: 'c', name: 'menu4_1_c', component: _import('menu/menu4_1/c'), meta: {perm: 'm:menu4:1:c', title: '菜单4-1-c'}}
-  //       ]
-  //     },
-  //     {path: 'menu4/menu4_2', name: 'menu4_2', icon: 'tab', component: _import('menu/menu4_2/index'), meta: {perm: 'm:menu4:2', title: '菜单4-2'}}
-  //   ]
-  // },
   {
     path: '/menu4',
     name: 'menu4',
@@ -254,4 +224,4 @@ export const asyncRouterMap = [
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
-]
+];

@@ -7,10 +7,16 @@
     <div class="right-menu">
       <error-log class="errLog-container right-menu-item"></error-log>
       <div style="display: inline-block;">
-        <span>帐号：</span><el-tag style="margin-right: 20px;">{{name}}</el-tag>
+        <span>帐号：</span>
+        <el-tag style="margin-right: 20px;">{{name}}</el-tag>
         <span>角色：</span>
-        <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0" >游客（未配置任何角色）</el-tag>
+        <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0">游客（未配置任何角色）</el-tag>
         <el-tag style="margin-right: 5px;" type="success" v-else v-for="r in roles" :key="r.val">{{r.name}}</el-tag>
+      </div>
+      <div style="display:inline-block;width: 40px;margin-left: 5px">
+        <el-badge :value="12">
+          <span class="el-icon-bell"></span>
+        </el-badge>
       </div>
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
@@ -53,152 +59,164 @@
   </el-menu>
 
 
-
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import userApi from '@/api/user'
+  import {mapGetters} from 'vuex'
+  import Breadcrumb from '@/components/Breadcrumb'
+  import Hamburger from '@/components/Hamburger'
+  import ErrorLog from '@/components/ErrorLog'
+  import userApi from '@/api/user'
 
-export default {
+  export default {
 
-  data(){
+    data() {
 
-    let validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.temp.pwd2 !== '') {
-          this.$refs.dataForm.validateField('pwd2');
+      let validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.temp.pwd2 !== '') {
+            this.$refs.dataForm.validateField('pwd2');
+          }
+          callback();
         }
-        callback();
-      }
-    };
+      };
 
-    let validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.temp.pwd) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
+      let validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.temp.pwd) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      return {
+        dialogVisible: false,
+        temp: {
+          pwd: null,
+          pwd2: null
+        },
+        rules: {
+          pwd: [{validator: validatePass, trigger: 'blur'}],
+          pwd2: [{validator: validatePass2, trigger: 'change'}]
+        },
       }
-    };
-    return {
-      dialogVisible: false,
-      temp: {
-        pwd: null,
-        pwd2: null
-      },
-      rules: {
-        pwd: [{validator: validatePass, trigger: 'blur'}],
-        pwd2: [{validator: validatePass2, trigger: 'change'}]
-      },
-    }
 
-  },
-  components: {
-    Breadcrumb,
-    Hamburger,
-    ErrorLog,
-  },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'name',
-      'avatar',
-      'roles',
-    ])
-  },
-  methods: {
-    toggleSideBar() {
-      this.$store.dispatch('toggleSideBar')
     },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
+    components: {
+      Breadcrumb,
+      Hamburger,
+      ErrorLog,
     },
-    handleUpdatePwd(){
-      this.dialogVisible = true
-      this.$nextTick(() => this.$refs['dataForm'].clearValidate())
+    computed: {
+      ...mapGetters([
+        'sidebar',
+        'name',
+        'avatar',
+        'roles',
+      ])
     },
-    updatePwd(){
-      this.$refs['dataForm'].validate((valid) => {
-        if (!valid) return
-        const tempData = Object.assign({}, this.temp)//copy obj
-        userApi.updatePwd(tempData).then(res => {
-          this.dialogVisible = false
-          this.$message.success("更新密码成功")
+    methods: {
+      toggleSideBar() {
+        this.$store.dispatch('toggleSideBar')
+      },
+      logout() {
+        this.$store.dispatch('LogOut').then(() => {
+          location.reload()// In order to re-instantiate the vue-router object to avoid bugs
         })
-      })
-    },
+      },
+      handleUpdatePwd() {
+        this.dialogVisible = true
+        this.$nextTick(() => this.$refs['dataForm'].clearValidate())
+      },
+      updatePwd() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (!valid) return
+          const tempData = Object.assign({}, this.temp)//copy obj
+          userApi.updatePwd(tempData).then(res => {
+            this.dialogVisible = false
+            this.$message.success("更新密码成功")
+          })
+        })
+      },
 
 
+    }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.navbar {
-  height: 50px;
-  line-height: 50px;
-  border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 58px;
+  .navbar {
     height: 50px;
-    float: left;
-    padding: 0 10px;
-  }
-  .breadcrumb-container{
-    float: left;
-  }
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-  .right-menu {
-    float: right;
-    height: 100%;
-    &:focus{
-     outline: none;
+    line-height: 50px;
+    border-radius: 0px !important;
+
+    .hamburger-container {
+      line-height: 58px;
+      height: 50px;
+      float: left;
+      padding: 0 10px;
     }
-    .right-menu-item {
+
+    .breadcrumb-container {
+      float: left;
+    }
+
+    .errLog-container {
       display: inline-block;
-      margin: 0 8px;
-    }
-    .screenfull {
-      height: 20px;
-    }
-    .international{
       vertical-align: top;
     }
-    .theme-switch {
-      vertical-align: 15px;
-    }
-    .avatar-container {
-      height: 50px;
-      margin-right: 30px;
-      .avatar-wrapper {
-        cursor: pointer;
-        margin-top: 5px;
-        position: relative;
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-        .el-icon-caret-bottom {
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+
+    .right-menu {
+      float: right;
+      height: 100%;
+
+      &:focus {
+        outline: none;
+      }
+
+      .right-menu-item {
+        display: inline-block;
+        margin: 0 8px;
+      }
+
+      .screenfull {
+        height: 20px;
+      }
+
+      .international {
+        vertical-align: top;
+      }
+
+      .theme-switch {
+        vertical-align: 15px;
+      }
+
+      .avatar-container {
+        height: 50px;
+        margin-right: 30px;
+
+        .avatar-wrapper {
+          cursor: pointer;
+          margin-top: 5px;
+          position: relative;
+
+          .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+          }
+
+          .el-icon-caret-bottom {
+            position: absolute;
+            right: -20px;
+            top: 25px;
+            font-size: 12px;
+          }
         }
       }
     }
   }
-}
 </style>
