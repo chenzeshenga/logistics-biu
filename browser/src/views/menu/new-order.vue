@@ -26,7 +26,7 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-col :span="12">
+          <el-col :span="12" v-if="form.category !== '1'">
             <el-form-item label="中国追踪单号">
               <el-input v-model="form.chinaNo" placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"></el-input>
             </el-form-item>
@@ -228,12 +228,14 @@
         myProducts: [],
         selectedProduct: [],
         productMap: {},
-        status: ""
+        status: "",
+        defaultFormData: {}
       }
     },
     created() {
       this.getAddress();
       this.getMyProducts();
+      this.defaultFormData = JSON.parse(JSON.stringify(this.form));
     },
     methods: {
       initPage() {
@@ -343,6 +345,7 @@
           data: this.form
         }).then(res => {
           this.$message.success(res.data.data + '个订单已保存');
+          this.form = this.defaultFormData;
         }).catch(err => {
           console.log(err);
         });

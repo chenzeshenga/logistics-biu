@@ -141,7 +141,7 @@
         <where>
             1=1
             <if test="cname != null and cname != 'admin' and cname != 'operator'">
-                and ord.creator=#{cname}
+                and ord.create_by=#{cname}
             </if>
             <if test="type != null and type != ''">
                 and ord.category=#{type}
