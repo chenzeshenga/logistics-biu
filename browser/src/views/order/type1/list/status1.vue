@@ -12,7 +12,7 @@
       <el-table-column type="expand">
         <template slot-scope="tableData">
           <el-col :span="12">
-            <el-table :data="tableData.row.contentList" stripe border>
+            <el-table :data="tableData.row.contentList" stripe border show-summary :summary-method="getSummary">
               <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
               <el-table-column prop="name" label="商品名称" width="300"></el-table-column>
               <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
@@ -258,6 +258,22 @@
         }).catch(err => {
           console.log(err);
         })
+      },
+      getSummary(param) {
+        console.log(param);
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach(
+          (column, index) => {
+            if (index === 0) {
+              sums[index] = "总价";
+            } else {
+              sums[index] = "";
+            }
+          }
+        );
+        sums[3] = data[0].totalPrice;
+        return sums;
       }
     }
   }

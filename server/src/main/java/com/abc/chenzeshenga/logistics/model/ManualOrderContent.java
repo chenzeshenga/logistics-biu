@@ -24,4 +24,6 @@ import java.io.Serializable;
 
     private boolean satisfied;
 
+    private Double totalPrice;
+
 }

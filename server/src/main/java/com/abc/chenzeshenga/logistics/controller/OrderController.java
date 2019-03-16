@@ -24,12 +24,19 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author chenzeshenga
  * @version 1.0
  */
 @Slf4j @RestController @RequestMapping("/ord") public class OrderController {
+
+    private static final String CARRIER = "carrier_";
+
+    private static final String ONE = "1";
+
+    private static final String THREE = "3";
 
     @Resource private OrderMapper orderMapper;
 
@@ -106,7 +113,7 @@ import java.util.*;
         manualOrder.setUpdateOn(curr);
         String cname = UserUtils.getUserName();
         manualOrder.setUpdator(cname);
-        manualOrder.setCarrierNo(manualOrder.getCarrierNo().replace("carrier_", ""));
+        manualOrder.setCarrierNo(manualOrder.getCarrierNo().replace(CARRIER, ""));
         int result = orderMapper.fillInTrackNo(manualOrder);
         return Json.succ().data(result);
     }
@@ -173,7 +180,14 @@ import java.util.*;
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
-            manualOrder.setCarrierName(labelCache.getLabel("carrier_" + manualOrder.getCarrierNo()));
+            manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+            List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
+            Double totalPrice = 0.0;
+            for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+                totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double.valueOf(manualOrderContent.getPrice());
+            }
+            final Double finalPrice = totalPrice;
+            manualOrderContentList.forEach(content -> content.setTotalPrice(finalPrice));
         });
     }
 
@@ -238,7 +252,7 @@ import java.util.*;
 
     @GetMapping @RequestMapping("/update/{category}/{ordno}/{status}")
     public Json statusUpdate(@PathVariable String category, @PathVariable String ordno, @PathVariable String status) {
-        if ("1".equals(category) && "3".equals(status)) {
+        if (ONE.equals(category) && THREE.equals(status)) {
             List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
             boolean satisfied = false;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
@@ -261,7 +275,7 @@ import java.util.*;
     }
 
     @GetMapping @RequestMapping("/carrier/distinct") public Json getCarrierList() {
-        List<Label> carrierList = labelCache.getLabelList("carrier_");
+        List<Label> carrierList = labelCache.getLabelList(CARRIER);
         List<CommonLabel> commonLabelList = new ArrayList<>(4);
         carrierList.forEach(carrier -> {
             CommonLabel commonLabel = new CommonLabel();
