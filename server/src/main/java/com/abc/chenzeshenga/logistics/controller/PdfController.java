@@ -2,14 +2,19 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+import com.abc.chenzeshenga.logistics.util.BarCodeUtil;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.StringUtil;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.UnitValue;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,14 +36,20 @@ import java.util.List;
     @Resource private OrderMapper orderMapper;
 
     @GetMapping("/ord/{ordno}") public void pdf(HttpServletResponse response, @PathVariable String ordno) throws IOException {
-        OutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<ManualOrderContent> manualOrderContentList = orderMapper.listContent2(ordno);
-        //        File file = new File("D:\\test.pdf");
         PdfWriter writer = new PdfWriter(outputStream);
         try (PdfDocument pdf = new PdfDocument(writer)) {
             try (Document document = new Document(pdf, PageSize.A4.rotate())) {
                 document.setMargins(20, 20, 20, 20);
                 PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+                Paragraph head = new Paragraph().add("东岳物流").setFont(font).addStyle(new Style().setMarginLeft(350));
+                document.add(head);
+                Paragraph time = new Paragraph().add(DateUtil.getStrFromDate(new Date())).addStyle(new Style().setMarginLeft(600));
+                document.add(time);
+                Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(ordno, "code128")));
+                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(400));
+                document.add(paragraph);
                 Table table = new Table(new float[] {4, 8, 4, 4, 4, 4});
                 table.setWidth(UnitValue.createPercentValue(100));
                 table.addHeaderCell(new Cell().add(new Paragraph("sku/东岳sku")).setFont(font))
@@ -46,19 +58,18 @@ import java.util.List;
                     .addHeaderCell(new Cell().add(new Paragraph("商品价格(JPY)")).setFont(font))
                     .addHeaderCell(new Cell().add(new Paragraph("商品数量")).setFont(font))
                     .addHeaderCell(new Cell().add(new Paragraph("已拣货数量")).setFont(font));
-                manualOrderContentList.forEach(manualOrderContent ->
-
-                    table.addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getSku()))).setFont(font))
-                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getName()))).setFont(font))
-                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getLocation()))).setFont(font))
-                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPrice()))).setFont(font))
-                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font))
-                        .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPicked()))).setFont(font)));
+                manualOrderContentList.forEach(manualOrderContent -> table
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getSku()))).setFont(font))
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getName()))).setFont(font))
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getLocation()))).setFont(font))
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPrice()))).setFont(font))
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font))
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPicked()))).setFont(font)));
                 document.add(table);
             }
         }
         response.setContentType("application/pdf");
-        response.getOutputStream().write(((ByteArrayOutputStream)outputStream).toByteArray());
+        response.getOutputStream().write(outputStream.toByteArray());
     }
 
 }
