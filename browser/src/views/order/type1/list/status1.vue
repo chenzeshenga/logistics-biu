@@ -263,7 +263,7 @@
             },
             getOrdNo2() {
                 request({
-                    url: "/trackno/pk",
+                    url: "/trackno/pk/" + this.form.carrierNo,
                     method: 'get'
                 }).then(res => {
                     this.form.trackNo = res.data.data;

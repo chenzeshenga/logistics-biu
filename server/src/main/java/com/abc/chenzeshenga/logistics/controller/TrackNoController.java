@@ -73,6 +73,9 @@ import java.util.List;
         Long minTrackno = trackNo.getMin();
         if (minTrackno + 1 > trackNo.getMax()) {
             trackNoMapper.delete(trackNo.getId());
+        } else {
+            trackNo.setMin(minTrackno + 1);
+            trackNoMapper.update(trackNo);
         }
         return Json.succ().data(trackNo.getMin());
     }
