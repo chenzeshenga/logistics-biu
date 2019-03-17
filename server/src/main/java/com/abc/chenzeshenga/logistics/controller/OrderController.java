@@ -24,7 +24,6 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author chenzeshenga
@@ -48,12 +47,16 @@ import java.util.stream.Collectors;
 
     private ChannelCache channelCache;
 
+    private CommonController commonController;
+
     @Autowired
-    public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache) {
+    public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache,
+        CommonController commonController) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
+        this.commonController = commonController;
     }
 
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
@@ -116,6 +119,23 @@ import java.util.stream.Collectors;
         manualOrder.setCarrierNo(manualOrder.getCarrierNo().replace(CARRIER, ""));
         int result = orderMapper.fillInTrackNo(manualOrder);
         return Json.succ().data(result);
+    }
+
+    @SuppressWarnings("unchecked") @PostMapping @RequestMapping("/trackno/list") public Json fillInTrackNoList(@RequestBody Map ords) {
+        List<String> ordNos = (List<String>)ords.get("ords");
+        String carrierNo = ((String)ords.get("carrierNo")).replace(CARRIER, "");
+        Date curr = new Date();
+        String cname = UserUtils.getUserName();
+        ordNos.forEach(ordNo -> {
+            ManualOrder manualOrder = new ManualOrder();
+            manualOrder.setOrderNo(ordNo);
+            manualOrder.setCarrierNo(carrierNo);
+            manualOrder.setUpdator(cname);
+            manualOrder.setUpdateOn(curr);
+            manualOrder.setTrackNo((String)commonController.getOrderNo().get("data"));
+            orderMapper.fillInTrackNo(manualOrder);
+        });
+        return Json.succ();
     }
 
     private void setAddress(@RequestBody ManualOrder manualOrder) {
@@ -182,7 +202,7 @@ import java.util.stream.Collectors;
             manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
-            Double totalPrice = 0.0;
+            double totalPrice = 0.0;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
                 totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double.valueOf(manualOrderContent.getPrice());
             }

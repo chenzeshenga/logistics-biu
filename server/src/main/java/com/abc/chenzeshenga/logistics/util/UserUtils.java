@@ -14,7 +14,6 @@ import org.apache.shiro.subject.Subject;
     public static String getUserName() {
         Subject subject = SecurityUtils.getSubject();
         SysUser user = (SysUser)subject.getPrincipal();
-        log.info("user {}", user);
         return user.getUname();
     }
 

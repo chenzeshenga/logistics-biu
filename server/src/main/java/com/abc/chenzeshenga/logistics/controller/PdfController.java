@@ -48,7 +48,7 @@ import java.util.List;
                 Paragraph time = new Paragraph().add(DateUtil.getStrFromDate(new Date())).addStyle(new Style().setMarginLeft(600));
                 document.add(time);
                 Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(ordno, "code128")));
-                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(400));
+                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(350));
                 document.add(paragraph);
                 Table table = new Table(new float[] {4, 8, 4, 4, 4, 4});
                 table.setWidth(UnitValue.createPercentValue(100));

@@ -30,7 +30,7 @@ import java.util.UUID;
      * shiro.loginUrl映射到这里，我在这里直接抛出异常交给GlobalExceptionHandler来统一返回json信息，
      * 您也可以在这里直接返回json，不过这样子就跟GlobalExceptionHandler中返回的json重复了。
      *
-     * @return
+     * @return 401 page
      */
     @RequestMapping("/page/401") public Json page401() {
         throw new UnauthenticatedException();
@@ -40,7 +40,7 @@ import java.util.UUID;
      * shiro.unauthorizedUrl映射到这里。由于约定了url方式只做鉴权控制，不做权限访问控制，
      * 也就是说在ShiroConfig中如果没有做roles[js],perms[mvn:install]这样的权限访问控制配置的话，是不会跳转到这里的。
      *
-     * @return
+     * @return 403 page
      */
     @RequestMapping("/page/403") public Json page403() {
         throw new UnauthorizedException();
@@ -49,7 +49,7 @@ import java.util.UUID;
     /**
      * 登录成功跳转到这里，直接返回json。但是实际情况是在login方法中登录成功后返回json了。
      *
-     * @return
+     * @return index page
      */
     @RequestMapping("/page/index") public Json pageIndex() {
         return new Json("index", true, 1, "index page", null);
@@ -59,8 +59,8 @@ import java.util.UUID;
      * 登录接口，由于UserService中是模拟返回用户信息的，
      * 所以用户名随意，密码123456
      *
-     * @param body
-     * @return
+     * @param body username&password
+     * @return user object
      */
     @PostMapping("/login") public Json login(@RequestBody String body) {
 
@@ -123,7 +123,7 @@ import java.util.UUID;
         Subject subject = SecurityUtils.getSubject();
 
         Serializable sessionId = subject.getSession().getId();
-        log.info("{}, sessionId: {}", oper, sessionId);
+        log.debug("{}, sessionId: {}", oper, sessionId);
 
         //从session取出用户信息
         SysUser user = (SysUser)subject.getPrincipal();

@@ -21,4 +21,4 @@ spring:
 logging:
   path: ./logs
   level:
-    com.abc.dao: debug
+    com.abc.chenzeshenga.logistics.mapper: debug
