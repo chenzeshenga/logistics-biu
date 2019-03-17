@@ -40,7 +40,7 @@ import java.util.Map;
     private String toContact;
     @NotEmpty(message = "收件人地址必填") private String toDetailAddress;
     @NotEmpty(message = "收件人姓名必填") private String toName;
-    private String toZipCode;
+    @NotEmpty(message = "收件人邮编必填") private String toZipCode;
     private String trackNo;
     private String fromKenId;
     private String fromCityId;

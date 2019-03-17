@@ -65,7 +65,7 @@ import java.util.UUID;
     @PostMapping("/login") public Json login(@RequestBody String body) {
 
         String oper = "user login";
-        log.info("{}, body: {}", oper, body);
+        log.debug("{}, body: {}", oper, body);
 
         JSONObject json = JSON.parseObject(body);
         String uname = json.getString("uname");
@@ -87,7 +87,7 @@ import java.util.UUID;
             if (user == null) {
                 throw new AuthenticationException();
             }
-            log.info("user login: {}, sessionId: {}", user.getUname(), currentUser.getSession().getId());
+            log.debug("user login: {}, sessionId: {}", user.getUname(), currentUser.getSession().getId());
             //返回登录用户的信息给前台，含用户的所有角色和权限
             return Json.succ(oper).data("token", UUID.randomUUID().toString()).data("uid", user.getUid()).data("nick", user.getNick())
                 .data("roles", user.getRoles()).data("perms", user.getPerms());
