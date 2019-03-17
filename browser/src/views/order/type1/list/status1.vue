@@ -258,11 +258,12 @@
                 this.dialogVisible = true;
             },
             handleCarrierChange(value) {
+                console.log(value);
                 this.form.carrierNo = value[0];
             },
             getOrdNo2() {
                 request({
-                    url: "/generate/pk",
+                    url: "/trackno/pk",
                     method: 'get'
                 }).then(res => {
                     this.form.trackNo = res.data.data;

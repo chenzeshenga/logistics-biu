@@ -272,7 +272,7 @@
       },
       getOrdNo2() {
         request({
-          url: "/generate/pk",
+            url: "/trackno/pk",
           method: 'get'
         }).then(res => {
           this.form.trackNo = res.data.data;

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.TrackNoMapper">
+
+    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.TrackNo">
+        <result property="id" column="id"/>
+        <result property="carrier" column="carrier_no"/>
+        <result property="min" column="min_track_code"/>
+        <result property="max" column="max_track_code"/>
+    </resultMap>
+
+    <select id="list" resultMap="result">
+        select *
+        from l_track_code
+    </select>
+
+    <select id="carrierNo" resultMap="result">
+        select *
+        from l_track_code
+        where carrier_no = #{carrierNo}
+    </select>
+
+    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.TrackNo">
+        insert into l_track_code(carrier_no, min_track_code, max_track_code)
+        VALUES (#{carrier}, #{min}, #{max})
+    </insert>
+
+    <delete id="delete">
+        delete
+        from l_track_code
+        where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.TrackNo">
+        update l_track_code
+        set carrier_no=#{carrier},
+            min_track_code=#{min},
+            max_track_code=#{max}
+        where id = #{id}
+    </update>
+
+    <select id="generate" resultMap="result">
+        select *
+        from l_track_code
+        limit 1;
+    </select>
+
+    <select id="generate2" resultMap="result">
+        select *
+        from l_track_code
+        where carrier_no = #{carrier}
+        limit 1;
+    </select>
+
+</mapper>

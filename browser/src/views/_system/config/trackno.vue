@@ -1,187 +1,64 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <el-form ref="form" :model="form" label-width="120px">
-                <el-form-item label="订单基本信息">
-                    <el-col :span="12">
-                        <el-form-item label="订单号">
-                            <el-input v-model="form.orderNo" v-bind:disabled="onUpdate" placeholder="请输入或点击按钮获取订单号">
-                                <el-button slot="append" v-bind:disabled="onUpdate" @click="getOrdNo">获取单号</el-button>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="订单类型">
-                            <el-select v-model="form.category" placeholder="请选择订单类型">
-                                <el-option label="海外仓代发订单" value="1"/>
-                                <el-option label="特色小包" value="2"/>
-                                <el-option label="单票单清" value="3"/>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="运送渠道">
-                            <el-cascader :options="channels" v-model="selectedChannels" @change="handleChange"></el-cascader>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item>
-                    <el-col :span="12" v-if="form.category !== '1'">
-                        <el-form-item label="中国追踪单号">
-                            <el-input v-model="form.chinaNo" placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="日本追踪单号">
-                            <el-input v-model="form.trackNo" placeholder="您可点击按钮预先获取单号，后台操作员将根据实际情况进行调整">
-                                <el-button slot="append" @click="getOrdNo2">获取单号</el-button>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item style="color: #606266;font-size: 14px;">发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)] 发件人 [东岳物流]</el-form-item>
-                <el-form-item label="发件人信息">
-                    <el-col :span="8">
-                        <el-form-item label="发件人姓名">
-                            <el-input v-model="form.fromName" placeholder="发件人姓名"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="发件人联系方式">
-                            <el-input v-model="form.fromContact" placeholder="发件人联系方式"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="发件人邮编">
-                            <el-input v-model="form.fromZipCode" placeholder="发件人邮编"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="道/府/县-城市-乡">
-                            <el-cascader :span="12"
-                                         :options="address"
-                                         v-model="form.selectedAddress"
-                                         @change="handleAddressChange"
-                                         style="width: 80%"
-                            >
-                            </el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="发件人详细地址">
-                            <el-input v-model="form.fromDetailAddress" placeholder="发件人详细地址"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="收件人信息">
-                    <el-col :span="8">
-                        <el-form-item label="收件人姓名">
-                            <el-input v-model="form.toName" placeholder="收件人姓名"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="收件人联系方式">
-                            <el-input v-model="form.toContact" placeholder="收件人联系方式"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="收件人邮编">
-                            <el-input v-model="form.toZipCode" placeholder="收件人邮编"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="道/府/县-城市-乡">
-                            <el-cascader :span="12"
-                                         :options="address"
-                                         v-model="form.selectedtoAddress"
-                                         @change="handleAddressChange2"
-                                         style="width: 80%"
-                            >
-                            </el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="收件人详细地址">
-                            <el-input v-model="form.toDetailAddress" placeholder="收件人详细地址"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="是否代收">
-                    <el-switch
-                        v-model="form.collect"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                    </el-switch>
-                </el-form-item>
-                <el-form-item label="订单内容">
-                    <el-col :span="5">
-                        <el-form-item label="sku">
-                            <el-cascader :options="myProducts"
-                                         v-model="selectedProduct"
-                                         @change="handleProductChange"
-                                         filterable>
-                            </el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="名称">
-                            <el-input disabled v-model="content.name">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="商品价值">
-                            <el-input disabled v-model="content.price">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="商品数量">
-                            <el-input-number v-model="content.num" :min="1"></el-input-number>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="2" style="margin-left: 2%">
-                        <el-button type="primary" round @click="add2Cart">添加</el-button>
-                    </el-col>
-                </el-form-item>
-                <el-table
-                    :data="form.contentList"
-                    stripe
-                    style="width: 100%">
-                    <el-table-column
-                        prop="sku"
-                        label="sku/东岳Sku"
-                        width="200">
-                    </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="商品名称"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                        prop="price"
-                        label="商品价格"
-                        width="180">
-                    </el-table-column>
-                    <el-table-column
-                        prop="num"
-                        label="商品数量"
-                        width="180">
-                    </el-table-column>
-                    <el-table-column label="操作">
+            <el-col :offset="2">
+                <el-form :model="form">
+                    <el-form-item label="承运人">
+                        <el-cascader :options="carrier" v-model="form.selectedCarrier" @change="handleCarrierChange" filterable></el-cascader>
+                        <el-button style="margin-left: 700px" size="small" type="primary" @click="newTrackno">新增追踪单号</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col>
+                <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
+                          highlight-current-row>
+                    <el-table-column prop="id" label="id"></el-table-column>
+                    <el-table-column prop="carrier" label="承运人编码"></el-table-column>
+                    <el-table-column prop="carrierDesc" label="承运人"></el-table-column>
+                    <el-table-column prop="min" label="当前最小订单号"></el-table-column>
+                    <el-table-column prop="max" label="当前最大订单号"></el-table-column>
+                    <el-table-column label="操作" width="300" fixed="right">
                         <template slot-scope="scope">
-                            <el-button
-                                size="mini"
-                                type="danger"
-                                @click="handleDelete(scope.$index, scope.row)">删除
-                            </el-button>
+                            <el-tooltip content="编辑" placement="top">
+                                <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle
+                                           plain></el-button>
+                            </el-tooltip>
+                            <el-tooltip content="删除" placement="top">
+                                <el-button @click="dropRecord(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-error" circle
+                                           plain></el-button>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
-            </el-form>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="tablePage.current"
+                               :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size" layout="total, sizes, prev, pager, next, jumper"
+                               :total="tablePage.total">
+                </el-pagination>
+            </el-col>
         </div>
-        <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 90%">确认</el-button>
-        <el-button @click="updateOrd" v-if="onUpdate" type="primary" style="margin-left: 90%">更新</el-button>
+        <el-dialog title="新增追踪单号" :visible.sync="dialogVisible" width="30%">
+            <el-form :model="form">
+                <el-form-item label="承运人">
+                    <el-select v-model="form.carrierNo2" placeholder="承运人">
+                        <el-option label="佐川急便" value="carrier_2"/>
+                        <el-option label="黑猫运输" value="carrier_3"/>
+                        <el-option label="西浓运输" value="carrier_4"/>
+                        <el-option label="卡车派送" value="carrier_5"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="最小追踪单号">
+                    <el-input-number v-model="form.min"></el-input-number>
+                </el-form-item>
+                <el-form-item label="最大追踪单号">
+                    <el-input-number v-model="form.max"></el-input-number>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="newTracknoSubmit" v-if="onCreate">确定</el-button>
+                <el-button type="primary" @click="updateOnSubmit" v-if="onUpdate">更新</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -193,173 +70,137 @@
         name: 'trackno',
         data() {
             return {
-                onUpdate: false,
                 onCreate: true,
+                onUpdate: false,
+                tablePage: {
+                    current: null,
+                    pages: null,
+                    size: null,
+                    total: null
+                },
+                tableData: [],
+                tableLoading: false,
+                carrier: [],
                 form: {
-                    orderNo: '',
-                    category: '',
-                    channel: '',
-                    chinaNo: '',
-                    trackNo: '',
-                    fromName: '',
-                    fromContact: '',
-                    fromZipCode: '',
-                    fromDetailAddress: '',
-                    toName: '',
-                    toContact: '',
-                    toZipCode: '',
-                    toDetailAddress: '',
-                    address: {},
-                    toAddress: {},
-                    collect: false,
-                    contentList: [],
-                    selectedAddress: [],
-                    selectedtoAddress: []
+                    selectedCarrier: null,
+                    min: null,
+                    max: null,
+                    selectedNewCarrier: [],
                 },
-                channels: [],
-                selectedChannels: [],
-                address: [],
-                content: {
-                    sku: '',
-                    name: '',
-                    price: '',
-                    num: 0
-                },
-                myProducts: [],
-                selectedProduct: [],
-                productMap: {},
-                status: "",
-                defaultFormData: {}
+                dialogVisible: false
             }
         },
         created() {
-            this.getAddress();
-            this.getMyProducts();
-            this.defaultFormData = JSON.parse(JSON.stringify(this.form));
+            this.initTrackno();
+            this.initTableData();
         },
         methods: {
-            initPage() {
-                let ordno = this.$route.query.ordno;
-                this.status = this.$route.query.status;
-                if (ordno != null && ordno.length > 0) {
-                    request({
-                        url: "ord/get/" + ordno,
-                        method: "get"
-                    }).then(res => {
-                        this.form = res.data.data;
-                        this.selectedChannels.push(res.data.data.channel);
-                        this.onUpdate = true;
-                        this.onCreate = false;
-                    })
-                }
-            },
-            onSubmit() {
-                this.$message('submit!')
-            },
-            onCancel() {
-                this.$message({
-                    message: 'cancel!',
-                    type: 'warning'
-                })
-            },
-            getOrdNo() {
+            initTrackno() {
                 request({
-                    url: "/generate/pk",
-                    method: 'get'
+                    url: "ord/carrier/distinct",
+                    method: "get"
                 }).then(res => {
-                    this.form.orderNo = res.data.data;
-                })
+                    this.carrier = res.data.data;
+                });
             },
-            getOrdNo2() {
+            handleCarrierChange(value) {
+                console.log(value);
+                this.form.carrierNo = value[0];
+                this.tableLoading = true;
                 request({
-                    url: "/generate/pk",
-                    method: 'get'
-                }).then(res => {
-                    this.form.trackNo = res.data.data;
-                })
-            },
-            listChannel() {
-                request({
-                    url: "/channel/list",
-                    method: 'get'
-                }).then(res => {
-                    this.channels = res.data.data;
-                    this.initPage();
-                })
-            },
-            getAddress() {
-                request({
-                    url: "/address/getKen",
-                    method: 'get'
-                }).then(res => {
-                    this.address = res.data.data;
-                    this.listChannel();
-                })
-            },
-            getMyProducts() {
-                request({
-                    url: "/product/list",
-                    method: 'get'
-                }).then(res => {
-                    this.myProducts = res.data.data;
-                    for (let index in this.myProducts) {
-                        let subProduct = this.myProducts[index];
-                        this.productMap[subProduct["value"].split("/")[0]] = subProduct;
+                    url: "trackno/list/" + this.form.carrierNo,
+                    method: "post",
+                    data: {
+                        current: this.tablePage.current,
+                        size: this.tablePage.size
                     }
+                }).then(res => {
+                    this.tableData = res.data.page.records;
+                    this.tableLoading = false;
+                });
+            },
+            initTableData() {
+                request({
+                    url: "trackno/list",
+                    method: "post",
+                    data: {
+                        current: this.tablePage.current,
+                        size: this.tablePage.size
+                    }
+                }).then(res => {
+                    this.tableData = res.data.page.records;
+                    this.tableLoading = false;
+                });
+            },
+            handleSizeChange(val) {
+                this.tablePage.size = val;
+                this.initTableData();
+            },
+            handleCurrentChange(val) {
+                this.tablePage.current = val;
+                this.initTableData();
+            },
+            newTrackno() {
+                this.dialogVisible = true;
+            },
+            newTracknoSubmit() {
+                request({
+                    url: "/trackno/add",
+                    method: "post",
+                    data: {
+                        carrier: this.form.carrierNo2,
+                        min: this.form.min,
+                        max: this.form.max
+                    }
+                }).then(res => {
+                    console.log(res);
+                    this.$message.success("追踪单号新建成功");
+                    this.dialogVisible = false;
+                    this.initTableData();
                 })
             },
-            handleChange(value) {
-                this.form.channel = value[0];
+            handleDialogCarrierChange(value) {
+                this.form.carrierNo2 = value[0];
             },
-            handleAddressChange(value) {
-                this.form.address.ken = value[0];
-                this.form.address.city = value[1];
-                this.form.address.town = value[2];
+            dropRecord(index, row) {
+                this.$confirm('您确定要永久删除该追踪单号？', '提示', confirm).then(() => {
+                    request({
+                        url: "/trackno/del/" + row.id,
+                        method: "get",
+                    }).then(res => {
+                        console.log(res);
+                        this.$message.success("追踪单号删除成功");
+                        this.initTableData();
+                    })
+                }).catch(() => {
+                    this.$message.info("取消删除");
+                })
             },
-            handleAddressChange2(value) {
-                this.form.toAddress.ken = value[0];
-                this.form.toAddress.city = value[1];
-                this.form.toAddress.town = value[2];
+            handleUpdate(index, row) {
+                this.onUpdate = true;
+                this.onCreate = false;
+                this.dialogVisible = true;
+                this.form.selectedNewCarrier = "carrier_" + row.carrier;
+                this.form.min = row.min;
+                this.form.max = row.max;
+                this.form.id = row.id;
             },
-            handleProductChange(value) {
-                let str = value[0].split("/");
-                let sku = str[0];
-                let skuLabel = sku + "/" + str[1];
-                let product = this.productMap[sku];
-                this.content.sku = skuLabel;
-                this.content.name = product.name;
-                this.content.price = product.price;
-            },
-            add2Cart() {
-                let tmpContent = {};
-                tmpContent = JSON.parse(JSON.stringify(this.content));
-                this.form.contentList.push(tmpContent);
-            },
-            handleDelete(index, row) {
-                this.form.contentList.splice(index, 1);
-            },
-            createOrd() {
+            updateOnSubmit() {
                 request({
-                    url: "/ord/add",
+                    url: "/trackno/update",
                     method: "post",
-                    data: this.form
+                    data: {
+                        id: this.form.id,
+                        carrier: this.form.carrierNo2,
+                        min: this.form.min,
+                        max: this.form.max
+                    }
                 }).then(res => {
-                    this.$message.success(res.data.data + '个订单已保存');
-                    this.form = this.defaultFormData;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            updateOrd() {
-                request({
-                    url: "/ord/update",
-                    method: "post",
-                    data: this.form
-                }).then(res => {
-                    this.$message.success('当前订单已更新');
-                    console.log('/order-list/mgt/type' + this.form.category + '/status' + this.status);
-                    this.$router.push({path: '/order-list/mgt/type' + this.form.category + '/status' + this.status})
-                });
+                    console.log(res);
+                    this.$message.success("追踪单号更新成功");
+                    this.dialogVisible = false;
+                    this.initTableData();
+                })
             }
         }
     }

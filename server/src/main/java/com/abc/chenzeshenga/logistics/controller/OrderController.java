@@ -47,16 +47,16 @@ import java.util.*;
 
     private ChannelCache channelCache;
 
-    private CommonController commonController;
+    private TrackNoController trackNoController;
 
     @Autowired
     public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache,
-        CommonController commonController) {
+        TrackNoController trackNoController) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
-        this.commonController = commonController;
+        this.trackNoController = trackNoController;
     }
 
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
@@ -132,7 +132,7 @@ import java.util.*;
             manualOrder.setCarrierNo(carrierNo);
             manualOrder.setUpdator(cname);
             manualOrder.setUpdateOn(curr);
-            manualOrder.setTrackNo((String)commonController.getOrderNo().get("data"));
+            manualOrder.setTrackNo((String)trackNoController.generate().get("data"));
             orderMapper.fillInTrackNo(manualOrder);
         });
         return Json.succ();
