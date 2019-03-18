@@ -147,7 +147,7 @@ import java.util.concurrent.atomic.AtomicReference;
             manualOrder.setCarrierNo(carrierNo);
             manualOrder.setUpdator(cname);
             manualOrder.setUpdateOn(curr);
-            manualOrder.setTrackNo((String)trackNoController.generate().get("data"));
+            manualOrder.setTrackNo(String.valueOf(trackNoController.generate().get("data")));
             orderMapper.fillInTrackNo(manualOrder);
         });
         return Json.succ();
@@ -342,6 +342,5 @@ import java.util.concurrent.atomic.AtomicReference;
         result.put("totalWeight", totalWeight.get());
         return Json.succ().data(result);
     }
-
 
 }

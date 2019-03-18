@@ -110,7 +110,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type1-status1',
+        name: 'order-list-mgt-type2-status1',
         data() {
             return {
                 tablePage: {
@@ -169,7 +169,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/1",
+                    url: "ord/list/2/1",
                     method: "post",
                     data: {
                         current: this.tablePage.current,
@@ -194,7 +194,7 @@
             statusUpdate(index, row) {
                 this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
                     request({
-                        url: "ord/update/1/" + row.orderNo + "/2",
+                        url: "ord/update/2/" + row.orderNo + "/2",
                         method: "get"
                     }).then(res => {
                         console.log(res);
@@ -208,7 +208,7 @@
             abandon(index, row) {
                 this.$confirm('您确定要废弃该订单？', '提示', confirm).then(() => {
                     request({
-                        url: "ord/update/1/" + row.orderNo + "/5",
+                        url: "ord/update/2/" + row.orderNo + "/5",
                         method: "get"
                     }).then(res => {
                         console.log(res);
@@ -226,7 +226,7 @@
                 }
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/1/" + this.daterange[0] + "/" + this.daterange[1],
+                    url: "ord/list/2/1/" + this.daterange[0] + "/" + this.daterange[1],
                     method: "post",
                     data: {
                         current: this.tablePage.current,
@@ -301,7 +301,7 @@
             print(index, row) {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.href = "http://47.105.107.242:8888/api/v1/pdf/ord/" + row.orderNo;
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();

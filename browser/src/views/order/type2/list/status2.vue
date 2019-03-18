@@ -100,7 +100,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type1-status1',
+        name: 'order-list-mgt-type2-status1',
         data() {
             return {
                 tablePage: {
@@ -215,7 +215,7 @@
                         }
                     }).then(res => {
                         request({
-                            url: "ord/update/1/" + this.form.orderNo + "/3",
+                            url: "ord/update/2/" + this.form.orderNo + "/3",
                             method: "get"
                         }).then(res => {
                             this.fetchData();

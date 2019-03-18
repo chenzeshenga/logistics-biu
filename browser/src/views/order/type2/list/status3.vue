@@ -63,7 +63,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type1-status1',
+        name: 'order-list-mgt-type2-status1',
         data() {
             return {
                 tablePage: {
@@ -111,7 +111,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/3",
+                    url: "ord/list/2/3",
                     method: "post",
                     data: {
                         current: this.tablePage.current,
@@ -151,7 +151,7 @@
                     console.log(row);
                     console.log(index);
                     request({
-                        url: "ord/update/1/" + row.orderNo + "/7",
+                        url: "ord/update/2/" + row.orderNo + "/7",
                         method: "get"
                     }).then(res => {
                         this.fetchData();
@@ -169,7 +169,7 @@
                 }
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/3/" + this.daterange[0] + "/" + this.daterange[1],
+                    url: "ord/list/2/3/" + this.daterange[0] + "/" + this.daterange[1],
                     method: "post",
                     data: {
                         current: this.tablePage.current,

@@ -133,7 +133,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type1-status1',
+        name: 'order-list-mgt-type2-status1',
         data() {
             return {
                 tablePage: {
@@ -154,7 +154,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/7",
+                    url: "ord/list/2/9",
                     method: "post",
                     data: {
                         current: this.tablePage.current,
