@@ -119,6 +119,14 @@
         where ord_no=#{orderNo}
     </update>
 
+    <update id="updateVolumeAndWeight" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        update l_manual_order
+        set total_volume=#{totalVolume},
+            total_weight=#{totalWeight},
+            ord_fee=#{ordFee}
+        where ord_no = #{orderNo}
+    </update>
+
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
@@ -232,5 +240,12 @@
             status=4
         where ord_no = #{orderNo}
     </update>
+
+    <select id="getProduct" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select sku, dy_sku as dySku, weight, length, width, height
+        from l_productions
+        where sku = #{sku}
+    </select>
+
 
 </mapper>

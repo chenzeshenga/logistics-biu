@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+import com.abc.chenzeshenga.logistics.model.Product;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,6 +20,8 @@ import java.util.List;
     int add(ManualOrder manualOrder);
 
     int update(ManualOrder manualOrder);
+
+    int updateVolumeAndWeight(ManualOrder manualOrder);
 
     int insertContent(List<ManualOrderContent> manualOrderContents);
 
@@ -40,5 +43,7 @@ import java.util.List;
     int fillInTrackNo(ManualOrder manualOrder);
 
     int abnormal(ManualOrder manualOrder);
+
+    Product getProduct(String sku);
 
 }

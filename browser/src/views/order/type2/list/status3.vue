@@ -1,24 +1,21 @@
 <template>
     <div class="login-container">
-        <el-col :offset="8" :span="16" style="margin-top: 10px;margin-bottom: 10px" class="block">
-            <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd"
-                            style="width: 400px">
+        <el-col :offset="8" :span="22" style="margin-top: 10px;margin-bottom: 10px" class="block">
+            <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
+                            end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
             </el-date-picker>
             <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
         </el-col>
-        <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
-                  border fit highlight-current-row>
+        <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
+                  stripe border fit highlight-current-row>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
                     <el-col :span="12">
-                        <el-table :data="tableData.row.contentList" stripe border :row-class-name="tableRowClassName">
+                        <el-table :data="tableData.row.contentList" stripe border>
                             <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
-                            <el-table-column prop="name" label="商品名称" width="250"></el-table-column>
+                            <el-table-column prop="name" label="商品名称"></el-table-column>
                             <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
                             <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
-                            <el-table-column prop="picked" label="已拣货数量" width="180"></el-table-column>
                         </el-table>
                     </el-col>
                 </template>
@@ -42,17 +39,9 @@
             <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
             <el-table-column label="操作" width="250" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip content="提交发货" placement="top">
-                        <el-button @click="statusUpdate(scope.$index,scope.row)" size="small" type="info"
-                                   icon="el-icon-check" circle plain></el-button>
-                    </el-tooltip>
-                    <el-tooltip content="编辑" placement="top">
-                        <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info"
-                                   icon="el-icon-edit" circle plain></el-button>
-                    </el-tooltip>
-                    <el-tooltip content="删除" placement="top">
-                        <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger"
-                                   icon="el-icon-delete" circle plain></el-button>
+                    <el-tooltip content="归档" placement="top">
+                        <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
+                                   plain></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -66,32 +55,6 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="tablePage.total">
         </el-pagination>
-        <el-dialog title="提交发货" :visible.sync="dialogVisible" width="30%">
-            <el-form :model="form">
-                <el-col>
-                    <el-input v-model="form.orderNo" disabled></el-input>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="当前订单总体积(cm^3)">
-                        <el-input-number v-model="form.totalVolume"></el-input-number>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="当前订单总重量(kg)">
-                        <el-input-number v-model="form.totalWeight"></el-input-number>
-                    </el-form-item>
-                </el-col>
-                <el-col>
-                    <el-form-item label="当前订单运费(JPY)">
-                        <el-input-number v-model="form.ordFee"></el-input-number>
-                    </el-form-item>
-                </el-col>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="updateVolumeAndWeight">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -139,13 +102,6 @@
                         }
                     }]
                 },
-                dialogVisible: false,
-                form: {
-                    ordno: "",
-                    totalVolume: 0,
-                    totalWeight: 0,
-                    ordFee: 0
-                }
             }
         },
         created() {
@@ -155,7 +111,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/2",
+                    url: "ord/list/1/3",
                     method: "post",
                     data: {
                         current: this.tablePage.current,
@@ -175,7 +131,7 @@
                 this.fetchData();
             },
             handleUpdate(index, row) {
-                this.$router.push({path: '/new-order/index?ordno=' + row.orderNo + "&status=2"})
+                this.$router.push({path: '/new-order/index?ordno=' + row.orderNo})
             },
             handleDelete(index, row) {
                 this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
@@ -191,57 +147,40 @@
                 });
             },
             statusUpdate(index, row) {
-                request({
-                    url: "ord//getVolumeAndWeight/" + row.orderNo,
-                    method: "get"
-                }).then(res => {
-                    this.form.totalVolume = res.data.data.totalVolume;
-                    this.form.totalWeight = res.data.data.totalWeight;
-                });
-                this.form.orderNo = row.orderNo;
-                this.dialogVisible = true;
-            },
-            tableRowClassName({row, rowIndex}) {
-                if (Number(row.picked) === Number(row.num)) {
-                    row.satisfied = true;
-                    return "success-row";
-                } else {
-                    row.satisfied = false;
-                    return "danger-row";
-                }
-            },
-            updateVolumeAndWeight() {
-                this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
+                this.$confirm('您确定要归档该订单？', '提示', confirm).then(() => {
+                    console.log(row);
+                    console.log(index);
                     request({
-                        url: "ord/update/" + this.form.orderNo,
-                        method: "post",
-                        data: {
-                            "totalVolume": this.form.totalVolume,
-                            "totalWeight": this.form.totalWeight,
-                            "ordFee": this.form.ordFee,
-                        }
+                        url: "ord/update/1/" + row.orderNo + "/7",
+                        method: "get"
                     }).then(res => {
-                        request({
-                            url: "ord/update/1/" + this.form.orderNo + "/3",
-                            method: "get"
-                        }).then(res => {
-                            this.fetchData();
-                            this.$message.success("提交成功");
-                        });
-                    });
-                });
+                        this.fetchData();
+                        this.$message.success("归档成功");
+                    })
+                }).catch(() => {
+                    this.$message.info("已取消提交")
+                })
+            },
+            searchOrd() {
+                console.log(this.daterange);
+                if (this.daterange == null || this.daterange[0] === 0 || this.daterange[1] === 0) {
+                    this.$message.warning("请选择日期");
+                    return;
+                }
+                this.tableLoading = true;
+                request({
+                    url: "ord/list/1/3/" + this.daterange[0] + "/" + this.daterange[1],
+                    method: "post",
+                    data: {
+                        current: this.tablePage.current,
+                        size: this.tablePage.size
+                    }
+                }).then(res => {
+                    this.tableData = res.data.page.records;
+                    this.tableLoading = false;
+                })
             }
         }
     }
 
 </script>
-
-<style>
-    .el-table .success-row {
-        background: rgba(103, 194, 58, .1);
-    }
-
-    .el-table .danger-row {
-        background: rgb(253, 226, 226);
-    }
-</style>

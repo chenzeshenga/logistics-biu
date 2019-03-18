@@ -155,7 +155,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/1/2",
+                    url: "ord/list/2/2",
                     method: "post",
                     data: {
                         current: this.tablePage.current,
@@ -191,13 +191,6 @@
                 });
             },
             statusUpdate(index, row) {
-                request({
-                    url: "ord//getVolumeAndWeight/" + row.orderNo,
-                    method: "get"
-                }).then(res => {
-                    this.form.totalVolume = res.data.data.totalVolume;
-                    this.form.totalWeight = res.data.data.totalWeight;
-                });
                 this.form.orderNo = row.orderNo;
                 this.dialogVisible = true;
             },

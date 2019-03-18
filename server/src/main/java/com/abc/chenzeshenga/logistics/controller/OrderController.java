@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author chenzeshenga
@@ -108,6 +109,20 @@ import java.util.*;
             orderMapper.insertContent(manualOrderContents);
         }
         return Json.succ().data(result);
+    }
+
+    @PostMapping @RequestMapping("/update/{ordno}") public Json update(@RequestBody Map<String, String> data, @PathVariable String ordno) {
+        ManualOrder manualOrder = new ManualOrder();
+        manualOrder.setOrderNo(ordno);
+        manualOrder.setTotalVolume(data.get("totalVolume"));
+        manualOrder.setTotalWeight(data.get("totalWeight"));
+        manualOrder.setOrdFee(data.get("ordFee"));
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        orderMapper.updateVolumeAndWeight(manualOrder);
+        return Json.succ();
     }
 
     @PostMapping @RequestMapping("/trackno") public Json fillInTrackNo(@RequestBody ManualOrder manualOrder) {
@@ -310,5 +325,23 @@ import java.util.*;
         orderMapper.abnormal(manualOrder);
         return Json.succ();
     }
+
+    @GetMapping @RequestMapping("/getVolumeAndWeight/{ordno}") public Json getVolumeAndWeight(@PathVariable String ordno) {
+        List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
+        Map<String, Double> result = new HashMap<>(2);
+        AtomicReference<Double> totalVolume = new AtomicReference<>(0.0);
+        AtomicReference<Double> totalWeight = new AtomicReference<>(0.0);
+        manualOrderContentList.forEach(manualOrderContent -> {
+            String sku = manualOrderContent.getSku();
+            Product product = orderMapper.getProduct(sku.split("/")[0]);
+            totalVolume
+                .updateAndGet(v -> v + product.getLength() * product.getHeight() * product.getWidth() * Double.valueOf(manualOrderContent.getNum()));
+            totalWeight.updateAndGet(v -> v + product.getWeight() * Double.valueOf(manualOrderContent.getNum()));
+        });
+        result.put("totalVolume", totalVolume.get());
+        result.put("totalWeight", totalWeight.get());
+        return Json.succ().data(result);
+    }
+
 
 }
