@@ -1,12 +1,15 @@
 <template>
     <div class="login-container">
-        <el-col :offset="4" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
-            <el-button type="primary" @click="applyTrackNo()" style="margin-right: 100px">批量申请单号</el-button>
+        <el-col :offset="1" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
+            <el-button type="primary" @click="applyTrackNo()" style="margin-right: 10px" v-if="multiSelection">批量申请单号</el-button>
+            <el-button type="primary" @click="route2NewOrd()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
             <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
             </el-date-picker>
             <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
-            <el-button type="primary" @click="route2NewOrd()" style="margin-left: 400px">新建订单</el-button>
+            <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
+            <el-button type="primary" @click="route2NewOrd()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
+            <el-button type="primary" @click="route2NewOrd()" icon="el-icon-tickets">导出csv</el-button>
         </el-col>
         <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                   highlight-current-row @selection-change="handleSelectionChange">
@@ -158,7 +161,8 @@
                     trackNo: ""
                 },
                 ord4TrackNo: [],
-                dialogVisibleList: false
+                dialogVisibleList: false,
+                multiSelection: false
             }
         },
         created() {
@@ -258,7 +262,6 @@
                 this.dialogVisible = true;
             },
             handleCarrierChange(value) {
-                console.log(value);
                 this.form.carrierNo = value[0];
             },
             getOrdNo2() {
@@ -267,6 +270,7 @@
                     method: 'get'
                 }).then(res => {
                     this.form.trackNo = res.data.data;
+                    this.$message.success("获取订单号成功");
                 })
             },
             fillInTrackNo() {
@@ -307,11 +311,11 @@
                 link.click();
             },
             handleSelectionChange(val) {
+                this.multiSelection = (val.length > 0);
                 this.ord4TrackNo = [];
                 val.forEach(ord => {
                     this.ord4TrackNo.push(ord.orderNo);
                 });
-                console.log(this.ord4TrackNo);
             },
             applyTrackNo() {
                 if (this.ord4TrackNo.length <= 0) {
@@ -341,3 +345,7 @@
     }
 
 </script>
+
+<!--<style>-->
+<!--@import "iconfont.css";-->
+<!--</style>-->
