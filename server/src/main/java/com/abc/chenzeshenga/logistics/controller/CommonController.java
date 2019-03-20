@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
+import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.vo.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
     @GetMapping("/generate/pk") public Json getOrderNo() {
         String pk = CommonUtil.generate();
         return Json.succ().data(pk);
+    }
+
+    @GetMapping("/generate/sku") public Json getDySku() {
+        String sku = SkuUtil.generateDySku();
+        return Json.succ().data(sku);
     }
 
     @GetMapping("/ord/excel/{ordno}") public void getOrdExcel(@PathVariable String ordno) {

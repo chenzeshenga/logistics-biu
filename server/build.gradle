@@ -64,6 +64,7 @@ dependencies {
     compile 'net.sf.barcode4j:barcode4j:2.1'
     compile 'com.alibaba:easyexcel:1.1.1'
     compile 'net.sourceforge.javacsv:javacsv:2.0'
+    compile 'commons-validator:commons-validator:1.6'
 
     compile 'com.itextpdf:kernel:7.1.4'
     compile 'com.itextpdf:io:7.1.4'
