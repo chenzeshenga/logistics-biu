@@ -74,9 +74,12 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="产品图片">
-                    <el-upload action="http://localhost:8888/api/v1/product/img" with-credentials multiple list-type="picture-card"
-                               :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :data="extra" :on-change="formCheck">
-                        <i class="el-icon-plus"></i>
+                    <el-upload action="http://localhost:8888/api/v1/product/img" with-credentials multiple list-type="picture"
+                               :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :data="form"
+                               ref="upload" :on-error="handleError" :limit="3">
+                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="">
@@ -105,9 +108,6 @@
                 onCreate: true,
                 dialogImageUrl: '',
                 dialogVisible: false,
-                extra: {
-                    tmp: 'xxx'
-                },
                 form: {
                     sku: '',
                     productName: '',
@@ -135,6 +135,7 @@
                         {required: true, message: "请输入产品价格", trigger: 'change'}
                     ]
                 },
+                fileList: []
             };
         },
         created() {
@@ -167,7 +168,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -186,6 +187,25 @@
                         return false;
                     }
                 });
+            },
+            beforeAvatarUpload(file) {
+                const isFormReady = this.formCheck();
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M && isFormReady;
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleError(err, file, fileList) {
+                this.$message.error(JSON.parse(err.message)["message"]);
             }
         }
     }

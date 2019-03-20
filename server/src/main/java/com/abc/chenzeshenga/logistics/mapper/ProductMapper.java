@@ -14,6 +14,6 @@ import java.util.List;
 
     int addImg(Product product);
 
-    Product listWithImg();
+    Product whetherImgs(String sku);
 
 }

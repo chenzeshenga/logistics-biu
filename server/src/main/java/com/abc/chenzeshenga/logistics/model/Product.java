@@ -52,6 +52,8 @@ import java.util.Date;
 
     private String dySku;
 
-    private byte[] img;
+    private byte[] img1;
+    private byte[] img2;
+    private byte[] img3;
 
 }

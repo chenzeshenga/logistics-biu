@@ -20,14 +20,17 @@
     </select>
 
     <update id="addImg" parameterType="com.abc.chenzeshenga.logistics.model.Product">
-        insert into l_productions(sku, img)
-        values (#{sku}, #{img});
+        insert into l_productions(sku, img1, img2, img3)
+        values (#{sku}, #{img2}, #{img2}, #{img3})
+        on duplicate key update img1=#{img1},
+                                img2=#{img2},
+                                img3=#{img3}
     </update>
 
-    <select id="listWithImg" resultType="com.abc.chenzeshenga.logistics.model.Product">
-        select sku, img
+    <select id="whetherImgs" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select sku, img1, img2, img3
         from l_productions
-        where sku = 'XXXx';
+        where sku = #{sku}
     </select>
 
 </mapper>
