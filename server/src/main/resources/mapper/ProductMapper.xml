@@ -2,20 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductMapper">
 
-    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Product">
-        <result column="sku" property="sku"/>
-        <result column="img" property="img" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Product">
+        <id column="sku" jdbcType="VARCHAR" property="sku"/>
+        <result column="dy_sku" jdbcType="VARCHAR" property="dySku"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="length" jdbcType="VARCHAR" property="length"/>
+        <result column="width" jdbcType="VARCHAR" property="width"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="weight" jdbcType="VARCHAR" property="weight"/>
+        <result column="createdBy" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="updateBy" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath"/>
+        <result column="alert_num" jdbcType="INTEGER" property="alertNum"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="ava_num" jdbcType="INTEGER" property="avaNum"/>
     </resultMap>
 
-
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select sku, dy_sku as dySku, name, value as price
+        select sku, dy_sku as dySku, product_name, value as price
         from l_productions
         where createdBy = #{username}
     </select>
 
     <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select sku, dy_sku as dySku, name, value as price
+        select sku, dy_sku as dySku, product_name, value as price
         from l_productions
     </select>
 
@@ -32,5 +48,260 @@
         from l_productions
         where sku = #{sku}
     </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sku,
+               dy_sku,
+               product_name,
+               category,
+               color,
+               `size`,
+               price,
+               `length`,
+               width,
+               height,
+               weight,
+               createdBy,
+               updateBy,
+               `location`,
+               img_path,
+               alert_num,
+               create_on,
+               update_on,
+               ava_num
+        from l_productions
+        where sku = #{sku,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from l_productions
+        where sku = #{sku,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        insert into l_productions (sku, dy_sku, product_name,
+                                   category, color, `size`,
+                                   price, `length`, width,
+                                   height, weight, createdBy,
+                                   updateBy, `location`, img_path,
+                                   alert_num, create_on, update_on,
+                                   ava_num, img1, img2,
+                                   img3)
+        values (#{sku,jdbcType=VARCHAR}, #{dySku,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
+                #{category,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR},
+                #{price,jdbcType=VARCHAR}, #{length,jdbcType=VARCHAR}, #{width,jdbcType=VARCHAR},
+                #{height,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, #{createdby,jdbcType=VARCHAR},
+                #{updateby,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR},
+                #{alertNum,jdbcType=INTEGER}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
+                #{avaNum,jdbcType=INTEGER}, #{img1,jdbcType=LONGVARBINARY}, #{img2,jdbcType=LONGVARBINARY},
+                #{img3,jdbcType=LONGVARBINARY})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        insert into l_productions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sku != null">
+                sku,
+            </if>
+            <if test="dySku != null">
+                dy_sku,
+            </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="color != null">
+                color,
+            </if>
+            <if test="size != null">
+                `size`,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="length != null">
+                `length`,
+            </if>
+            <if test="width != null">
+                width,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="createdby != null">
+                createdBy,
+            </if>
+            <if test="updateby != null">
+                updateBy,
+            </if>
+            <if test="location != null">
+                `location`,
+            </if>
+            <if test="imgPath != null">
+                img_path,
+            </if>
+            <if test="alertNum != null">
+                alert_num,
+            </if>
+            <if test="createOn != null">
+                create_on,
+            </if>
+            <if test="updateOn != null">
+                update_on,
+            </if>
+            <if test="avaNum != null">
+                ava_num,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sku != null">
+                #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="dySku != null">
+                #{dySku,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=VARCHAR},
+            </if>
+            <if test="length != null">
+                #{length,jdbcType=VARCHAR},
+            </if>
+            <if test="width != null">
+                #{width,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=VARCHAR},
+            </if>
+            <if test="createdby != null">
+                #{createdby,jdbcType=VARCHAR},
+            </if>
+            <if test="updateby != null">
+                #{updateby,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="imgPath != null">
+                #{imgPath,jdbcType=VARCHAR},
+            </if>
+            <if test="alertNum != null">
+                #{alertNum,jdbcType=INTEGER},
+            </if>
+            <if test="createOn != null">
+                #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="avaNum != null">
+                #{avaNum,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        update l_productions
+        <set>
+            <if test="dySku != null">
+                dy_sku = #{dySku,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                color = #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                `size` = #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=VARCHAR},
+            </if>
+            <if test="length != null">
+                `length` = #{length,jdbcType=VARCHAR},
+            </if>
+            <if test="width != null">
+                width = #{width,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                height = #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                weight = #{weight,jdbcType=VARCHAR},
+            </if>
+            <if test="createdby != null">
+                createdBy = #{createdby,jdbcType=VARCHAR},
+            </if>
+            <if test="updateby != null">
+                updateBy = #{updateby,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                `location` = #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="imgPath != null">
+                img_path = #{imgPath,jdbcType=VARCHAR},
+            </if>
+            <if test="alertNum != null">
+                alert_num = #{alertNum,jdbcType=INTEGER},
+            </if>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                update_on = #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="avaNum != null">
+                ava_num = #{avaNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where sku = #{sku,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        update l_productions
+        set dy_sku       = #{dySku,jdbcType=VARCHAR},
+            product_name = #{productName,jdbcType=VARCHAR},
+            category     = #{category,jdbcType=VARCHAR},
+            color        = #{color,jdbcType=VARCHAR},
+            `size`       = #{size,jdbcType=VARCHAR},
+            price        = #{price,jdbcType=VARCHAR},
+            `length`     = #{length,jdbcType=VARCHAR},
+            width        = #{width,jdbcType=VARCHAR},
+            height       = #{height,jdbcType=VARCHAR},
+            weight       = #{weight,jdbcType=VARCHAR},
+            createdBy    = #{createdby,jdbcType=VARCHAR},
+            updateBy     = #{updateby,jdbcType=VARCHAR},
+            `location`   = #{location,jdbcType=VARCHAR},
+            img_path     = #{imgPath,jdbcType=VARCHAR},
+            alert_num    = #{alertNum,jdbcType=INTEGER},
+            create_on    = #{createOn,jdbcType=TIMESTAMP},
+            update_on    = #{updateOn,jdbcType=TIMESTAMP},
+            ava_num      = #{avaNum,jdbcType=INTEGER}
+        where sku = #{sku,jdbcType=VARCHAR}
+    </update>
 
 </mapper>

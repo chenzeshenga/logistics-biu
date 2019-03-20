@@ -16,4 +16,16 @@ import java.util.List;
 
     Product whetherImgs(String sku);
 
+    int insert(Product product);
+
+    int insertSelective(Product product);
+
+    int updateByPrimaryKeySelective(Product product);
+
+    int updateByPrimaryKey(Product product);
+
+    int deleteByPrimaryKey(Product product);
+
+    Product selectByPrimaryKey(String sku);
+
 }

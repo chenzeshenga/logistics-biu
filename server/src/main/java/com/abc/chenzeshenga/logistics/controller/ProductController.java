@@ -7,10 +7,13 @@ import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +38,18 @@ import java.util.List;
             skuLabel.setLabel(skuLabel.getName() + "(" + skuLabel.getPrice() + ")");
         });
         return Json.succ().data(skuLabelList);
+    }
+
+    @PostMapping(value = "/add") public Json add(@RequestBody @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errMsg = new StringBuilder();
+            for (ObjectError objectError : bindingResult.getAllErrors()) {
+                errMsg.append(objectError.getDefaultMessage()).append(";");
+            }
+            return Json.fail().msg(errMsg.toString());
+        }
+        productMapper.add(product);
+        return Json.succ();
     }
 
     @PostMapping(value = "/img")

@@ -126,13 +126,13 @@
                         {min: 3, max: 20, message: "sku长度在3-20之间", trigger: 'blur'},
                     ],
                     productName: [
-                        {required: true, message: "请输入产品名称", trigger: 'change'}
+                        {required: true, message: "请输入商品名称", trigger: 'change'}
                     ],
                     category: [
-                        {required: true, message: "请选择产品类型", trigger: 'change'}
+                        {required: true, message: "请选择商品类型", trigger: 'change'}
                     ],
                     price: [
-                        {required: true, message: "请输入产品价格", trigger: 'change'}
+                        {required: true, message: "请输入商品价格", trigger: 'change'}
                     ]
                 },
                 fileList: []
