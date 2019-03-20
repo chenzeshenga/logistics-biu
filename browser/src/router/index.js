@@ -104,6 +104,16 @@ export const asyncRouterMap = [
         }]
     },
     {
+        path: '/new-product',
+        component: Layout,
+        children: [{
+            path: 'new-product',
+            name: 'menu1',
+            component: _import('product/new-product'),
+            meta: {perm: 'm:product', title: '新建产品', icon: 'icon'}
+        }]
+    },
+    {
         path: "/order-list/mgt",
         name: 'order-list-mgt',
         component: Layout,

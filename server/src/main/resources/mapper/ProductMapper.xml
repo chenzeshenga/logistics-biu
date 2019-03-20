@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductMapper">
 
+    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Product">
+        <result column="sku" property="sku"/>
+        <result column="img" property="img" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+
+
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
         select sku, dy_sku as dySku, name, value as price
         from l_productions
@@ -12,4 +18,16 @@
         select sku, dy_sku as dySku, name, value as price
         from l_productions
     </select>
+
+    <update id="addImg" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        insert into l_productions(sku, img)
+        values (#{sku}, #{img});
+    </update>
+
+    <select id="listWithImg" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select sku, img
+        from l_productions
+        where sku = 'XXXx';
+    </select>
+
 </mapper>

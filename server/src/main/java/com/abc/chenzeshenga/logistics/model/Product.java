@@ -52,4 +52,6 @@ import java.util.Date;
 
     private String dySku;
 
+    private byte[] img;
+
 }
