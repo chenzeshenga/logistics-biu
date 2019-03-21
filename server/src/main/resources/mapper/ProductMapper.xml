@@ -36,11 +36,13 @@
     </select>
 
     <update id="addImg" parameterType="com.abc.chenzeshenga.logistics.model.Product">
-        insert into l_productions(sku, img1, img2, img3)
-        values (#{sku}, #{img2}, #{img2}, #{img3})
+        insert into l_productions(sku, img1, img2, img3, createdBy, updateBy, create_on, update_on)
+        values (#{sku}, #{img1}, #{img2}, #{img3}, #{createdBy}, #{updateBy}, #{createOn}, #{updateOn})
         on duplicate key update img1=#{img1},
                                 img2=#{img2},
-                                img3=#{img3}
+                                img3=#{img3},
+                                updateBy=#{updateBy},
+                                update_on=#{updateOn}
     </update>
 
     <select id="whetherImgs" resultType="com.abc.chenzeshenga.logistics.model.Product">
@@ -86,16 +88,14 @@
                                    height, weight, createdBy,
                                    updateBy, `location`, img_path,
                                    alert_num, create_on, update_on,
-                                   ava_num, img1, img2,
-                                   img3)
+                                   ava_num)
         values (#{sku,jdbcType=VARCHAR}, #{dySku,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
                 #{category,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR},
                 #{price,jdbcType=VARCHAR}, #{length,jdbcType=VARCHAR}, #{width,jdbcType=VARCHAR},
-                #{height,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, #{createdby,jdbcType=VARCHAR},
-                #{updateby,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR},
+                #{height,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR},
+                #{updateBy,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR},
                 #{alertNum,jdbcType=INTEGER}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
-                #{avaNum,jdbcType=INTEGER}, #{img1,jdbcType=LONGVARBINARY}, #{img2,jdbcType=LONGVARBINARY},
-                #{img3,jdbcType=LONGVARBINARY})
+                #{avaNum,jdbcType=INTEGER})
     </insert>
 
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Product">
@@ -134,10 +134,10 @@
             <if test="weight != null">
                 weight,
             </if>
-            <if test="createdby != null">
+            <if test="createdBy != null">
                 createdBy,
             </if>
-            <if test="updateby != null">
+            <if test="updateBy != null">
                 updateBy,
             </if>
             <if test="location != null">
@@ -193,7 +193,7 @@
             <if test="weight != null">
                 #{weight,jdbcType=VARCHAR},
             </if>
-            <if test="createdby != null">
+            <if test="createdBy != null">
                 #{createdby,jdbcType=VARCHAR},
             </if>
             <if test="updateby != null">
@@ -253,11 +253,11 @@
             <if test="weight != null">
                 weight = #{weight,jdbcType=VARCHAR},
             </if>
-            <if test="createdby != null">
-                createdBy = #{createdby,jdbcType=VARCHAR},
+            <if test="createdBy != null">
+                createdBy = #{createdBy,jdbcType=VARCHAR},
             </if>
-            <if test="updateby != null">
-                updateBy = #{updateby,jdbcType=VARCHAR},
+            <if test="updateBy != null">
+                updateBy = #{updatBy,jdbcType=VARCHAR},
             </if>
             <if test="location != null">
                 `location` = #{location,jdbcType=VARCHAR},
@@ -293,8 +293,8 @@
             width        = #{width,jdbcType=VARCHAR},
             height       = #{height,jdbcType=VARCHAR},
             weight       = #{weight,jdbcType=VARCHAR},
-            createdBy    = #{createdby,jdbcType=VARCHAR},
-            updateBy     = #{updateby,jdbcType=VARCHAR},
+            createdBy    = #{createdBy,jdbcType=VARCHAR},
+            updateBy     = #{updateBy,jdbcType=VARCHAR},
             `location`   = #{location,jdbcType=VARCHAR},
             img_path     = #{imgPath,jdbcType=VARCHAR},
             alert_num    = #{alertNum,jdbcType=INTEGER},

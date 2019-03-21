@@ -168,7 +168,13 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert('submit!');
+                        request({
+                            url: "/product/add",
+                            method: "post",
+                            data: this.form
+                        }).then(res => {
+                            console.log(res);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

@@ -12,19 +12,19 @@ import java.util.Date;
  * @author chenzesheng
  * @version 1.0
  */
-@Data public class Product implements Serializable {
+@Data public class Product implements Serializable, Cloneable {
 
     @NotEmpty(message = "商品sku必填") private String sku;
     private String dySku;
     @NotEmpty(message = "商品名称必填") private String productName;
-    @NotEmpty(message = "商品类型必选") private int category;
+    @NotEmpty(message = "商品类型必选") private String category;
     private String categoryName;
     private String color;
     private String size;
-    private double length;
-    private double width;
-    private double height;
-    private double weight;
+    private String length;
+    private String width;
+    private String height;
+    private String weight;
     @NotEmpty(message = "商品价格必填") private String price;
     private String createdBy;
     private String updateBy;
@@ -33,7 +33,7 @@ import java.util.Date;
     private int alertNum;
     private String location;
     private String imgPath;
-    private int avaNum;
+    private String avaNum;
     private byte[] img1;
     private byte[] img2;
     private byte[] img3;

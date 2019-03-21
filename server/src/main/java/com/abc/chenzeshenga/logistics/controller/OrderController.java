@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.awt.geom.Arc2D;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -334,9 +335,10 @@ import java.util.concurrent.atomic.AtomicReference;
         manualOrderContentList.forEach(manualOrderContent -> {
             String sku = manualOrderContent.getSku();
             Product product = orderMapper.getProduct(sku.split("/")[0]);
-            totalVolume
-                .updateAndGet(v -> v + product.getLength() * product.getHeight() * product.getWidth() * Double.valueOf(manualOrderContent.getNum()));
-            totalWeight.updateAndGet(v -> v + product.getWeight() * Double.valueOf(manualOrderContent.getNum()));
+            totalVolume.updateAndGet(
+                v -> v + Double.valueOf(product.getLength()) * Double.valueOf(product.getHeight()) * Double.valueOf(product.getWidth()) * Double
+                    .valueOf(manualOrderContent.getNum()));
+            totalWeight.updateAndGet(v -> v + Double.valueOf(product.getWeight()) * Double.valueOf(manualOrderContent.getNum()));
         });
         result.put("totalVolume", totalVolume.get());
         result.put("totalWeight", totalWeight.get());

@@ -3,6 +3,8 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
+import com.abc.chenzeshenga.logistics.util.ObjectUtil;
+import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,12 +26,14 @@ import java.util.List;
  */
 @RestController @RequestMapping("/product") @Slf4j public class ProductController {
 
+    private static final String ADMIN = "admin";
+
     @Resource private ProductMapper productMapper;
 
     @GetMapping("/list") public Json listProduct() {
         String uname = UserUtils.getUserName();
         List<SkuLabel> skuLabelList;
-        if ("admin".equals(uname)) {
+        if (ADMIN.equals(uname)) {
             skuLabelList = productMapper.listAll();
         } else {
             skuLabelList = productMapper.list(uname);
@@ -42,14 +47,34 @@ import java.util.List;
 
     @PostMapping(value = "/add") public Json add(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            StringBuilder errMsg = new StringBuilder();
-            for (ObjectError objectError : bindingResult.getAllErrors()) {
-                errMsg.append(objectError.getDefaultMessage()).append(";");
-            }
+            StringBuilder errMsg = getErrMsg(bindingResult);
             return Json.fail().msg(errMsg.toString());
         }
-        productMapper.add(product);
+        String username = UserUtils.getUserName();
+        Date curr = new Date();
+        Product ori = productMapper.selectByPrimaryKey(product.getSku());
+        if (ori == null) {
+            ori = product;
+            ori.setDySku(SkuUtil.generateDySku());
+            ori.setCreatedBy(username);
+            ori.setUpdateBy(username);
+            ori.setCreateOn(curr);
+            ori.setUpdateOn(curr);
+            productMapper.insert(ori);
+        } else {
+            product.setUpdateBy(username);
+            product.setUpdateOn(curr);
+            productMapper.updateByPrimaryKey(product);
+        }
         return Json.succ();
+    }
+
+    private StringBuilder getErrMsg(BindingResult bindingResult) {
+        StringBuilder errMsg = new StringBuilder();
+        for (ObjectError objectError : bindingResult.getAllErrors()) {
+            errMsg.append(objectError.getDefaultMessage()).append(";");
+        }
+        return errMsg;
     }
 
     @PostMapping(value = "/img")
@@ -74,10 +99,5 @@ import java.util.List;
         productMapper.addImg(ori);
         return Json.succ();
     }
-
-    //    @GetMapping @RequestMapping(value = "/listWithImg") public Json listWithImg() {
-    //        Product product = productMapper.listWithImg();
-    //        return Json.succ().data(product);
-    //    }
 
 }
