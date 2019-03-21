@@ -129,4 +129,23 @@ import java.util.List;
         return Json.succ();
     }
 
+    @GetMapping @RequestMapping("/delete/{sku}") public Json delete(@PathVariable String sku) {
+        productMapper.deleteByPrimaryKey(sku);
+        return Json.succ();
+    }
+
+    @GetMapping @RequestMapping("/status/{sku}/{status}") public Json statusUpdate(@PathVariable String sku, @PathVariable String status) {
+        productMapper.statusUpdate(sku, status);
+        return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/update") public Json update(@RequestBody Product product) {
+        String username = UserUtils.getUserName();
+        Date curr = new Date();
+        product.setUpdateBy(username);
+        product.setUpdateOn(curr);
+        productMapper.updateByPrimaryKey(product);
+        return Json.succ();
+    }
+
 }

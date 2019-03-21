@@ -355,4 +355,10 @@
         where sku = #{sku,jdbcType=VARCHAR}
     </update>
 
+    <update id="statusUpdate" parameterType="java.lang.String">
+        update l_productions
+        set status=#{status}
+        where sku = #{sku}
+    </update>
+
 </mapper>

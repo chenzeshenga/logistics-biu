@@ -27,7 +27,7 @@
                         <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
+                        <el-button @click="delete(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>

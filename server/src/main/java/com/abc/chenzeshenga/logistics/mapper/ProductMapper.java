@@ -26,12 +26,14 @@ import java.util.List;
 
     int updateByPrimaryKey(Product product);
 
-    int deleteByPrimaryKey(Product product);
+    int deleteByPrimaryKey(String sku);
 
     Product selectByPrimaryKey(String sku);
 
     List<Product> listByStatusWithUser(Page page, String username, String status);
 
     List<Product> listByStatus(Page page, String status);
+
+    int statusUpdate(String sku, String status);
 
 }
