@@ -2,11 +2,13 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper public interface ProductMapper {
+@Mapper public interface ProductMapper extends BaseMapper<Product> {
 
     List<SkuLabel> list(String username);
 
@@ -16,7 +18,7 @@ import java.util.List;
 
     Product whetherImgs(String sku);
 
-    int insert(Product product);
+    @Override Integer insert(Product product);
 
     int insertSelective(Product product);
 
@@ -27,5 +29,9 @@ import java.util.List;
     int deleteByPrimaryKey(Product product);
 
     Product selectByPrimaryKey(String sku);
+
+    List<Product> listByStatusWithUser(Page page, String username, String status);
+
+    List<Product> listByStatus(Page page, String status);
 
 }

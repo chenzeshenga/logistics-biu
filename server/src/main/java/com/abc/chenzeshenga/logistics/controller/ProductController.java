@@ -3,12 +3,17 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
-import com.abc.chenzeshenga.logistics.util.ObjectUtil;
+import com.abc.chenzeshenga.logistics.service.ProductService;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.util.PageUtils;
 import com.abc.vo.Json;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +34,12 @@ import java.util.List;
     private static final String ADMIN = "admin";
 
     @Resource private ProductMapper productMapper;
+
+    private ProductService productService;
+
+    @Autowired public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/list") public Json listProduct() {
         String uname = UserUtils.getUserName();
@@ -54,19 +65,31 @@ import java.util.List;
         Date curr = new Date();
         Product ori = productMapper.selectByPrimaryKey(product.getSku());
         if (ori == null) {
-            ori = product;
-            ori.setDySku(SkuUtil.generateDySku());
-            ori.setCreatedBy(username);
-            ori.setUpdateBy(username);
-            ori.setCreateOn(curr);
-            ori.setUpdateOn(curr);
-            productMapper.insert(ori);
+            product.setDySku(SkuUtil.generateDySku());
+            product.setCreatedBy(username);
+            product.setUpdateBy(username);
+            product.setCreateOn(curr);
+            product.setUpdateOn(curr);
+            productMapper.insert(product);
         } else {
             product.setUpdateBy(username);
             product.setUpdateOn(curr);
             productMapper.updateByPrimaryKey(product);
         }
         return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/list/{status}") public Json listProduct(@RequestBody String body, @PathVariable String status) {
+        String username = UserUtils.getUserName();
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        Page<Product> productPage;
+        if (ADMIN.equals(username)) {
+            productPage = productService.listByStatus(page, status);
+        } else {
+            productPage = productService.listByStatusWithUser(page, username, status);
+        }
+        return Json.succ().data("page", productPage);
     }
 
     private StringBuilder getErrMsg(BindingResult bindingResult) {
