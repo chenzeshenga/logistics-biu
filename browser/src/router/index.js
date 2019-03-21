@@ -257,5 +257,24 @@ export const asyncRouterMap = [
 
         ]
     },
+    {
+        path: '/product',
+        component: Layout,
+        meta: {perm: 'm:product', title: '商品管理', icon: 'chart'},
+        children: [
+            {
+                path: 'status0',
+                name: 'status0',
+                component: _import('product/mgt/status0'),
+                meta: {perm: 'm:product:list', title: '待审核商品', icon: 'chart', noCache: true}
+            },
+            {
+                path: 'status1',
+                name: 'status1',
+                component: _import('product/mgt/status1'),
+                meta: {perm: 'm:product:list', title: '在库商品', icon: 'chart', noCache: true},
+            },
+        ]
+    },
     {path: '*', redirect: '/404', hidden: true}
 ];

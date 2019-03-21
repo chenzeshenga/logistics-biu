@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
@@ -37,8 +38,11 @@ import java.util.List;
 
     private ProductService productService;
 
-    @Autowired public ProductController(ProductService productService) {
+    private LabelCache labelCache;
+
+    @Autowired public ProductController(ProductService productService, LabelCache labelCache) {
         this.productService = productService;
+        this.labelCache = labelCache;
     }
 
     @GetMapping("/list") public Json listProduct() {
@@ -89,6 +93,8 @@ import java.util.List;
         } else {
             productPage = productService.listByStatusWithUser(page, username, status);
         }
+        List<Product> productList = productPage.getRecords();
+        productList.forEach(product -> product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory())));
         return Json.succ().data("page", productPage);
     }
 
