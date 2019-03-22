@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.*;
 /**
  * created by CaiBaoHong at 2018/4/17 14:55<br>
  */
-@TableName("sys_user") @Data public class SysUser extends Model<SysUser> {
+@TableName("sys_user") @Data @EqualsAndHashCode(callSuper = false) public class SysUser extends Model<SysUser> {
 
     // 用户id
     @TableId(type = IdType.ID_WORKER_STR) private String uid;

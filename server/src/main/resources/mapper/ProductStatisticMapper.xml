@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductStatisticMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+        <id column="sku" jdbcType="VARCHAR" property="sku"/>
+        <result column="dySku" jdbcType="VARCHAR" property="dysku"/>
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
+        <result column="on_way_num" jdbcType="VARCHAR" property="onWayNum"/>
+        <result column="uncheck_num" jdbcType="VARCHAR" property="uncheckNum"/>
+        <result column="pending_pickup_num" jdbcType="VARCHAR" property="pendingPickupNum"/>
+        <result column="pending_deliver_num" jdbcType="VARCHAR" property="pendingDeliverNum"/>
+        <result column="defect_num" jdbcType="VARCHAR" property="defectNum"/>
+        <result column="statistical_time" jdbcType="TIMESTAMP" property="statisticalTime"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sku,
+               dySku,
+               total_num,
+               on_way_num,
+               uncheck_num,
+               pending_pickup_num,
+               pending_deliver_num,
+               defect_num,
+               statistical_time
+        from l_product_statistic
+        where sku = #{sku,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from l_product_statistic
+        where sku = #{sku,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+        insert into l_product_statistic (sku, dySku, total_num,
+                                         on_way_num, uncheck_num, pending_pickup_num,
+                                         pending_deliver_num, defect_num, statistical_time)
+        values (#{sku,jdbcType=VARCHAR}, #{dysku,jdbcType=VARCHAR}, #{totalNum,jdbcType=VARCHAR},
+                #{onWayNum,jdbcType=VARCHAR}, #{uncheckNum,jdbcType=VARCHAR}, #{pendingPickupNum,jdbcType=VARCHAR},
+                #{pendingDeliverNum,jdbcType=VARCHAR}, #{defectNum,jdbcType=VARCHAR}, #{statisticalTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+        insert into l_product_statistic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sku != null">
+                sku,
+            </if>
+            <if test="dysku != null">
+                dySku,
+            </if>
+            <if test="totalNum != null">
+                total_num,
+            </if>
+            <if test="onWayNum != null">
+                on_way_num,
+            </if>
+            <if test="uncheckNum != null">
+                uncheck_num,
+            </if>
+            <if test="pendingPickupNum != null">
+                pending_pickup_num,
+            </if>
+            <if test="pendingDeliverNum != null">
+                pending_deliver_num,
+            </if>
+            <if test="defectNum != null">
+                defect_num,
+            </if>
+            <if test="statisticalTime != null">
+                statistical_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sku != null">
+                #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="dysku != null">
+                #{dysku,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null">
+                #{totalNum,jdbcType=VARCHAR},
+            </if>
+            <if test="onWayNum != null">
+                #{onWayNum,jdbcType=VARCHAR},
+            </if>
+            <if test="uncheckNum != null">
+                #{uncheckNum,jdbcType=VARCHAR},
+            </if>
+            <if test="pendingPickupNum != null">
+                #{pendingPickupNum,jdbcType=VARCHAR},
+            </if>
+            <if test="pendingDeliverNum != null">
+                #{pendingDeliverNum,jdbcType=VARCHAR},
+            </if>
+            <if test="defectNum != null">
+                #{defectNum,jdbcType=VARCHAR},
+            </if>
+            <if test="statisticalTime != null">
+                #{statisticalTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+        update l_product_statistic
+        <set>
+            <if test="dysku != null">
+                dySku = #{dysku,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null">
+                total_num = #{totalNum,jdbcType=VARCHAR},
+            </if>
+            <if test="onWayNum != null">
+                on_way_num = #{onWayNum,jdbcType=VARCHAR},
+            </if>
+            <if test="uncheckNum != null">
+                uncheck_num = #{uncheckNum,jdbcType=VARCHAR},
+            </if>
+            <if test="pendingPickupNum != null">
+                pending_pickup_num = #{pendingPickupNum,jdbcType=VARCHAR},
+            </if>
+            <if test="pendingDeliverNum != null">
+                pending_deliver_num = #{pendingDeliverNum,jdbcType=VARCHAR},
+            </if>
+            <if test="defectNum != null">
+                defect_num = #{defectNum,jdbcType=VARCHAR},
+            </if>
+            <if test="statisticalTime != null">
+                statistical_time = #{statisticalTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where sku = #{sku,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+        update l_product_statistic
+        set dySku               = #{dysku,jdbcType=VARCHAR},
+            total_num           = #{totalNum,jdbcType=VARCHAR},
+            on_way_num          = #{onWayNum,jdbcType=VARCHAR},
+            uncheck_num         = #{uncheckNum,jdbcType=VARCHAR},
+            pending_pickup_num  = #{pendingPickupNum,jdbcType=VARCHAR},
+            pending_deliver_num = #{pendingDeliverNum,jdbcType=VARCHAR},
+            defect_num          = #{defectNum,jdbcType=VARCHAR},
+            statistical_time    = #{statisticalTime,jdbcType=TIMESTAMP}
+        where sku = #{sku,jdbcType=VARCHAR}
+    </update>
+</mapper>

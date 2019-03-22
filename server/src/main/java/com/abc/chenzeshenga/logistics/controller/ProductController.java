@@ -13,7 +13,6 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,12 @@ import java.util.UUID;
 
     private static final String ADMIN = "admin";
 
+    private static final String ONE = "1";
+
+    private static final String ZERO = "0";
+
     @Resource private ProductMapper productMapper;
+
     @Resource private ImgMapper imgMapper;
 
     private ProductService productService;
@@ -103,9 +107,9 @@ import java.util.UUID;
         List<Product> productList = productPage.getRecords();
         productList.forEach(product -> {
             product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
-            if ("0".equals(product.getStatus())) {
+            if (ZERO.equals(product.getStatus())) {
                 product.setStatusDesc("审核中");
-            } else if ("1".equals(product.getStatus())) {
+            } else if (ONE.equals(product.getStatus())) {
                 product.setStatusDesc("在库");
             }
         });
