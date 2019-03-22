@@ -6,7 +6,8 @@
                     <el-col :span="12">
                         <el-form-item label="sku" prop="sku">
                             <el-input v-model="form.sku" v-bind:disabled="onUpdate" placeholder="请输入或者扫描产品sku">
-                                <el-button slot="append" v-bind:disabled="onUpdate" @click="getDySku">获取唯一sku</el-button>
+                                <el-button slot="append" v-bind:disabled="onUpdate" @click="getDySku">获取唯一sku
+                                </el-button>
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -74,11 +75,14 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="产品图片">
-                    <el-upload action="http://localhost:8888/api/v1/product/img" with-credentials multiple list-type="picture"
-                               :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :data="form"
+                    <el-upload action="http://localhost:8888/api/v1/product/img/put" with-credentials multiple
+                               list-type="picture"
+                               :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                               :data="form" :on-change="handleFileChange"
                                ref="upload" :on-error="handleError" :limit="3">
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器
+                        </el-button>
                         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
@@ -87,7 +91,8 @@
                 </el-form-item>
                 <el-form-item>
                     <el-col :offset="20">
-                        <el-button type="primary" @click="submitForm('form')">立即创建</el-button>
+                        <el-button type="primary" @click="submitForm('form')" v-if="onCreate">立即创建</el-button>
+                        <el-button type="primary" @click="updateForm()" v-if="onUpdate">立即更新</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-col>
                 </el-form-item>
@@ -139,23 +144,60 @@
             };
         },
         created() {
-            // this.withEditor();
+            this.initPage();
         },
         methods: {
+            initPage() {
+                let sku = this.$route.query.sku;
+                if (sku !== undefined && sku.length > 0) {
+                    request({
+                        url: "/product/get/" + sku,
+                        method: "get"
+                    }).then(res => {
+                        this.form = res.data.data;
+                        this.onCreate = false;
+                        this.onUpdate = true;
+                        if (res.data.data.img1 !== null && res.data.data.img1.length > 0) {
+                            let tmp = {
+                                "name": "img1",
+                                "index": "1",
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img1,
+                                "uid": res.data.data.img1
+                            };
+                            this.fileList.push(tmp)
+                        }
+                        if (res.data.data.img2 !== null && res.data.data.img2.length > 0) {
+                            let tmp = {
+                                "name": "img2",
+                                "index": "2",
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img2,
+                                "uid": res.data.data.img2
+                            };
+                            this.fileList.push(tmp)
+                        }
+                        if (res.data.data.img3 !== null && res.data.data.img3.length > 0) {
+                            let tmp = {
+                                "name": "img3",
+                                "index": "3",
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img3,
+                                "uid": res.data.data.img3
+                            };
+                            this.fileList.push(tmp)
+                        }
+                    })
+                }
+            },
             handleRemove(file, fileList) {
-                console.log(file, fileList);
+                request({
+                    url: "/product/img/drop/" + file.uid + "/" + this.form.sku + "/" + file.index,
+                    method: "get"
+                }).then(() => {
+                    this.$message.success("成功删除关联图片");
+                })
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
-            },
-            withEditor() {
-                request({
-                    url: "/product/listWithImg",
-                    method: "get",
-                }).then(res => {
-                    console.log(res);
-                })
             },
             getDySku() {
                 request({
@@ -184,34 +226,24 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
-            formCheck() {
-                this.$refs['form'].validate((valid) => {
-                    if (valid) {
-                        return true;
-                    } else {
-                        this.$message.error("请填写必填项");
-                        return false;
-                    }
-                });
-            },
-            beforeAvatarUpload(file) {
-                const isFormReady = this.formCheck();
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-                if (!isJPG) {
-                    this.$message.error('上传图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M && isFormReady;
-            },
             submitUpload() {
                 this.$refs.upload.submit();
             },
             handleError(err, file, fileList) {
                 this.$message.error(JSON.parse(err.message)["message"]);
+            },
+            updateForm() {
+                request({
+                    url: "/product/update",
+                    method: "post",
+                    data: this.form
+                }).then(() => {
+                    this.$message.success("更新成功");
+                    this.$router.push({path: '/product/status0'});
+                })
+            },
+            handleFileChange(file, fileList) {
+                file.index = fileList.length;
             }
         }
     }

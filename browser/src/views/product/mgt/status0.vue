@@ -1,9 +1,11 @@
 <template>
     <div class="login-container">
-        <el-table style="width: 100%;margin: 10px" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
+        <el-table style="width: 100%;margin: 10px" :data="tableData" v-loading.body="tableLoading"
+                  element-loading-text="加载中" stripe
                   highlight-current-row>
             <el-table-column width="150" prop="sku" label="sku"></el-table-column>
             <el-table-column width="150" prop="dySku" label="东岳sku"></el-table-column>
+            <el-table-column width="150" prop="statusDesc" label="状态"></el-table-column>
             <el-table-column width="200" prop="productName" label="商品名称"></el-table-column>
             <el-table-column width="150" prop="categoryName" label="商品类型"></el-table-column>
             <el-table-column prop="color" label="商品颜色" width="150"></el-table-column>
@@ -20,20 +22,25 @@
             <el-table-column label="操作" width="200" fixed="right">
                 <template slot-scope="scope">
                     <el-tooltip content="审核" placement="top">
-                        <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
+                        <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info"
+                                   icon="el-icon-check" circle
                                    plain></el-button>
                     </el-tooltip>
                     <el-tooltip content="编辑" placement="top">
-                        <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
+                        <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info"
+                                   icon="el-icon-edit" circle plain></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button @click="delete(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
+                        <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger"
+                                   icon="el-icon-remove" circle plain></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="tablePage.current"
-                       :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size" layout="total, sizes, prev, pager, next, jumper"
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="tablePage.current"
+                       :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size"
+                       layout="total, sizes, prev, pager, next, jumper"
                        :total="tablePage.total">
         </el-pagination>
     </div>
@@ -82,6 +89,37 @@
                 this.tablePage.current = val;
                 this.fetchData();
             },
+            statusUpdate(index, row) {
+                console.log(row);
+                this.$confirm('您确定审核通过该商品？', '提示', confirm).then(() => {
+                    request({
+                        url: "/product/status/" + row.sku + "/1",
+                        method: "get"
+                    }).then(() => {
+                        this.$message.success("审核成功");
+                        this.fetchData();
+                    })
+                }).catch(() => {
+                    this.$message.info("已取消审核")
+                })
+            },
+            handleDelete(index, row) {
+                console.log(row);
+                this.$confirm("您确定删除该商品？", "提示", confirm).then(() => {
+                    request({
+                        url: "/product/delete/" + row.sku,
+                        method: "get"
+                    }).then(() => {
+                        this.$message.success(row.sku + "删除成功");
+                        this.fetchData();
+                    })
+                }).catch(() => {
+                    this.$message.info("已取消删除");
+                })
+            },
+            handleUpdate(index, row) {
+                this.$router.push({path: '/new-product/new-product?sku=' + row.sku});
+            }
         }
     }
 </script>
