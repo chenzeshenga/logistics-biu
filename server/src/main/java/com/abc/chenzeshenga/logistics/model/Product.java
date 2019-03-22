@@ -34,8 +34,9 @@ import java.util.Date;
     private String location;
     private String imgPath;
     private String avaNum;
-    private byte[] img1;
-    private byte[] img2;
-    private byte[] img3;
-
+    private String img1;
+    private String img2;
+    private String img3;
+    private String status;
+    private String statusDesc;
 }

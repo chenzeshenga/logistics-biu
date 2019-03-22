@@ -22,6 +22,9 @@
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
         <result column="ava_num" jdbcType="INTEGER" property="avaNum"/>
+        <result column="img1" jdbcType="VARCHAR" property="img1"/>
+        <result column="img2" jdbcType="VARCHAR" property="img2"/>
+        <result column="img3" jdbcType="VARCHAR" property="img3"/>
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
@@ -51,6 +54,12 @@
         where sku = #{sku}
     </select>
 
+    <select id="whetherImgsV2" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select sku, img1, img2, img3
+        from l_productions
+        where sku = #{sku}
+    </select>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select sku,
                dy_sku,
@@ -70,7 +79,10 @@
                alert_num,
                create_on,
                update_on,
-               ava_num
+               ava_num,
+               img1,
+               img2,
+               img3
         from l_productions
         where sku = #{sku,jdbcType=VARCHAR}
     </select>
@@ -308,7 +320,7 @@
                 createdBy = #{createdBy,jdbcType=VARCHAR},
             </if>
             <if test="updateBy != null">
-                updateBy = #{updatBy,jdbcType=VARCHAR},
+                updateBy = #{updateBy,jdbcType=VARCHAR},
             </if>
             <if test="location != null">
                 `location` = #{location,jdbcType=VARCHAR},
@@ -327,6 +339,15 @@
             </if>
             <if test="avaNum != null">
                 ava_num = #{avaNum,jdbcType=INTEGER},
+            </if>
+            <if test="img1 != null">
+                img1 = #{img1,jdbcType=INTEGER},
+            </if>
+            <if test="img2 != null">
+                img2 = #{img2,jdbcType=INTEGER},
+            </if>
+            <if test="img3 != null">
+                img3 = #{img3,jdbcType=INTEGER},
             </if>
         </set>
         where sku = #{sku,jdbcType=VARCHAR}

@@ -18,6 +18,8 @@ import java.util.List;
 
     Product whetherImgs(String sku);
 
+    Product whetherImgsV2(String sku);
+
     @Override Integer insert(Product product);
 
     int insertSelective(Product product);

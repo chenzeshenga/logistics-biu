@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
+import com.abc.chenzeshenga.logistics.mapper.ImgMapper;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
@@ -12,6 +13,7 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author chenzeshenga
@@ -35,14 +38,18 @@ import java.util.List;
     private static final String ADMIN = "admin";
 
     @Resource private ProductMapper productMapper;
+    @Resource private ImgMapper imgMapper;
 
     private ProductService productService;
 
     private LabelCache labelCache;
 
-    @Autowired public ProductController(ProductService productService, LabelCache labelCache) {
+    private CommonController commonController;
+
+    @Autowired public ProductController(ProductService productService, LabelCache labelCache, CommonController commonController) {
         this.productService = productService;
         this.labelCache = labelCache;
+        this.commonController = commonController;
     }
 
     @GetMapping("/list") public Json listProduct() {
@@ -78,7 +85,7 @@ import java.util.List;
         } else {
             product.setUpdateBy(username);
             product.setUpdateOn(curr);
-            productMapper.updateByPrimaryKey(product);
+            productMapper.updateByPrimaryKeySelective(product);
         }
         return Json.succ();
     }
@@ -94,7 +101,14 @@ import java.util.List;
             productPage = productService.listByStatusWithUser(page, username, status);
         }
         List<Product> productList = productPage.getRecords();
-        productList.forEach(product -> product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory())));
+        productList.forEach(product -> {
+            product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
+            if ("0".equals(product.getStatus())) {
+                product.setStatusDesc("审核中");
+            } else if ("1".equals(product.getStatus())) {
+                product.setStatusDesc("在库");
+            }
+        });
         return Json.succ().data("page", productPage);
     }
 
@@ -106,26 +120,64 @@ import java.util.List;
         return errMsg;
     }
 
-    @PostMapping(value = "/img")
-    public Json addImg(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam(value = "sku") String sku) throws IOException {
+    @PostMapping(value = "/img/put")
+    public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam(value = "sku") String sku) throws IOException {
         if (StringUtils.isEmpty(sku)) {
             throw new IllegalArgumentException("产品sku必填");
         }
-        Product ori = productMapper.whetherImgs(sku);
+        Product ori = productMapper.whetherImgsV2(sku);
+        String uuid = UUID.randomUUID().toString();
         if (ori != null) {
-            if (ori.getImg1() == null) {
-                ori.setImg1(multipartFile.getBytes());
-            } else if (ori.getImg1() != null && ori.getImg2() == null) {
-                ori.setImg2(multipartFile.getBytes());
-            } else if (ori.getImg1() != null && ori.getImg2() != null && ori.getImg3() == null) {
-                ori.setImg3(multipartFile.getBytes());
+            if (StringUtils.isEmpty(ori.getImg1())) {
+                ori.setImg1(uuid);
+                commonController.putImg(multipartFile, uuid);
+            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isEmpty(ori.getImg2())) {
+                ori.setImg2(uuid);
+                commonController.putImg(multipartFile, uuid);
+            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isNotEmpty(ori.getImg2()) && StringUtils.isEmpty(ori.getImg3())) {
+                ori.setImg3(uuid);
+                commonController.putImg(multipartFile, uuid);
             }
+            ori.setUpdateOn(new Date());
+            ori.setUpdateBy(UserUtils.getUserName());
+            productMapper.updateByPrimaryKeySelective(ori);
         } else {
             ori = new Product();
             ori.setSku(sku);
-            ori.setImg1(multipartFile.getBytes());
+            ori.setImg1(uuid);
+            String username = UserUtils.getUserName();
+            Date curr = new Date();
+            ori.setUpdateBy(username);
+            ori.setCreatedBy(username);
+            ori.setCreateOn(curr);
+            ori.setUpdateOn(curr);
+            commonController.putImg(multipartFile, uuid);
+            productMapper.addImg(ori);
         }
-        productMapper.addImg(ori);
+        return Json.succ();
+    }
+
+    @GetMapping(value = "/img/drop/{uuid}/{sku}/{index}")
+    public Json putImg(@PathVariable String uuid, @PathVariable String sku, @PathVariable String index) {
+        Product product = new Product();
+        product.setSku(sku);
+        switch (index) {
+            case "1":
+                product.setImg1("");
+                break;
+            case "2":
+                product.setImg2("");
+                break;
+            case "3":
+                product.setImg3("");
+                break;
+            default:
+                break;
+        }
+        product.setUpdateBy(UserUtils.getUserName());
+        product.setUpdateOn(new Date());
+        productMapper.updateByPrimaryKeySelective(product);
+        imgMapper.deleteByPrimaryKey(uuid);
         return Json.succ();
     }
 
@@ -146,6 +198,11 @@ import java.util.List;
         product.setUpdateOn(curr);
         productMapper.updateByPrimaryKey(product);
         return Json.succ();
+    }
+
+    @GetMapping @RequestMapping("/get/{sku}") public Json getSingleProduct(@PathVariable String sku) {
+        Product product = productMapper.selectByPrimaryKey(sku);
+        return Json.succ().data(product);
     }
 
 }

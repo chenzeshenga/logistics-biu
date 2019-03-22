@@ -14,8 +14,8 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     List<String> getRoleIdsByUserId(@Param("userId") String userId);
 
-    Boolean checkRidsContainRval(@Param("rids")List<String> rids,@Param("rval")String rval);
+    Boolean checkRidsContainRval(@Param("rids") List<String> rids, @Param("rval") String rval);
 
-    Boolean checkUidContainRval(@Param("uid")String uid,@Param("rval")String rval);
+    Boolean checkUidContainRval(@Param("uid") String uid, @Param("rval") String rval);
 
 }

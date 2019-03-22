@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ImgMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Img">
+        <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.Img">
+        <result column="img" jdbcType="LONGVARBINARY" property="img"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        uuid
+    </sql>
+    <sql id="Blob_Column_List">
+        img
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from l_img
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from l_img
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.abc.chenzeshenga.logistics.model.Img"
+            useGeneratedKeys="true">
+        insert into l_img (uuid, img)
+        values (#{uuid,jdbcType=VARCHAR}, #{img,jdbcType=LONGVARBINARY})
+    </insert>
+    <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid"
+            parameterType="com.abc.chenzeshenga.logistics.model.Img" useGeneratedKeys="true">
+        insert into l_img
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=LONGVARBINARY},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Img">
+        update l_img
+        <set>
+            <if test="img != null">
+                img = #{img,jdbcType=LONGVARBINARY},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.abc.chenzeshenga.logistics.model.Img">
+        update l_img
+        set img = #{img,jdbcType=LONGVARBINARY}
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -11,6 +11,6 @@ import java.util.List;
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
-    List<SysUser> selectUserIncludeRoles(Pagination page, @Param("nick")String nick);
+    List<SysUser> selectUserIncludeRoles(Pagination page, @Param("nick") String nick);
 
 }
