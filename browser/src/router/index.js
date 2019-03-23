@@ -90,6 +90,14 @@ export const asyncRouterMap = [
                 meta: {
                     perm: 'm:config:list', title: '追踪单号维护', icon: 'chart'
                 }
+            },
+            {
+                path: 'channel',
+                name: 'channel',
+                component: _import('_system/config/channel'),
+                meta: {
+                    perm: 'm:config:list', title: '渠道配置', icon: 'chart'
+                }
             }
         ]
     },

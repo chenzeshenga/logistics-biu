@@ -65,7 +65,9 @@ import java.util.*;
             productStatisticsList.add(entry.getValue());
         }
         productStatisticsMapper.deleteAll();
-        productStatisticsMapper.insertBatch(productStatisticsList);
+        if (!productStatisticsList.isEmpty()) {
+            productStatisticsMapper.insertBatch(productStatisticsList);
+        }
     }
 
 }
