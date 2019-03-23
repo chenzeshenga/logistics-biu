@@ -253,7 +253,77 @@ export const asyncRouterMap = [
                         meta: {perm: 'm:order:list', title: '历史', icon: 'chart', noCache: true}
                     }]
             },
-
+            {
+                path: '/order-list/mgt/type3',
+                name: 'order-list-mgt-type3',
+                component: _import('order/type3/index'),
+                meta: {
+                    perm: 'm:order:list',
+                    title: '单票单请',
+                    icon: 'chart'
+                },
+                children: [
+                    {
+                        path: 'pickup',
+                        component: _import('order/type3/list/pickup'),
+                        name: 'order-list-mgt-type2-pickup',
+                        meta: {perm: 'm:order:list', title: '拣货', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status1',
+                        component: _import('order/type3/list/status1'),
+                        name: 'order-list-mgt-type3-status1',
+                        meta: {perm: 'm:order:list', title: '待审核', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status2',
+                        component: _import('order/type3/list/status2'),
+                        name: 'order-list-mgt-type3-status2',
+                        meta: {perm: 'm:order:list', title: '国内待发货', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status3',
+                        component: _import('order/type3/list/status3'),
+                        name: 'order-list-mgt-type3-status3',
+                        meta: {perm: 'm:order:list', title: '国内已发货', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status8',
+                        component: _import('order/type3/list/status8'),
+                        name: 'order-list-mgt-type3-status8',
+                        meta: {perm: 'm:order:list', title: '日本待发货', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status9',
+                        component: _import('order/type3/list/status9'),
+                        name: 'order-list-mgt-type3-status9',
+                        meta: {perm: 'm:order:list', title: '日本已发货', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status4',
+                        component: _import('order/type3/list/status4'),
+                        name: 'order-list-mgt-type3-status4',
+                        meta: {perm: 'm:order:list', title: '问题件', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status5',
+                        component: _import('order/type3/list/status5'),
+                        name: 'order-list-mgt-type3-status5',
+                        meta: {perm: 'm:order:list', title: '已废弃', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status6',
+                        component: _import('order/type3/list/status6'),
+                        name: 'order-list-mgt-type3-status6',
+                        meta: {perm: 'm:order:list', title: '暂存', icon: 'chart', noCache: true}
+                    },
+                    {
+                        path: 'status7',
+                        component: _import('order/type3/list/status7'),
+                        name: 'order-list-mgt-type3-status7',
+                        meta: {perm: 'm:order:list', title: '历史', icon: 'chart', noCache: true}
+                    }]
+            },
 
         ]
     },
