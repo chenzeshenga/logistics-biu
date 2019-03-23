@@ -56,7 +56,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type1-pickup',
+        name: 'order-list-mgt-type2-pickup',
         data() {
             return {
                 search: "",

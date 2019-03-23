@@ -7,25 +7,16 @@
             <el-table-column width="150" prop="dySku" label="东岳sku"></el-table-column>
             <el-table-column width="150" prop="totalNum" label="在库商品总数"></el-table-column>
             <el-table-column width="150" prop="onWayNum" label="在途入库商品数量"></el-table-column>
-            <el-table-column width="150" prop="uncheckNum" label="商品类型"></el-table-column>
-            <el-table-column prop="pendingPickupNum" label="商品颜色" width="150"></el-table-column>
-            <el-table-column prop="pendingDeliverNum" label="商品尺寸" width="150"></el-table-column>
-            <el-table-column prop="defectNum" label="商品长度(cm)" width="150"></el-table-column>
-            <el-table-column prop="statisticalTime" label="商品宽度(cm)" width="150"></el-table-column>
+            <el-table-column width="150" prop="uncheckNum" label="未入库数量"></el-table-column>
+            <el-table-column prop="pendingPickupNum" label="待拣货数量" width="150"></el-table-column>
+            <el-table-column prop="pendingDeliverNum" label="待出库出量" width="150"></el-table-column>
+            <el-table-column prop="defectNum" label="缺陷品数量" width="150"></el-table-column>
+            <el-table-column prop="statisticalTime" label="上一次统计时间" width="150"></el-table-column>
             <el-table-column label="操作" width="200" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip content="审核" placement="top">
-                        <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info"
-                                   icon="el-icon-check" circle
-                                   plain></el-button>
-                    </el-tooltip>
                     <el-tooltip content="编辑" placement="top">
                         <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info"
                                    icon="el-icon-edit" circle plain></el-button>
-                    </el-tooltip>
-                    <el-tooltip content="删除" placement="top">
-                        <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger"
-                                   icon="el-icon-remove" circle plain></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>

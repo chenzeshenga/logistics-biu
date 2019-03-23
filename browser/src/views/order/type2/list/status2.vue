@@ -100,7 +100,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type2-status1',
+        name: 'order-list-mgt-type2-status2',
         data() {
             return {
                 tablePage: {

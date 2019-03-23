@@ -136,7 +136,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type2-status1',
+        name: 'order-list-mgt-type2-status5',
         data() {
             return {
                 tablePage: {

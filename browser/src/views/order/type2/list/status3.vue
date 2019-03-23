@@ -43,6 +43,10 @@
                         <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
                                    plain></el-button>
                     </el-tooltip>
+                    <el-tooltip content="查询物流进度" placement="top">
+                        <el-button @click="findWhere(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-question" circle
+                                   plain></el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -63,7 +67,7 @@
     import request from '@/utils/request'
 
     export default {
-        name: 'order-list-mgt-type2-status1',
+        name: 'order-list-mgt-type2-status3',
         data() {
             return {
                 tablePage: {
@@ -179,6 +183,9 @@
                     this.tableData = res.data.page.records;
                     this.tableLoading = false;
                 })
+            },
+            findWhere(index, row) {
+                this.$message.info("查询物流进度");
             }
         }
     }

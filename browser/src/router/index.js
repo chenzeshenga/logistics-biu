@@ -217,18 +217,6 @@ export const asyncRouterMap = [
                         meta: {perm: 'm:order:list', title: '国内已发货', icon: 'chart', noCache: true}
                     },
                     {
-                        path: 'status8',
-                        component: _import('order/type2/list/status8'),
-                        name: 'order-list-mgt-type2-status8',
-                        meta: {perm: 'm:order:list', title: '日本待发货', icon: 'chart', noCache: true}
-                    },
-                    {
-                        path: 'status9',
-                        component: _import('order/type2/list/status9'),
-                        name: 'order-list-mgt-type2-status9',
-                        meta: {perm: 'm:order:list', title: '日本已发货', icon: 'chart', noCache: true}
-                    },
-                    {
                         path: 'status4',
                         component: _import('order/type2/list/status4'),
                         name: 'order-list-mgt-type2-status4',
@@ -259,14 +247,14 @@ export const asyncRouterMap = [
                 component: _import('order/type3/index'),
                 meta: {
                     perm: 'm:order:list',
-                    title: '单票单请',
+                    title: '虚拟海外仓',
                     icon: 'chart'
                 },
                 children: [
                     {
                         path: 'pickup',
                         component: _import('order/type3/list/pickup'),
-                        name: 'order-list-mgt-type2-pickup',
+                        name: 'order-list-mgt-type3-pickup',
                         meta: {perm: 'm:order:list', title: '拣货', icon: 'chart', noCache: true}
                     },
                     {
@@ -343,6 +331,12 @@ export const asyncRouterMap = [
                 name: 'status1',
                 component: _import('product/mgt/status1'),
                 meta: {perm: 'm:product:list', title: '在库商品', icon: 'chart', noCache: true},
+            },
+            {
+                path: 'product-statistic',
+                name: 'product-statistic',
+                component: _import('product/product-statistic'),
+                meta: {perm: 'm:product:list', title: '商品统计', icon: 'chart', noCache: true},
             },
         ]
     },
