@@ -8,8 +8,8 @@
             </el-date-picker>
             <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
         </el-col>
-        <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
-                  border fit highlight-current-row>
+        <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
+                  border fit highlight-current-row :row-class-name="tableRowClassNameOuter">
             <el-table-column type="expand">
                 <template slot-scope="tableData">
                     <el-col :span="12">
@@ -207,6 +207,13 @@
                     return "success-row";
                 } else {
                     row.satisfied = false;
+                    return "danger-row";
+                }
+            },
+            tableRowClassNameOuter({row, rowIndex}) {
+                if (row.satisfied) {
+                    return "success-row";
+                } else {
                     return "danger-row";
                 }
             },

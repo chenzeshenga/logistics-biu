@@ -15,13 +15,13 @@ import java.io.Serializable;
 
     private String name;
 
-    private String num;
+    private String num = "0";
 
     private String price;
 
     private String ordno;
 
-    private String picked;
+    private String picked = "0";
 
     private boolean satisfied;
 

@@ -193,7 +193,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
     private void enrichOrd(Page<ManualOrder> manualOrderPage) {
         List<ManualOrder> manualOrderList = manualOrderPage.getRecords();
-        manualOrderList.forEach(manualOrder -> {
+        for (ManualOrder manualOrder : manualOrderList) {
             if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
                 manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
             } else {
@@ -222,8 +222,16 @@ import java.util.concurrent.atomic.AtomicReference;
                 totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double.valueOf(manualOrderContent.getPrice());
             }
             final Double finalPrice = totalPrice;
-            manualOrderContentList.forEach(content -> content.setTotalPrice(finalPrice));
-        });
+            for (ManualOrderContent content : manualOrderContentList) {
+                content.setTotalPrice(finalPrice);
+                String total = content.getNum();
+                String picked = content.getPicked();
+                if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
+                    manualOrder.setSatisfied(false);
+                    break;
+                }
+            }
+        }
     }
 
     @GetMapping @RequestMapping("/delete/{ordNo}") public Json delete(@PathVariable String ordNo) {

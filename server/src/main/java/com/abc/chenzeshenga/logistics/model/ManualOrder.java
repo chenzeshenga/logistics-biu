@@ -75,5 +75,6 @@ import java.util.Map;
     private String totalVolume;
     private String totalWeight;
     private String ordFee;
+    private boolean satisfied = true;
 
 }
