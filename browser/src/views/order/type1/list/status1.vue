@@ -64,7 +64,8 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="tablePage.current"
+        <el-pagination style="margin-left: 65%;margin-top: 10px" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="tablePage.current"
                        :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size" layout="total, sizes, prev, pager, next, jumper"
                        :total="tablePage.total">
         </el-pagination>
@@ -117,7 +118,7 @@
         data() {
             return {
                 tablePage: {
-                    current: null,
+                    current: 1,
                     pages: null,
                     size: null,
                     total: null
@@ -177,10 +178,14 @@
                     method: "post",
                     data: {
                         current: this.tablePage.current,
-                        size: this.tablePage.size
+                        size: this.tablePage.size,
                     }
                 }).then(res => {
                     this.tableData = res.data.page.records;
+                    this.tablePage.current = res.data.page.current;
+                    this.tablePage.pages = res.data.page.pages;
+                    this.tablePage.size = res.data.page.size;
+                    this.tablePage.total = res.data.page.total;
                     this.tableLoading = false;
                 })
             },
@@ -324,7 +329,7 @@
             print(index, row) {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.href = "http://47.105.107.242:8888/api/v1/pdf/ord/" + row.orderNo;
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();
@@ -363,7 +368,7 @@
             exportExcel() {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://localhost:8888/api/v1/ord/excel/1";
+                link.href = "http://47.105.107.242:8888/api/v1/ord/excel/1";
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();
