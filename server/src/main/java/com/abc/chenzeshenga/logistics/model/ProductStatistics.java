@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,10 +11,12 @@ import java.util.Date;
  *
  * @author chenz
  */
-@Data public class ProductStatistic implements Serializable {
+@Data public class ProductStatistics implements Serializable {
     private String sku;
 
     private String dysku;
+
+    private String owner;
 
     private String totalNum;
 
@@ -27,6 +30,6 @@ import java.util.Date;
 
     private String defectNum;
 
-    private Date statisticalTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date statisticalTime = new Date();
 
 }

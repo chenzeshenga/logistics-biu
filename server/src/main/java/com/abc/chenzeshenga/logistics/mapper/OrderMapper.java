@@ -37,6 +37,8 @@ import java.util.Map;
 
     List<ManualOrderContent> listContent(String ordNo);
 
+    List<ManualOrder> listAll();
+
     List<ManualOrderContent> listContentBatch(String ordNo);
 
     List<ManualOrderContent> listContent2(String ordNo);

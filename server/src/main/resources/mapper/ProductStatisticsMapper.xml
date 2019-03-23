@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductStatisticMapper">
-    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         <id column="sku" jdbcType="VARCHAR" property="sku"/>
         <result column="dySku" jdbcType="VARCHAR" property="dysku"/>
+        <result column="owner" jdbcType="VARCHAR" property="owner"/>
         <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
         <result column="on_way_num" jdbcType="VARCHAR" property="onWayNum"/>
         <result column="uncheck_num" jdbcType="VARCHAR" property="uncheckNum"/>
@@ -12,6 +13,36 @@
         <result column="defect_num" jdbcType="VARCHAR" property="defectNum"/>
         <result column="statistical_time" jdbcType="TIMESTAMP" property="statisticalTime"/>
     </resultMap>
+
+    <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sku,
+               dySku,
+               total_num,
+               on_way_num,
+               uncheck_num,
+               pending_pickup_num,
+               pending_deliver_num,
+               defect_num,
+               statistical_time,
+               owner
+        from l_product_statistic
+    </select>
+
+    <select id="selectAllByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sku,
+               dySku,
+               total_num,
+               on_way_num,
+               uncheck_num,
+               pending_pickup_num,
+               pending_deliver_num,
+               defect_num,
+               statistical_time,
+               owner
+        from l_product_statistic
+        where owner = #{username}
+    </select>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select sku,
                dySku,
@@ -21,7 +52,8 @@
                pending_pickup_num,
                pending_deliver_num,
                defect_num,
-               statistical_time
+               statistical_time,
+               owner
         from l_product_statistic
         where sku = #{sku,jdbcType=VARCHAR}
     </select>
@@ -30,15 +62,36 @@
         from l_product_statistic
         where sku = #{sku,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         insert into l_product_statistic (sku, dySku, total_num,
                                          on_way_num, uncheck_num, pending_pickup_num,
-                                         pending_deliver_num, defect_num, statistical_time)
+                                         pending_deliver_num, defect_num, statistical_time, owner)
         values (#{sku,jdbcType=VARCHAR}, #{dysku,jdbcType=VARCHAR}, #{totalNum,jdbcType=VARCHAR},
                 #{onWayNum,jdbcType=VARCHAR}, #{uncheckNum,jdbcType=VARCHAR}, #{pendingPickupNum,jdbcType=VARCHAR},
-                #{pendingDeliverNum,jdbcType=VARCHAR}, #{defectNum,jdbcType=VARCHAR}, #{statisticalTime,jdbcType=TIMESTAMP})
+                #{pendingDeliverNum,jdbcType=VARCHAR}, #{defectNum,jdbcType=VARCHAR}, #{statisticalTime,jdbcType=TIMESTAMP},
+                #{owner,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into l_product_statistic (sku, dySku, total_num,
+        on_way_num, uncheck_num, pending_pickup_num,
+        pending_deliver_num, defect_num, statistical_time, owner)
+        values
+        <foreach collection="list" item="item" separator="," index="index">
+            (#{item.sku,jdbcType=VARCHAR}, #{item.dysku,jdbcType=VARCHAR}, #{item.totalNum,jdbcType=VARCHAR},
+            #{item.onWayNum,jdbcType=VARCHAR}, #{item.uncheckNum,jdbcType=VARCHAR}, #{item.pendingPickupNum,jdbcType=VARCHAR},
+            #{item.pendingDeliverNum,jdbcType=VARCHAR}, #{item.defectNum,jdbcType=VARCHAR}, #{item.statisticalTime,jdbcType=TIMESTAMP},
+            #{item.owner,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        delete
+        from l_product_statistic
+        where 1 = 1
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         insert into l_product_statistic
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="sku != null">
@@ -67,6 +120,9 @@
             </if>
             <if test="statisticalTime != null">
                 statistical_time,
+            </if>
+            <if test="owner != null">
+                owner,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -97,9 +153,12 @@
             <if test="statisticalTime != null">
                 #{statisticalTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="owner != null">
+                #{owner,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         update l_product_statistic
         <set>
             <if test="dysku != null">
@@ -126,10 +185,13 @@
             <if test="statisticalTime != null">
                 statistical_time = #{statisticalTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="owner != null">
+                #{owner,jdbcType=VARCHAR},
+            </if>
         </set>
         where sku = #{sku,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistic">
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         update l_product_statistic
         set dySku               = #{dysku,jdbcType=VARCHAR},
             total_num           = #{totalNum,jdbcType=VARCHAR},
@@ -138,6 +200,7 @@
             pending_pickup_num  = #{pendingPickupNum,jdbcType=VARCHAR},
             pending_deliver_num = #{pendingDeliverNum,jdbcType=VARCHAR},
             defect_num          = #{defectNum,jdbcType=VARCHAR},
+            owner               = #{owner,jdbcType=VARCHAR},
             statistical_time    = #{statisticalTime,jdbcType=TIMESTAMP}
         where sku = #{sku,jdbcType=VARCHAR}
     </update>

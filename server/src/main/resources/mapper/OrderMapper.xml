@@ -162,6 +162,12 @@
         </where>
     </select>
 
+    <select id="listAll" resultMap="result">
+        select *
+        from l_manual_order ord
+                 left join l_manual_order_content content on (ord.ord_no = content.ordno)
+    </select>
+
     <select id="listAllByUsername" resultMap="result" parameterType="java.util.Map">
         select *
         from l_manual_order ord
