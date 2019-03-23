@@ -7,6 +7,8 @@
                             style="width: 400px">
             </el-date-picker>
             <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
+            <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
+            <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
         </el-col>
         <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
                   border fit highlight-current-row :row-class-name="tableRowClassNameOuter">
@@ -50,9 +52,11 @@
                         <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info"
                                    icon="el-icon-edit" circle plain></el-button>
                     </el-tooltip>
-                    <el-tooltip content="删除" placement="top">
-                        <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger"
-                                   icon="el-icon-delete" circle plain></el-button>
+                    <el-tooltip content="打印配货单" placement="top">
+                        <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle plain></el-button>
+                    </el-tooltip>
+                    <el-tooltip content="废弃" placement="top">
+                        <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -235,7 +239,40 @@
                         });
                     });
                 });
-            }
+            },
+            route2NewOrd() {
+                this.$router.push({path: '/new-order/index'});
+            },
+            exportExcel() {
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = "http://localhost:8888/api/v1/ord/excel/2";
+                link.target = "_blank";
+                document.body.appendChild(link);
+                link.click();
+            },
+            print(index, row) {
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.target = "_blank";
+                document.body.appendChild(link);
+                link.click();
+            },
+            abandon(index, row) {
+                this.$confirm('您确定要废弃该订单？', '提示', confirm).then(() => {
+                    request({
+                        url: "ord/update/1/" + row.orderNo + "/5",
+                        method: "get"
+                    }).then(res => {
+                        console.log(res);
+                        this.fetchData();
+                        this.$message.success("废弃成功");
+                    })
+                }).catch(() => {
+                    this.$message.info("已取消废弃")
+                })
+            },
         }
     }
 
