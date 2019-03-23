@@ -213,8 +213,6 @@
             tableRowClassNameOuter({row, rowIndex}) {
                 if (row.satisfied) {
                     return "success-row";
-                } else {
-                    return "danger-row";
                 }
             },
             updateVolumeAndWeight() {
