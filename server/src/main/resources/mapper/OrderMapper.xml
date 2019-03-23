@@ -162,6 +162,20 @@
         </where>
     </select>
 
+    <select id="listAllByUsername" resultMap="result" parameterType="java.util.Map">
+        select *
+        from l_manual_order ord
+        <where>
+            1=1
+            <if test="cname != null and cname != 'admin' and cname != 'operator'">
+                and ord.create_by=#{cname}
+            </if>
+            <if test="status != null and status != ''">
+                and ord.status=#{status}
+            </if>
+        </where>
+    </select>
+
     <select id="listByRange" resultMap="result">
         select *
         from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
@@ -212,6 +226,20 @@
             or ord.status = 7)
     </select>
 
+    <select id="listContentBatch" parameterType="java.util.List" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        from l_manual_order_content content
+        inner join l_manual_order ord on (content.ordno = ord.ord_no)
+        where ordno in
+        (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+        and (ord.status = 2
+        or ord.status = 7)
+    </select>
+
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
         select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
         from l_manual_order_content content
@@ -223,6 +251,17 @@
         update l_manual_order
         set status=#{status}
         where ord_no = #{orderNo};
+    </update>
+
+    <update id="statusUpdateBatch" parameterType="java.util.Map">
+        update l_manual_order
+        set status=#{status}
+        where ord_no in
+        (
+        <foreach collection="ords" item="ord" index="index" separator=",">
+            #{ord}
+        </foreach>
+        )
     </update>
 
     <update id="fillInTrackNo" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">

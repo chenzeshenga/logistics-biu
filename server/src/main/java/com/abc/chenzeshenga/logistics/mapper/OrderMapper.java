@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chenzeshenga
@@ -36,14 +37,22 @@ import java.util.List;
 
     List<ManualOrderContent> listContent(String ordNo);
 
+    List<ManualOrderContent> listContentBatch(String ordNo);
+
     List<ManualOrderContent> listContent2(String ordNo);
 
     int statusUpdate(ManualOrder manualOrder);
+
+    int statusUpdateBatch(Map<String, Object> request);
 
     int fillInTrackNo(ManualOrder manualOrder);
 
     int abnormal(ManualOrder manualOrder);
 
     Product getProduct(String sku);
+
+    //    List<ManualOrder> listAll(String status);
+
+    List<ManualOrder> listAllByUsername(Map<String, String> request);
 
 }

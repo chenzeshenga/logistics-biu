@@ -289,16 +289,7 @@ import java.util.concurrent.atomic.AtomicReference;
     public Json statusUpdate(@PathVariable String category, @PathVariable String ordno, @PathVariable String status) {
         if (ONE.equals(category) && THREE.equals(status)) {
             List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
-            boolean satisfied = false;
-            for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-                if (manualOrderContent.isSatisfied()) {
-                    satisfied = true;
-                } else {
-                    satisfied = false;
-                    break;
-                }
-            }
-            if (!satisfied) {
+            if (whetherPickup(manualOrderContentList)) {
                 return Json.fail().msg("有商品未拣货完成");
             }
         }
@@ -307,6 +298,34 @@ import java.util.concurrent.atomic.AtomicReference;
         manualOrder.setStatus(status);
         orderMapper.statusUpdate(manualOrder);
         return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/update/{category}/{status}")
+    public Json batchStatusUpdate(@RequestBody List<String> ords, @PathVariable String category, @PathVariable String status) {
+        if (ONE.equals(category) && THREE.equals(status)) {
+            List<ManualOrderContent> manualOrderContentList = orderMapper.listContentBatch(ords.get(0));
+            if (whetherPickup(manualOrderContentList)) {
+                return Json.fail().msg("有商品未拣货完成");
+            }
+        }
+        Map<String, Object> request = new HashMap<>(2);
+        request.put("status", status);
+        request.put("ords", ords);
+        orderMapper.statusUpdateBatch(request);
+        return Json.succ();
+    }
+
+    private boolean whetherPickup(List<ManualOrderContent> manualOrderContentList) {
+        boolean satisfied = false;
+        for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+            if (manualOrderContent.isSatisfied()) {
+                satisfied = true;
+            } else {
+                satisfied = false;
+                break;
+            }
+        }
+        return !satisfied;
     }
 
     @GetMapping @RequestMapping("/carrier/distinct") public Json getCarrierList() {

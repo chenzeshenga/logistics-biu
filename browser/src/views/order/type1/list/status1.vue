@@ -2,14 +2,14 @@
     <div class="login-container">
         <el-col :offset="1" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
             <el-button type="primary" @click="applyTrackNo()" style="margin-right: 10px" v-if="multiSelection">批量申请单号</el-button>
-            <el-button type="primary" @click="route2NewOrd()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
+            <el-button type="primary" @click="batchStatusUpdate()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
             <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
                             end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
             </el-date-picker>
             <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
             <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
-            <el-button type="primary" @click="route2NewOrd()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
-            <el-button type="primary" @click="route2NewOrd()" icon="el-icon-tickets">导出csv</el-button>
+            <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
+            <!--<el-button type="primary" @click="route2NewOrd()" icon="el-icon-tickets">导出csv</el-button>-->
         </el-col>
         <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                   highlight-current-row @selection-change="handleSelectionChange">
@@ -209,6 +209,25 @@
                     this.$message.info("已取消提交")
                 })
             },
+            batchStatusUpdate() {
+                if (this.ord4TrackNo.length <= 0) {
+                    this.$message.warning("请勾选每一行前的勾选框");
+                    return;
+                }
+                this.$confirm('您确定要提交这些订单？', '提示', confirm).then(() => {
+                    request({
+                        url: "ord/update/1/2",
+                        method: "post",
+                        data: this.ord4TrackNo
+                    }).then(res => {
+                        console.log(res);
+                        this.fetchData();
+                        this.$message.success("提交成功");
+                    })
+                }).catch(() => {
+                    this.$message.info("已取消提交")
+                })
+            },
             abandon(index, row) {
                 this.$confirm('您确定要废弃该订单？', '提示', confirm).then(() => {
                     request({
@@ -340,6 +359,14 @@
                 }).catch(err => {
                     console.log(err);
                 })
+            },
+            exportExcel() {
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = "http://localhost:8888/api/v1/ord/excel/1";
+                link.target = "_blank";
+                document.body.appendChild(link);
+                link.click();
             }
         }
     }
