@@ -75,9 +75,10 @@
                 <el-col>
                     <el-input v-model="form.orderNo" disabled></el-input>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24">
                     <el-form-item label="当前订单总体积(cm^3)">
-                        <el-input-number v-model="form.totalVolume"></el-input-number>
+                        <el-input-number v-model="form.totalVolume" @change="updateVolume2"></el-input-number>
+                        <span>{{updateVolume}}</span>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -116,6 +117,7 @@
                 tableLoading: false,
                 tableData: [],
                 daterange: null,
+                updateVolume: 0,
                 pickerOptions2: {
                     shortcuts: [{
                         text: '最近一周',
@@ -246,7 +248,7 @@
             exportExcel() {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://47.105.107.242:8888/api/v1/ord/excel/2";
+                link.href = "http://localhost:8888/api/v1/ord/excel/2";
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();
@@ -254,7 +256,7 @@
             print(index, row) {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://47.105.107.242:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();
@@ -273,6 +275,9 @@
                     this.$message.info("已取消废弃")
                 })
             },
+            updateVolume2() {
+                this.updateVolume += 1;
+            }
         }
     }
 

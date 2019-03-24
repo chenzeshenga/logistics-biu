@@ -147,8 +147,8 @@
                 },
                 tableLoading: false,
                 tableData: [],
-                onCreate: true,
-                onUpdate: false,
+                onCreate: false,
+                onUpdate: true,
                 form: {
                     channelName: "",
                     adapter: "",
@@ -215,7 +215,14 @@
                 })
             },
             updateForm() {
-
+                request({
+                    url: "/channel/update",
+                    method: "post",
+                    data: this.form
+                }).then(res => {
+                    this.$message.success("成功");
+                    this.fetch();
+                })
             },
             handleSizeChange(val) {
                 this.tablePage.size = val;

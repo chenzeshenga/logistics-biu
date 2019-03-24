@@ -301,7 +301,7 @@
             print(index, row) {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://47.105.107.242:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();

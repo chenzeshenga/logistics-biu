@@ -75,7 +75,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="产品图片">
-                    <el-upload action="http://47.105.107.242:8888/api/v1/product/img/put" with-credentials multiple
+                    <el-upload action="http://localhost:8888/api/v1/product/img/put" with-credentials multiple
                                list-type="picture"
                                :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                                :data="form" :on-change="handleFileChange"
@@ -161,7 +161,7 @@
                             let tmp = {
                                 "name": "img1",
                                 "index": "1",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img1,
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img1,
                                 "uid": res.data.data.img1
                             };
                             this.fileList.push(tmp)
@@ -170,7 +170,7 @@
                             let tmp = {
                                 "name": "img2",
                                 "index": "2",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img2,
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img2,
                                 "uid": res.data.data.img2
                             };
                             this.fileList.push(tmp)
@@ -179,7 +179,7 @@
                             let tmp = {
                                 "name": "img3",
                                 "index": "3",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img3,
+                                "url": "http://localhost:8888/api/v1/img/" + res.data.data.img3,
                                 "uid": res.data.data.img3
                             };
                             this.fileList.push(tmp)
