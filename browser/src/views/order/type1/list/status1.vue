@@ -176,10 +176,7 @@
                 request({
                     url: "ord/list/1/1",
                     method: "post",
-                    data: {
-                        current: this.tablePage.current,
-                        size: this.tablePage.size,
-                    }
+                    data: this.tablePage
                 }).then(res => {
                     this.tableData = res.data.page.records;
                     this.tablePage.current = res.data.page.current;

@@ -1,93 +1,189 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ChannelMapper">
-    <cache eviction="FIFO" flushInterval="600000" size="512"/>
-    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
-        select channel_code as value,
-               channel_name as label
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Channel">
+        <id column="channel_code" jdbcType="VARCHAR" property="channelCode"/>
+        <result column="channel_name" jdbcType="VARCHAR" property="channelName"/>
+        <result column="partner" jdbcType="VARCHAR" property="partner"/>
+        <result column="min" jdbcType="VARCHAR" property="min"/>
+        <result column="max" jdbcType="VARCHAR" property="max"/>
+        <result column="checked_rules" jdbcType="VARCHAR" property="checkedRules"/>
+        <result column="active" jdbcType="VARCHAR" property="active"/>
+        <result column="comments" jdbcType="VARCHAR" property="comments"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select channel_code,
+               channel_name,
+               partner,
+               `min`,
+               `max`,
+               checked_rules,
+               active,
+               comments,
+               create_by,
+               update_by,
+               create_on,
+               update_on
         from l_channel
-        where enable = 'Y'
+        where channel_code = #{channelCode,jdbcType=VARCHAR}
     </select>
-
-    <select id="listActiveChannel" resultType="com.abc.chenzeshenga.logistics.model.Channel">
-        select id,
-               channel_code            as channelCode,
-               channel_name            as channelName,
-               channel_adapter         as channelAdapter,
-               partner                 as cooperatorCode,
-               min                     as currencyCode,
-               max                     as minDays,
-               checked_rules           as maxDays,
-               active                  as weightRuleCode,
-               comments                as weightMulti,
-               default_package_weight  as defaultPackageWeight,
-               default_package_fee     as defaultPackageFee,
-               fee_code_rule           as feeRuleCode,
-               whether_multi_package   as whetherMultiPackage,
-               whether_volume          as whetherVolume,
-               whether_charge_at_first as whetherChargeAtFirst,
-               enable,
-               remarks,
-               create_on               as createOn,
-               update_on               as updateOn,
-               create_by               as createBy,
-               update_by               as updateBy
-        from l_channel
-        where enable = 'Y'
-          and channel_adapter = #{where}
-        order by id asc
-    </select>
-
-    <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
-        insert
-        into l_channel
-        (channel_code, channel_name, channel_adapter, partner, min, max, checked_rules, active, comments,
-         default_package_weight, default_package_fee,
-         fee_code_rule,
-         whether_multi_package,
-         whether_volume, whether_charge_at_first, whether_charge_for_them, whether_insurance, enable, remarks, create_on, create_by)
-        values (#{channelCode}, #{channelName}, #{channelAdapter}, #{cooperatorCode}, #{currencyCode}, #{minDays}, #{maxDays}, #{weightRuleCode},
-                #{weightMulti}, #{defaultPackageWeight}, #{defaultPackageFee},
-                #{feeRuleCode},
-                #{whetherMultiPackage}, #{whetherVolume}, #{whetherChargeAtFirst}, #{whetherChargeForThem}, #{whetherInsurance}, #{enable},
-                #{remarks}, #{createOn}, #{createBy})
-    </insert>
-
-    <select id="count" resultType="java.lang.Integer">
-        select max(id) + 1 as num
-        from l_channel
-    </select>
-
-    <delete id="delete" parameterType="java.lang.String">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from l_channel
-        where channel_code = #{channelCode}
+        where channel_code = #{channelCode,jdbcType=VARCHAR}
     </delete>
-
-    <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
+    <insert id="insert" keyColumn="channel_code" keyProperty="channelCode" parameterType="com.abc.chenzeshenga.logistics.model.Channel"
+            useGeneratedKeys="true">
+        insert into l_channel (channel_name, partner, `min`,
+                               `max`, checked_rules, active,
+                               comments, create_by, update_by,
+                               create_on, update_on)
+        values (#{channelName,jdbcType=VARCHAR}, #{partner,jdbcType=VARCHAR}, #{min,jdbcType=VARCHAR},
+                #{max,jdbcType=VARCHAR}, #{checkedRules,jdbcType=VARCHAR}, #{active,jdbcType=VARCHAR},
+                #{comments,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
+                #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="channel_code" keyProperty="channelCode" parameterType="com.abc.chenzeshenga.logistics.model.Channel"
+            useGeneratedKeys="true">
+        insert into l_channel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channelName != null">
+                channel_name,
+            </if>
+            <if test="partner != null">
+                partner,
+            </if>
+            <if test="min != null">
+                `min`,
+            </if>
+            <if test="max != null">
+                `max`,
+            </if>
+            <if test="checkedRules != null">
+                checked_rules,
+            </if>
+            <if test="active != null">
+                active,
+            </if>
+            <if test="comments != null">
+                comments,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="createOn != null">
+                create_on,
+            </if>
+            <if test="updateOn != null">
+                update_on,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channelName != null">
+                #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="partner != null">
+                #{partner,jdbcType=VARCHAR},
+            </if>
+            <if test="min != null">
+                #{min,jdbcType=VARCHAR},
+            </if>
+            <if test="max != null">
+                #{max,jdbcType=VARCHAR},
+            </if>
+            <if test="checkedRules != null">
+                #{checkedRules,jdbcType=VARCHAR},
+            </if>
+            <if test="active != null">
+                #{active,jdbcType=VARCHAR},
+            </if>
+            <if test="comments != null">
+                #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createOn != null">
+                #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
         update l_channel
-        set channel_code=#{channelCode},
-            channel_name=#{channelName},
-            channel_adapter=#{channelAdapter},
-            partner=#{cooperatorCode},
-            min=#{currencyCode},
-            max=#{minDays},
-            checked_rules=#{maxDays},
-            active=#{weightRuleCode},
-            comments=#{weightMulti},
-            default_package_weight=#{defaultPackageWeight},
-            default_package_fee=#{defaultPackageFee},
-            fee_code_rule=#{feeRuleCode},
-            whether_multi_package=#{whetherMultiPackage},
-            whether_volume=#{whetherVolume},
-            whether_charge_at_first=#{whetherChargeAtFirst},
-            whether_charge_for_them=#{whetherChargeForThem},
-            whether_insurance=#{whetherInsurance},
-            enable=#{enable},
-            remarks=#{remarks},
-            update_on=#{updateOn},
-            update_by=#{updateBy}
-        where id = #{id}
+        <set>
+            <if test="channelName != null">
+                channel_name = #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="partner != null">
+                partner = #{partner,jdbcType=VARCHAR},
+            </if>
+            <if test="min != null">
+                `min` = #{min,jdbcType=VARCHAR},
+            </if>
+            <if test="max != null">
+                `max` = #{max,jdbcType=VARCHAR},
+            </if>
+            <if test="checkedRules != null">
+                checked_rules = #{checkedRules,jdbcType=VARCHAR},
+            </if>
+            <if test="active != null">
+                active = #{active,jdbcType=VARCHAR},
+            </if>
+            <if test="comments != null">
+                comments = #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                update_on = #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where channel_code = #{channelCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
+        update l_channel
+        set channel_name  = #{channelName,jdbcType=VARCHAR},
+            partner       = #{partner,jdbcType=VARCHAR},
+            `min`         = #{min,jdbcType=VARCHAR},
+            `max`         = #{max,jdbcType=VARCHAR},
+            checked_rules = #{checkedRules,jdbcType=VARCHAR},
+            active        = #{active,jdbcType=VARCHAR},
+            comments      = #{comments,jdbcType=VARCHAR},
+            create_by     = #{createBy,jdbcType=VARCHAR},
+            update_by     = #{updateBy,jdbcType=VARCHAR},
+            create_on     = #{createOn,jdbcType=TIMESTAMP},
+            update_on     = #{updateOn,jdbcType=TIMESTAMP}
+        where channel_code = #{channelCode,jdbcType=VARCHAR}
     </update>
 
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
+        select channel_code as value, channel_name as label
+        from l_channel
+    </select>
+
+    <select id="page" resultMap="BaseResultMap">
+        select *
+        from l_channel
+    </select>
 </mapper>
