@@ -165,11 +165,16 @@
                     method: "post",
                     data: {
                         current: this.tablePage.current,
-                        size: this.tablePage.size
+                        size: this.tablePage.size,
                     }
                 }).then(res => {
                     this.tableData = res.data.page.records;
                     this.tableLoading = false;
+                    this.tablePage.pages = res.data.pages.pages;
+                    this.tablePage.total = res.data.pages.total;
+                    this.tablePage.current = res.data.pages.current;
+                    this.tablePage.size = res.data.pages.size;
+
                 })
             },
             handleSizeChange(val) {
@@ -248,7 +253,7 @@
             exportExcel() {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://localhost:8888/api/v1/ord/excel/2";
+                link.href = "http://47.105.107.242:8888/api/v1/ord/excel/2";
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();
@@ -256,7 +261,7 @@
             print(index, row) {
                 const link = document.createElement('a');
                 link.style.display = 'none';
-                link.href = "http://localhost:8888/api/v1/pdf/ord/" + row.orderNo;
+                link.href = "http://47.105.107.242:8888/api/v1/pdf/ord/" + row.orderNo;
                 link.target = "_blank";
                 document.body.appendChild(link);
                 link.click();

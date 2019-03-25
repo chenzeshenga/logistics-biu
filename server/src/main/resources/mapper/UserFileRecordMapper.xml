@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.UserFileRecordMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.UserFileRecord">
+        <id column="uid" jdbcType="VARCHAR" property="uid"/>
+        <id column="file_uuid" jdbcType="VARCHAR" property="fileUuid"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `uid`, file_uuid, file_name, create_on
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecordKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from l_user_file_record
+        where `uid` = #{uid,jdbcType=VARCHAR}
+        and file_uuid = #{fileUuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecordKey">
+        delete
+        from l_user_file_record
+        where `uid` = #{uid,jdbcType=VARCHAR}
+          and file_uuid = #{fileUuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecord">
+        insert into l_user_file_record (`uid`, file_uuid, file_name,
+                                        create_on)
+        values (#{uid,jdbcType=VARCHAR}, #{fileUuid,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+                #{createOn,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecord">
+        insert into l_user_file_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                `uid`,
+            </if>
+            <if test="fileUuid != null">
+                file_uuid,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="createOn != null">
+                create_on,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="fileUuid != null">
+                #{fileUuid,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="createOn != null">
+                #{createOn,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecord">
+        update l_user_file_record
+        <set>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where `uid` = #{uid,jdbcType=VARCHAR}
+        and file_uuid = #{fileUuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.UserFileRecord">
+        update l_user_file_record
+        set file_name = #{fileName,jdbcType=VARCHAR},
+            create_on = #{createOn,jdbcType=TIMESTAMP}
+        where `uid` = #{uid,jdbcType=VARCHAR}
+          and file_uuid = #{fileUuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

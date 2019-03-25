@@ -2,13 +2,16 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
+import com.abc.chenzeshenga.logistics.mapper.FileMapper;
 import com.abc.chenzeshenga.logistics.mapper.ImgMapper;
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
+import com.abc.chenzeshenga.logistics.mapper.UserFileRecordMapper;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
+import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
@@ -21,11 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author chenzesheng
@@ -38,6 +41,10 @@ import java.util.Map;
     @Resource private ImgMapper imgMapper;
 
     @Resource private OrderMapper orderMapper;
+
+    @Resource private FileMapper fileMapper;
+
+    @Resource private UserFileRecordMapper userFileRecordMapper;
 
     private JapanAddressCache japanAddressCache;
 
@@ -106,6 +113,21 @@ import java.util.Map;
         excelWriter.write(manualOrderList, sheet1);
         excelWriter.finish();
         httpServletResponse.flushBuffer();
+    }
+
+    @PostMapping("/ord/excel") public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        File file = new File(uuid, multipartFile.getBytes());
+        fileMapper.insert(file);
+        String username = UserUtils.getUserName();
+        UserFileRecord userFileRecord = new UserFileRecord(multipartFile.getOriginalFilename(), new Date());
+        userFileRecord.setUid(username);
+        userFileRecord.setFileUuid(uuid);
+        userFileRecordMapper.insert(userFileRecord);
+        InputStream inputStream = multipartFile.getInputStream();
+        List<Object> manualOrderList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder.class));
+        manualOrderList.forEach(manualOrder -> System.out.println(manualOrder));
+        return Json.succ();
     }
 
     @GetMapping("/ord/csv/{ordno}") public void getOrdCsv(@PathVariable String ordno) {

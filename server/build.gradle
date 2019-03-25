@@ -62,7 +62,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'org.apache.commons:commons-lang3'
     compile 'net.sf.barcode4j:barcode4j:2.1'
-    compile 'com.alibaba:easyexcel:1.1.1'
+    compile 'com.alibaba:easyexcel:1.1.2-beta5'
     compile 'net.sourceforge.javacsv:javacsv:2.0'
     compile 'commons-validator:commons-validator:1.6'
 
