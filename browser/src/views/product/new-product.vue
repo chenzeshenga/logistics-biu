@@ -2,25 +2,25 @@
     <div class="login-container">
         <div class="app-container">
             <el-form ref="form" :rules="checkRules" :model="form" label-width="120px">
-                <el-form-item label="产品信息">
+                <el-form-item label="商品信息">
                     <el-col :span="12">
                         <el-form-item label="sku" prop="sku">
-                            <el-input v-model="form.sku" v-bind:disabled="onUpdate" placeholder="请输入或者扫描产品sku">
+                            <el-input v-model="form.sku" v-bind:disabled="onUpdate" placeholder="请输入或者扫描商品sku">
                                 <el-button slot="append" v-bind:disabled="onUpdate" @click="getDySku">获取唯一sku
                                 </el-button>
                             </el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="产品名称" prop="productName">
-                            <el-input v-model="form.productName" placeholder="请输入产品名称"/>
+                        <el-form-item label="商品名称" prop="productName">
+                            <el-input v-model="form.productName" placeholder="请输入商品名称"/>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item>
                     <el-col :span="12">
-                        <el-form-item label="产品类型" prop="category">
-                            <el-select v-model="form.category" placeholder="请选择产品类型">
+                        <el-form-item label="商品类型" prop="category">
+                            <el-select v-model="form.category" placeholder="请选择商品类型">
                                 <el-option value="1" label="小物"/>
                                 <el-option value="2" label="服装"/>
                                 <el-option value="3" label="户外运动"/>
@@ -33,24 +33,24 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="产品颜色">
-                            <el-input v-model="form.color" placeholder="请输入产品颜色"/>
+                        <el-form-item label="商品颜色">
+                            <el-input v-model="form.color" placeholder="请输入商品颜色"/>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item>
                     <el-col :span="12">
-                        <el-form-item label="产品价格(JPY)" prop="price">
+                        <el-form-item label="商品价格(JPY)" prop="price">
                             <el-input-number v-model="form.price"></el-input-number>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="产品尺寸">
-                            <el-input v-model="form.size" placeholder="请输入产品尺寸"></el-input>
+                        <el-form-item label="商品尺寸">
+                            <el-input v-model="form.size" placeholder="请输入商品尺寸"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="产品尺寸">
+                <el-form-item label="商品尺寸">
                     <el-col :span="8">
                         <el-form-item label="长(cm)">
                             <el-input-number v-model="form.length"></el-input-number>
@@ -74,8 +74,8 @@
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="产品图片">
-                    <el-upload action="http://47.105.107.242:8888/api/v1/product/img/put" with-credentials multiple
+                <el-form-item label="商品图片">
+                    <el-upload action="http://localhost:8888/api/v1/product/img/put" with-credentials multiple
                                list-type="picture"
                                :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                                :data="form" :on-change="handleFileChange"
@@ -90,14 +90,29 @@
                     </el-dialog>
                 </el-form-item>
                 <el-form-item>
-                    <el-col :offset="20">
+                    <el-col :offset="18">
+                        <el-button type="primary" @click="createByFile" v-if="onCreate">批量创建</el-button>
                         <el-button type="primary" @click="submitForm('form')" v-if="onCreate">立即创建</el-button>
                         <el-button type="primary" @click="updateForm()" v-if="onUpdate">立即更新</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-col>
                 </el-form-item>
             </el-form>
-
+            <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
+                <el-form :model="form">
+                    <el-form-item label="商品文件">
+                        <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError" :limit="1">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload4Excel">上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传excel文件(xls/xlsx)，记录条数小于200条</div>
+                        </el-upload>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible4Excel = false">取 消</el-button>
+                    <el-button type="primary" @click="uploadExcel">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -140,7 +155,8 @@
                         {required: true, message: "请输入商品价格", trigger: 'change'}
                     ]
                 },
-                fileList: []
+                fileList: [],
+                dialogVisible4Excel: false
             };
         },
         created() {
@@ -229,6 +245,9 @@
             submitUpload() {
                 this.$refs.upload.submit();
             },
+            submitUpload4Excel() {
+                this.$refs.upload.submit();
+            },
             handleError(err, file, fileList) {
                 this.$message.error(JSON.parse(err.message)["message"]);
             },
@@ -244,6 +263,12 @@
             },
             handleFileChange(file, fileList) {
                 file.index = fileList.length;
+            },
+            createByFile() {
+                this.dialogVisible4Excel = true;
+            },
+            uploadExcel() {
+
             }
         }
     }

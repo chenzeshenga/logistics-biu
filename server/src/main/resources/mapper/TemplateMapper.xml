@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.TemplateMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Template">
+        <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.Template">
+        <result column="template_file" jdbcType="LONGVARBINARY" property="templateFile"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        uuid, create_on, file_name
+    </sql>
+    <sql id="Blob_Column_List">
+        template_file
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from l_template
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from l_template
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.Template">
+        insert into l_template (uuid, create_on, file_name,
+                                template_file)
+        values (#{uuid,jdbcType=VARCHAR}, #{createOn,jdbcType=TIMESTAMP}, #{fileName,jdbcType=VARCHAR},
+                #{templateFile,jdbcType=LONGVARBINARY})
+    </insert>
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Template">
+        insert into l_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="createOn != null">
+                create_on,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="templateFile != null">
+                template_file,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="createOn != null">
+                #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="templateFile != null">
+                #{templateFile,jdbcType=LONGVARBINARY},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Template">
+        update l_template
+        <set>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="templateFile != null">
+                template_file = #{templateFile,jdbcType=LONGVARBINARY},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.abc.chenzeshenga.logistics.model.Template">
+        update l_template
+        set create_on     = #{createOn,jdbcType=TIMESTAMP},
+            file_name     = #{fileName,jdbcType=VARCHAR},
+            template_file = #{templateFile,jdbcType=LONGVARBINARY}
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Template">
+        update l_template
+        set create_on = #{createOn,jdbcType=TIMESTAMP},
+            file_name = #{fileName,jdbcType=VARCHAR}
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

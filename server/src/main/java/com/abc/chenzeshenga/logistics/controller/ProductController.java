@@ -127,7 +127,7 @@ import java.util.UUID;
     @PostMapping(value = "/img/put")
     public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam(value = "sku") String sku) throws IOException {
         if (StringUtils.isEmpty(sku)) {
-            throw new IllegalArgumentException("产品sku必填");
+            throw new IllegalArgumentException("商品sku必填");
         }
         Product ori = productMapper.whetherImgsV2(sku);
         String uuid = UUID.randomUUID().toString();

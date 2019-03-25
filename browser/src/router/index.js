@@ -118,7 +118,7 @@ export const asyncRouterMap = [
             path: 'new-product',
             name: 'new-product',
             component: _import('product/new-product'),
-            meta: {perm: 'm:product', title: '新建产品', icon: 'icon'}
+            meta: {perm: 'm:product', title: '新建商品', icon: 'icon'}
         }]
     },
     {

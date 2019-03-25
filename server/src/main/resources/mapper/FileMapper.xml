@@ -19,8 +19,8 @@
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.abc.chenzeshenga.logistics.model.File" useGeneratedKeys="true">
-        insert into l_file (`file`)
-        values (#{file,jdbcType=LONGVARBINARY})
+        insert into l_file (uuid, `file`)
+        values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY})
     </insert>
     <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.abc.chenzeshenga.logistics.model.File"
             useGeneratedKeys="true">
