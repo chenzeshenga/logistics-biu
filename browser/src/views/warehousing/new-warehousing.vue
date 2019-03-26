@@ -98,7 +98,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="10">
+                    <el-col :span="6">
                         <el-form-item label="sku">
                             <el-select v-model="currContent.sku" placeholder="请从已审核产品中选择" @change="handleValueChange">
                                 <el-option v-for="item in products" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -140,6 +140,12 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                </el-form-item>
+                <el-form-item>
+                    <el-col :offset="20">
+                        <el-button type="primary" @click="submitForm('form')" v-if="onCreate">立即创建</el-button>
+                        <el-button type="primary" @click="updateForm()" v-if="onUpdate">立即更新</el-button>
+                    </el-col>
                 </el-form-item>
             </el-form>
         </div>

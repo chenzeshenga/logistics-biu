@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.WarehousingMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Warehousing">
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
+        <result column="target" jdbcType="VARCHAR" property="target"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
+        <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
+        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
+        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
+        <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
+        <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
+        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
+        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,
+    tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator, 
+    updator
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from l_warehousing
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from l_warehousing
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
+        insert into l_warehousing (warehousing_no, target, `method`,
+                                   carrier, track_no, deliver_method,
+                                   clearance_type, tax_type, insurance,
+                                   insurance_num, estimated_date, create_on,
+                                   update_on, creator, updator)
+        values (#{warehousingNo,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
+                #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR}, #{deliverMethod,jdbcType=VARCHAR},
+                #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR},
+                #{insuranceNum,jdbcType=VARCHAR}, #{estimatedDate,jdbcType=TIMESTAMP}, #{createOn,jdbcType=TIMESTAMP},
+                #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
+        insert into l_warehousing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warehousingNo != null">
+                warehousing_no,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+            <if test="method != null">
+                `method`,
+            </if>
+            <if test="carrier != null">
+                carrier,
+            </if>
+            <if test="trackNo != null">
+                track_no,
+            </if>
+            <if test="deliverMethod != null">
+                deliver_method,
+            </if>
+            <if test="clearanceType != null">
+                clearance_type,
+            </if>
+            <if test="taxType != null">
+                tax_type,
+            </if>
+            <if test="insurance != null">
+                insurance,
+            </if>
+            <if test="insuranceNum != null">
+                insurance_num,
+            </if>
+            <if test="estimatedDate != null">
+                estimated_date,
+            </if>
+            <if test="createOn != null">
+                create_on,
+            </if>
+            <if test="updateOn != null">
+                update_on,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="updator != null">
+                updator,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warehousingNo != null">
+                #{warehousingNo,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                #{target,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="carrier != null">
+                #{carrier,jdbcType=VARCHAR},
+            </if>
+            <if test="trackNo != null">
+                #{trackNo,jdbcType=VARCHAR},
+            </if>
+            <if test="deliverMethod != null">
+                #{deliverMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="clearanceType != null">
+                #{clearanceType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxType != null">
+                #{taxType,jdbcType=VARCHAR},
+            </if>
+            <if test="insurance != null">
+                #{insurance,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceNum != null">
+                #{insuranceNum,jdbcType=VARCHAR},
+            </if>
+            <if test="estimatedDate != null">
+                #{estimatedDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createOn != null">
+                #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updator != null">
+                #{updator,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
+        update l_warehousing
+        <set>
+            <if test="target != null">
+                target = #{target,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                `method` = #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="carrier != null">
+                carrier = #{carrier,jdbcType=VARCHAR},
+            </if>
+            <if test="trackNo != null">
+                track_no = #{trackNo,jdbcType=VARCHAR},
+            </if>
+            <if test="deliverMethod != null">
+                deliver_method = #{deliverMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="clearanceType != null">
+                clearance_type = #{clearanceType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxType != null">
+                tax_type = #{taxType,jdbcType=VARCHAR},
+            </if>
+            <if test="insurance != null">
+                insurance = #{insurance,jdbcType=VARCHAR},
+            </if>
+            <if test="insuranceNum != null">
+                insurance_num = #{insuranceNum,jdbcType=VARCHAR},
+            </if>
+            <if test="estimatedDate != null">
+                estimated_date = #{estimatedDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                update_on = #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updator != null">
+                updator = #{updator,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
+        update l_warehousing
+        set target         = #{target,jdbcType=VARCHAR},
+            `method`       = #{method,jdbcType=VARCHAR},
+            carrier        = #{carrier,jdbcType=VARCHAR},
+            track_no       = #{trackNo,jdbcType=VARCHAR},
+            deliver_method = #{deliverMethod,jdbcType=VARCHAR},
+            clearance_type = #{clearanceType,jdbcType=VARCHAR},
+            tax_type       = #{taxType,jdbcType=VARCHAR},
+            insurance      = #{insurance,jdbcType=VARCHAR},
+            insurance_num  = #{insuranceNum,jdbcType=VARCHAR},
+            estimated_date = #{estimatedDate,jdbcType=TIMESTAMP},
+            create_on      = #{createOn,jdbcType=TIMESTAMP},
+            update_on      = #{updateOn,jdbcType=TIMESTAMP},
+            creator        = #{creator,jdbcType=VARCHAR},
+            updator        = #{updator,jdbcType=VARCHAR}
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

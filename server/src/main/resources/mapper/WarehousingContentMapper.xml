@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper">
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
+        <id column="sku" jdbcType="VARCHAR" property="sku"/>
+        <id column="box_seq" jdbcType="VARCHAR" property="boxSeq"/>
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
+        <result column="wrap_type" jdbcType="VARCHAR" property="wrapType"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        warehousing_no, sku, box_seq, total_num, wrap_type, `name`
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from l_warehousing_content
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+        and sku = #{sku,jdbcType=VARCHAR}
+        and box_seq = #{boxSeq,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey">
+        delete
+        from l_warehousing_content
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+          and sku = #{sku,jdbcType=VARCHAR}
+          and box_seq = #{boxSeq,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        insert into l_warehousing_content (warehousing_no, sku, box_seq,
+                                           total_num, wrap_type, `name`)
+        values (#{warehousingNo,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{boxSeq,jdbcType=VARCHAR},
+                #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        insert into l_warehousing_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warehousingNo != null">
+                warehousing_no,
+            </if>
+            <if test="sku != null">
+                sku,
+            </if>
+            <if test="boxSeq != null">
+                box_seq,
+            </if>
+            <if test="totalNum != null">
+                total_num,
+            </if>
+            <if test="wrapType != null">
+                wrap_type,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warehousingNo != null">
+                #{warehousingNo,jdbcType=VARCHAR},
+            </if>
+            <if test="sku != null">
+                #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="boxSeq != null">
+                #{boxSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null">
+                #{totalNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wrapType != null">
+                #{wrapType,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        update l_warehousing_content
+        <set>
+            <if test="totalNum != null">
+                total_num = #{totalNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wrapType != null">
+                wrap_type = #{wrapType,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+        and sku = #{sku,jdbcType=VARCHAR}
+        and box_seq = #{boxSeq,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        update l_warehousing_content
+        set total_num = #{totalNum,jdbcType=VARCHAR},
+            wrap_type = #{wrapType,jdbcType=VARCHAR},
+            `name`    = #{name,jdbcType=VARCHAR}
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+          and sku = #{sku,jdbcType=VARCHAR}
+          and box_seq = #{boxSeq,jdbcType=VARCHAR}
+    </update>
+</mapper>
