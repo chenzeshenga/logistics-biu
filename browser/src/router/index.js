@@ -122,6 +122,16 @@ export const asyncRouterMap = [
         }]
     },
     {
+        path: '/new-warehousing',
+        component: Layout,
+        children: [{
+            path: 'new-warehousing',
+            name: 'new-warehousing',
+            component: _import('warehousing/new-warehousing'),
+            meta: {perm: 'm:product', title: '新建入库单', icon: 'icon'}
+        }]
+    },
+    {
         path: "/order-list/mgt",
         name: 'order-list-mgt',
         component: Layout,
