@@ -86,39 +86,60 @@
                 <el-form-item>
                     <el-col :span="12">
                         <el-form-item label="预计到港时间">
-                            <el-date-picker v-model="estimatedDate" type="date" placeholder="选择日期"></el-date-picker>
+                            <el-date-picker v-model="form.estimatedDate" type="date" placeholder="选择日期"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="入库商品">
-                    <el-col :span="5">
+                    <el-col :span="4">
+                        <el-form-item label="箱号">
+                            <el-select v-model="currContent.boxSeq" placeholder="请选择箱号">
+                                <el-option v-for="item in arr" :key="item" :label="item" :value="item"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
                         <el-form-item label="sku">
-                            <el-select v-model="currContent.sku" placeholder="请从已审核产品中选择">
+                            <el-select v-model="currContent.sku" placeholder="请从已审核产品中选择" @change="handleValueChange">
                                 <el-option v-for="item in products" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="10">
                         <el-form-item label="名称">
-                            <el-input v-model="currContent.name" placeholder="商品名称" disabled></el-input>
+                            <el-input v-model="currContent.name" placeholder="商品名称"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="6" style="margin-top: 22px">
                         <el-form-item label="数量">
                             <el-input-number v-model="currContent.totalNum"></el-input-number>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="包装方式">
+                    <el-col :span="6">
+                        <el-form-item label="包装方式" style="margin-top: 22px">
                             <el-select v-model="currContent.wrapType">
-                                <el-option :key="自带包装" :label="自带包装" :value="自带包装"></el-option>
-                                <el-option :key="非自带包装" :label="非自带包装" :value="非自带包装"></el-option>
+                                <el-option v-for="item in wrapTypeArr" :key="item" :label="item" :value="item"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="3">
+                    <el-col :span="4" style="margin-top: 22px">
                         <el-button type="primary" @click="add2Cart">添加</el-button>
                     </el-col>
+                </el-form-item>
+                <el-form-item>
+                    <el-table :data="form.contentList" v-loading.body="tableLoading"
+                              element-loading-text="加载中" stripe fit highlight-current-row>
+                        <el-table-column width="100" prop="boxSeq" label="箱号"></el-table-column>
+                        <el-table-column width="250" prop="sku" label="sku"></el-table-column>
+                        <el-table-column width="250" prop="name" label="名称"></el-table-column>
+                        <el-table-column width="150" prop="totalNum" label="数量"></el-table-column>
+                        <el-table-column width="150" prop="wrapType" label="包装方式"></el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </el-form-item>
             </el-form>
         </div>
@@ -148,13 +169,12 @@
                     taxType: "",
                     insurance: false,
                     insuranceNum: 0,
-                    estimatedDate: null,
+                    estimatedDate: new Date(),
                     contentList: []
                 },
                 currContent: {
                     warehousingNo: "",
                     sku: "",
-                    dySku: "",
                     name: "",
                     boxSeq: "",
                     totalNum: "",
@@ -163,52 +183,33 @@
                 contentMap: {},
                 checkRules: {},
                 channels: [],
-                products: []
-            };
+                products: [],
+                productMap: {},
+                selectedProductMap: {},
+                tableLoading: false,
+                arr:
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                wrapTypeArr:
+                    ["自带包装", "非自带包装"]
+            }
+                ;
         },
         created() {
-            // this.initPage();
+            this.initPage();
         },
         methods: {
             initPage() {
-                let sku = this.$route.query.sku;
-                if (sku !== undefined && sku.length > 0) {
-                    request({
-                        url: "/product/get/" + sku,
-                        method: "get"
-                    }).then(res => {
-                        this.form = res.data.data;
-                        this.onCreate = false;
-                        this.onUpdate = true;
-                        if (res.data.data.img1 !== null && res.data.data.img1.length > 0) {
-                            let tmp = {
-                                "name": "img1",
-                                "index": "1",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img1,
-                                "uid": res.data.data.img1
-                            };
-                            this.fileList.push(tmp)
+                request({
+                    url: "/product/list",
+                    method: "get"
+                }).then(res => {
+                    this.products = res.data.data;
+                    this.products.forEach(
+                        product => {
+                            this.productMap[product["value"]] = product;
                         }
-                        if (res.data.data.img2 !== null && res.data.data.img2.length > 0) {
-                            let tmp = {
-                                "name": "img2",
-                                "index": "2",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img2,
-                                "uid": res.data.data.img2
-                            };
-                            this.fileList.push(tmp)
-                        }
-                        if (res.data.data.img3 !== null && res.data.data.img3.length > 0) {
-                            let tmp = {
-                                "name": "img3",
-                                "index": "3",
-                                "url": "http://47.105.107.242:8888/api/v1/img/" + res.data.data.img3,
-                                "uid": res.data.data.img3
-                            };
-                            this.fileList.push(tmp)
-                        }
-                    })
-                }
+                    );
+                });
             },
             getOrdNo() {
                 request({
@@ -216,15 +217,48 @@
                     method: 'get'
                 }).then(res => {
                     this.form.warehousingNo = res.data.data;
+                    this.currContent.warehousingNo = res.data.data;
                 })
             },
             add2Cart() {
-                request({
-                    url: "/product/img/drop/" + file.uid + "/" + this.form.sku + "/" + file.index,
-                    method: "get"
-                }).then(() => {
-                    this.$message.success("成功删除关联图片");
-                })
+                let sku = this.currContent.sku;
+                let boxSeq = this.currContent.boxSeq;
+                let boxContentMap = this.selectedProductMap[boxSeq];
+                if (boxContentMap === undefined || boxContentMap.length <= 0) {
+                    this.selectedProductMap[boxSeq] = {};
+                    this.selectedProductMap[boxSeq][sku] = this.currContent;
+                    this.pushData2Table();
+                } else {
+                    if (boxContentMap.hasOwnProperty(sku)) {
+                        this.$confirm('相同箱号中的相同sku产品将合并', '提示', confirm).then(() => {
+                            let oriContent = boxContentMap[sku];
+                            oriContent.totalNum += this.currContent.totalNum;
+                            this.pushData2Table();
+                        }).catch(() => {
+                            this.$message.info("请重新选择箱号");
+                        });
+                    } else {
+                        this.selectedProductMap[boxSeq][sku] = this.currContent;
+                        this.pushData2Table();
+                    }
+                }
+            },
+            pushData2Table() {
+                this.form.contentList = [];
+                for (let boxSeq in this.selectedProductMap) {
+                    let boxContainer = this.selectedProductMap[boxSeq];
+                    for (let key in boxContainer) {
+                        let product = boxContainer[key];
+                        this.form.contentList.push(product);
+                    }
+                }
+            },
+            handleValueChange(value) {
+                this.currContent.name = this.productMap[value]["name"];
+            },
+            handleDelete(index, row) {
+                this.form.contentList.splice(index, 1);
+                delete this.selectedProductMap[row.boxSeq][row.sku];
             }
         }
     }

@@ -104,7 +104,6 @@
                 });
             },
             handleCarrierChange(value) {
-                console.log(value);
                 this.form.carrierNo = value[0];
                 this.tableLoading = true;
                 request({

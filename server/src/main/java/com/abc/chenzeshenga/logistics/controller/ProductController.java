@@ -66,7 +66,7 @@ import java.util.UUID;
         }
         skuLabelList.forEach(skuLabel -> {
             skuLabel.setValue(skuLabel.getSku() + "/" + skuLabel.getDySku());
-            skuLabel.setLabel(skuLabel.getName() + "(" + skuLabel.getPrice() + ")");
+            skuLabel.setLabel(skuLabel.getName() + "(" + skuLabel.getValue() + ")");
         });
         return Json.succ().data(skuLabelList);
     }

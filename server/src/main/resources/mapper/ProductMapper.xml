@@ -28,14 +28,14 @@
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
+        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
         from l_productions product
                  left join l_product_statistic static on (product.sku = static.sku)
         where createdBy = #{username}
     </select>
 
     <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
+        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
         from l_productions product
                  left join l_product_statistic static on (product.sku = static.sku)
     </select>
