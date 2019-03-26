@@ -92,7 +92,32 @@
                 </el-form-item>
                 <el-form-item label="入库商品">
                     <el-col :span="5">
-                        <el-form-item label="sku"></el-form-item>
+                        <el-form-item label="sku">
+                            <el-select v-model="currContent.sku" placeholder="请从已审核产品中选择">
+                                <el-option v-for="item in products" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
+                        <el-form-item label="名称">
+                            <el-input v-model="currContent.name" placeholder="商品名称" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
+                        <el-form-item label="数量">
+                            <el-input-number v-model="currContent.totalNum"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
+                        <el-form-item label="包装方式">
+                            <el-select v-model="currContent.wrapType">
+                                <el-option :key="自带包装" :label="自带包装" :value="自带包装"></el-option>
+                                <el-option :key="非自带包装" :label="非自带包装" :value="非自带包装"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button type="primary" @click="add2Cart">添加</el-button>
                     </el-col>
                 </el-form-item>
             </el-form>
@@ -124,12 +149,21 @@
                     insurance: false,
                     insuranceNum: 0,
                     estimatedDate: null,
-
+                    contentList: []
                 },
+                currContent: {
+                    warehousingNo: "",
+                    sku: "",
+                    dySku: "",
+                    name: "",
+                    boxSeq: "",
+                    totalNum: "",
+                    wrapType: "",
+                },
+                contentMap: {},
                 checkRules: {},
                 channels: [],
-                fileList: [],
-                dialogVisible4Excel: false
+                products: []
             };
         },
         created() {
@@ -184,72 +218,13 @@
                     this.form.warehousingNo = res.data.data;
                 })
             },
-            handleRemove(file, fileList) {
+            add2Cart() {
                 request({
                     url: "/product/img/drop/" + file.uid + "/" + this.form.sku + "/" + file.index,
                     method: "get"
                 }).then(() => {
                     this.$message.success("成功删除关联图片");
                 })
-            },
-            handlePictureCardPreview(file) {
-                this.dialogImageUrl = file.url;
-                this.dialogVisible = true;
-            },
-            getDySku() {
-                request({
-                    url: "/generate/sku",
-                    method: "get"
-                }).then(res => {
-                    this.form.sku = res.data.data;
-                })
-            },
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        request({
-                            url: "/product/add",
-                            method: "post",
-                            data: this.form
-                        }).then(res => {
-                            console.log(res);
-                        })
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-            },
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
-            submitUpload4Excel() {
-                this.$refs.upload.submit();
-            },
-            handleError(err, file, fileList) {
-                this.$message.error(JSON.parse(err.message)["message"]);
-            },
-            updateForm() {
-                request({
-                    url: "/product/update",
-                    method: "post",
-                    data: this.form
-                }).then(() => {
-                    this.$message.success("更新成功");
-                    this.$router.push({path: '/product/status0'});
-                })
-            },
-            handleFileChange(file, fileList) {
-                file.index = fileList.length;
-            },
-            createByFile() {
-                this.dialogVisible4Excel = true;
-            },
-            uploadExcel() {
-
             }
         }
     }
