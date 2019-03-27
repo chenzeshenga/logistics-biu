@@ -22,13 +22,20 @@ import java.util.Map;
 
     private Map<String, ChannelLabel> channelLabelCache = new HashMap<>();
 
+    private String channelSeq;
+
     @Scheduled(cron = "0 0 0 * * ?") @PostConstruct public void init() {
         List<ChannelLabel> channelLabelList = channelMapper.list();
         channelLabelList.forEach(channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
+        this.channelSeq = String.valueOf(channelLabelList.size());
     }
 
     public String channelLabel(String channelValue) {
         return channelLabelCache.get(channelValue).getLabel();
+    }
+
+    public String getChannelSeq() {
+        return this.channelSeq;
     }
 
 }

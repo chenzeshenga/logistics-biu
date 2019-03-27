@@ -297,7 +297,7 @@
                     method: "post",
                     data: this.form
                 }).then(res => {
-                    console.log(res);
+                    this.$message.success("成功新建订单")
                 })
             }
         }

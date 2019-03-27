@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * l_channel
@@ -24,6 +25,8 @@ import java.util.Date;
     private String max;
 
     private String checkedRules;
+
+    private List<String> checkedRules2;
 
     private String active;
 

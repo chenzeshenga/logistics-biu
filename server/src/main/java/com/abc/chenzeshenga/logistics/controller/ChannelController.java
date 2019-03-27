@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.mapper.ChannelMapper;
 import com.abc.chenzeshenga.logistics.model.Channel;
 import com.abc.chenzeshenga.logistics.model.ChannelLabel;
@@ -29,8 +30,11 @@ import java.util.List;
 
     private ChannelService channelService;
 
-    @Autowired public ChannelController(ChannelService channelService) {
+    private ChannelCache channelCache;
+
+    @Autowired public ChannelController(ChannelService channelService, ChannelCache channelCache) {
         this.channelService = channelService;
+        this.channelCache = channelCache;
     }
 
     @GetMapping @RequestMapping("/list") public Json list() {
@@ -47,10 +51,13 @@ import java.util.List;
         String username = UserUtils.getUserName();
         channel.setCreateBy(username);
         channel.setUpdateBy(username);
+        channel.setChannelCode("CHANNEL_" + channelCache.getChannelSeq());
         Date curr = new Date();
         channel.setCreateOn(curr);
         channel.setUpdateOn(curr);
+        channel.setCheckedRules(channel.getCheckedRules2().toString());
         channelMapper.insert(channel);
+        channelCache.init();
         return Json.succ().data(channel);
     }
 
