@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.ChannelCache;
+import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.ChannelMapper;
 import com.abc.chenzeshenga.logistics.model.Channel;
 import com.abc.chenzeshenga.logistics.model.ChannelLabel;
@@ -11,7 +12,6 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +32,17 @@ import java.util.List;
 
     private ChannelCache channelCache;
 
-    @Autowired public ChannelController(ChannelService channelService, ChannelCache channelCache) {
+    private LabelCache labelCache;
+
+    @Autowired public ChannelController(ChannelService channelService, ChannelCache channelCache, LabelCache labelCache) {
         this.channelService = channelService;
         this.channelCache = channelCache;
+        this.labelCache = labelCache;
     }
 
     @GetMapping @RequestMapping("/list") public Json list() {
         List<ChannelLabel> channelList = channelMapper.list();
+
         return Json.succ().data(channelList);
     }
 
@@ -77,6 +81,16 @@ import java.util.List;
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Page<Channel> channelPage = channelService.list(page);
+        List<Channel> channelList = channelPage.getRecords();
+        for (Channel channel : channelList) {
+            String checkedRules = channel.getCheckedRules();
+            String[] checkedRulesList = checkedRules.replace("[", "").replace("]", "").split(",");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String str : checkedRulesList) {
+                stringBuilder.append(labelCache.getLabel(str)).append("\r\n");
+            }
+            channel.setRuleDesc(stringBuilder.toString());
+        }
         return Json.succ().data("page", channelPage);
     }
 

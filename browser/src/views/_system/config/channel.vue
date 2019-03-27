@@ -2,6 +2,11 @@
     <div class="login-container">
         <div class="app-container">
             <el-col :span="24">
+                <el-tooltip content="刷新" placement="top">
+                    <el-button size="mini" circle @click="fetch">
+                        <svg-icon icon-class="refresh"></svg-icon>
+                    </el-button>
+                </el-tooltip>
                 <el-button style="margin-left: 1400px" type="primary" @click="triggerDialog">新增渠道</el-button>
             </el-col>
             <el-table style="width: 100%;margin-top: 10px" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
@@ -9,7 +14,7 @@
                 <el-table-column width="160" prop="channelCode" label="渠道编码"></el-table-column>
                 <el-table-column width="200" prop="channelName" label="渠道名称"></el-table-column>
                 <el-table-column width="200" prop="active" label="是否激活"></el-table-column>
-                <el-table-column width="100" prop="checkedRules2" label="规则"></el-table-column>
+                <el-table-column width="100" prop="ruleDesc" label="规则"></el-table-column>
                 <el-table-column width="150" prop="min" label="最短运输天数"></el-table-column>
                 <el-table-column width="170" prop="max" label="最长运输天数"></el-table-column>
                 <el-table-column width="250" prop="partner" label="partner"></el-table-column>
@@ -183,10 +188,7 @@
                     data: this.tablePage
                 }).then(res => {
                     this.tableData = res.data.page.records;
-                    this.tablePage.current = res.data.page.current;
-                    this.tablePage.pages = res.data.page.pages;
-                    this.tablePage.size = res.data.page.size;
-                    this.tablePage.total = res.data.page.total;
+                    this.tablePage = res.data.page;
                     this.tableLoading = false;
                 })
             },
@@ -235,11 +237,11 @@
             },
             handleSizeChange(val) {
                 this.tablePage.size = val;
-                this.fetchData();
+                this.fetch();
             },
             handleCurrentChange(val) {
                 this.tablePage.current = val;
-                this.fetchData();
+                this.fetch();
             },
             update(index, row) {
                 this.dialogVisible = true;

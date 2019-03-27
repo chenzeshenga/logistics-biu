@@ -26,6 +26,8 @@ import java.util.List;
 
     private String checkedRules;
 
+    private String ruleDesc;
+
     private List<String> checkedRules2;
 
     private String active;
