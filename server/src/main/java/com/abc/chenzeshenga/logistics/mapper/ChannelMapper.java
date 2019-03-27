@@ -31,6 +31,14 @@ import java.util.List;
 
     List<ChannelLabel> list();
 
+    /**
+     * 用于取代list方法, where 字段还未添加到数据库表中
+     *
+     * @param where 试用范围
+     * @return 渠道列表
+     */
+    List<ChannelLabel> listByWhere(String where);
+
     List<Channel> page(Pagination pagination);
 
 }

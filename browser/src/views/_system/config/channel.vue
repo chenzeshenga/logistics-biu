@@ -163,7 +163,7 @@
                 checkRules: {},
                 isIndeterminate: true,
                 checkAll: false,
-                dialogVisible: false
+                dialogVisible: true
             }
         },
         created() {

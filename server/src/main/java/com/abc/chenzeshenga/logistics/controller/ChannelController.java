@@ -38,6 +38,11 @@ import java.util.List;
         return Json.succ().data(channelList);
     }
 
+    @GetMapping @RequestMapping("/list/{where}") public Json listByWhere(@PathVariable String where) {
+        List<ChannelLabel> channelList = channelMapper.listByWhere(where);
+        return Json.succ().data(channelList);
+    }
+
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody Channel channel) {
         String username = UserUtils.getUserName();
         channel.setCreateBy(username);

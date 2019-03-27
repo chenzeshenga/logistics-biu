@@ -12,7 +12,8 @@
     <sql id="Base_Column_List">
         warehousing_no, sku, box_seq, total_num, wrap_type, `name`
     </sql>
-    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey"
+            resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from l_warehousing_content
@@ -33,6 +34,17 @@
         values (#{warehousingNo,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{boxSeq,jdbcType=VARCHAR},
                 #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
     </insert>
+
+    <insert id="insertList" parameterType="java.util.List">
+        insert into l_warehousing_content (warehousing_no, sku, box_seq,
+        total_num, wrap_type, `name`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
+            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
         insert into l_warehousing_content
         <trim prefix="(" suffix=")" suffixOverrides=",">

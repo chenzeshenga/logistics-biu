@@ -32,7 +32,7 @@
                     </el-col>
                     <el-col :span="12" v-if="form.method==='2'">
                         <el-form-item label="承运人追踪号">
-                            <el-input v-model="form.trackno" placeholder="请输入承运人追踪号"></el-input>
+                            <el-input v-model="form.trackNo" placeholder="请输入承运人追踪号"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -40,13 +40,14 @@
                     <el-col :span="12">
                         <el-form-item label="头程渠道">
                             <el-select v-model="form.channel" placeholder="请选择头程渠道">
-                                <el-option v-for="item in channels" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="item in channels" :key="item.value" :label="item.label"
+                                           :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="运输方式">
-                            <el-select v-model="form.delivermethod" placeholder="请选择运输方式">
+                            <el-select v-model="form.deliverMethod" placeholder="请选择运输方式">
                                 <el-option label="海运整柜20GP/HQ" value="1"></el-option>
                                 <el-option label="海运整柜40GP/HQ" value="2"></el-option>
                                 <el-option label="海运散货" value="3"></el-option>
@@ -74,7 +75,8 @@
                 <el-form-item>
                     <el-col :span="12">
                         <el-form-item label="保险服务">
-                            <el-switch v-model="form.insurance" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                            <el-switch v-model="form.insurance" active-color="#13ce66"
+                                       inactive-color="#ff4949"></el-switch>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" v-if="form.insurance">
@@ -86,7 +88,8 @@
                 <el-form-item>
                     <el-col :span="12">
                         <el-form-item label="预计到港时间">
-                            <el-date-picker v-model="form.estimatedDate" type="date" placeholder="选择日期"></el-date-picker>
+                            <el-date-picker v-model="form.estimatedDate" type="date"
+                                            placeholder="选择日期"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -101,7 +104,8 @@
                     <el-col :span="6">
                         <el-form-item label="sku">
                             <el-select v-model="currContent.sku" placeholder="请从已审核产品中选择" @change="handleValueChange">
-                                <el-option v-for="item in products" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="item in products" :key="item.value" :label="item.label"
+                                           :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -118,7 +122,8 @@
                     <el-col :span="6">
                         <el-form-item label="包装方式" style="margin-top: 22px">
                             <el-select v-model="currContent.wrapType">
-                                <el-option v-for="item in wrapTypeArr" :key="item" :label="item" :value="item"></el-option>
+                                <el-option v-for="item in wrapTypeArr" :key="item" :label="item"
+                                           :value="item"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -127,7 +132,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item>
-                    <el-table :data="form.contentList" v-loading.body="tableLoading"
+                    <el-table :data="form.warehousingContentList" v-loading.body="tableLoading"
                               element-loading-text="加载中" stripe fit highlight-current-row>
                         <el-table-column width="100" prop="boxSeq" label="箱号"></el-table-column>
                         <el-table-column width="250" prop="sku" label="sku"></el-table-column>
@@ -136,14 +141,15 @@
                         <el-table-column width="150" prop="wrapType" label="包装方式"></el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
+                                </el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                 </el-form-item>
                 <el-form-item>
                     <el-col :offset="20">
-                        <el-button type="primary" @click="submitForm('form')" v-if="onCreate">立即创建</el-button>
+                        <el-button type="primary" @click="submitForm()" v-if="onCreate">立即创建</el-button>
                         <el-button type="primary" @click="updateForm()" v-if="onUpdate">立即更新</el-button>
                     </el-col>
                 </el-form-item>
@@ -169,14 +175,14 @@
                     warehousingNo: "",
                     method: '1',
                     carrier: '',
-                    trackno: '',
-                    delivermethod: "",
+                    trackNo: '',
+                    deliverMethod: "",
                     clearanceType: "",
                     taxType: "",
                     insurance: false,
                     insuranceNum: 0,
                     estimatedDate: new Date(),
-                    contentList: []
+                    warehousingContentList: [],
                 },
                 currContent: {
                     warehousingNo: "",
@@ -216,6 +222,12 @@
                         }
                     );
                 });
+                request({
+                    url: "/channel/list/123",
+                    method: "get"
+                }).then(res => {
+                    this.channels = res.data.data;
+                });
             },
             getOrdNo() {
                 request({
@@ -250,21 +262,43 @@
                 }
             },
             pushData2Table() {
-                this.form.contentList = [];
+                this.form.warehousingContentList = [];
                 for (let boxSeq in this.selectedProductMap) {
                     let boxContainer = this.selectedProductMap[boxSeq];
                     for (let key in boxContainer) {
                         let product = boxContainer[key];
-                        this.form.contentList.push(product);
+                        this.form.warehousingContentList.push(product);
                     }
                 }
+                this.currContent = {
+                    warehousingNo: "",
+                    sku: "",
+                    name: "",
+                    boxSeq: "",
+                    totalNum: "",
+                    wrapType: "",
+                };
             },
             handleValueChange(value) {
                 this.currContent.name = this.productMap[value]["name"];
             },
             handleDelete(index, row) {
-                this.form.contentList.splice(index, 1);
+                this.form.warehousingContentList.splice(index, 1);
                 delete this.selectedProductMap[row.boxSeq][row.sku];
+            },
+            submitForm() {
+                if (this.form.insurance) {
+                    this.form.insurance = "Y";
+                } else {
+                    this.form.insurance = "N";
+                }
+                request({
+                    url: "/warehousing/add",
+                    method: "post",
+                    data: this.form
+                }).then(res => {
+                    console.log(res);
+                })
             }
         }
     }

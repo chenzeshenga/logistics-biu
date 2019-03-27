@@ -182,6 +182,11 @@
         from l_channel
     </select>
 
+    <select id="listByWhere" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
+        select channel_code as value, channel_name as label
+        from l_channel
+    </select>
+
     <select id="page" resultMap="BaseResultMap">
         select *
         from l_channel

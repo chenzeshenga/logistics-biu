@@ -66,24 +66,53 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="tablePage.total">
         </el-pagination>
-        <el-dialog title="提交发货" :visible.sync="dialogVisible" width="30%">
+        <el-dialog title="提交发货" :visible.sync="dialogVisible" width="50%">
             <el-form :model="form">
-                <el-col>
-                    <el-input v-model="form.orderNo" disabled></el-input>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="当前订单总体积(cm^3)">
-                        <el-input-number v-model="form.totalVolume"></el-input-number>
+                <el-col :span="24">
+                    <el-form-item label="订单号">
+                        <el-input v-model="form.orderNo" disabled></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="24" style="margin-top: 10px">
+                    <el-col :span="8">
+                        <el-form-item label="长(cm)">
+                            <el-input-number v-model="form.length" @change="calculateIndex"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="宽(cm)">
+                            <el-input-number v-model="form.width" @change="calculateIndex"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="高(cm)">
+                            <el-input-number v-model="form.height" @change="calculateIndex"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <label>后台计算总体积为:</label>
+                    <span>{{form.totalVolume}} cm^3</span><br>
+                    <label>根据页面输入计算结果如下:</label>
+                    <el-form-item>
+                        <el-col :span="8">
+                            <el-form-item label="总体积(cm^3)">
+                                <el-input-number v-model="form.totalVolumeFrontEnd"></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="三边和(cm)">
+                                <el-input-number v-model="form.sum"></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="体积重(cm^3)">
+                                <el-input-number v-model="form.totalVolumeWithWeight"></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
                     <el-form-item label="当前订单总重量(kg)">
                         <el-input-number v-model="form.totalWeight"></el-input-number>
-                    </el-form-item>
-                </el-col>
-                <el-col>
-                    <el-form-item label="当前订单运费(JPY)">
-                        <el-input-number v-model="form.ordFee"></el-input-number>
                     </el-form-item>
                 </el-col>
             </el-form>
@@ -144,7 +173,13 @@
                     ordno: "",
                     totalVolume: 0,
                     totalWeight: 0,
-                    ordFee: 0
+                    ordFee: 0,
+                    length: 0,
+                    width: 0,
+                    height: 0,
+                    totalVolumeFrontEnd: 0,
+                    sum: 0,
+                    totalVolumeWithWeight: 0
                 }
             }
         },
@@ -223,6 +258,11 @@
                         });
                     });
                 });
+            },
+            calculateIndex() {
+                this.form.totalVolumeFrontEnd = this.form.length * this.form.height * this.form.width;
+                this.form.sum = this.form.length + this.form.height + this.form.width;
+                this.form.totalVolumeWithWeight = this.form.length * this.form.height * this.form.width / 6000
             }
         }
     }

@@ -25,7 +25,7 @@ apply plugin: "io.freefair.lombok"
 
 //项目设置
 group 'com.abc'
-version '1.0'
+version '20190327'
 
 //编译设置
 sourceCompatibility = 1.8
