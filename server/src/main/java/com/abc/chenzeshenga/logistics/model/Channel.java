@@ -20,6 +20,8 @@ import java.util.List;
 
     private String partner;
 
+    private String partnerDesc;
+
     private String min;
 
     private String max;
@@ -31,6 +33,14 @@ import java.util.List;
     private List<String> checkedRules2;
 
     private String active;
+
+    private String adapter;
+
+    private String adapterDesc;
+
+    private String rule;
+
+    private String calculateRuleDesc;
 
     private String comments;
 

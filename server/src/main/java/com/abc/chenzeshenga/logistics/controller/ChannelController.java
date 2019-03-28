@@ -59,7 +59,7 @@ import java.util.List;
         Date curr = new Date();
         channel.setCreateOn(curr);
         channel.setUpdateOn(curr);
-        channel.setCheckedRules(channel.getCheckedRules2().toString());
+        channel.setCheckedRules(String.join(",", channel.getCheckedRules2()));
         channelMapper.insert(channel);
         channelCache.init();
         return Json.succ().data(channel);
@@ -71,6 +71,7 @@ import java.util.List;
     }
 
     @PostMapping @RequestMapping("/update") public Json update(@RequestBody Channel channel) {
+        channel.setCheckedRules(String.join(",", channel.getCheckedRules2()));
         channel.setUpdateOn(new Date());
         channel.setUpdateBy(UserUtils.getUserName());
         channelMapper.updateByPrimaryKeySelective(channel);
@@ -84,12 +85,15 @@ import java.util.List;
         List<Channel> channelList = channelPage.getRecords();
         for (Channel channel : channelList) {
             String checkedRules = channel.getCheckedRules();
-            String[] checkedRulesList = checkedRules.replace("[", "").replace("]", "").split(",");
+            String[] checkedRulesList = checkedRules.split(",");
             StringBuilder stringBuilder = new StringBuilder();
             for (String str : checkedRulesList) {
-                stringBuilder.append(labelCache.getLabel(str)).append("\r\n");
+                stringBuilder.append(";").append(labelCache.getLabel(str));
             }
-            channel.setRuleDesc(stringBuilder.toString());
+            channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
+            channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
+            channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
+            channel.setAdapterDesc(labelCache.getLabel("category_" + channel.getAdapter()));
         }
         return Json.succ().data("page", channelPage);
     }

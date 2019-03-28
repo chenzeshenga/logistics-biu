@@ -9,6 +9,8 @@
         <result column="max" jdbcType="VARCHAR" property="max"/>
         <result column="checked_rules" jdbcType="VARCHAR" property="checkedRules"/>
         <result column="active" jdbcType="VARCHAR" property="active"/>
+        <result column="adapter" jdbcType="VARCHAR" property="adapter"/>
+        <result column="rule" jdbcType="VARCHAR" property="rule"/>
         <result column="comments" jdbcType="VARCHAR" property="comments"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
@@ -24,6 +26,8 @@
                `max`,
                checked_rules,
                active,
+               adapter,
+               rule,
                comments,
                create_by,
                update_by,
@@ -39,11 +43,12 @@
     </delete>
     <insert id="insert" keyColumn="channel_code" keyProperty="channelCode" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
         insert into l_channel (channel_code, channel_name, partner, `min`,
-                               `max`, checked_rules, active,
+                               `max`, checked_rules, active, adapter, rule,
                                comments, create_by, update_by,
                                create_on, update_on)
         values (#{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{partner,jdbcType=VARCHAR}, #{min,jdbcType=VARCHAR},
-                #{max,jdbcType=VARCHAR}, #{checkedRules,jdbcType=VARCHAR}, #{active,jdbcType=VARCHAR},
+                #{max,jdbcType=VARCHAR}, #{checkedRules,jdbcType=VARCHAR}, #{active,jdbcType=VARCHAR}, #{adapter,jdbcType=VARCHAR},
+                #{rule,jdbcType=VARCHAR},
                 #{comments,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
                 #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP})
     </insert>
@@ -68,6 +73,12 @@
             </if>
             <if test="active != null">
                 active,
+            </if>
+            <if test="adapter != null">
+                adapter,
+            </if>
+            <if test="rule != null">
+                rule,
             </if>
             <if test="comments != null">
                 comments,
@@ -103,6 +114,12 @@
             </if>
             <if test="active != null">
                 #{active,jdbcType=VARCHAR},
+            </if>
+            <if test="adapter != null">
+                #{adapter,jdbcType=VARCHAR},
+            </if>
+            <if test="rule != null">
+                #{rule,jdbcType=VARCHAR},
             </if>
             <if test="comments != null">
                 #{comments,jdbcType=VARCHAR},
@@ -142,6 +159,12 @@
             <if test="active != null">
                 active = #{active,jdbcType=VARCHAR},
             </if>
+            <if test="adapter != null">
+                adapter = #{adapter,jdbcType=VARCHAR},
+            </if>
+            <if test="rule != null">
+                rule = #{rule,jdbcType=VARCHAR},
+            </if>
             <if test="comments != null">
                 comments = #{comments,jdbcType=VARCHAR},
             </if>
@@ -168,6 +191,8 @@
             `max`         = #{max,jdbcType=VARCHAR},
             checked_rules = #{checkedRules,jdbcType=VARCHAR},
             active        = #{active,jdbcType=VARCHAR},
+            adapter       = #{adapter,jdbcType=VARCHAR},
+            rule          = #{rule,jdbcType=VARCHAR},
             comments      = #{comments,jdbcType=VARCHAR},
             create_by     = #{createBy,jdbcType=VARCHAR},
             update_by     = #{updateBy,jdbcType=VARCHAR},
@@ -184,6 +209,7 @@
     <select id="listByWhere" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
         select channel_code as value, channel_name as label
         from l_channel
+        where adapter = #{adapter}
     </select>
 
     <select id="page" resultMap="BaseResultMap">

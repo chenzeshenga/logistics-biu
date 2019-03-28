@@ -10,15 +10,18 @@
                 <el-button style="margin-left: 1400px" type="primary" @click="triggerDialog">新增渠道</el-button>
             </el-col>
             <el-table style="width: 100%;margin-top: 10px" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
-                      highlight-current-row>
+                      highlight-current-row @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column width="160" prop="channelCode" label="渠道编码"></el-table-column>
-                <el-table-column width="200" prop="channelName" label="渠道名称"></el-table-column>
-                <el-table-column width="200" prop="active" label="是否激活"></el-table-column>
-                <el-table-column width="100" prop="ruleDesc" label="规则"></el-table-column>
+                <el-table-column width="150" prop="channelName" label="渠道名称"></el-table-column>
+                <el-table-column width="100" prop="active" label="是否激活"></el-table-column>
+                <el-table-column width="150" prop="adapterDesc" label="适用类型"></el-table-column>
+                <el-table-column width="300" prop="ruleDesc" label="规则"></el-table-column>
+                <el-table-column width="200" prop="calculateRuleDesc" label="计算规则"></el-table-column>
                 <el-table-column width="150" prop="min" label="最短运输天数"></el-table-column>
-                <el-table-column width="170" prop="max" label="最长运输天数"></el-table-column>
-                <el-table-column width="250" prop="partner" label="partner"></el-table-column>
-                <el-table-column width="150" prop="fromName" label="合作方"></el-table-column>
+                <el-table-column width="150" prop="max" label="最长运输天数"></el-table-column>
+                <el-table-column width="200" prop="partnerDesc" label="合作物流"></el-table-column>
+                <el-table-column width="300" prop="comments" label="备注"></el-table-column>
                 <el-table-column width="170" prop="createOn" label="创建时间"></el-table-column>
                 <el-table-column width="170" prop="updateOn" label="修改时间"></el-table-column>
                 <el-table-column width="150" prop="createBy" label="创建人"></el-table-column>
@@ -26,8 +29,17 @@
                 <el-table-column label="操作" width="300" fixed="right">
                     <template slot-scope="scope">
                         <el-tooltip content="编辑" placement="top">
-                            <el-button @click="update(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle
-                                       plain></el-button>
+                            <el-button @click="update(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
+                        </el-tooltip>
+                        <el-tooltip content="快速启用" placement="top">
+                            <el-button @click="handleEnable(scope.$index,scope.row)" size="small" type="success" circle plain>
+                                <svg-icon icon-class="enable"></svg-icon>
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip content="快速禁用" placement="top">
+                            <el-button @click="handleDisable(scope.$index,scope.row)" size="small" type="warning" circle plain>
+                                <svg-icon icon-class="disable"></svg-icon>
+                            </el-button>
                         </el-tooltip>
                         <el-tooltip content="删除" placement="top">
                             <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle
@@ -167,6 +179,7 @@
                     max: "",
                     checkedRules2: [],
                     active: false,
+                    rule: '',
                     comments: "",
                 },
                 rules: rules,
@@ -188,7 +201,10 @@
                     data: this.tablePage
                 }).then(res => {
                     this.tableData = res.data.page.records;
-                    this.tablePage = res.data.page;
+                    this.tablePage.current = res.data.page.current;
+                    this.tablePage.pages = res.data.page.pages;
+                    this.tablePage.size = res.data.page.size;
+                    this.tablePage.total = res.data.page.total;
                     this.tableLoading = false;
                 })
             },
@@ -220,17 +236,24 @@
                     url: "/channel/add",
                     method: "post",
                     data: this.form
-                }).then(res => {
+                }).then(() => {
+                    this.dialogVisible = false;
                     this.$message.success("成功");
                     this.fetch();
                 })
             },
             updateForm() {
+                if (this.form.active) {
+                    this.form.active = 'Y';
+                } else {
+                    this.form.active = 'N';
+                }
                 request({
                     url: "/channel/update",
                     method: "post",
                     data: this.form
                 }).then(res => {
+                    this.dialogVisible = false;
                     this.$message.success("成功");
                     this.fetch();
                 })
@@ -245,10 +268,38 @@
             },
             update(index, row) {
                 this.dialogVisible = true;
+                this.onUpdate = true;
+                this.onCreate = false;
                 this.form = this.tableData[index];
+                this.form.checkedRules2 = this.tableData[index].checkedRules.split(",");
+                this.form.active = (this.tableData[index].active === "Y");
             },
             triggerDialog() {
                 this.dialogVisible = true;
+            },
+            handleSelectionChange(val) {
+                console.log(val);
+            },
+            handleDelete(index, row) {
+                this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
+                    request({
+                        url: "/channel/delete/" + row.channelCode,
+                        method: "get"
+                    }).then(() => {
+                        this.$message.success("删除成功");
+                        this.fetch();
+                    })
+                }).catch(() => {
+                    this.$message.info("取消删除");
+                })
+            },
+            handleEnable(index, row) {
+                console.log(index);
+                console.log(row);
+            },
+            handleDisable(index, row) {
+                console.log(index);
+                console.log(row);
             }
         }
     }
