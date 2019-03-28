@@ -1,14 +1,24 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <el-col :span="24">
-                <el-tooltip content="刷新" placement="top">
-                    <el-button size="mini" circle @click="fetch">
-                        <svg-icon icon-class="refresh"></svg-icon>
-                    </el-button>
-                </el-tooltip>
-                <el-button style="margin-left: 1400px" type="primary" @click="triggerDialog">新增渠道</el-button>
-            </el-col>
+            <el-row :gutter="20">
+                <el-col :span="1">
+                    <el-tooltip content="刷新" placement="top">
+                        <el-button size="mini" circle @click="fetch">
+                            <svg-icon icon-class="refresh"></svg-icon>
+                        </el-button>
+                    </el-tooltip>
+                </el-col>
+                <el-col :span="2">
+                    <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchEnable">批量启用</el-button>
+                </el-col>
+                <el-col :span="2">
+                    <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchDisable">批量禁用</el-button>
+                </el-col>
+                <el-col :span="2" :offset="16">
+                    <el-button type="primary" @click="triggerDialog">新增渠道</el-button>
+                </el-col>
+            </el-row>
             <el-table style="width: 100%;margin-top: 10px" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                       highlight-current-row @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55"></el-table-column>
@@ -168,6 +178,7 @@
                     total: null
                 },
                 tableLoading: false,
+                multiSelected: false,
                 tableData: [],
                 onCreate: true,
                 onUpdate: false,
@@ -186,7 +197,8 @@
                 checkRules: {},
                 isIndeterminate: true,
                 checkAll: false,
-                dialogVisible: false
+                dialogVisible: false,
+                channelCodeList: []
             }
         },
         created() {
@@ -278,7 +290,10 @@
                 this.dialogVisible = true;
             },
             handleSelectionChange(val) {
-                console.log(val);
+                this.multiSelected = (val.length > 1);
+                val.foreach(channel => {
+                    this.channelCodeList.push(channel.channelCode);
+                })
             },
             handleDelete(index, row) {
                 this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
@@ -300,7 +315,13 @@
             handleDisable(index, row) {
                 console.log(index);
                 console.log(row);
-            }
+            },
+            batchEnable() {
+                console.log(this.sele)
+            },
+            batchDisable() {
+
+            },
         }
     }
 </script>

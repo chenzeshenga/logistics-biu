@@ -27,7 +27,7 @@ import java.util.Map;
     @Scheduled(cron = "0 0 0 * * ?") @PostConstruct public void init() {
         List<ChannelLabel> channelLabelList = channelMapper.list();
         channelLabelList.forEach(channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
-        this.channelSeq = String.valueOf(channelLabelList.size());
+        this.channelSeq = String.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", ""));
     }
 
     public String channelLabel(String channelValue) {

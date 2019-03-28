@@ -215,5 +215,6 @@
     <select id="page" resultMap="BaseResultMap">
         select *
         from l_channel
+        order by create_on desc
     </select>
 </mapper>
