@@ -41,4 +41,8 @@ import java.util.List;
 
     List<Channel> page(Pagination pagination);
 
+    int quickEnableList(List<String> channelCodes);
+
+    int quickDisableList(List<String> channelCodes);
+
 }

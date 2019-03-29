@@ -217,4 +217,21 @@
         from l_channel
         order by create_on desc
     </select>
+
+    <update id="quickDisableList" parameterType="java.util.List">
+        update l_channel
+        set active='N'
+        where
+        <foreach collection="list" item="channelCode" index="index" separator="or">
+            channel_code=#{channelCode}
+        </foreach>
+    </update>
+    <update id="quickEnableList" parameterType="java.util.List">
+        update l_channel
+        set active='Y'
+        where
+        <foreach collection="list" item="channelCode" index="index" separator="or">
+            channel_code=#{channelCode}
+        </foreach>
+    </update>
 </mapper>

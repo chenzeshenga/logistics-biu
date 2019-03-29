@@ -115,4 +115,14 @@ import java.util.Map;
         return Json.succ();
     }
 
+    @PostMapping @RequestMapping("/enable/list") public Json quickEnableList(@RequestBody List<String> channelCodes) {
+        channelMapper.quickEnableList(channelCodes);
+        return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/disable/list") public Json quickDisableList(@RequestBody List<String> channelCodes) {
+        channelMapper.quickDisableList(channelCodes);
+        return Json.succ();
+    }
+
 }
