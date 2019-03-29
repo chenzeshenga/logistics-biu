@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chenzeshenga
@@ -96,6 +97,22 @@ import java.util.List;
             channel.setAdapterDesc(labelCache.getLabel("category_" + channel.getAdapter()));
         }
         return Json.succ().data("page", channelPage);
+    }
+
+    @PostMapping @RequestMapping("/enable") public Json quickEnable(@RequestBody Map<String, String> channelMap) {
+        Channel channel = new Channel();
+        channel.setChannelCode(channelMap.get("channelCode"));
+        channel.setActive("Y");
+        channelMapper.updateByPrimaryKeySelective(channel);
+        return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/disable") public Json disable(@RequestBody Map<String, String> channelMap) {
+        Channel channel = new Channel();
+        channel.setChannelCode(channelMap.get("channelCode"));
+        channel.setActive("N");
+        channelMapper.updateByPrimaryKeySelective(channel);
+        return Json.succ();
     }
 
 }

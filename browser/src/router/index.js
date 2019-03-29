@@ -211,12 +211,6 @@ export const asyncRouterMap = [
                 },
                 children: [
                     {
-                        path: 'pickup',
-                        component: _import('order/type2/list/pickup'),
-                        name: 'order-list-mgt-type2-pickup',
-                        meta: {perm: 'm:order:list', title: '拣货', icon: 'chart', noCache: true}
-                    },
-                    {
                         path: 'status1',
                         component: _import('order/type2/list/status1'),
                         name: 'order-list-mgt-type2-status1',
@@ -269,12 +263,6 @@ export const asyncRouterMap = [
                     icon: 'chart'
                 },
                 children: [
-                    {
-                        path: 'pickup',
-                        component: _import('order/type3/list/pickup'),
-                        name: 'order-list-mgt-type3-pickup',
-                        meta: {perm: 'm:order:list', title: '拣货', icon: 'chart', noCache: true}
-                    },
                     {
                         path: 'status1',
                         component: _import('order/type3/list/status1'),
