@@ -9,3 +9,4 @@ npm-debug.log
 /server/logs/
 /server/out/
 /logs/
+/server/target/

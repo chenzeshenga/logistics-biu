@@ -6,10 +6,9 @@ import java.util.Objects;
 
 /**
  * created by CaiBaoHong at 2018/5/14 16:14<br>
- *     用于存储角色或权限的值
+ * 用于存储角色或权限的值
  */
 public class AuthVo {
-
 
     private String name;//显示名
     private String val;//值
@@ -42,21 +41,22 @@ public class AuthVo {
         this.val = val;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuthVo authVo = (AuthVo) o;
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuthVo authVo = (AuthVo)o;
         return Objects.equals(val, authVo.val);
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return Objects.hash(val);
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return JSON.toJSONString(this);
     }
 }
