@@ -1,4 +1,0 @@
-rootProject.name = 'logistics-biu'
-include 'server'
-include 'browser'
-
