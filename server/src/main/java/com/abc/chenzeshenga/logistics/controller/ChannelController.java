@@ -43,6 +43,7 @@ import java.util.Map;
 
     @GetMapping @RequestMapping("/list") public Json list() {
         List<ChannelLabel> channelList = channelMapper.list();
+        channelList.forEach(channelLabel -> channelLabel.setPartnerDesc(labelCache.getLabel("carrier_" + channelLabel.getPartner())));
         return Json.succ().data(channelList);
     }
 

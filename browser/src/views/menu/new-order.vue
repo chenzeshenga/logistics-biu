@@ -27,8 +27,20 @@
         </el-form-item>
         <el-form-item>
           <el-col :span="12" v-if="form.category !== '1'">
+            <el-form-item label="中国承运人">
+              <el-input v-model="form.chinaCarrier" placeholder="顺丰/圆通/中通..."></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.category !== '1'">
             <el-form-item label="中国追踪单号">
               <el-input v-model="form.chinaNo" placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="12">
+            <el-form-item label="日本承运人">
+              <el-input v-model="form.carrierDesc" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -169,6 +181,8 @@
           orderNo: '',
           category: '',
           channel: '',
+          carrier: '',
+          carrierDesc: '',
           chinaNo: '',
           trackNo: '',
           fromName: '',

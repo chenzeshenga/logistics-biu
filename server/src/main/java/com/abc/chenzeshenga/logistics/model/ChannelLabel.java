@@ -12,4 +12,8 @@ import lombok.Data;
 
     private String value;
 
+    private String partner;
+
+    private String partnerDesc;
+
 }

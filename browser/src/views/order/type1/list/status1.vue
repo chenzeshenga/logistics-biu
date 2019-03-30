@@ -198,9 +198,9 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push(
-          {path: '/new-order/index?ordno=' + row.orderNo + '&status=1'},
-        );
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo + '&status=1',
+        });
       },
       statusUpdate(index, row) {
         this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
@@ -268,7 +268,9 @@
         });
       },
       route2NewOrd() {
-        this.$router.push({path: '/new-order/index'});
+        this.$router.push({
+          path: '/new-order/index',
+        });
       },
       initTrackno() {
         request({
@@ -314,7 +316,9 @@
         });
       },
       getSummary(param) {
-        const {columns, data} = param;
+        const {
+          columns, data,
+        } = param;
         const sums = [];
         columns.forEach(
           (column, index) => {
