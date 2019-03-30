@@ -7,6 +7,7 @@
         <result property="carrier" column="carrier_no"/>
         <result property="min" column="min_track_code"/>
         <result property="max" column="max_track_code"/>
+        <result property="channelCode" column="channel_code"/>
     </resultMap>
 
     <select id="list" resultMap="result">
@@ -18,11 +19,12 @@
         select *
         from l_track_code
         where carrier_no = #{carrierNo}
+          and channel_code = #{channelCode}
     </select>
 
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.TrackNo">
-        insert into l_track_code(carrier_no, min_track_code, max_track_code)
-        VALUES (#{carrier}, #{min}, #{max})
+        insert into l_track_code(carrier_no, min_track_code, max_track_code, channel_code)
+        VALUES (#{carrier}, #{min}, #{max}, #{channelCode})
     </insert>
 
     <delete id="delete">
@@ -35,13 +37,15 @@
         update l_track_code
         set carrier_no=#{carrier},
             min_track_code=#{min},
-            max_track_code=#{max}
+            max_track_code=#{max},
+            channel_code=#{channelCode}
         where id = #{id}
     </update>
 
     <select id="generate" resultMap="result">
         select *
         from l_track_code
+        where channel_code = #{channelCode}
         limit 1;
     </select>
 

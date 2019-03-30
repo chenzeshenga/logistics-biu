@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
         return page.setRecords(baseMapper.list(page));
     }
 
-    public Page<TrackNo> carrierNo(Page page, String carrierNo) {
-        return page.setRecords(baseMapper.carrierNo(page, carrierNo));
+    public Page<TrackNo> carrierNo(Page page, String carrierNo, String channelCode) {
+        return page.setRecords(baseMapper.carrierNo(page, carrierNo, channelCode));
     }
 
 }

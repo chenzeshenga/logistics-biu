@@ -42,10 +42,12 @@ import java.util.List;
         return Json.succ().data("page", trackNoPage);
     }
 
-    @PostMapping @RequestMapping("/list/{carrierNo}") public Json carrierNo(@RequestBody String body, @PathVariable String carrierNo) {
+    @PostMapping
+    @RequestMapping("/list/{carrierNo}/{channelCode}")
+    public Json carrierNo(@RequestBody String body, @PathVariable String carrierNo, @PathVariable String channelCode) {
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
-        Page<TrackNo> trackNoPage = trackNoService.carrierNo(page, carrierNo.replace("carrier_", ""));
+        Page<TrackNo> trackNoPage = trackNoService.carrierNo(page, carrierNo.replace("carrier_", ""), channelCode);
         List<TrackNo> trackNoList = trackNoPage.getRecords();
         trackNoList.forEach(trackNo -> trackNo.setCarrierDesc(labelCache.getLabel("carrier_" + trackNo.getCarrier())));
         return Json.succ().data("page", trackNoPage);
@@ -70,11 +72,11 @@ import java.util.List;
 
     @GetMapping @RequestMapping("/pk") public Json generate() {
         TrackNo trackNo = trackNoMapper.generate();
-        Long minTrackno = trackNo.getMin();
-        if (minTrackno + 1 > trackNo.getMax()) {
+        Long minTrackno = Long.valueOf(trackNo.getMin());
+        if (minTrackno + 1 > Long.valueOf(trackNo.getMax())) {
             trackNoMapper.delete(trackNo.getId());
         } else {
-            trackNo.setMin(minTrackno + 1);
+            trackNo.setMin(String.valueOf(minTrackno + 1));
             trackNoMapper.update(trackNo);
         }
         return Json.succ().data(trackNo.getMin());
@@ -83,11 +85,11 @@ import java.util.List;
     @GetMapping @RequestMapping("/pk/{carrier}") public Json generateByCarrier(@PathVariable String carrier) {
         carrier = carrier.replace("carrier_", "");
         TrackNo trackNo = trackNoMapper.generate2(carrier);
-        Long minTrackno = trackNo.getMin();
-        if (minTrackno + 1 > trackNo.getMax()) {
+        Long minTrackno = Long.valueOf(trackNo.getMin());
+        if (minTrackno + 1 > Long.valueOf(trackNo.getMax())) {
             trackNoMapper.delete(trackNo.getId());
         } else {
-            trackNo.setMin(minTrackno + 1);
+            trackNo.setMin(String.valueOf(minTrackno + 1));
             trackNoMapper.update(trackNo);
         }
         return Json.succ().data(trackNo.getMin());

@@ -43,7 +43,6 @@ import java.util.Map;
 
     @GetMapping @RequestMapping("/list") public Json list() {
         List<ChannelLabel> channelList = channelMapper.list();
-
         return Json.succ().data(channelList);
     }
 

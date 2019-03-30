@@ -11,7 +11,7 @@ import java.util.List;
 
     List<TrackNo> list(Pagination pagination);
 
-    List<TrackNo> carrierNo(Pagination pagination, String carrierNo);
+    List<TrackNo> carrierNo(Pagination pagination, String carrierNo, String channelCode);
 
     int add(TrackNo trackNo);
 

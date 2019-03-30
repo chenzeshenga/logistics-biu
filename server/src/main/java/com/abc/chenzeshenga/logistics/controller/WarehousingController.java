@@ -21,7 +21,6 @@ import java.util.List;
  * @author chenzesheng
  * @version 1.0
  */
-@Deprecated
 @Slf4j @RestController @RequestMapping("/warehousing") public class WarehousingController {
 
     @Resource private WarehousingMapper warehousingMapper;
