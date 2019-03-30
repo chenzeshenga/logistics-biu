@@ -14,9 +14,8 @@
         <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                   highlight-current-row>
           <el-table-column prop="id" label="id"></el-table-column>
-          <el-table-column prop="carrier" label="承运人编码"></el-table-column>
           <el-table-column prop="carrierDesc" label="承运人"></el-table-column>
-          <el-table-column prop="channelCode" label="对应渠道"></el-table-column>
+          <el-table-column prop="channelName" label="对应渠道"></el-table-column>
           <el-table-column prop="min" label="当前最小订单号"></el-table-column>
           <el-table-column prop="max" label="当前最大订单号"></el-table-column>
           <el-table-column label="操作" width="300" fixed="right">
@@ -45,7 +44,7 @@
     <el-dialog title="新增追踪单号" :visible.sync="dialogVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="承运人">
-          <el-select v-model="form.carrierNo2" placeholder="承运人">
+          <el-select v-model="form.carrier" placeholder="承运人">
             <el-option label="佐川急便" value="carrier_2"/>
             <el-option label="黑猫运输" value="carrier_3"/>
             <el-option label="西浓运输" value="carrier_4"/>
@@ -59,7 +58,7 @@
           <el-input-number v-model="form.max"></el-input-number>
         </el-form-item>
         <el-form-item label="对应渠道">
-          <el-select v-model="form.channel" placeholder="对应渠道">
+          <el-select v-model="form.channelCode" placeholder="对应渠道">
             <el-option v-for="item in channels" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
@@ -93,6 +92,7 @@
         tableLoading: false,
         carrier: [],
         form: {
+          carrier: null,
           selectedCarrier: null,
           min: null,
           max: null,
@@ -160,15 +160,22 @@
       },
       newTrackno() {
         this.dialogVisible = true
+        this.form = {
+          carrier: null,
+          min: null,
+          max: null,
+          channel: null,
+        };
       },
       newTracknoSubmit() {
         request({
           url: '/trackno/add',
           method: 'post',
           data: {
-            carrier: this.form.carrierNo2,
+            carrier: this.form.carrier,
             min: this.form.min,
-            max: this.form.max
+            max: this.form.max,
+            channelCode: this.form.channelCode,
           }
         }).then(res => {
           console.log(res)
@@ -195,6 +202,7 @@
         })
       },
       handleUpdate(index, row) {
+        console.log(row);
         this.onUpdate = true
         this.onCreate = false
         this.dialogVisible = true
@@ -202,6 +210,8 @@
         this.form.min = row.min
         this.form.max = row.max
         this.form.id = row.id
+        this.form.channelCode = row.channelCode;
+        this.form.carrier = 'carrier_' + row.carrier;
       },
       updateOnSubmit() {
         request({
@@ -209,9 +219,10 @@
           method: 'post',
           data: {
             id: this.form.id,
-            carrier: this.form.carrierNo2,
+            carrier: this.form.carrier,
             min: this.form.min,
-            max: this.form.max
+            max: this.form.max,
+            channelCode: this.form.channelCode,
           }
         }).then(res => {
           console.log(res)

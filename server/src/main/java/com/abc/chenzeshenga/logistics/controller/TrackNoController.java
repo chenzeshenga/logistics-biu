@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.TrackNoMapper;
 import com.abc.chenzeshenga.logistics.model.TrackNo;
@@ -28,9 +29,12 @@ import java.util.List;
 
     private LabelCache labelCache;
 
-    @Autowired public TrackNoController(TrackNoService trackNoService, LabelCache labelCache) {
+    private ChannelCache channelCache;
+
+    @Autowired public TrackNoController(TrackNoService trackNoService, LabelCache labelCache, ChannelCache channelCache) {
         this.trackNoService = trackNoService;
         this.labelCache = labelCache;
+        this.channelCache = channelCache;
     }
 
     @PostMapping @RequestMapping("/list") public Json list(@RequestBody String body) {
@@ -38,12 +42,14 @@ import java.util.List;
         Page page = PageUtils.getPageParam(jsonObject);
         Page<TrackNo> trackNoPage = trackNoService.list(page);
         List<TrackNo> trackNoList = trackNoPage.getRecords();
-        trackNoList.forEach(trackNo -> trackNo.setCarrierDesc(labelCache.getLabel("carrier_" + trackNo.getCarrier())));
+        trackNoList.forEach(trackNo -> {
+            trackNo.setCarrierDesc(labelCache.getLabel("carrier_" + trackNo.getCarrier()));
+            trackNo.setChannelName(channelCache.channelLabel(trackNo.getChannelCode()));
+        });
         return Json.succ().data("page", trackNoPage);
     }
 
-    @PostMapping
-    @RequestMapping("/list/{carrierNo}/{channelCode}")
+    @PostMapping @RequestMapping("/list/{carrierNo}/{channelCode}")
     public Json carrierNo(@RequestBody String body, @PathVariable String carrierNo, @PathVariable String channelCode) {
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
