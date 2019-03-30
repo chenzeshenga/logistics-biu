@@ -21,6 +21,8 @@ import java.util.List;
 
     TrackNo generate();
 
+    TrackNo generate3(String channelCode);
+
     TrackNo generate2(String carrier);
 
 }

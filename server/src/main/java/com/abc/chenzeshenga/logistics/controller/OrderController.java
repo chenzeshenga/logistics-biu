@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
+import com.abc.chenzeshenga.logistics.mapper.TrackNoMapper;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
@@ -50,14 +51,17 @@ import java.util.concurrent.atomic.AtomicReference;
 
     private TrackNoController trackNoController;
 
+    private TrackNoMapper trackNoMapper;
+
     @Autowired
     public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache,
-        TrackNoController trackNoController) {
+        TrackNoController trackNoController, TrackNoMapper trackNoMapper) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
         this.trackNoController = trackNoController;
+        this.trackNoMapper = trackNoMapper;
     }
 
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
@@ -147,7 +151,7 @@ import java.util.concurrent.atomic.AtomicReference;
             manualOrder.setCarrierNo(carrierNo);
             manualOrder.setUpdator(cname);
             manualOrder.setUpdateOn(curr);
-            manualOrder.setTrackNo(String.valueOf(trackNoController.generate().get("data")));
+            manualOrder.setTrackNo(String.valueOf(trackNoMapper.generate().getMin()));
             orderMapper.fillInTrackNo(manualOrder);
         });
         return Json.succ();

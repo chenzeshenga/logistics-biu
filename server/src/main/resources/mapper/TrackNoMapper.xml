@@ -45,7 +45,6 @@
     <select id="generate" resultMap="result">
         select *
         from l_track_code
-        where channel_code = #{channelCode}
         limit 1;
     </select>
 
@@ -53,6 +52,13 @@
         select *
         from l_track_code
         where carrier_no = #{carrier}
+        limit 1;
+    </select>
+
+    <select id="generate3" resultMap="result">
+        select *
+        from l_track_code
+        where channel_code = #{channelCode}
         limit 1;
     </select>
 

@@ -76,8 +76,8 @@ import java.util.List;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/pk") public Json generate() {
-        TrackNo trackNo = trackNoMapper.generate();
+    @GetMapping @RequestMapping("/pk") public Json generate(@RequestParam String channelCode) {
+        TrackNo trackNo = trackNoMapper.generate3(channelCode);
         Long minTrackno = Long.valueOf(trackNo.getMin());
         if (minTrackno + 1 > Long.valueOf(trackNo.getMax())) {
             trackNoMapper.delete(trackNo.getId());
