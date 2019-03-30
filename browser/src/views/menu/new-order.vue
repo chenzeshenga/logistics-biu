@@ -40,7 +40,7 @@
         <el-form-item>
           <el-col :span="12">
             <el-form-item label="日本承运人">
-              <el-input v-model="form.carrierDesc" disabled></el-input>
+              <el-input v-model="form.carrierDesc" disabled placeholder="请选择运送渠道"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -187,6 +187,7 @@
           trackNo: '',
           fromName: '',
           fromContact: '',
+          chinaCarrier: '',
           fromZipCode: '',
           fromDetailAddress: '',
           toName: '',
@@ -216,6 +217,7 @@
         selectedProductMap: {},
         status: '',
         defaultFormData: {},
+        channelMap: {},
       };
     },
     created() {
@@ -274,6 +276,10 @@
           method: 'get',
         }).then(res => {
           this.channels = res.data.data;
+          for (const index in this.channels) {
+            const channel = this.channels[index];
+            this.channelMap[channel['value']] = channel;
+          }
           this.initPage();
         });
       },
@@ -300,6 +306,7 @@
       },
       handleChange(value) {
         this.form.channel = value[0];
+        this.form.carrierDesc = this.channelMap[value[0]]['partnerDesc'];
       },
       handleAddressChange(value) {
         this.form.address.ken = value[0];

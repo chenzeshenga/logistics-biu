@@ -6,6 +6,7 @@
         <result property="orderNo" column="ord_no"/>
         <result property="category" column="category"/>
         <result property="carrierNo" column="carrier_no"/>
+        <result property="chinaCarrier" column="china_carrier"/>
         <result property="trackNo" column="track_no"/>
         <result property="creator" column="owner"/>
         <result property="status" column="status"/>
@@ -51,6 +52,9 @@
             </if>
             <if test="carrierNo != null and carrierNo != ''">
                 carrier_no=#{carrierNo},
+            </if>
+            <if test="chinaCarrier != null and chinaCarrier != ''">
+                china_carrier=#{chinaCarrier},
             </if>
             <if test="trackNo != null and trackNo != ''">
                 track_no=#{trackNo},
@@ -130,11 +134,11 @@
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
-                                   on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel)
+                                   on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel, china_carrier)
         values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn}, #{creator}, #{updator},
                 #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId}, #{toCityId}, #{toTownId},
                 #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact}, #{fromName},
-                #{toName}, #{channel})
+                #{toName}, #{channel}, #{chinaCarrier})
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">

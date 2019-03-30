@@ -48,6 +48,7 @@ import java.util.Map;
     @ExcelProperty(index = 21, value = "是否代收费用") private String collect;
     private String status;
     private String carrierNo;
+    private String chinaCarrier;
     private String updator;
     @NotEmpty(message = "订单类型必选") private String category;
     private String channel;
