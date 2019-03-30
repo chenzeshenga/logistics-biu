@@ -8,6 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * @author chenzeshenga
+ * @version 1.0
+ */
 @Mapper public interface ProductMapper extends BaseMapper<Product> {
 
     List<SkuLabel> list(String username);
@@ -37,5 +41,7 @@ import java.util.List;
     List<Product> listByStatus(Page page, String status);
 
     int statusUpdate(String sku, String status);
+
+    int batchUpdate(List<String> skus);
 
 }

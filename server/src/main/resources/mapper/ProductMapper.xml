@@ -384,4 +384,13 @@
         where sku = #{sku}
     </update>
 
+    <update id="batchUpdate" parameterType="java.util.List">
+        update l_productions
+        set status='1'
+        where
+        <foreach collection="list" item="item" index="index" separator="or">
+            sku = #{item}
+        </foreach>
+    </update>
+
 </mapper>

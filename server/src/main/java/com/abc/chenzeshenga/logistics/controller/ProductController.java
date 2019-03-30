@@ -209,4 +209,9 @@ import java.util.UUID;
         return Json.succ().data(product);
     }
 
+    @PostMapping @RequestMapping("/update/approval") public Json batchApproval(@RequestBody List<String> skus) {
+        productMapper.batchUpdate(skus);
+        return Json.succ();
+    }
+
 }

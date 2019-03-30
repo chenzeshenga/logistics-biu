@@ -1,6 +1,9 @@
 <template>
   <div class="login-container">
     <div class="app-container">
+      <el-col :offset="2" v-if="multiSelected">
+        <el-button type="primary" @click="batchUpdate">批量审核</el-button>
+      </el-col>
       <el-table style="width: 100%;margin: 10px" :data="tableData" v-loading.body="tableLoading"
                 element-loading-text="加载中" stripe
                 highlight-current-row @selection-change="handleSelectionChange">
@@ -64,6 +67,8 @@
         },
         tableLoading: false,
         tableData: [],
+        multiSelected: false,
+        skus: [],
       };
     },
     created() {
@@ -121,15 +126,30 @@
         });
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-product/new-product?sku=' + row.sku});
+        this.$router.push({
+          path: '/new-product/new-product?sku=' + row.sku,
+        });
       },
       handleSelectionChange(val) {
-        console.log(val);
+        this.multiSelected = (val.length > 1);
+        for (let i = 0; i < val.length; i++) {
+          this.skus.push(val[i]['sku']);
+        }
+      },
+      batchUpdate() {
+        this.$confirm('您确定要审核这些商品吗？', '提示', confirm).then(() => {
+          request({
+            url: '/product/update/approval',
+            method: 'post',
+            data: this.skus,
+          }).then(() => {
+            this.$message.success('更新成功');
+            this.fetchData();
+          });
+        }).catch(() => {
+          this.$message.info('已取消审核');
+        });
       },
     },
   };
 </script>
-
-<style scoped>
-
-</style>
