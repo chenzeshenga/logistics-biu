@@ -13,11 +13,14 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.property.VerticalAlignment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +71,29 @@ import java.util.List;
                 document.add(table);
             }
         }
+        response.setContentType("application/pdf");
+        response.getOutputStream().write(outputStream.toByteArray());
+    }
+
+    @GetMapping("/sku/{dySku}") public void skuPdf(HttpServletResponse response, @PathVariable String dySku) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PdfWriter pdfWriter = new PdfWriter(outputStream);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        Document document = new Document(pdfDocument, PageSize.A4.rotate());
+        document.setMargins(10, 10, 10, 10);
+        Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku, "ean13")));
+        Table table = new Table(new float[] {8, 8, 8});
+        table.setWidth(UnitValue.createPercentValue(100));
+        for (int i = 0; i < 7; i++) {
+            table.addCell(new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)).addCell(
+                new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
+                    .setHorizontalAlignment(HorizontalAlignment.CENTER)).addCell(
+                new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
+                    .setHorizontalAlignment(HorizontalAlignment.CENTER));
+        }
+        document.add(table);
+        document.close();
         response.setContentType("application/pdf");
         response.getOutputStream().write(outputStream.toByteArray());
     }

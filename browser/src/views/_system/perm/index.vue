@@ -132,7 +132,6 @@
 </template>
 
 <script>
-
   import tree from '../tree'
   import {parseTime, resetTemp} from '@/utils'
   import permApi from '@/api/perm'
@@ -231,7 +230,7 @@
           this.apiPermValSet = new Set(apiPermList.map(p=>p.pval))
           //显示菜单权限树
           this.menuPermissionTree = tree.generateMenuPermissionTree()
-          //显示按钮权限树
+          // 显示按钮权限树
           let menuPermissionTreeCopy = tree.generateMenuPermissionTree()
           this.buttonPermissionTree = this.generateButtonPermissionTree(menuPermissionTreeCopy)
           //显示接口权限树

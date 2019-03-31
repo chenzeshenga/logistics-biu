@@ -154,7 +154,7 @@
             fetchData() {
                 this.tableLoading = true;
                 request({
-                    url: "ord/list/2/8",
+                  url: 'ord/list/3/8',
                     method: "post",
                     data: {
                         current: this.tablePage.current,
