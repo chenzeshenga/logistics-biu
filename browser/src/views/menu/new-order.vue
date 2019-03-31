@@ -12,7 +12,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="订单类型">
-              <el-select v-model="form.category" placeholder="请选择订单类型">
+              <el-select filterable v-model="form.category" placeholder="请选择订单类型">
                 <el-option label="海外仓代发订单" value="1"/>
                 <el-option label="虚拟海外仓" value="3"/>
                 <el-option label="单票单清" value="2"/>

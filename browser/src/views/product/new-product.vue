@@ -20,7 +20,7 @@
                 <el-form-item>
                     <el-col :span="12">
                         <el-form-item label="商品类型" prop="category">
-                            <el-select v-model="form.category" placeholder="请选择商品类型">
+                          <el-select filterable v-model="form.category" placeholder="请选择商品类型">
                                 <el-option value="1" label="小物"/>
                                 <el-option value="2" label="服装"/>
                                 <el-option value="3" label="户外运动"/>

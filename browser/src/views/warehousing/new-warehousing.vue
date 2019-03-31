@@ -17,7 +17,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="头程方式">
-              <el-select v-model="form.method" placeholder="请选择头程方式">
+              <el-select filterable v-model="form.method" placeholder="请选择头程方式">
                 <el-option label="东岳头程" value="1"></el-option>
                 <el-option label="其他头程" value="2"></el-option>
               </el-select>
@@ -39,7 +39,7 @@
         <el-form-item>
           <el-col :span="12">
             <el-form-item label="头程渠道">
-              <el-select v-model="form.channel" placeholder="请选择头程渠道">
+              <el-select filterable v-model="form.channel" placeholder="请选择头程渠道">
                 <el-option v-for="item in channels" :key="item.value" :label="item.label"
                            :value="item.value"></el-option>
               </el-select>

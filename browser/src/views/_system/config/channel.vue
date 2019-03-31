@@ -74,7 +74,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="渠道适用">
-                  <el-select v-model="form.adapter">
+                  <el-select filterable v-model="form.adapter">
                     <el-option label="头程" value="1"></el-option>
                     <el-option label="单票单请" value="2"></el-option>
                     <el-option label="虚拟海外仓" value="3"></el-option>
@@ -86,7 +86,7 @@
             <el-form-item>
               <el-col :span="12">
                 <el-form-item label="渠道合作方">
-                  <el-select v-model="form.partner">
+                  <el-select filterable v-model="form.partner">
                     <el-option label="日本邮政" value="1"></el-option>
                     <el-option label="佐川急便" value="2"></el-option>
                     <el-option label="黑猫运输" value="3"></el-option>
@@ -112,7 +112,7 @@
             <el-form-item label="费用相关信息">
               <el-col :span="12">
                 <el-form-item label="计算规则">
-                  <el-select v-model="form.rule">
+                  <el-select filterable v-model="form.rule">
                     <el-option label="人工输入" value="1"></el-option>
                     <el-option label="后台计算之后人工确认" value="2"></el-option>
                   </el-select>
@@ -163,9 +163,9 @@
     {label: '是否支持保险', value: 'whetherInsurance'},
     {label: '是否支持代收费用', value: 'whetherChargeForThem'},
     {label: '是否立即扣费', value: 'whetherChargeAtFirst'},
-  ]
+  ];
 
-  import request from '@/utils/request'
+  import request from '@/utils/request';
 
   export default {
     name: 'channel',
@@ -175,7 +175,7 @@
           current: 1,
           pages: null,
           size: null,
-          total: null
+          total: null,
         },
         tableLoading: false,
         multiSelected: false,
@@ -198,103 +198,103 @@
         isIndeterminate: true,
         checkAll: false,
         dialogVisible: false,
-        channelCodeList: []
-      }
+        channelCodeList: [],
+      };
     },
     created() {
-      this.fetch()
+      this.fetch();
     },
     methods: {
       fetch() {
-        this.tableLoading = true
+        this.tableLoading = true;
         request({
           url: '/channel/page',
           method: 'post',
-          data: this.tablePage
+          data: this.tablePage,
         }).then(res => {
-          this.tableData = res.data.page.records
-          this.tablePage.current = res.data.page.current
-          this.tablePage.pages = res.data.page.pages
-          this.tablePage.size = res.data.page.size
-          this.tablePage.total = res.data.page.total
-          this.tableLoading = false
-        })
+          this.tableData = res.data.page.records;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.pages = res.data.page.pages;
+          this.tablePage.size = res.data.page.size;
+          this.tablePage.total = res.data.page.total;
+          this.tableLoading = false;
+        });
       },
       handleCheckAllChange(val) {
         if (val) {
-          let tmp = []
+          let tmp = [];
           for (let key in rules) {
-            tmp.push(rules[key]['value'])
+            tmp.push(rules[key]['value']);
           }
-          this.form.checkedRules2 = tmp
-          this.isIndeterminate = false
+          this.form.checkedRules2 = tmp;
+          this.isIndeterminate = false;
         } else {
-          this.form.checkedRules2 = []
-          this.isIndeterminate = true
+          this.form.checkedRules2 = [];
+          this.isIndeterminate = true;
         }
       },
       handleCheckedChange(value) {
-        let checkedCount = value.length
-        this.checkAll = checkedCount === this.rules.length
-        this.isIndeterminate = (checkedCount > 0 && checkedCount < this.rules.length)
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.rules.length;
+        this.isIndeterminate = (checkedCount > 0 && checkedCount < this.rules.length);
       },
       submitForm() {
         if (this.form.active) {
-          this.form.active = 'Y'
+          this.form.active = 'Y';
         } else {
-          this.form.active = 'N'
+          this.form.active = 'N';
         }
         request({
           url: '/channel/add',
           method: 'post',
-          data: this.form
+          data: this.form,
         }).then(() => {
-          this.dialogVisible = false
-          this.$message.success('成功')
-          this.fetch()
-        })
+          this.dialogVisible = false;
+          this.$message.success('成功');
+          this.fetch();
+        });
       },
       updateForm() {
         if (this.form.active) {
-          this.form.active = 'Y'
+          this.form.active = 'Y';
         } else {
-          this.form.active = 'N'
+          this.form.active = 'N';
         }
         request({
           url: '/channel/update',
           method: 'post',
-          data: this.form
+          data: this.form,
         }).then(res => {
-          this.dialogVisible = false
-          this.$message.success('成功')
-          this.fetch()
-        })
+          this.dialogVisible = false;
+          this.$message.success('成功');
+          this.fetch();
+        });
       },
       handleSizeChange(val) {
-        this.tablePage.size = val
-        this.fetch()
+        this.tablePage.size = val;
+        this.fetch();
       },
       handleCurrentChange(val) {
-        this.tablePage.current = val
-        this.fetch()
+        this.tablePage.current = val;
+        this.fetch();
       },
       update(index, row) {
-        this.dialogVisible = true
-        this.onUpdate = true
-        this.onCreate = false
-        this.form = this.tableData[index]
-        this.form.checkedRules2 = this.tableData[index].checkedRules.split(',')
-        this.form.active = (this.tableData[index].active === 'Y')
+        this.dialogVisible = true;
+        this.onUpdate = true;
+        this.onCreate = false;
+        this.form = this.tableData[index];
+        this.form.checkedRules2 = this.tableData[index].checkedRules.split(',');
+        this.form.active = (this.tableData[index].active === 'Y');
       },
       triggerDialog() {
-        this.dialogVisible = true
+        this.dialogVisible = true;
       },
       handleSelectionChange(val) {
-        this.multiSelected = (val.length > 1)
+        this.multiSelected = (val.length > 1);
         if (this.multiSelected) {
-          this.channelCodeList = []
+          this.channelCodeList = [];
           for (var index in val) {
-            this.channelCodeList.push(val[index]['channelCode'])
+            this.channelCodeList.push(val[index]['channelCode']);
           }
         }
       },
@@ -302,60 +302,60 @@
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
           request({
             url: '/channel/delete/' + row.channelCode,
-            method: 'get'
+            method: 'get',
           }).then(() => {
-            this.$message.success('删除成功')
-            this.fetch()
-          })
+            this.$message.success('删除成功');
+            this.fetch();
+          });
         }).catch(() => {
-          this.$message.info('取消删除')
-        })
+          this.$message.info('取消删除');
+        });
       },
       handleEnable(index, row) {
         request({
           url: '/channel/enable',
           method: 'post',
           data: {
-            channelCode: row.channelCode
-          }
+            channelCode: row.channelCode,
+          },
         }).then(() => {
-          this.$message.success('启用成功')
-        })
+          this.$message.success('启用成功');
+        });
       },
       handleDisable(index, row) {
         request({
           url: '/channel/disable',
           method: 'post',
           data: {
-            channelCode: row.channelCode
-          }
+            channelCode: row.channelCode,
+          },
         }).then(() => {
-          this.$message.success('禁用成功')
-          this.fetch()
-        })
+          this.$message.success('禁用成功');
+          this.fetch();
+        });
       },
       batchEnable() {
         request({
           url: '/channel/enable/list',
           method: 'post',
-          data: this.channelCodeList
+          data: this.channelCodeList,
         }).then(() => {
-          this.$message.success('启用成功')
-          this.fetch()
-        })
+          this.$message.success('启用成功');
+          this.fetch();
+        });
       },
       batchDisable() {
         request({
           url: '/channel/disable/list',
           method: 'post',
-          data: this.channelCodeList
+          data: this.channelCodeList,
         }).then(() => {
-          this.$message.success('禁用成功')
-          this.fetch()
-        })
+          this.$message.success('禁用成功');
+          this.fetch();
+        });
       },
-    }
-  }
+    },
+  };
 </script>
 
 <style scoped>

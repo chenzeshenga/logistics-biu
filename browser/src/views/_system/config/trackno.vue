@@ -44,7 +44,7 @@
     <el-dialog title="新增追踪单号" :visible.sync="dialogVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="承运人">
-          <el-select v-model="form.carrier" placeholder="承运人">
+          <el-select filterable v-model="form.carrier" placeholder="承运人">
             <el-option label="佐川急便" value="carrier_2"/>
             <el-option label="黑猫运输" value="carrier_3"/>
             <el-option label="西浓运输" value="carrier_4"/>
@@ -58,7 +58,7 @@
           <el-input-number v-model="form.max"></el-input-number>
         </el-form-item>
         <el-form-item label="对应渠道">
-          <el-select v-model="form.channelCode" placeholder="对应渠道">
+          <el-select filterable v-model="form.channelCode" placeholder="对应渠道">
             <el-option v-for="item in channels" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>

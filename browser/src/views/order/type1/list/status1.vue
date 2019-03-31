@@ -1,17 +1,47 @@
 <template>
   <div class="login-container">
     <div class="app-container">
-      <el-col :offset="1" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
-        <el-button type="primary" @click="applyTrackNo()" style="margin-right: 10px" v-if="multiSelection">批量申请单号</el-button>
-        <el-button type="primary" @click="batchStatusUpdate()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
-        <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
-                        end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
-        </el-date-picker>
-        <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
-        <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
-        <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
-        <!--<el-button type="primary" @click="route2NewOrd()" icon="el-icon-tickets">导出csv</el-button>-->
-      </el-col>
+      <el-form>
+        <el-form-item>
+          <el-col :offset="1" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
+            <el-button type="primary" @click="applyTrackNo()" style="margin-right: 10px" v-if="multiSelection">批量申请单号</el-button>
+            <el-button type="primary" @click="batchStatusUpdate()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
+            <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
+                            end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
+            </el-date-picker>
+            <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
+            <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
+          </el-col>
+        </el-form-item>
+        <el-col :offset="1">
+          <el-col :span="6">
+            <el-form-item>
+              <el-tooltip content="订单号" placement="top">
+                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="1">
+            <el-form-item>
+              <el-tooltip content="创建人" placement="top">
+                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" :offset="1">
+            <el-form-item>
+              <el-tooltip content="相关渠道" placement="top">
+                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="1" :offset="1">
+            <el-form-item label="">
+              <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
+            </el-form-item>
+          </el-col>
+        </el-col>
+      </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                 highlight-current-row @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
@@ -167,6 +197,9 @@
         ord4TrackNo: [],
         dialogVisibleList: false,
         multiSelection: false,
+        search: {
+          ordno: '',
+        },
       };
     },
     created() {
