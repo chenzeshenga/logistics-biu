@@ -17,6 +17,7 @@ import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +51,7 @@ import java.util.*;
 
     private LabelCache labelCache;
 
-    public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache) {
+    @Autowired public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache) {
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
     }

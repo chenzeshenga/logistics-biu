@@ -41,6 +41,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
     @Resource private OrderMapper orderMapper;
 
+    @Resource private TrackNoMapper trackNoMapper;
+
     private OrderService orderService;
 
     private JapanAddressCache japanAddressCache;
@@ -51,17 +53,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
     private TrackNoController trackNoController;
 
-    private TrackNoMapper trackNoMapper;
-
     @Autowired
     public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache,
-        TrackNoController trackNoController, TrackNoMapper trackNoMapper) {
+        TrackNoController trackNoController) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
         this.trackNoController = trackNoController;
-        this.trackNoMapper = trackNoMapper;
     }
 
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {

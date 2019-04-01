@@ -1,6 +1,8 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,7 +14,7 @@ import java.io.Serializable;
  * @createOn 2018-12-21 0:58
  * @updateOn 2018-12-21 0:58
  */
-@Data public class Label implements Serializable {
+@Data @AllArgsConstructor @NoArgsConstructor public class Label implements Serializable {
 
     private int id;
 
@@ -22,9 +24,7 @@ import java.io.Serializable;
 
     private String value;
 
-    public Label() {
-
-    }
+    private String label;
 
     public Label(int seq, String key, String value) {
         this.seq = seq;

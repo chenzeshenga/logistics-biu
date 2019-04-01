@@ -46,7 +46,8 @@ import java.util.Map;
         List<Label> labelList = new ArrayList<>(16);
         for (Map.Entry<String, String> entry : labelCache.entrySet()) {
             if (entry.getKey().startsWith(keyPattern)) {
-                labelList.add(new Label(Integer.valueOf(entry.getKey().replace(keyPattern, "")), entry.getKey(), entry.getValue()));
+                labelList
+                    .add(new Label(0, Integer.valueOf(entry.getKey().replace(keyPattern, "")), entry.getKey(), entry.getValue(), entry.getValue()));
             }
         }
         return labelList;
