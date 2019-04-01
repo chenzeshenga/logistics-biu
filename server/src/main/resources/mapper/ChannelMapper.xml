@@ -218,6 +218,27 @@
         order by create_on desc
     </select>
 
+    <select id="pageReg" resultMap="BaseResultMap">
+        select *
+        from l_channel
+        where channel_code like CONCAT('%', #{reg}, '%')
+           or channel_name like CONCAT('%', #{reg}, '%')
+           or partner like CONCAT('%', #{reg}, '%')
+           or min like CONCAT('%', #{reg}, '%')
+           or max like CONCAT('%', #{reg}, '%')
+           or checked_rules like CONCAT('%', #{reg}, '%')
+           or active like CONCAT('%', #{reg}, '%')
+           or adapter like CONCAT('%', #{reg}, '%')
+           or rule like CONCAT('%', #{reg}, '%')
+           or comments like CONCAT('%', #{reg}, '%')
+           or create_by like CONCAT('%', #{reg}, '%')
+           or adapter like CONCAT('%', #{reg}, '%')
+           or update_by like CONCAT('%', #{reg}, '%')
+           or create_on like CONCAT('%', #{reg}, '%')
+           or update_on like CONCAT('%', #{reg}, '%')
+        order by create_on desc
+    </select>
+
     <update id="quickDisableList" parameterType="java.util.List">
         update l_channel
         set active='N'

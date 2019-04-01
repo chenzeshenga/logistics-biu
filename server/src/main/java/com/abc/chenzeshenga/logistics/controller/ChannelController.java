@@ -99,6 +99,26 @@ import java.util.Map;
         return Json.succ().data("page", channelPage);
     }
 
+    @PostMapping @RequestMapping("/pageReg") public Json pageReg(@RequestBody String body, @RequestParam String reg) {
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        Page<Channel> channelPage = channelService.listReg(page, reg);
+        List<Channel> channelList = channelPage.getRecords();
+        for (Channel channel : channelList) {
+            String checkedRules = channel.getCheckedRules();
+            String[] checkedRulesList = checkedRules.split(",");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String str : checkedRulesList) {
+                stringBuilder.append(";").append(labelCache.getLabel(str));
+            }
+            channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
+            channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
+            channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
+            channel.setAdapterDesc(labelCache.getLabel("category_" + channel.getAdapter()));
+        }
+        return Json.succ().data("page", channelPage);
+    }
+
     @PostMapping @RequestMapping("/enable") public Json quickEnable(@RequestBody Map<String, String> channelMap) {
         Channel channel = new Channel();
         channel.setChannelCode(channelMap.get("channelCode"));

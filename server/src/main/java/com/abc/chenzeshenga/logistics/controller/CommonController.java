@@ -126,7 +126,9 @@ import java.util.*;
         userFileRecordMapper.insert(userFileRecord);
         InputStream inputStream = multipartFile.getInputStream();
         List<Object> manualOrderList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder.class));
-        manualOrderList.forEach(manualOrder -> System.out.println(manualOrder));
+        manualOrderList.forEach(manualOrder -> {
+            log.info(manualOrder.toString());
+        });
         return Json.succ();
     }
 

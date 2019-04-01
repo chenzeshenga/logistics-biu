@@ -106,7 +106,9 @@ import java.util.UUID;
         }
         List<Product> productList = productPage.getRecords();
         productList.forEach(product -> {
-            product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
+            if (StringUtils.isEmpty(product.getCategoryName())) {
+                product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
+            }
             if (ZERO.equals(product.getStatus())) {
                 product.setStatusDesc("审核中");
             } else if (ONE.equals(product.getStatus())) {

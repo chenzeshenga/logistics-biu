@@ -16,4 +16,8 @@ import org.springframework.stereotype.Service;
         return page.setRecords(baseMapper.page(page));
     }
 
+    public Page<Channel> listReg(Page page, String reg) {
+        return page.setRecords(baseMapper.pageReg(page, reg));
+    }
+
 }

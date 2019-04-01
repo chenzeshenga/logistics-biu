@@ -15,7 +15,19 @@
         <el-col :span="2">
           <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchDisable">批量禁用</el-button>
         </el-col>
-        <el-col :span="2" :offset="16">
+        <el-col :span="4">
+          <el-tooltip content="快速查询" placement="top">
+            <el-form>
+              <el-input v-model="regTxt" placeholder="系统根据输入的内容进行全文匹配"></el-input>
+            </el-form>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="2">
+          <el-tooltip class="item" content="搜索" placement="top">
+            <el-button icon="el-icon-search" circle @click="searchByReg()"></el-button>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="2" :offset="10">
           <el-button type="primary" @click="triggerDialog">新增渠道</el-button>
         </el-col>
       </el-row>
@@ -156,13 +168,22 @@
 </template>
 
 <script>
-
   const rules = [
-    {label: '是否支持多包裹', value: 'whetherMultiPackage'},
-    {label: '是否需要体积', value: 'whetherVolume'},
-    {label: '是否支持保险', value: 'whetherInsurance'},
-    {label: '是否支持代收费用', value: 'whetherChargeForThem'},
-    {label: '是否立即扣费', value: 'whetherChargeAtFirst'},
+    {
+      label: '是否支持多包裹', value: 'whetherMultiPackage',
+    },
+    {
+      label: '是否需要体积', value: 'whetherVolume',
+    },
+    {
+      label: '是否支持保险', value: 'whetherInsurance',
+    },
+    {
+      label: '是否支持代收费用', value: 'whetherChargeForThem',
+    },
+    {
+      label: '是否立即扣费', value: 'whetherChargeAtFirst',
+    },
   ];
 
   import request from '@/utils/request';
@@ -199,6 +220,7 @@
         checkAll: false,
         dialogVisible: false,
         channelCodeList: [],
+        regTxt: '',
       };
     },
     created() {
@@ -222,8 +244,8 @@
       },
       handleCheckAllChange(val) {
         if (val) {
-          let tmp = [];
-          for (let key in rules) {
+          const tmp = [];
+          for (const key in rules) {
             tmp.push(rules[key]['value']);
           }
           this.form.checkedRules2 = tmp;
@@ -234,7 +256,7 @@
         }
       },
       handleCheckedChange(value) {
-        let checkedCount = value.length;
+        const checkedCount = value.length;
         this.checkAll = checkedCount === this.rules.length;
         this.isIndeterminate = (checkedCount > 0 && checkedCount < this.rules.length);
       },
@@ -352,6 +374,21 @@
         }).then(() => {
           this.$message.success('禁用成功');
           this.fetch();
+        });
+      },
+      searchByReg() {
+        this.tableLoading = true;
+        request({
+          url: '/channel/pageReg?reg=' + this.regTxt,
+          method: 'post',
+          data: this.tablePage,
+        }).then(res => {
+          this.tableData = res.data.page.records;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.pages = res.data.page.pages;
+          this.tablePage.size = res.data.page.size;
+          this.tablePage.total = res.data.page.total;
+          this.tableLoading = false;
         });
       },
     },
