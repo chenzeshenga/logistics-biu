@@ -78,7 +78,7 @@
       fetchData() {
         this.tableLoading = true;
         request({
-          url: 'product/list/0',
+          url: '/product/list/0',
           method: 'post',
           data: {
             current: this.tablePage.current,

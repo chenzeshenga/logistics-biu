@@ -9,17 +9,11 @@
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.Template">
         <result column="template_file" jdbcType="LONGVARBINARY" property="templateFile"/>
     </resultMap>
-    <sql id="Base_Column_List">
-        uuid, create_on, file_name
-    </sql>
-    <sql id="Blob_Column_List">
-        template_file
-    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
-        select
-        <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
+        select uuid,
+               create_on,
+               file_name,
+               template_file
         from l_template
         where uuid = #{uuid,jdbcType=VARCHAR}
     </select>
