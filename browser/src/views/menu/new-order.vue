@@ -426,6 +426,15 @@
       createBatchOrd() {
         this.dialogVisible4Excel = true;
       },
+      downloadTemplate() {
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        // link.href = "http://47.105.107.242:8888/api/v1/template?category=1";
+        link.href = 'http://localhost:8888/api/v1/template?category=1';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+      },
     },
   };
 </script>

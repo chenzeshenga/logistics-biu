@@ -2,10 +2,7 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
-import com.abc.chenzeshenga.logistics.mapper.FileMapper;
-import com.abc.chenzeshenga.logistics.mapper.ImgMapper;
-import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
-import com.abc.chenzeshenga.logistics.mapper.UserFileRecordMapper;
+import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
@@ -28,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -46,6 +44,8 @@ import java.util.*;
     @Resource private FileMapper fileMapper;
 
     @Resource private UserFileRecordMapper userFileRecordMapper;
+
+    @Resource private TemplateMapper templateMapper;
 
     private JapanAddressCache japanAddressCache;
 
@@ -145,8 +145,12 @@ import java.util.*;
 
     }
 
-    @GetMapping("/template") public void downloadTemplate(@RequestParam String category) {
-
+    @GetMapping("/template") public void downloadTemplate(@RequestParam String category, HttpServletResponse httpServletResponse) throws IOException {
+        Template template = templateMapper.selectByPrimaryKey(category);
+        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(template.getFileName(), "utf-8"));
+        httpServletResponse.getOutputStream().write(template.getTemplateFile());
+        httpServletResponse.flushBuffer();
     }
 
 }
