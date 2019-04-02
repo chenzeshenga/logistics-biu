@@ -202,12 +202,12 @@
     </update>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
-        select channel_code as value, channel_name as label, partner
+        select channel_code as value, channel_name as label, partner, checked_rules as checkedRules
         from l_channel
     </select>
 
     <select id="listByWhere" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
-        select channel_code as value, channel_name as label
+        select channel_code as value, channel_name as label, checked_rules as checkedRules
         from l_channel
         where adapter = #{adapter}
     </select>

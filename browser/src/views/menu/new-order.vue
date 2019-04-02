@@ -12,7 +12,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="订单类型">
-              <el-select filterable v-model="form.category" placeholder="请选择订单类型">
+              <el-select filterable v-model="form.category" placeholder="请选择订单类型" @change="changeByCategory">
                 <el-option label="海外仓代发订单" value="1"/>
                 <el-option label="虚拟海外仓" value="3"/>
                 <el-option label="单票单清" value="2"/>
@@ -118,27 +118,50 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="是否代收">
+        <el-form-item label="是否代收" v-if="!whetherChargeForThem">
           <el-switch
             v-model="form.collect"
             active-color="#13ce66"
             inactive-color="#ff4949">
           </el-switch>
         </el-form-item>
+        <el-form-item label="是否代收" v-if="whetherChargeForThem">
+          <el-switch
+            disabled
+            v-model="form.collect"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
         <el-form-item label="订单内容">
-          <el-col :span="5">
+          <el-col :span="5" v-if="!skuFlag">
             <el-form-item label="sku">
               <el-cascader :options="myProducts" v-model="selectedProduct" @change="handleProductChange" filterable></el-cascader>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="名称">
-              <el-input disabled v-model="content.name"></el-input>
+          <el-col :span="5" v-if="skuFlag">
+            <el-form-item label="sku">
+              <el-input v-model="content.sku" placeholder="请输入或者扫描sku"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="!skuFlag">
+            <el-form-item label="名称">
+              <el-input disabled v-model="content.name" placeholder="请输入产品名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="skuFlag">
+            <el-form-item label="名称">
+              <el-input v-model="content.name" placeholder="请输入产品名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="!skuFlag">
             <el-form-item label="商品价值">
               <el-input disabled v-model="content.price"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="skuFlag">
+            <el-form-item label="商品价值">
+              <el-input-number v-model="content.price"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -150,20 +173,30 @@
             <el-button type="primary" round @click="add2Cart">添加</el-button>
           </el-col>
         </el-form-item>
-        <el-table :data="form.contentList" stripe style="width: 100%">
-          <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
-          <el-table-column prop="name" label="商品名称"></el-table-column>
-          <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
-          <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-form-item>
+          <el-table :data="form.contentList" stripe style="width: 100%">
+            <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
+            <el-table-column prop="name" label="商品名称"></el-table-column>
+            <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
+            <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
       </el-form>
     </div>
-    <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 90%">确认</el-button>
+    <el-row>
+      <el-col :offset="17" :span="2">
+        <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 80%">批量创建</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 90%">立即创建</el-button>
+      </el-col>
+    </el-row>
+
     <el-button @click="updateOrd" v-if="onUpdate" type="primary" style="margin-left: 90%">更新</el-button>
   </div>
 </template>
@@ -218,6 +251,8 @@
         status: '',
         defaultFormData: {},
         channelMap: {},
+        skuFlag: false,
+        whetherChargeForThem: false,
       };
     },
     created() {
@@ -307,6 +342,8 @@
       handleChange(value) {
         this.form.channel = value[0];
         this.form.carrierDesc = this.channelMap[value[0]]['partnerDesc'];
+        const checkedRules = this.channelMap[value[0]]['checkedRules'];
+        this.whetherChargeForThem = (checkedRules.indexOf('whetherChargeForThem') <= -1);
       },
       handleAddressChange(value) {
         this.form.address.ken = value[0];
@@ -366,6 +403,9 @@
             path: '/order-list/mgt/type' + this.form.category + '/status' + this.status,
           });
         });
+      },
+      changeByCategory(val) {
+        this.skuFlag = (val !== '1');
       },
     },
   };
