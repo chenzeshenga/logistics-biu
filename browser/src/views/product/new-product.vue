@@ -289,7 +289,10 @@
         this.dialogVisible4Excel = true;
       },
       uploadExcel() {
-
+        console.log('uploadExcel');
+      },
+      downloadTemplate() {
+        console.log('downloadTemplate');
       },
     },
   };

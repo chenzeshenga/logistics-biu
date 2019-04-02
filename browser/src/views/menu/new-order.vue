@@ -190,14 +190,29 @@
     </div>
     <el-row>
       <el-col :offset="17" :span="2">
-        <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 80%">批量创建</el-button>
+        <el-button @click="createBatchOrd" v-if="onCreate" type="primary">批量创建</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button @click="createOrd" v-if="onCreate" type="primary" style="margin-left: 90%">立即创建</el-button>
+        <el-button @click="createOrd" v-if="onCreate" type="primary">立即创建</el-button>
       </el-col>
     </el-row>
-
     <el-button @click="updateOrd" v-if="onUpdate" type="primary" style="margin-left: 90%">更新</el-button>
+
+    <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
+      <el-form :model="form">
+        <el-form-item label="订单文件">
+          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError" :limit="1">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>
+            <el-button style="margin-left: 150px;" size="small" type="success" @click="downloadTemplate">
+              <svg-icon icon-class="doc"></svg-icon>
+              模版文件
+            </el-button>
+            <div slot="tip" class="el-upload__tip">只能上传excel文件(xls/xlsx)，记录条数小于200条</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -253,6 +268,7 @@
         channelMap: {},
         skuFlag: false,
         whetherChargeForThem: false,
+        dialogVisible4Excel: false,
       };
     },
     created() {
@@ -406,6 +422,9 @@
       },
       changeByCategory(val) {
         this.skuFlag = (val !== '1');
+      },
+      createBatchOrd() {
+        this.dialogVisible4Excel = true;
       },
     },
   };

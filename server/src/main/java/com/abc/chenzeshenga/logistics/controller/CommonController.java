@@ -145,4 +145,8 @@ import java.util.*;
 
     }
 
+    @GetMapping("/template") public void downloadTemplate(@RequestParam String category) {
+
+    }
+
 }
