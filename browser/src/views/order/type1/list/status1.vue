@@ -24,7 +24,7 @@
           <el-col :span="6" :offset="1">
             <el-form-item>
               <el-tooltip content="创建人" placement="top">
-                <el-select filterable v-model="search.creator" placeholder="请选择创建人">
+                <el-select filterable clearable v-model="search.creator" placeholder="请选择创建人">
                   <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick" :value="creator.uname"></el-option>
                 </el-select>
                 <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
@@ -34,7 +34,10 @@
           <el-col :span="6" :offset="1">
             <el-form-item>
               <el-tooltip content="相关渠道" placement="top">
-                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
+                <el-select clearable filterable v-model="search.channelCode" placeholder="对应渠道">
+                  <el-option v-for="item in channels" :key="item.value" :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -203,14 +206,17 @@
         search: {
           ordno: '',
           creator: '',
+          channelCode: '',
         },
         users: [],
+        channels: [],
       };
     },
     created() {
       this.fetchData();
       this.initTrackno();
       this.initUserList();
+      this.initChannel();
     },
     methods: {
       fetchData() {
@@ -289,13 +295,18 @@
         });
       },
       searchOrd() {
+        let url = '';
         if (this.daterange == null || this.daterange[0] === 0 || this.daterange[1] === 0) {
           this.$message.warning('请选择您想要查询的日期范围');
-          return;
+          url = 'ord/list/1/1/2000-01-01/2099-01-01?ordno=' + this.search.ordno + '&creator=' + this.search.creator +
+            '&channelCode=' + this.search.channelCode;
+        } else {
+          url = 'ord/list/1/1/' + this.daterange[0] + '/' + this.daterange[1] + '?ordno=' + this.search.ordno + '&creator=' + this.search.creator +
+            '&channelCode=' + this.search.channelCode;
         }
         this.tableLoading = true;
         request({
-          url: 'ord/list/1/1/' + this.daterange[0] + '/' + this.daterange[1],
+          url: url,
           method: 'post',
           data: {
             current: this.tablePage.current,
@@ -330,11 +341,13 @@
         }).then(res => {
           this.users = res.data.page.records;
         });
+      },
+      initChannel() {
         request({
-          url: 'ord/carrier/distinct',
+          url: '/channel/list',
           method: 'get',
         }).then(res => {
-          this.carrier = res.data.data;
+          this.channels = res.data.data;
         });
       },
       applyTrackno(index, row) {

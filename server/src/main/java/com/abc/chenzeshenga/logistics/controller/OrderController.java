@@ -183,13 +183,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
     @PostMapping @RequestMapping("/list/{type}/{status}/{fromDate}/{toDate}")
     public Json listByRange(@RequestBody String body, @PathVariable String type, @PathVariable String status, @PathVariable String fromDate,
-        @PathVariable String toDate) throws ParseException {
+        @PathVariable String toDate, @RequestParam(required = false) String ordno, @RequestParam(required = false) String creator,
+        @RequestParam(required = false) String channelCode) throws ParseException {
         String cname = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Date fromDate1 = DateUtil.getDateFromStr(fromDate);
         Date toDate1 = DateUtil.getDateFromStr(toDate);
-        Page<ManualOrder> manualOrderPage = orderService.listByRange(page, cname, type, status, fromDate1, toDate1);
+        Page<ManualOrder> manualOrderPage = orderService.listByRange(page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode);
         enrichOrd(manualOrderPage);
         return Json.succ().data("page", manualOrderPage);
     }

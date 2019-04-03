@@ -29,7 +29,8 @@ import java.util.Map;
     List<ManualOrder> list(Pagination pagination, @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
 
     List<ManualOrder> listByRange(Pagination pagination, @Param("cname") String cname, @Param("type") String type, @Param("status") String status,
-        @Param("from") Date from, @Param("to") Date to);
+        @Param("from") Date from, @Param("to") Date to, @Param("ordno") String ordno, @Param("creator") String creator,
+        @Param("channelCode") String channelCode);
 
     int delete(String ordNo);
 

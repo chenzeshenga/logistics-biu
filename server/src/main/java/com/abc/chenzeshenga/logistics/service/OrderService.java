@@ -18,8 +18,9 @@ import java.util.Date;
         return page.setRecords(baseMapper.list(page, cname, type, status));
     }
 
-    public Page<ManualOrder> listByRange(Page page, String cname, String type, String status, Date from, Date to) {
-        return page.setRecords(baseMapper.listByRange(page, cname, type, status, from, to));
+    public Page<ManualOrder> listByRange(Page page, String cname, String type, String status, Date from, Date to, String ordno, String creator,
+        String channelCode) {
+        return page.setRecords(baseMapper.listByRange(page, cname, type, status, from, to, ordno, creator, channelCode));
     }
 
 }

@@ -200,6 +200,15 @@
             <if test="status != null and status != ''">
                 and ord.status=#{status}
             </if>
+            <if test="ordno != null and ordno != ''">
+                and ord.ord_no=#{ordno}
+            </if>
+            <if test="creator != null and creator != ''">
+                and ord.create_by=#{creator}
+            </if>
+            <if test="channelCode != null and channelCode != ''">
+                and ord.channel=#{channelCode}
+            </if>
             <if test="from != null">
                 and ord.create_on >= #{from}
             </if>
