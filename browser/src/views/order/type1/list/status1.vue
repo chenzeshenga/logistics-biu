@@ -24,6 +24,9 @@
           <el-col :span="6" :offset="1">
             <el-form-item>
               <el-tooltip content="创建人" placement="top">
+                <el-select filterable v-model="search.creator" placeholder="请选择创建人">
+                  <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick" :value="creator.uname"></el-option>
+                </el-select>
                 <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
               </el-tooltip>
             </el-form-item>
@@ -199,12 +202,15 @@
         multiSelection: false,
         search: {
           ordno: '',
+          creator: '',
         },
+        users: [],
       };
     },
     created() {
       this.fetchData();
       this.initTrackno();
+      this.initUserList();
     },
     methods: {
       fetchData() {
@@ -306,6 +312,24 @@
         });
       },
       initTrackno() {
+        request({
+          url: 'ord/carrier/distinct',
+          method: 'get',
+        }).then(res => {
+          this.carrier = res.data.data;
+        });
+      },
+      initUserList() {
+        request({
+          url: '/sys_user/query',
+          method: 'post',
+          data: {
+            current: null,
+            size: 'all',
+          },
+        }).then(res => {
+          this.users = res.data.page.records;
+        });
         request({
           url: 'ord/carrier/distinct',
           method: 'get',

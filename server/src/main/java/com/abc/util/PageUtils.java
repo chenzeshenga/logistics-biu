@@ -16,7 +16,12 @@ public class PageUtils {
      */
     public static Page getPageParam(JSONObject json) {
         int current = json.getIntValue("current");
-        int size = json.getIntValue("size");
+        int size;
+        if ("all".equals(json.getString("size"))) {
+            size = 999;
+        } else {
+            size = json.getIntValue("size");
+        }
         if (current == 0) {
             current = 1;
         }
