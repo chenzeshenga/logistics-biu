@@ -43,31 +43,25 @@ import java.util.List;
         List<ManualOrderContent> manualOrderContentList = orderMapper.listContent2(ordno);
         PdfWriter writer = new PdfWriter(outputStream);
         try (PdfDocument pdf = new PdfDocument(writer)) {
-            try (Document document = new Document(pdf, PageSize.A4.rotate())) {
-                document.setMargins(20, 20, 20, 20);
+            try (Document document = new Document(pdf, PageSize.A7)) {
+                document.setMargins(5, 5, 5, 5);
                 PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
-                Paragraph head = new Paragraph().add("东岳物流").setFont(font).addStyle(new Style().setMarginLeft(350));
+                Paragraph head = new Paragraph().add("东岳物流").setFont(font).addStyle(new Style().setMarginLeft(30));
                 document.add(head);
-                Paragraph time = new Paragraph().add(DateUtil.getStrFromDate(new Date())).addStyle(new Style().setMarginLeft(600));
+                Paragraph time = new Paragraph().add(DateUtil.getStrFromDate(new Date())).addStyle(new Style().setMarginLeft(50));
                 document.add(time);
                 Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(ordno, "code128")));
-                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(350));
+                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(20));
                 document.add(paragraph);
-                Table table = new Table(new float[] {4, 8, 4, 4, 4, 4});
+                Table table = new Table(new float[] {8, 4, 4});
                 table.setWidth(UnitValue.createPercentValue(100));
-                table.addHeaderCell(new Cell().add(new Paragraph("sku/东岳sku")).setFont(font))
-                    .addHeaderCell(new Cell().add(new Paragraph("商品名称")).setFont(font))
+                table.addHeaderCell(new Cell().add(new Paragraph("商品名称")).setFont(font))
                     .addHeaderCell(new Cell().add(new Paragraph("货架位置")).setFont(font))
-                    .addHeaderCell(new Cell().add(new Paragraph("商品价格(JPY)")).setFont(font))
-                    .addHeaderCell(new Cell().add(new Paragraph("商品数量")).setFont(font))
-                    .addHeaderCell(new Cell().add(new Paragraph("已拣货数量")).setFont(font));
+                    .addHeaderCell(new Cell().add(new Paragraph("商品数量")).setFont(font));
                 manualOrderContentList.forEach(manualOrderContent -> table
-                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getSku()))).setFont(font))
                     .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getName()))).setFont(font))
                     .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getLocation()))).setFont(font))
-                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPrice()))).setFont(font))
-                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font))
-                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getPicked()))).setFont(font)));
+                    .addCell(new Cell().add(new Paragraph(StringUtil.correctString(manualOrderContent.getNum()))).setFont(font)));
                 document.add(table);
             }
         }
@@ -79,16 +73,13 @@ import java.util.List;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
-        Document document = new Document(pdfDocument, PageSize.A4.rotate());
-        document.setMargins(10, 10, 10, 10);
+        Document document = new Document(pdfDocument, PageSize.A9);
+        document.setMargins(5, 5, 5, 5);
         Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku, "ean13")));
-        Table table = new Table(new float[] {8, 8, 8});
+        Table table = new Table(new float[] {8});
         table.setWidth(UnitValue.createPercentValue(100));
         for (int i = 0; i < 7; i++) {
-            table.addCell(new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER)).addCell(
-                new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
-                    .setHorizontalAlignment(HorizontalAlignment.CENTER)).addCell(
+            table.addCell(
                 new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
                     .setHorizontalAlignment(HorizontalAlignment.CENTER));
         }

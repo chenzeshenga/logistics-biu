@@ -12,6 +12,7 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ import java.util.*;
 
     @Resource private UserFileRecordMapper userFileRecordMapper;
 
+    @Resource private ProductMapper productMapper;
+
     @Resource private TemplateMapper templateMapper;
 
     private JapanAddressCache japanAddressCache;
@@ -71,6 +74,15 @@ import java.util.*;
         return img.getImg();
     }
 
+    @GetMapping(value = "/template/file/{uuid}") @ResponseBody public void file(@PathVariable String uuid, HttpServletResponse httpServletResponse)
+        throws IOException {
+        File file = fileMapper.selectByPrimaryKey(uuid);
+        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
+        httpServletResponse.getOutputStream().write(file.getFile());
+        httpServletResponse.flushBuffer();
+    }
+
     @PostMapping @RequestMapping(value = "/img") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, String uuid)
         throws IOException {
         Img img = new Img(uuid, multipartFile.getBytes());
@@ -88,6 +100,7 @@ import java.util.*;
         request.put("status", status);
         List<ManualOrder> manualOrderList = orderMapper.listAllByUsername(request);
         manualOrderList.forEach(manualOrder -> {
+            log.info(manualOrder.toString());
             if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
                 manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
             } else {
@@ -116,6 +129,30 @@ import java.util.*;
         httpServletResponse.flushBuffer();
     }
 
+    @GetMapping("/product/excel/{status}") public void getProductExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
+        throws IOException {
+        String fileName = "商品信息.xlsx";
+        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        List<Product> productList = productMapper.listByStatusWithUser(new Page(1, 500), UserUtils.getUserName(), status);
+        productList.forEach(product -> {
+            if (StringUtils.isEmpty(product.getCategoryName())) {
+                product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
+            }
+            if ("0".equals(product.getStatus())) {
+                product.setStatusDesc("审核中");
+            } else if ("1".equals(product.getStatus())) {
+                product.setStatusDesc("在库");
+            }
+        });
+        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+        ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
+        Sheet sheet1 = new Sheet(1, 0, Product.class);
+        excelWriter.write(productList, sheet1);
+        excelWriter.finish();
+        httpServletResponse.flushBuffer();
+    }
+
     @PostMapping("/ord/excel") public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes());
@@ -133,6 +170,53 @@ import java.util.*;
         return Json.succ();
     }
 
+    @PostMapping("/product/excel") public Json parseProductExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        File file = new File(uuid, multipartFile.getBytes());
+        fileMapper.insert(file);
+        String username = UserUtils.getUserName();
+        UserFileRecord userFileRecord = new UserFileRecord(multipartFile.getOriginalFilename(), new Date());
+        userFileRecord.setUid(username);
+        userFileRecord.setFileUuid(uuid);
+        userFileRecordMapper.insert(userFileRecord);
+        InputStream inputStream = multipartFile.getInputStream();
+        List<Object> productList = EasyExcelFactory.read(inputStream, new Sheet(1, 1, Product.class));
+        for (Object o : productList) {
+            Product product = (Product)o;
+            product.setCategory(switchFromCategoryName(product.getCategoryName()));
+            product.setDySku(SkuUtil.generateDySku());
+            product.setStatus("0");
+            product.setCreatedBy(username);
+            product.setUpdateBy(username);
+            Date curr = new Date();
+            product.setUpdateOn(curr);
+            product.setCreateOn(curr);
+            productMapper.insertSelective(product);
+        }
+        return Json.succ();
+    }
+
+    private String switchFromCategoryName(String categoryName) {
+        switch (categoryName) {
+            case "小物":
+                return "1";
+            case "服装":
+                return "2";
+            case "户外运动":
+                return "3";
+            case "电子产品":
+                return "4";
+            case "家居用品":
+                return "5";
+            case "玩具":
+                return "6";
+            case "大件":
+                return "7";
+            default:
+                return "8";
+        }
+    }
+
     @GetMapping("/ord/csv/{ordno}") public void getOrdCsv(@PathVariable String ordno) {
 
     }
@@ -143,14 +227,6 @@ import java.util.*;
 
     @GetMapping("/warehousing/csv/{ordno}") public void getWarehousingCsv(@PathVariable String ordno) {
 
-    }
-
-    @GetMapping("/template") public void downloadTemplate(@RequestParam String category, HttpServletResponse httpServletResponse) throws IOException {
-        Template template = templateMapper.selectByPrimaryKey(category);
-        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(template.getFileName(), "utf-8"));
-        httpServletResponse.getOutputStream().write(template.getTemplateFile());
-        httpServletResponse.flushBuffer();
     }
 
 }

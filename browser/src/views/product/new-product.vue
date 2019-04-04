@@ -101,16 +101,21 @@
       <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
         <el-form :model="form">
           <el-form-item label="商品文件">
-            <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError" :limit="1">
+            <el-upload action="http://localhost:8888/api/v1/product/excel" with-credentials :on-error="handleError"
+                       :limit="1">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload4Excel">上传</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload4Excel">上传
+              </el-button>
+              <el-button style="margin-left: 150px;" size="small" type="success" @click="downloadTemplate">
+                <svg-icon icon-class="doc"></svg-icon>
+                模版文件
+              </el-button>
               <div slot="tip" class="el-upload__tip">只能上传excel文件(xls/xlsx)，记录条数小于200条</div>
             </el-upload>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible4Excel = false">取 消</el-button>
-                    <el-button type="primary" @click="uploadExcel">确 定</el-button>
                 </span>
       </el-dialog>
     </div>
@@ -187,7 +192,8 @@
               const tmp = {
                 'name': 'img1',
                 'index': '1',
-                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img1,
+                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img1,
+                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img1,
                 'uid': res.data.data.img1,
               };
               this.fileList.push(tmp);
@@ -196,7 +202,8 @@
               const tmp = {
                 'name': 'img2',
                 'index': '2',
-                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img2,
+                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img2,
+                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img2,
                 'uid': res.data.data.img2,
               };
               this.fileList.push(tmp);
@@ -205,7 +212,8 @@
               const tmp = {
                 'name': 'img3',
                 'index': '3',
-                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img3,
+                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img3,
+                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img3,
                 'uid': res.data.data.img3,
               };
               this.fileList.push(tmp);
@@ -288,12 +296,15 @@
       createByFile() {
         this.dialogVisible4Excel = true;
       },
-      uploadExcel() {
-        console.log('uploadExcel');
-      },
       downloadTemplate() {
-        console.log('downloadTemplate');
-      },
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        // link.href = "http://47.105.107.242:8888/api/v1/template?category=1";
+        link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+      }
     },
   };
 </script>

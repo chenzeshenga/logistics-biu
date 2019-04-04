@@ -132,12 +132,18 @@
     </update>
 
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
-        insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on, create_by, update_by, from_ken_id,
-                                   from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode,
-                                   on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel, china_carrier)
-        values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn}, #{creator}, #{updator},
-                #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId}, #{toCityId}, #{toTownId},
-                #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact}, #{fromName},
+        insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on,
+                                   create_by, update_by, from_ken_id,
+                                   from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id,
+                                   to_town_id, to_where, to_zipcode,
+                                   on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel,
+                                   china_carrier)
+        values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn},
+                #{creator}, #{updator},
+                #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId},
+                #{toCityId}, #{toTownId},
+                #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact},
+                #{fromName},
                 #{toName}, #{channel}, #{chinaCarrier})
     </insert>
 
@@ -164,17 +170,19 @@
                 and ord.status=#{status}
             </if>
         </where>
+        order by ord.update_on desc
     </select>
 
     <select id="listAll" resultMap="result">
         select *
         from l_manual_order ord
                  left join l_manual_order_content content on (ord.ord_no = content.ordno)
+        order by ord.update_on desc
     </select>
 
     <select id="listAllByUsername" resultMap="result" parameterType="java.util.Map">
         select *
-        from l_manual_order ord
+        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
         <where>
             1=1
             <if test="cname != null and cname != 'admin' and cname != 'operator'">
@@ -184,6 +192,7 @@
                 and ord.status=#{status}
             </if>
         </where>
+        order by ord.update_on desc
     </select>
 
     <select id="listByRange" resultMap="result">
@@ -216,6 +225,7 @@
                 and ord.create_on &lt;= #{to}
             </if>
         </where>
+        order by ord.update_on desc
     </select>
 
     <delete id="delete">
@@ -243,9 +253,11 @@
         where ordno = #{ordNo}
           and (ord.status = 2
             or ord.status = 7)
+        order by ord.update_on desc
     </select>
 
-    <select id="listContentBatch" parameterType="java.util.List" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+    <select id="listContentBatch" parameterType="java.util.List"
+            resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
         select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
         from l_manual_order_content content
         inner join l_manual_order ord on (content.ordno = ord.ord_no)
@@ -257,6 +269,7 @@
         )
         and (ord.status = 2
         or ord.status = 7)
+        order by ord.update_on desc
     </select>
 
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">

@@ -3,34 +3,42 @@
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.FileMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.File">
         <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.File">
         <result column="file" jdbcType="LONGVARBINARY" property="file"/>
     </resultMap>
-
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
-        select uuid, `file`
-        from l_file
-        where uuid = #{uuid,jdbcType=VARCHAR}
+        select file.uuid,
+               `file`,
+               template.file_name
+        from l_file file
+                 left join l_template template on (file.uuid = template.uuid)
+        where file.uuid = #{uuid,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from l_file
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.abc.chenzeshenga.logistics.model.File" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file (uuid, `file`)
         values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY})
     </insert>
-    <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.abc.chenzeshenga.logistics.model.File"
-            useGeneratedKeys="true">
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
             <if test="file != null">
                 `file`,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
             <if test="file != null">
                 #{file,jdbcType=LONGVARBINARY},
             </if>

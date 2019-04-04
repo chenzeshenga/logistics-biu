@@ -91,28 +91,30 @@
 
     <select id="listByStatusWithUser" parameterType="java.lang.String" resultMap="BaseResultMap">
         select sku,
-               dy_sku,
-               product_name,
-               category,
-               color,
-               `size`,
-               price,
-               `length`,
-               width,
-               height,
-               weight,
-               createdBy,
-               updateBy,
-               `location`,
-               img_path,
-               alert_num,
-               create_on,
-               update_on,
-               ava_num,
-               status
+        dy_sku,
+        product_name,
+        category,
+        color,
+        `size`,
+        price,
+        `length`,
+        width,
+        height,
+        weight,
+        createdBy,
+        updateBy,
+        `location`,
+        img_path,
+        alert_num,
+        create_on,
+        update_on,
+        ava_num,
+        status
         from l_productions
         where status = #{status}
-          and createdBy = #{username}
+        <if test="username != null and username != 'admin' and username != 'operator'">
+            and createdBy = #{username}
+        </if>
     </select>
 
     <select id="listByStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -223,6 +225,9 @@
             <if test="avaNum != null">
                 ava_num,
             </if>
+            <if test="status != null">
+                status,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sku != null">
@@ -259,10 +264,10 @@
                 #{weight,jdbcType=VARCHAR},
             </if>
             <if test="createdBy != null">
-                #{createdby,jdbcType=VARCHAR},
+                #{createdBy,jdbcType=VARCHAR},
             </if>
-            <if test="updateby != null">
-                #{updateby,jdbcType=VARCHAR},
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
             </if>
             <if test="location != null">
                 #{location,jdbcType=VARCHAR},
@@ -281,6 +286,9 @@
             </if>
             <if test="avaNum != null">
                 #{avaNum,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

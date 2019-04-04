@@ -8,7 +8,9 @@
       </el-date-picker>
       <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
       <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
-      <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
+      <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">
+        导出excel
+      </el-button>
     </el-col>
     <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
               border fit highlight-current-row :row-class-name="tableRowClassNameOuter">
@@ -53,10 +55,12 @@
                        icon="el-icon-edit" circle plain></el-button>
           </el-tooltip>
           <el-tooltip content="打印配货单" placement="top">
-            <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle plain></el-button>
+            <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle
+                       plain></el-button>
           </el-tooltip>
           <el-tooltip content="废弃" placement="top">
-            <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
+            <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle
+                       plain></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -171,11 +175,9 @@
         }).then(res => {
           this.tableData = res.data.page.records;
           this.tableLoading = false;
-          this.tablePage.pages = res.data.pages.pages;
           this.tablePage.total = res.data.pages.total;
           this.tablePage.current = res.data.pages.current;
           this.tablePage.size = res.data.pages.size;
-
         });
       },
       handleSizeChange(val) {
@@ -187,7 +189,9 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo + '&status=2'});
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo + '&status=2',
+        });
       },
       handleDelete(index, row) {
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
@@ -249,7 +253,9 @@
         });
       },
       route2NewOrd() {
-        this.$router.push({path: '/new-order/index'});
+        this.$router.push({
+          path: '/new-order/index',
+        });
       },
       exportExcel() {
         const link = document.createElement('a');
@@ -263,7 +269,8 @@
       print(index, row) {
         const link = document.createElement('a');
         link.style.display = 'none';
-        link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
+        // link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
+        link.href = 'http://localhost:8888/api/v1/pdf/ord/' + row.orderNo;
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

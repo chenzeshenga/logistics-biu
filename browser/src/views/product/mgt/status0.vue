@@ -1,9 +1,17 @@
 <template>
   <div class="login-container">
     <div class="app-container">
-      <el-col :offset="2" v-if="multiSelected">
-        <el-button type="primary" @click="batchUpdate">批量审核</el-button>
-      </el-col>
+      <el-row gutter="20">
+        <el-col span="2" :offset="2" v-if="multiSelected">
+          <el-button type="primary" @click="batchUpdate">批量审核</el-button>
+        </el-col>
+        <el-col :offset="4" span="2">
+          <el-button type="primary" @click="route2New">新建商品</el-button>
+        </el-col>
+        <el-col :offset="4" span="2">
+          <el-button type="primary" @click="export2Excel">导出</el-button>
+        </el-col>
+      </el-row>
       <el-table style="width: 100%;margin: 10px" :data="tableData" v-loading.body="tableLoading"
                 element-loading-text="加载中" stripe
                 highlight-current-row @selection-change="handleSelectionChange">
@@ -86,6 +94,9 @@
           },
         }).then(res => {
           this.tableData = res.data.page.records;
+          this.tablePage.total = res.data.page.total;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.size = res.data.page.size;
           this.tableLoading = false;
         });
       },
@@ -149,6 +160,20 @@
         }).catch(() => {
           this.$message.info('已取消审核');
         });
+      },
+      route2New() {
+        this.$router.push({
+          path: '/new-product/new-product',
+        });
+      },
+      export2Excel() {
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        // link.href = "http://47.105.107.242:8888/api/v1/template?category=1";
+        link.href = 'http://localhost:8888/api/v1/product/excel/0';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
       },
     },
   };

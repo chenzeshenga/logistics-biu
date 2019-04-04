@@ -51,7 +51,8 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item style="color: #606266;font-size: 14px;">发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)] 发件人 [东岳物流]</el-form-item>
+        <el-form-item style="color: #606266;font-size: 14px;">发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)] 发件人 [东岳物流]
+        </el-form-item>
         <el-form-item label="发件人信息">
           <el-col :span="8">
             <el-form-item label="发件人姓名">
@@ -136,7 +137,8 @@
         <el-form-item label="订单内容">
           <el-col :span="5" v-if="!skuFlag">
             <el-form-item label="sku">
-              <el-cascader :options="myProducts" v-model="selectedProduct" @change="handleProductChange" filterable></el-cascader>
+              <el-cascader :options="myProducts" v-model="selectedProduct" @change="handleProductChange"
+                           filterable></el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="5" v-if="skuFlag">
@@ -201,7 +203,8 @@
     <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
       <el-form :model="form">
         <el-form-item label="订单文件">
-          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError" :limit="1">
+          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError"
+                     :limit="1">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>
             <el-button style="margin-left: 150px;" size="small" type="success" @click="downloadTemplate">
@@ -430,7 +433,7 @@
         const link = document.createElement('a');
         link.style.display = 'none';
         // link.href = "http://47.105.107.242:8888/api/v1/template?category=1";
-        link.href = 'http://localhost:8888/api/v1/template?category=1';
+        link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

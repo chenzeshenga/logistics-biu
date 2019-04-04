@@ -114,7 +114,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'template',
-        name: 'template',
+        name: 'fileTemplate',
         component: _import('_system/config/template'),
         meta: {
           perm: 'm:config:list', title: '模版查看', icon: 'chart',

@@ -9,7 +9,9 @@
         <el-table-column prop="createOn" label="创建时间"></el-table-column>
         <el-table-column prop="link" label="文件">
           <template slot-scope="scope">
-            <svg-icon icon-class="doc"></svg-icon>
+            <el-button type="primary" round @click="downloadFile(scope.$index, scope.row)">
+              <svg-icon icon-class="doc"></svg-icon>
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -21,15 +23,9 @@
   import request from '@/utils/request';
 
   export default {
-    name: 'template',
+    name: 'fileTemplate',
     data() {
       return {
-        tablePage: {
-          current: null,
-          pages: null,
-          size: null,
-          total: null,
-        },
         tableLoading: false,
         tableData: [],
       };
@@ -42,16 +38,19 @@
         this.tableLoading = true;
         request({
           url: '/template/list',
-          method: 'post',
-          data: {
-            current: this.tablePage.current,
-            size: this.tablePage.size,
-          },
+          method: 'get',
         }).then(res => {
-          this.tableData = res.data.page.records;
+          this.tableData = res.data.data;
           this.tableLoading = false;
-          this.tablePage = res.data.page;
         });
+      },
+      downloadFile(index, row) {
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = row.link;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
       },
     },
   };
