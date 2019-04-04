@@ -59,6 +59,15 @@ import java.util.List;
         return Json.succ().data("page", trackNoPage);
     }
 
+    @PostMapping @RequestMapping("/list/{carrierNo}") public Json listByCarrierNo(@RequestBody String body, @PathVariable String carrierNo) {
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        Page<TrackNo> trackNoPage = trackNoService.carrierNo(page, carrierNo.replace("carrier_", ""));
+        List<TrackNo> trackNoList = trackNoPage.getRecords();
+        trackNoList.forEach(trackNo -> trackNo.setCarrierDesc(labelCache.getLabel("carrier_" + trackNo.getCarrier())));
+        return Json.succ().data("page", trackNoPage);
+    }
+
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody TrackNo trackNo) {
         trackNo.setCarrier(trackNo.getCarrier().replace("carrier_", ""));
         trackNoMapper.add(trackNo);

@@ -22,6 +22,12 @@
           and channel_code = #{channelCode}
     </select>
 
+    <select id="listByCarrierNo" resultMap="result">
+        select *
+        from l_track_code
+        where carrier_no = #{carrierNo}
+    </select>
+
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.TrackNo">
         insert into l_track_code(carrier_no, min_track_code, max_track_code, channel_code)
         VALUES (#{carrier}, #{min}, #{max}, #{channelCode})

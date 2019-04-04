@@ -203,7 +203,8 @@
     <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
       <el-form :model="form">
         <el-form-item label="订单文件">
-          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError"
+          <!--          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError"-->
+          <el-upload action="http://47.105.107.242:8888/api/v1/ord/excel" with-credentials :on-error="handleError"
                      :limit="1">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>
@@ -432,8 +433,8 @@
       downloadTemplate() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        // link.href = "http://47.105.107.242:8888/api/v1/template?category=1";
-        link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        link.href = 'http://47.105.107.242:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        // link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

@@ -13,6 +13,8 @@ import java.util.List;
 
     List<TrackNo> carrierNo(Pagination pagination, String carrierNo, String channelCode);
 
+    List<TrackNo> listByCarrierNo(Pagination pagination, String carrierNo);
+
     int add(TrackNo trackNo);
 
     int delete(int id);
