@@ -27,6 +27,8 @@
       <el-table-column width="100" prop="statusDesc" label="订单状态"></el-table-column>
       <el-table-column width="150" prop="carrierName" label="承运人"></el-table-column>
       <el-table-column width="170" prop="trackNo" label="追踪单号"></el-table-column>
+      <el-table-column width="170" prop="chinaCarrier" label="国内承运人"></el-table-column>
+      <el-table-column width="170" prop="chinaNo" label="国内单号"></el-table-column>
       <el-table-column width="250" prop="fromAddressDesc" label="寄件地址"></el-table-column>
       <el-table-column width="150" prop="fromName" label="寄件人"></el-table-column>
       <el-table-column width="150" prop="fromContact" label="寄件人联系方式"></el-table-column>

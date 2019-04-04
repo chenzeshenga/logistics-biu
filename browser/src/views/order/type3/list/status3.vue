@@ -24,6 +24,10 @@
       <el-table-column width="150" prop="categoryName" label="订单类型"></el-table-column>
       <el-table-column width="200" prop="channelDesc" label="运送渠道"></el-table-column>
       <el-table-column width="100" prop="statusDesc" label="订单状态"></el-table-column>
+      <el-table-column width="150" prop="carrierName" label="承运人"></el-table-column>
+      <el-table-column width="170" prop="trackNo" label="追踪单号"></el-table-column>
+      <el-table-column width="170" prop="chinaCarrier" label="国内承运人"></el-table-column>
+      <el-table-column width="170" prop="chinaNo" label="国内单号"></el-table-column>
       <el-table-column width="250" prop="fromAddressDesc" label="寄件地址"></el-table-column>
       <el-table-column width="150" prop="fromName" label="寄件人"></el-table-column>
       <el-table-column width="150" prop="fromContact" label="寄件人联系方式"></el-table-column>
@@ -32,7 +36,7 @@
       <el-table-column width="150" prop="toName" label="收件人"></el-table-column>
       <el-table-column width="150" prop="toContact" label="收件人联系方式"></el-table-column>
       <el-table-column width="150" prop="toZipCode" label="收件人邮编"></el-table-column>
-      <el-table-column prop="collect" width="80" label="是否代收商品费用"></el-table-column>
+      <el-table-column width="80" prop="collect" label="是否代收商品费用"></el-table-column>
       <el-table-column width="170" prop="createOn" label="创建时间"></el-table-column>
       <el-table-column width="170" prop="updateOn" label="修改时间"></el-table-column>
       <el-table-column width="150" prop="creator" label="创建人"></el-table-column>
