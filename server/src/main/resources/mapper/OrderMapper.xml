@@ -119,6 +119,9 @@
             <if test="toContact != null and toContact != ''">
                 to_contact=#{toContact},
             </if>
+            <if test="collectNum != null and collectNum != ''">
+                collect_num=#{collectNum},
+            </if>
         </trim>
         where ord_no=#{orderNo}
     </update>
@@ -137,14 +140,14 @@
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id,
                                    to_town_id, to_where, to_zipcode,
                                    on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel,
-                                   china_carrier)
+                                   china_carrier, collect_num)
         values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn},
                 #{creator}, #{updator},
                 #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId},
                 #{toCityId}, #{toTownId},
                 #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact},
                 #{fromName},
-                #{toName}, #{channel}, #{chinaCarrier})
+                #{toName}, #{channel}, #{chinaCarrier}, #{collectNum})
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
@@ -318,5 +321,9 @@
         where sku = #{sku}
     </select>
 
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from l_manual_order;
+    </select>
 
 </mapper>

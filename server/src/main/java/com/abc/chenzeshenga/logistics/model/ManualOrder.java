@@ -46,6 +46,10 @@ import java.util.Map;
     @ExcelProperty(index = 19, value = "收件人姓名") @NotEmpty(message = "收件人姓名必填") private String toName;
     @ExcelProperty(index = 20, value = "收件人联系方式") private String toContact;
     @ExcelProperty(index = 21, value = "是否代收费用") private String collect;
+    /**
+     * 代收金额
+     */
+    private String collectNum;
     @ExcelProperty(index = 22, value = "sku") private String sku1;
     @ExcelProperty(index = 23, value = "名称") private String name1;
     @ExcelProperty(index = 24, value = "数量") private String num1;

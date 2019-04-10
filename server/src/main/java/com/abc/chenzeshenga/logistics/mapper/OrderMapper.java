@@ -58,4 +58,6 @@ import java.util.Map;
 
     List<ManualOrder> listAllByUsername(Map<String, String> request);
 
+    int count();
+
 }

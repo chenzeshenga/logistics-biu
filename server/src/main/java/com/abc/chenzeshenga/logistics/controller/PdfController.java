@@ -73,17 +73,15 @@ import java.util.List;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
-        Document document = new Document(pdfDocument, PageSize.A9);
-        document.setMargins(5, 5, 5, 5);
-        Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku, "ean13")));
-        Table table = new Table(new float[] {8});
-        table.setWidth(UnitValue.createPercentValue(100));
-        for (int i = 0; i < 7; i++) {
-            table.addCell(
-                new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
-                    .setHorizontalAlignment(HorizontalAlignment.CENTER));
-        }
-        document.add(table);
+        Document document = new Document(pdfDocument, new PageSize(50, 50));
+        document.setMargins(0, 0, 0, 0);
+        Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku)));
+        document.add(barcode);
+        //        Table table = new Table(new float[] {8});
+        //        table.setWidth(UnitValue.createPercentValue(100));
+        //        table.addCell(new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
+        //            .setHorizontalAlignment(HorizontalAlignment.CENTER));
+        //        document.add(table);
         document.close();
         response.setContentType("application/pdf");
         response.getOutputStream().write(outputStream.toByteArray());
