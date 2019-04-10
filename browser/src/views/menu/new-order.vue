@@ -119,20 +119,23 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="是否代收" v-if="!whetherChargeForThem">
-          <el-switch
-            v-model="form.collect"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
-        </el-form-item>
-        <el-form-item label="是否代收" v-if="whetherChargeForThem">
-          <el-switch
-            disabled
-            v-model="form.collect"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
+        <el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="是否代收" v-if="!whetherChargeForThem">
+                <el-switch
+                  v-model="form.collect"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+                </el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="代收金额" v-if="form.collect && !whetherChargeForThem">
+                <el-input-number v-model="form.collectNum"></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="订单内容">
           <el-col :span="5" v-if="!skuFlag">
@@ -203,11 +206,12 @@
     <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
       <el-form :model="form">
         <el-form-item label="订单文件">
-          <!--          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials :on-error="handleError"-->
-          <el-upload action="http://47.105.107.242:8888/api/v1/ord/excel" with-credentials :on-error="handleError"
+          <!--          <el-upload action="http://47.105.107.242:8888/api/v1/ord/excel" with-credentials :on-error="handleError"-->
+          <!--                     :on-error="handleError"-->
+          <el-upload action="http://localhost:8888/api/v1/ord/excel" with-credentials
                      :limit="1">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>
+            <!--            <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>-->
             <el-button style="margin-left: 150px;" size="small" type="success" @click="downloadTemplate">
               <svg-icon icon-class="doc"></svg-icon>
               模版文件
@@ -249,6 +253,7 @@
           address: {},
           toAddress: {},
           collect: false,
+          collectNum: 0,
           contentList: [],
           selectedAddress: [],
           selectedtoAddress: [],
@@ -364,6 +369,10 @@
         this.form.carrierDesc = this.channelMap[value[0]]['partnerDesc'];
         const checkedRules = this.channelMap[value[0]]['checkedRules'];
         this.whetherChargeForThem = (checkedRules.indexOf('whetherChargeForThem') <= -1);
+        if (this.whetherChargeForThem) {
+          this.form.collect = false;
+        }
+        console.log(this.form);
       },
       handleAddressChange(value) {
         this.form.address.ken = value[0];
@@ -433,8 +442,8 @@
       downloadTemplate() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        link.href = 'http://47.105.107.242:8888/api/v1/template/file/PRODUCT_TEMPLATE';
-        // link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        // link.href = 'http://47.105.107.242:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

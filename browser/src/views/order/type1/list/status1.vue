@@ -3,57 +3,72 @@
     <div class="app-container">
       <el-form>
         <el-form-item>
-          <el-col :offset="1" :span="20" style="margin-top: 10px;margin-bottom: 10px" class="block">
-            <el-button type="primary" @click="applyTrackNo()" style="margin-right: 10px" v-if="multiSelection">批量申请单号</el-button>
-            <el-button type="primary" @click="batchStatusUpdate()" style="margin-right: 50px" v-if="multiSelection">批量提交</el-button>
-            <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
-                            end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
-            </el-date-picker>
-            <el-button type="primary" @click="route2NewOrd()" style="margin-left: 300px">新建订单</el-button>
-            <el-button type="primary" @click="exportExcel()" icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel</el-button>
-          </el-col>
-        </el-form-item>
-        <el-col :offset="1">
-          <el-col :span="6">
-            <el-form-item>
+          <el-row :gutter="20" style="margin-left: 4%">
+            <el-col span="6">
+              <el-tooltip content="订单创建时间" placement="top">
+                <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd"
+                                style="width: 400px">
+                </el-date-picker>
+              </el-tooltip>
+            </el-col>
+            <el-col :span="4">
               <el-tooltip content="订单号" placement="top">
                 <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
               </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="1">
-            <el-form-item>
+            </el-col>
+            <el-col :span="4">
               <el-tooltip content="创建人" placement="top">
                 <el-select filterable clearable v-model="search.creator" placeholder="请选择创建人">
-                  <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick" :value="creator.uname"></el-option>
+                  <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick"
+                             :value="creator.uname"></el-option>
                 </el-select>
-                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
               </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" :offset="1">
-            <el-form-item>
+            </el-col>
+            <el-col :span="4">
               <el-tooltip content="相关渠道" placement="top">
                 <el-select clearable filterable v-model="search.channelCode" placeholder="对应渠道">
                   <el-option v-for="item in channels" :key="item.value" :label="item.label"
                              :value="item.value"></el-option>
                 </el-select>
               </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="1" :offset="1">
-            <el-form-item label="">
-              <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
-            </el-form-item>
-          </el-col>
-        </el-col>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item label="">
+                <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20" style="margin-top: 1%;margin-left: 4%">
+            <el-col :span="2">
+              <el-button type="primary" @click="applyTrackNo()" v-if="multiSelection">
+                批量申请单号
+              </el-button>
+            </el-col>
+            <el-col :span="2">
+              <el-button type="primary" @click="batchStatusUpdate()" v-if="multiSelection">
+                批量提交
+              </el-button>
+            </el-col>
+            <el-col :span="2">
+              <el-button type="primary" @click="route2NewOrd()">新建订单</el-button>
+            </el-col>
+            <el-col :span="2">
+              <el-button type="primary" @click="exportExcel()"
+                         icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel
+              </el-button>
+            </el-col>
+          </el-row>
+        </el-form-item>
       </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
                 highlight-current-row @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand">
           <template slot-scope="tableData">
-            <el-table :data="tableData.row.contentList" show-summary :summary-method="getSummary" style="margin-bottom: 0">
+            <el-table :data="tableData.row.contentList" show-summary :summary-method="getSummary"
+                      style="margin-bottom: 0">
               <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
               <el-table-column prop="name" label="商品名称" width="300"></el-table-column>
               <el-table-column prop="price" label="商品价格(JPY)" width="180"></el-table-column>
@@ -83,27 +98,34 @@
         <el-table-column label="操作" width="300" fixed="right">
           <template slot-scope="scope">
             <el-tooltip content="提交拣货" placement="top">
-              <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
+              <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check"
+                         circle
                          plain></el-button>
             </el-tooltip>
             <el-tooltip content="申请单号" placement="top">
-              <el-button @click="applyTrackno(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-info" circle plain></el-button>
+              <el-button @click="applyTrackno(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-info"
+                         circle plain></el-button>
             </el-tooltip>
             <el-tooltip content="编辑" placement="top">
-              <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
+              <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit"
+                         circle plain></el-button>
             </el-tooltip>
             <el-tooltip content="打印配货单" placement="top">
-              <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle plain></el-button>
+              <el-button @click="print(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-printer" circle
+                         plain></el-button>
             </el-tooltip>
             <el-tooltip content="废弃" placement="top">
-              <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle plain></el-button>
+              <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle
+                         plain></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination style="margin-left: 65%;margin-top: 10px" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      <el-pagination style="margin-left: 65%;margin-top: 10px" background @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
                      :current-page="tablePage.current"
-                     :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size" layout="total, sizes, prev, pager, next, jumper"
+                     :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size"
+                     layout="total, sizes, prev, pager, next, jumper"
                      :total="tablePage.total">
       </el-pagination>
       <!--:before-close="handleClose"-->
@@ -111,7 +133,8 @@
         <el-form :model="form">
           <el-col :span="12">
             <el-form-item label="承运人">
-              <el-cascader :options="carrier" v-model="form.selectedCarrier" @change="handleCarrierChange" filterable></el-cascader>
+              <el-cascader :options="carrier" v-model="form.selectedCarrier" @change="handleCarrierChange"
+                           filterable></el-cascader>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -134,7 +157,8 @@
         <el-form :model="form">
           <el-col :span="24">
             <el-form-item label="承运人">
-              <el-cascader :options="carrier" v-model="form.selectedCarrier" @change="handleCarrierChange" filterable></el-cascader>
+              <el-cascader :options="carrier" v-model="form.selectedCarrier" @change="handleCarrierChange"
+                           filterable></el-cascader>
             </el-form-item>
           </el-col>
         </el-form>
@@ -405,8 +429,8 @@
       print(index, row) {
         const link = document.createElement('a');
         link.style.display = 'none';
-        link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
-        // link.href = 'http://localhost:8888/api/v1/pdf/ord/' + row.orderNo;
+        // link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
+        link.href = 'http://localhost:8888/api/v1/pdf/ord/' + row.orderNo;
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
@@ -445,8 +469,8 @@
       exportExcel() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        link.href = 'http://47.105.107.242:8888/api/v1/ord/excel/1';
-        // link.href = 'http://localhost:8888/api/v1/ord/excel/1';
+        // link.href = 'http://47.105.107.242:8888/api/v1/ord/excel/1';
+        link.href = 'http://localhost:8888/api/v1/ord/excel/1';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
