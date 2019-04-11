@@ -4,7 +4,7 @@
       <el-form>
         <el-form-item>
           <el-row :gutter="20" style="margin-left: 4%">
-            <el-col span="6">
+            <el-col :span="6">
               <el-tooltip content="订单创建时间" placement="top">
                 <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至"
                                 start-placeholder="开始日期"
