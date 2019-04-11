@@ -4,20 +4,22 @@
       <el-form ref="form" label-width="120px" :model="form">
         <el-form-item label="仓库地址">
           <el-col :span="12">
-            <el-input v-model="form.target" disabled></el-input>
+            <el-form-item label="默认地址">
+              <el-input v-model="form.target" disabled></el-input>
+            </el-form-item>
           </el-col>
         </el-form-item>
         <el-form-item label="承运信息">
           <el-col :span="12">
             <el-form-item label="单号">
-              <el-input v-model="form.warehousingNo" v-bind:disabled="onUpdate" placeholder="请点击按钮获取单号">
+              <el-input v-model="form.warehousingNo" clearable v-bind:disabled="onUpdate" placeholder="请点击按钮获取单号">
                 <el-button slot="append" v-bind:disabled="onUpdate" @click="getOrdNo">获取单号</el-button>
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="头程方式">
-              <el-select filterable v-model="form.method" placeholder="请选择头程方式">
+              <el-select filterable v-model="form.method" placeholder="请选择头程方式" clearable>
                 <el-option label="东岳头程" value="1"></el-option>
                 <el-option label="其他头程" value="2"></el-option>
               </el-select>
@@ -27,19 +29,19 @@
         <el-form-item>
           <el-col :span="12" v-if="form.method==='2'">
             <el-form-item label="头程承运人">
-              <el-input v-model="form.carrier" placeholder="请输入承运人"></el-input>
+              <el-input v-model="form.carrier" placeholder="请输入承运人" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.method==='2'">
             <el-form-item label="承运人追踪号">
-              <el-input v-model="form.trackNo" placeholder="请输入承运人追踪号"></el-input>
+              <el-input v-model="form.trackNo" placeholder="请输入承运人追踪号" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
         <el-form-item>
           <el-col :span="12">
             <el-form-item label="头程渠道">
-              <el-select filterable v-model="form.channel" placeholder="请选择头程渠道">
+              <el-select filterable v-model="form.channel" placeholder="请选择头程渠道" clearable>
                 <el-option v-for="item in channels" :key="item.value" :label="item.label"
                            :value="item.value"></el-option>
               </el-select>
@@ -47,7 +49,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="运输方式">
-              <el-select v-model="form.deliverMethod" placeholder="请选择运输方式">
+              <el-select v-model="form.deliverMethod" clearable filterable placeholder="请选择运输方式">
                 <el-option label="海运整柜20GP/HQ" value="1"></el-option>
                 <el-option label="海运整柜40GP/HQ" value="2"></el-option>
                 <el-option label="海运散货" value="3"></el-option>
@@ -89,7 +91,7 @@
           <el-col :span="12">
             <el-form-item label="预计到港时间">
               <el-date-picker v-model="form.estimatedDate" type="date"
-                              placeholder="选择日期"></el-date-picker>
+                              placeholder="选择日期" :picker-options="pickerOptions1"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -159,10 +161,10 @@
 </template>
 
 <script>
-  import request from '@/utils/request'
+  import request from '@/utils/request';
 
   export default {
-    name: "new-warehousing",
+    name: 'new-warehousing',
     data() {
       return {
         onUpdate: false,
@@ -170,26 +172,26 @@
         dialogImageUrl: '',
         dialogVisible: false,
         form: {
-          target: "岡山县岡山市中区新京橋3丁目4-26",
-          warehousingNo: "",
+          target: '岡山县岡山市中区新京橋3丁目4-26',
+          warehousingNo: '',
           method: '1',
           carrier: '',
           trackNo: '',
-          deliverMethod: "",
-          clearanceType: "",
-          taxType: "",
+          deliverMethod: '',
+          clearanceType: '',
+          taxType: '',
           insurance: false,
           insuranceNum: 0,
           estimatedDate: new Date(),
           warehousingContentList: [],
         },
         currContent: {
-          warehousingNo: "",
-          sku: "",
-          name: "",
-          boxSeq: "",
-          totalNum: "",
-          wrapType: "",
+          warehousingNo: '',
+          sku: '',
+          name: '',
+          boxSeq: '',
+          totalNum: '',
+          wrapType: '',
         },
         contentMap: {},
         checkRules: {},
@@ -201,9 +203,36 @@
         arr:
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         wrapTypeArr:
-          ["自带包装", "非自带包装"]
-      }
-        ;
+          ['自带包装', '非自带包装'],
+        pickerOptions1: {
+          disabledDate(time) {
+            return time.getTime() < Date.now();
+          },
+          shortcuts: [
+            {
+              text: '明天',
+              onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() + 3600 * 1000 * 24);
+                picker.$emit('pick', date);
+              },
+            }, {
+              text: '一周后',
+              onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', date);
+              },
+            }, {
+              text: '两周后',
+              onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() + 3600 * 1000 * 24 * 7 * 2);
+                picker.$emit('pick', date);
+              },
+            }],
+        },
+      };
     },
     created() {
       this.initPage();
@@ -211,36 +240,36 @@
     methods: {
       initPage() {
         request({
-          url: "/product/list",
-          method: "get"
+          url: '/product/list',
+          method: 'get',
         }).then(res => {
           this.products = res.data.data;
           this.products.forEach(
             product => {
-              this.productMap[product["value"]] = product;
-            }
+              this.productMap[product['value']] = product;
+            },
           );
         });
         request({
-          url: "/channel/list/123",
-          method: "get"
+          url: '/channel/list/123',
+          method: 'get',
         }).then(res => {
           this.channels = res.data.data;
         });
       },
       getOrdNo() {
         request({
-          url: "/generate/pk",
-          method: 'get'
+          url: '/generate/pk',
+          method: 'get',
         }).then(res => {
           this.form.warehousingNo = res.data.data;
           this.currContent.warehousingNo = res.data.data;
-        })
+        });
       },
       add2Cart() {
-        let sku = this.currContent.sku;
-        let boxSeq = this.currContent.boxSeq;
-        let boxContentMap = this.selectedProductMap[boxSeq];
+        const sku = this.currContent.sku;
+        const boxSeq = this.currContent.boxSeq;
+        const boxContentMap = this.selectedProductMap[boxSeq];
         if (boxContentMap === undefined || boxContentMap.length <= 0) {
           this.selectedProductMap[boxSeq] = {};
           this.selectedProductMap[boxSeq][sku] = this.currContent;
@@ -248,11 +277,11 @@
         } else {
           if (boxContentMap.hasOwnProperty(sku)) {
             this.$confirm('相同箱号中的相同sku产品将合并', '提示', confirm).then(() => {
-              let oriContent = boxContentMap[sku];
+              const oriContent = boxContentMap[sku];
               oriContent.totalNum += this.currContent.totalNum;
               this.pushData2Table();
             }).catch(() => {
-              this.$message.info("请重新选择箱号");
+              this.$message.info('请重新选择箱号');
             });
           } else {
             this.selectedProductMap[boxSeq][sku] = this.currContent;
@@ -262,24 +291,24 @@
       },
       pushData2Table() {
         this.form.warehousingContentList = [];
-        for (let boxSeq in this.selectedProductMap) {
-          let boxContainer = this.selectedProductMap[boxSeq];
-          for (let key in boxContainer) {
-            let product = boxContainer[key];
+        for (const boxSeq in this.selectedProductMap) {
+          const boxContainer = this.selectedProductMap[boxSeq];
+          for (const key in boxContainer) {
+            const product = boxContainer[key];
             this.form.warehousingContentList.push(product);
           }
         }
         this.currContent = {
-          warehousingNo: "",
-          sku: "",
-          name: "",
-          boxSeq: "",
-          totalNum: "",
-          wrapType: "",
+          warehousingNo: '',
+          sku: '',
+          name: '',
+          boxSeq: '',
+          totalNum: '',
+          wrapType: '',
         };
       },
       handleValueChange(value) {
-        this.currContent.name = this.productMap[value]["name"];
+        this.currContent.name = this.productMap[value]['name'];
       },
       handleDelete(index, row) {
         this.form.warehousingContentList.splice(index, 1);
@@ -287,19 +316,19 @@
       },
       submitForm() {
         if (this.form.insurance) {
-          this.form.insurance = "Y";
+          this.form.insurance = 'Y';
         } else {
-          this.form.insurance = "N";
+          this.form.insurance = 'N';
         }
         request({
-          url: "/warehousing/add",
-          method: "post",
-          data: this.form
+          url: '/warehousing/add',
+          method: 'post',
+          data: this.form,
         }).then(res => {
-          this.$message.success("成功新建订单")
-        })
-      }
-    }
-  }
+          this.$message.success('成功新建订单');
+        });
+      },
+    },
+  };
 </script>
 

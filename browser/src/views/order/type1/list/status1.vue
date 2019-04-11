@@ -15,7 +15,7 @@
             </el-col>
             <el-col :span="4">
               <el-tooltip content="订单号" placement="top">
-                <el-input v-model="search.ordno" placeholder="请输入订单号"></el-input>
+                <el-input v-model="search.ordno" clearable placeholder="请输入订单号"></el-input>
               </el-tooltip>
             </el-col>
             <el-col :span="4">

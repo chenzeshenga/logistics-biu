@@ -218,7 +218,7 @@ import java.util.concurrent.atomic.AtomicReference;
             manualOrder.setToAddressDesc(to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
-            manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
+            //            manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
             double totalPrice = 0.0;

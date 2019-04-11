@@ -62,7 +62,7 @@ import java.util.Map;
         channel.setUpdateOn(curr);
         channel.setCheckedRules(String.join(",", channel.getCheckedRules2()));
         channelMapper.insert(channel);
-        channelCache.init();
+        //        channelCache.init();
         return Json.succ().data(channel);
     }
 

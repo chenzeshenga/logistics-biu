@@ -179,6 +179,11 @@
     created() {
       this.initPage();
     },
+    watch: {
+      $route() {
+        this.initPage();
+      },
+    },
     methods: {
       initPage() {
         const sku = this.$route.query.sku;
