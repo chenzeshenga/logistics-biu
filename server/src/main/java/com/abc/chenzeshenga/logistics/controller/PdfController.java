@@ -73,6 +73,7 @@ import java.util.List;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        //pagesize 的单位为mm，可改为500
         Document document = new Document(pdfDocument, new PageSize(50, 50));
         document.setMargins(0, 0, 0, 0);
         Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku)));
