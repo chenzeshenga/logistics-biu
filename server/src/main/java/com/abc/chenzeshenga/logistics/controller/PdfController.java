@@ -78,11 +78,6 @@ import java.util.List;
         document.setMargins(0, 0, 0, 0);
         Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku)));
         document.add(barcode);
-        //        Table table = new Table(new float[] {8});
-        //        table.setWidth(UnitValue.createPercentValue(100));
-        //        table.addCell(new Cell().add(barcode).setBorder(Border.NO_BORDER).setVerticalAlignment(VerticalAlignment.MIDDLE)
-        //            .setHorizontalAlignment(HorizontalAlignment.CENTER));
-        //        document.add(table);
         document.close();
         response.setContentType("application/pdf");
         response.getOutputStream().write(outputStream.toByteArray());
