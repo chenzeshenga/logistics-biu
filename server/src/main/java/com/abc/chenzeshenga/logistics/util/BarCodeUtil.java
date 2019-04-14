@@ -8,7 +8,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.krysalis.barcode4j.BarcodeUtil;
 import org.krysalis.barcode4j.impl.AbstractBarcodeBean;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
@@ -61,9 +60,9 @@ import java.util.Map;
             abstractBarcodeBean = new EAN13Bean();
         }
         // 精细度
-        final int dpi = 300;
+        final int dpi = 160;
         // module宽度
-        final double moduleWidth = UnitConv.in2mm(4.0f / dpi);
+        final double moduleWidth = UnitConv.in2mm(1.1f / dpi);
         // 配置对象
         abstractBarcodeBean.setModuleWidth(moduleWidth);
         abstractBarcodeBean.doQuietZone(false);
@@ -83,7 +82,7 @@ import java.util.Map;
      * @reference https://crunchify.com/java-simple-qr-code-generator-example/
      */
     private static void generateQrCode(String content, OutputStream outputStream) {
-        int size = 50;
+        int size = 80;
         String fileType = "png";
         try {
             Map<EncodeHintType, Object> hintMap = new EnumMap<>(EncodeHintType.class);

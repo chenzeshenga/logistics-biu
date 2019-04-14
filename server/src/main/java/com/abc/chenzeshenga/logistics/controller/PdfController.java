@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.util.BarCodeUtil;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.PdfUtil;
 import com.abc.chenzeshenga.logistics.util.StringUtil;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
@@ -13,14 +14,11 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
-import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,17 +68,8 @@ import java.util.List;
     }
 
     @GetMapping("/sku/{dySku}") public void skuPdf(HttpServletResponse response, @PathVariable String dySku) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PdfWriter pdfWriter = new PdfWriter(outputStream);
-        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
-        //pagesize 的单位为mm，可改为500
-        Document document = new Document(pdfDocument, new PageSize(50, 50));
-        document.setMargins(0, 0, 0, 0);
-        Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(dySku)));
-        document.add(barcode);
-        document.close();
         response.setContentType("application/pdf");
-        response.getOutputStream().write(outputStream.toByteArray());
+        response.getOutputStream().write(PdfUtil.skuPdf(dySku, "我我我我我我"));
     }
 
 }
