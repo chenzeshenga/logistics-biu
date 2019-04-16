@@ -31,8 +31,8 @@
 </template>
 
 <script>
-  import {isvalidUsername} from '@/utils/validate'
-  import LangSelect from '@/components/LangSelect'
+  import {isvalidUsername} from '@/utils/validate';
+  import LangSelect from '@/components/LangSelect';
 
   export default {
     components: {LangSelect},
@@ -40,55 +40,63 @@
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!isvalidUsername(value)) {
-          callback(new Error('请输入正确的用户帐号'))
+          callback(new Error('请输入正确的用户帐号'));
         } else {
-          callback()
+          callback();
         }
-      }
+      };
       const validatePassword = (rule, value, callback) => {
         if (value.length < 6) {
-          callback(new Error('密码不能少于6个字符'))
+          callback(new Error('密码不能少于6个字符'));
         } else {
-          callback()
+          callback();
         }
-      }
+      };
       return {
         loginForm: {
           username: 'admin',
-          password: '123456'
+          password: '123456',
         },
         loginRules: {
-          username: [{required: true, trigger: 'blur', validator: validateUsername}],
-          password: [{required: true, trigger: 'blur', validator: validatePassword}]
+          username: [
+            {
+              required: true, trigger: 'blur', validator: validateUsername,
+            }],
+          password: [
+            {
+              required: true, trigger: 'blur', validator: validatePassword,
+            }],
         },
         passwordType: 'password',
         loading: false,
-        showDialog: false
-      }
+        showDialog: false,
+      };
     },
     methods: {
       showPwd() {
         if (this.passwordType === 'password') {
-          this.passwordType = ''
+          this.passwordType = '';
         } else {
-          this.passwordType = 'password'
+          this.passwordType = 'password';
         }
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            this.loading = true
+            this.loading = true;
             this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-              this.loading = false
-              this.$router.push({path: '/'})
+              this.loading = false;
+              this.$router.push({
+                path: '/',
+              });
             }).catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
           }
-        })
+        });
       },
     },
-  }
+  };
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

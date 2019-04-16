@@ -33,6 +33,11 @@ export const constantRouterMap = [
     path: '/login', component: _import('login/index'), hidden: true,
   },
   {
+    path: '/order-info',
+    component: _import('showPage/order-info'),
+    hidden: true,
+  },
+  {
     path: '/authredirect',
     component: _import('login/authredirect'),
     hidden: true,
@@ -52,7 +57,9 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: _import('dashboard/index'),
         name: 'dashboard',
-        meta: {title: '东岳', icon: 'dashboard', noCache: true},
+        meta: {
+          title: '东岳', icon: 'dashboard', noCache: true,
+        },
       }],
   },
 ];
@@ -69,7 +76,9 @@ export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
-    meta: {perm: 'm:sys', title: '系统', icon: 'chart'},
+    meta: {
+      perm: 'm:sys', title: '系统', icon: 'chart',
+    },
     children: [
       {
         path: 'user_manage',
