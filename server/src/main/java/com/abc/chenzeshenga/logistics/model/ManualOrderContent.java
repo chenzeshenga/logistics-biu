@@ -29,4 +29,6 @@ import java.io.Serializable;
 
     private String location;
 
+    private String imgUrl;
+
 }
