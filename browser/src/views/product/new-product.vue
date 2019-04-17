@@ -177,8 +177,10 @@
       };
     },
     created() {
+      this.reload();
       this.initPage();
     },
+    inject: ['reload'],
     watch: {
       $route() {
         this.initPage();
@@ -264,8 +266,9 @@
               url: '/product/add',
               method: 'post',
               data: this.form,
-            }).then(res => {
-              console.log(res);
+            }).then(() => {
+              this.$message.success('商品创建成功');
+              this.resetForm(formName);
             });
           } else {
             console.log('error submit!!');

@@ -89,6 +89,7 @@
               this.$router.push({
                 path: '/',
               });
+              this.$router.go(0);
             }).catch(() => {
               this.loading = false;
             });

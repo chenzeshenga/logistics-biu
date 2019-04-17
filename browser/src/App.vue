@@ -5,10 +5,28 @@
 </template>
 
 <script>
-  export default{
+  export default {
     name: 'App',
-    data(){
-      return {}
-    }
-  }
+    provide() {
+      return {
+        reload: this.reload,
+      };
+    },
+    data() {
+      return {
+        isRouterAlive: true,
+      };
+    },
+    methods: {
+      reload() {
+        console.log('reloading');
+        this.isRouterAlive = false;
+        this.$nextTick(function() {
+          this.isRouterAlive = true;
+        });
+        console.log('reload END');
+      },
+    },
+
+  };
 </script>
