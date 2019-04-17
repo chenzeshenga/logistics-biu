@@ -177,7 +177,6 @@
       };
     },
     created() {
-      this.reload();
       this.initPage();
     },
     inject: ['reload'],
