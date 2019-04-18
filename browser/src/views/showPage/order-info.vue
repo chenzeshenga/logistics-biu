@@ -44,6 +44,9 @@
         this.init();
       },
     },
+    created() {
+      this.init();
+    },
     methods: {
       init() {
         console.log(this.$route.query.ord);

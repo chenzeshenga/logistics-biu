@@ -5,3 +5,6 @@ spring:
       url: jdbc:mysql://47.105.107.242:3306/logistics-prod?characterEncoding=UTF-8&useSSL=false
       username: logistics
       password: Dongyue@123
+logistics:
+  base:
+    url: "www.jpdyu.com:8888/api/v1/"

@@ -35,8 +35,15 @@
   import LangSelect from '@/components/LangSelect';
 
   export default {
-    components: {LangSelect},
+    components: {
+      LangSelect,
+    },
     name: 'login',
+    watch: {
+      $route() {
+        this.initPage();
+      },
+    },
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!isvalidUsername(value)) {
