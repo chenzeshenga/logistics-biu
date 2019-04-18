@@ -23,6 +23,7 @@ import javax.annotation.Resource;
     }
 
     public String getOrderSeq() {
+        log.info(orderSeq);
         return orderSeq;
     }
 

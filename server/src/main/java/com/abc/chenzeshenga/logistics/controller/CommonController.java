@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
+import com.abc.chenzeshenga.logistics.cache.OrderCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
@@ -23,10 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -54,13 +53,17 @@ import java.util.*;
 
     private LabelCache labelCache;
 
-    @Autowired public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache) {
+    private OrderCache orderCache;
+
+    @Autowired public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache) {
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
+        this.orderCache = orderCache;
     }
 
     @GetMapping("/generate/pk") public Json getOrderNo() {
-        String pk = CommonUtil.generate();
+        String pk = CommonUtil.generate() + "-" + orderCache.getOrderSeq();
+        orderCache.init();
         return Json.succ().data(pk);
     }
 
