@@ -1,52 +1,54 @@
 <template>
   <div class="login-container">
-    <el-table style="width: 100%;margin: 10px" :data="tableData" v-loading.body="tableLoading"
-              element-loading-text="加载中" stripe
-              highlight-current-row>
-      <el-table-column width="150" prop="sku" label="sku"></el-table-column>
-      <el-table-column width="150" prop="dySku" label="东岳sku"></el-table-column>
-      <el-table-column width="150" prop="statusDesc" label="状态"></el-table-column>
-      <el-table-column width="200" prop="productName" label="商品名称"></el-table-column>
-      <el-table-column width="150" prop="categoryName" label="商品类型"></el-table-column>
-      <el-table-column prop="color" label="商品颜色" width="150"></el-table-column>
-      <el-table-column prop="size" label="商品尺寸" width="150"></el-table-column>
-      <el-table-column prop="length" label="商品长度(cm)" width="150"></el-table-column>
-      <el-table-column prop="width" label="商品宽度(cm)" width="150"></el-table-column>
-      <el-table-column prop="height" label="商品高度(cm)" width="150"></el-table-column>
-      <el-table-column prop="weight" label="商品重量(kg)" width="150"></el-table-column>
-      <el-table-column prop="price" label="商品价格" width="150"></el-table-column>
-      <el-table-column prop="createdBy" label="创建者" width="150"></el-table-column>
-      <el-table-column prop="updateBy" label="更新者" width="150"></el-table-column>
-      <el-table-column prop="createOn" label="创建时间" width="160"></el-table-column>
-      <el-table-column prop="updateOn" label="更新时间" width="160"></el-table-column>
-      <el-table-column label="操作" width="200" fixed="right">
-        <template slot-scope="scope">
-          <el-tooltip content="编辑" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="mini" type="info"
-                       icon="el-icon-edit" circle plain></el-button>
-          </el-tooltip>
-          <el-tooltip content="打印商品标签" placement="top">
-            <el-button @click="handlePrint(scope.$index,scope.row)" size="mini" type="info"
-                       circle plain>
-              <svg-icon icon-class="print"></svg-icon>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="删除" placement="top">
-            <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger"
-                       icon="el-icon-remove" circle plain></el-button>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                   :current-page="tablePage.current"
-                   :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size"
-                   layout="total, sizes, prev, pager, next, jumper"
-                   :total="tablePage.total">
-    </el-pagination>
-    <el-dialog>
+    <div class="app-container">
+      <el-table :data="tableData" element-loading-text="加载中" highlight-current-row
+                stripe style="width: 100%;margin: 10px"
+                v-loading.body="tableLoading">
+        <el-table-column label="sku" prop="sku" width="150"></el-table-column>
+        <el-table-column label="东岳sku" prop="dySku" width="150"></el-table-column>
+        <el-table-column label="状态" prop="statusDesc" width="150"></el-table-column>
+        <el-table-column label="商品名称" prop="productName" width="200"></el-table-column>
+        <el-table-column label="商品类型" prop="categoryName" width="150"></el-table-column>
+        <el-table-column label="商品颜色" prop="color" width="150"></el-table-column>
+        <el-table-column label="商品尺寸" prop="size" width="150"></el-table-column>
+        <el-table-column label="商品长度(cm)" prop="length" width="150"></el-table-column>
+        <el-table-column label="商品宽度(cm)" prop="width" width="150"></el-table-column>
+        <el-table-column label="商品高度(cm)" prop="height" width="150"></el-table-column>
+        <el-table-column label="商品重量(kg)" prop="weight" width="150"></el-table-column>
+        <el-table-column label="商品价格" prop="price" width="150"></el-table-column>
+        <el-table-column label="创建者" prop="createdBy" width="150"></el-table-column>
+        <el-table-column label="更新者" prop="updateBy" width="150"></el-table-column>
+        <el-table-column label="创建时间" prop="createOn" width="160"></el-table-column>
+        <el-table-column label="更新时间" prop="updateOn" width="160"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="200">
+          <template slot-scope="scope">
+            <el-tooltip content="编辑" placement="top">
+              <el-button @click="handleUpdate(scope.$index,scope.row)" circle icon="el-icon-edit"
+                         plain size="mini" type="info"></el-button>
+            </el-tooltip>
+            <el-tooltip content="打印商品标签" placement="top">
+              <el-button @click="handlePrint(scope.$index,scope.row)" circle plain
+                         size="mini" type="info">
+                <svg-icon icon-class="print"></svg-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button @click="handleDelete(scope.$index,scope.row)" circle icon="el-icon-remove"
+                         plain size="mini" type="danger"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination :current-page="tablePage.current" :page-size="tablePage.size"
+                     :page-sizes="[10, 20, 30, 40, 50]"
+                     :total="tablePage.total" @current-change="handleCurrentChange"
+                     @size-change="handleSizeChange"
+                     layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+      <el-dialog>
 
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
 </template>
 

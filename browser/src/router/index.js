@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+/* Layout */
+import Layout from '../views/layout/Layout';
 
 const _import = require('./_import_' + process.env.NODE_ENV);
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router);
-
-/* Layout */
-import Layout from '../views/layout/Layout';
 
 /** note: submenu only appear when children.length>=1
  *   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
@@ -84,26 +83,34 @@ export const asyncRouterMap = [
         path: 'user_manage',
         name: 'user_manage',
         component: _import('_system/user/index'),
-        meta: {perm: 'm:sys:user', title: '用户管理', icon: 'chart', noCache: true},
+        meta: {
+          perm: 'm:sys:user', title: '用户管理', icon: 'chart', noCache: true,
+        },
       },
       {
         path: 'role_manage',
         name: 'role_manage',
         component: _import('_system/role/index'),
-        meta: {perm: 'm:sys:role', title: '角色管理', icon: 'chart', noCache: true},
+        meta: {
+          perm: 'm:sys:role', title: '角色管理', icon: 'chart', noCache: true,
+        },
       },
       {
         hidden: true,
         path: 'role_manage/:roleId/assign_perm',
         name: 'role_manage_assign_perm',
         component: _import('_system/role/assign_perm'),
-        meta: {hiddenTag: true, title: '角色授权'},
+        meta: {
+          hiddenTag: true, title: '角色授权',
+        },
       },
       {
         path: 'perm_manage',
         name: 'perm_manage',
         component: _import('_system/perm/index'),
-        meta: {perm: 'm:sys:perm', title: '权限管理', icon: 'chart', noCache: true},
+        meta: {
+          perm: 'm:sys:perm', title: '权限管理', icon: 'chart', noCache: true,
+        },
       },
       {
         path: 'trackno',
@@ -139,7 +146,9 @@ export const asyncRouterMap = [
         path: 'index',
         name: 'menu1',
         component: _import('menu/new-order'),
-        meta: {perm: 'm:menu1', title: '新建订单', icon: 'icon'},
+        meta: {
+          perm: 'm:menu1', title: '新建订单', icon: 'icon',
+        },
       }],
   },
   {
@@ -150,7 +159,9 @@ export const asyncRouterMap = [
         path: 'new-product',
         name: 'new-product',
         component: _import('product/new-product'),
-        meta: {perm: 'm:product', title: '新建商品', icon: 'icon'},
+        meta: {
+          perm: 'm:product', title: '新建商品', icon: 'icon',
+        },
       }],
   },
   {
@@ -161,7 +172,9 @@ export const asyncRouterMap = [
         path: 'new-warehousing',
         name: 'new-warehousing',
         component: _import('warehousing/new-warehousing'),
-        meta: {perm: 'm:product', title: '新建入库单', icon: 'icon'},
+        meta: {
+          perm: 'm:product', title: '新建入库单', icon: 'icon',
+        },
       }],
   },
   {
@@ -477,7 +490,9 @@ export const asyncRouterMap = [
   {
     path: '/product',
     component: Layout,
-    meta: {perm: 'm:product', title: '商品管理', icon: 'chart'},
+    meta: {
+      perm: 'm:product', title: '商品管理', icon: 'chart',
+    },
     children: [
       {
         path: 'status0',
@@ -514,5 +529,7 @@ export const asyncRouterMap = [
       },
     ],
   },
-  {path: '*', redirect: '/404', hidden: true},
+  {
+    path: '*', redirect: '/404', hidden: true,
+  },
 ];
