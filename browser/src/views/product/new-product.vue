@@ -267,7 +267,7 @@
               data: this.form,
             }).then(() => {
               this.$message.success('商品创建成功');
-              this.resetForm(formName);
+              this.reload();
             });
           } else {
             console.log('error submit!!');
