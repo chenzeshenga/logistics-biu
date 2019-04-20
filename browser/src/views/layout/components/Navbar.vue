@@ -7,18 +7,27 @@
     <div class="right-menu">
       <error-log class="errLog-container right-menu-item"></error-log>
       <div style="display: inline-block;">
-        <span>帐号：</span>
-        <el-tag style="margin-right: 20px;">{{name}}</el-tag>
-        <span>角色：</span>
-        <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0">游客（未配置任何角色）</el-tag>
-        <el-tag :key="r.val" style="margin-right: 5px;" type="success" v-else v-for="r in roles">{{r.name}}</el-tag>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-input placeholder="test" style="display: inline-block;"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <span>帐号：</span>
+            <el-tag style="margin-right: 20px;">{{name}}</el-tag>
+          </el-col>
+          <el-col :span="8">
+            <span>角色：</span>
+            <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0">游客（未配置任何角色）</el-tag>
+            <el-tag :key="r.val" style="margin-right: 5px;" type="success" v-else v-for="r in roles">{{r.name}}</el-tag>
+          </el-col>
+        </el-row>
       </div>
       <div style="display:inline-block;width: 40px;margin-left: 5px">
         <el-badge :value="12">
           <span class="el-icon-bell"></span>
         </el-badge>
       </div>
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item" trigger="click" style="margin-bottom: 4px">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom"></i>
