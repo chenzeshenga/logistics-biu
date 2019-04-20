@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
         return page.setRecords(baseMapper.selectUserIncludeRoles(page, nick));
     }
 
-    @Override public Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username, String roleValue) {
-        return page.setRecords(baseMapper.selectUserIncludeRoles4Option(page, nick, username, roleValue));
+    @Override public Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username) {
+        return page.setRecords(baseMapper.selectUserIncludeRoles4Option(page, nick, username));
     }
 
 }

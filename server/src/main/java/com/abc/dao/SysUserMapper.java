@@ -12,7 +12,6 @@ import java.util.List;
 
     List<SysUser> selectUserIncludeRoles(Pagination page, @Param("nick") String nick);
 
-    List<SysUser> selectUserIncludeRoles4Option(Pagination page, @Param("nick") String nick, @Param("username") String username,
-        @Param("roleValue") String roleValue);
+    List<SysUser> selectUserIncludeRoles4Option(Pagination page, @Param("nick") String nick, @Param("username") String username);
 
 }

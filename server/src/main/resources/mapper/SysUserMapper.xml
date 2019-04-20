@@ -51,16 +51,14 @@
         from sys_user u
         left join sys_user_role ur on u.uid = ur.user_id
         left join sys_role r on ur.role_id = r.rid
-        <where>
-            <trim prefix="set" suffixOverrides="and">
-                <if test="nick != null and nick != ''">
-                    u.`nick` like concat('%',#{nick},'%') and
-                </if>
-                <if test="roleValue == 'common'">
-                    u.uname = #{username} and
-                </if>
-            </trim>
-        </where>
+        where
+        1=1
+        <if test="nick != null and nick != ''">
+            and u.`nick` like concat('%',#{nick},'%')
+        </if>
+        <if test="username != null and username != ''">
+            and u.uname = #{username}
+        </if>
         order by u.uid
     </select>
 

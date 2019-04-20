@@ -8,6 +8,6 @@ public interface SysUserService extends IService<SysUser> {
 
     Page<SysUser> queryUserIncludeRoles(Page page, String nick);
 
-    Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username, String roleValue);
+    Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username);
 
 }

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -148,11 +149,17 @@ import java.util.stream.Collectors;
         Subject subject = SecurityUtils.getSubject();
         SysUser user = (SysUser)subject.getPrincipal();
         List<SysRole> sysRoleList = user.getRoleList();
+        AtomicBoolean queryAll = new AtomicBoolean(false);
+        sysRoleList.forEach(sysRole -> {
+            if ("root".equals(sysRole.getRval()) || "operator".equals(sysRole.getRval())) {
+                queryAll.set(true);
+            }
+        });
         Page<SysUser> page;
-        if (sysRoleList.size() == 1 && "common".equals(sysRoleList.get(0).getRval())) {
-            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName(), "common");
+        if (queryAll.get()) {
+            page = sysUserService.queryUserIncludeRoles(PageUtils.getPageParam(json), nick);
         } else {
-            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName(), "");
+            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName());
         }
         return Json.succ(oper).data("page", page);
     }
