@@ -147,7 +147,7 @@ export const asyncRouterMap = [
         name: 'menu1',
         component: _import('menu/new-order'),
         meta: {
-          perm: 'm:menu1', title: '新建订单', icon: 'icon',
+          perm: 'm:order', title: '新建订单', icon: 'icon',
         },
       }],
   },
@@ -291,7 +291,7 @@ export const asyncRouterMap = [
         name: 'order-list-mgt-type2',
         component: _import('order/type2/index'),
         meta: {
-          perm: 'm:order:list',
+          perm: 'm:order2:list',
           title: '单票单请',
           icon: 'chart',
         },
@@ -301,7 +301,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status1'),
             name: 'order-list-mgt-type2-status1',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:1',
               title: '待审核',
               icon: 'chart',
               noCache: true,
@@ -312,7 +312,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status2'),
             name: 'order-list-mgt-type2-status2',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:2',
               title: '国内待发货',
               icon: 'chart',
               noCache: true,
@@ -323,7 +323,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status3'),
             name: 'order-list-mgt-type2-status3',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:3',
               title: '国内已发货',
               icon: 'chart',
               noCache: true,
@@ -334,7 +334,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status4'),
             name: 'order-list-mgt-type2-status4',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:4',
               title: '问题件',
               icon: 'chart',
               noCache: true,
@@ -345,7 +345,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status5'),
             name: 'order-list-mgt-type2-status5',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:5',
               title: '已废弃',
               icon: 'chart',
               noCache: true,
@@ -356,7 +356,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status6'),
             name: 'order-list-mgt-type2-status6',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:6',
               title: '暂存',
               icon: 'chart',
               noCache: true,
@@ -367,7 +367,7 @@ export const asyncRouterMap = [
             component: _import('order/type2/list/status7'),
             name: 'order-list-mgt-type2-status7',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order2:list:7',
               title: '历史',
               icon: 'chart',
               noCache: true,
@@ -379,7 +379,7 @@ export const asyncRouterMap = [
         name: 'order-list-mgt-type3',
         component: _import('order/type3/index'),
         meta: {
-          perm: 'm:order:list',
+          perm: 'm:order3:list',
           title: '虚拟海外仓',
           icon: 'chart',
         },
@@ -389,7 +389,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status1'),
             name: 'order-list-mgt-type3-status1',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:1',
               title: '待审核',
               icon: 'chart',
               noCache: true,
@@ -400,7 +400,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status2'),
             name: 'order-list-mgt-type3-status2',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:2',
               title: '国内待发货',
               icon: 'chart',
               noCache: true,
@@ -411,7 +411,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status3'),
             name: 'order-list-mgt-type3-status3',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:3',
               title: '国内已发货',
               icon: 'chart',
               noCache: true,
@@ -422,7 +422,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status8'),
             name: 'order-list-mgt-type3-status8',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:4',
               title: '日本待发货',
               icon: 'chart',
               noCache: true,
@@ -433,7 +433,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status9'),
             name: 'order-list-mgt-type3-status9',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:5',
               title: '日本已发货',
               icon: 'chart',
               noCache: true,
@@ -444,7 +444,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status4'),
             name: 'order-list-mgt-type3-status4',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:6',
               title: '问题件',
               icon: 'chart',
               noCache: true,
@@ -455,7 +455,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status5'),
             name: 'order-list-mgt-type3-status5',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:7',
               title: '已废弃',
               icon: 'chart',
               noCache: true,
@@ -466,7 +466,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status6'),
             name: 'order-list-mgt-type3-status6',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:8',
               title: '暂存',
               icon: 'chart',
               noCache: true,
@@ -477,7 +477,7 @@ export const asyncRouterMap = [
             component: _import('order/type3/list/status7'),
             name: 'order-list-mgt-type3-status7',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order3:list:9',
               title: '历史',
               icon: 'chart',
               noCache: true,
@@ -491,7 +491,7 @@ export const asyncRouterMap = [
     path: '/product',
     component: Layout,
     meta: {
-      perm: 'm:product', title: '商品管理', icon: 'chart',
+      perm: 'm:product:mgt', title: '商品管理', icon: 'chart',
     },
     children: [
       {
@@ -499,7 +499,7 @@ export const asyncRouterMap = [
         name: 'status0',
         component: _import('product/mgt/status0'),
         meta: {
-          perm: 'm:product:list',
+          perm: 'm:product:mgt:1',
           title: '待审核商品',
           icon: 'chart',
           noCache: true,
@@ -510,7 +510,7 @@ export const asyncRouterMap = [
         name: 'status1',
         component: _import('product/mgt/status1'),
         meta: {
-          perm: 'm:product:list',
+          perm: 'm:product:mgt:2',
           title: '在库商品',
           icon: 'chart',
           noCache: true,
@@ -521,7 +521,7 @@ export const asyncRouterMap = [
         name: 'product-statistic',
         component: _import('product/product-statistic'),
         meta: {
-          perm: 'm:product:list',
+          perm: 'm:product:mgt:3',
           title: '商品统计',
           icon: 'chart',
           noCache: true,
