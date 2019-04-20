@@ -1,7 +1,9 @@
 package com.abc.controller;
 
 import com.abc.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.constant.Root;
+import com.abc.entity.SysRole;
 import com.abc.entity.SysUser;
 import com.abc.entity.SysUserRole;
 import com.abc.service.SysRoleService;
@@ -134,6 +136,24 @@ import java.util.stream.Collectors;
         JSONObject json = JSON.parseObject(body);
         String nick = json.getString("nick");
         Page<SysUser> page = sysUserService.queryUserIncludeRoles(PageUtils.getPageParam(json), nick);
+        return Json.succ(oper).data("page", page);
+    }
+
+    @PermInfo("查询所有系统用户形成下拉菜单") @RequiresPermissions("a:sys:user:list:option") @PostMapping("/query4Option")
+    public Json query4Option(@RequestBody String body) {
+        String oper = "query user for option";
+        log.info("{}, body: {}", oper, body);
+        JSONObject json = JSON.parseObject(body);
+        String nick = json.getString("nick");
+        Subject subject = SecurityUtils.getSubject();
+        SysUser user = (SysUser)subject.getPrincipal();
+        List<SysRole> sysRoleList = user.getRoleList();
+        Page<SysUser> page;
+        if (sysRoleList.size() == 1 && "common".equals(sysRoleList.get(0).getRval())) {
+            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName(), "common");
+        } else {
+            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName(), "");
+        }
         return Json.succ(oper).data("page", page);
     }
 

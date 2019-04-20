@@ -24,7 +24,7 @@ spring:
 logging:
   path: ./logs
   level:
-    com.abc.chenzeshenga.logistics.mapper: debug
+    com.abc: debug
 logistics:
   base:
     url: "localhost:8888/api/v1/"

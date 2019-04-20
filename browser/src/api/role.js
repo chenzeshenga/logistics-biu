@@ -1,7 +1,7 @@
 /**
  * “角色管理”相关接口
  */
-import request from '@/utils/request'
+import request from '@/utils/request';
 
 export default {
   /**
@@ -12,8 +12,8 @@ export default {
     return request({
       url: '/sys_role',
       method: 'post',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -24,8 +24,8 @@ export default {
     return request({
       url: '/sys_role',
       method: 'delete',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -33,16 +33,16 @@ export default {
    * @param queryParam
    * @param pageParam
    */
-  queryRole(queryParam,pageParam) {
+  queryRole(queryParam, pageParam) {
     return request({
       url: '/sys_role/query',
       method: 'post',
       data: {
         ...queryParam,
         current: pageParam.current,
-        size: pageParam.size
-      }
-    })
+        size: pageParam.size,
+      },
+    });
   },
 
   /**
@@ -53,8 +53,8 @@ export default {
     return request({
       url: '/sys_role/info',
       method: 'patch',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -65,8 +65,8 @@ export default {
     return request({
       url: '/sys_role/perm',
       method: 'patch',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -77,8 +77,8 @@ export default {
     return request({
       url: '/sys_role/perm',
       method: 'post',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -89,8 +89,8 @@ export default {
     return request({
       url: '/sys_role/perm',
       method: 'delete',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -99,10 +99,10 @@ export default {
    */
   findRolePerms(rid) {
     return request({
-      url: '/sys_role/'+rid+'/perms',
-      method: 'get'
-    })
-  }
+      url: '/sys_role/' + rid + '/perms',
+      method: 'get',
+    });
+  },
 
-}
+};
 

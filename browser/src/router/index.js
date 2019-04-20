@@ -117,7 +117,7 @@ export const asyncRouterMap = [
         name: 'trackno',
         component: _import('_system/config/trackno'),
         meta: {
-          perm: 'm:config:list', title: '追踪单号维护', icon: 'chart',
+          perm: 'm:config:list:a', title: '追踪单号维护', icon: 'chart',
         },
       },
       {
@@ -125,7 +125,7 @@ export const asyncRouterMap = [
         name: 'channel',
         component: _import('_system/config/channel'),
         meta: {
-          perm: 'm:config:list', title: '渠道配置', icon: 'chart',
+          perm: 'm:config:list:b', title: '渠道配置', icon: 'chart',
         },
       },
       {
@@ -133,7 +133,7 @@ export const asyncRouterMap = [
         name: 'fileTemplate',
         component: _import('_system/config/template'),
         meta: {
-          perm: 'm:config:list', title: '模版查看', icon: 'chart',
+          perm: 'm:config:list:c', title: '模版查看', icon: 'chart',
         },
       },
     ],
@@ -173,7 +173,7 @@ export const asyncRouterMap = [
         name: 'new-warehousing',
         component: _import('warehousing/new-warehousing'),
         meta: {
-          perm: 'm:product', title: '新建入库单', icon: 'icon',
+          perm: 'm:warehousing', title: '新建入库单', icon: 'icon',
         },
       }],
   },
@@ -192,7 +192,7 @@ export const asyncRouterMap = [
         name: 'order-list-mgt-type1',
         component: _import('order/type1/index'),
         meta: {
-          perm: 'm:order:list',
+          perm: 'm:order1:list',
           title: '海外仓代发',
           icon: 'chart',
         },
@@ -202,7 +202,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/pickup'),
             name: 'order-list-mgt-type1-pickup',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:1',
               title: '拣货',
               icon: 'chart',
               noCache: true,
@@ -213,7 +213,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status1'),
             name: 'order-list-mgt-type1-status1',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:2',
               title: '待审核',
               icon: 'chart',
               noCache: true,
@@ -224,7 +224,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status2'),
             name: 'status2',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:3',
               title: '待发货',
               icon: 'chart',
               noCache: true,
@@ -235,7 +235,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status3'),
             name: 'status3',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:4',
               title: '已发货',
               icon: 'chart',
               noCache: true,
@@ -246,7 +246,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status4'),
             name: 'status4',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:5',
               title: '问题件',
               icon: 'chart',
               noCache: true,
@@ -257,7 +257,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status5'),
             name: 'status5',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:6',
               title: '已废弃',
               icon: 'chart',
               noCache: true,
@@ -268,7 +268,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status6'),
             name: 'status6',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:7',
               title: '暂存',
               icon: 'chart',
               noCache: true,
@@ -279,7 +279,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/status7'),
             name: 'status7',
             meta: {
-              perm: 'm:order:list',
+              perm: 'm:order1:list:8',
               title: '历史',
               icon: 'chart',
               noCache: true,

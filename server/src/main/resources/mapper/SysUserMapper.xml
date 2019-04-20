@@ -39,4 +39,29 @@
         order by u.uid
     </select>
 
+    <select id="selectUserIncludeRoles4Option" resultMap="userIncludeRolesMap">
+        select
+        u.*,
+        r.rid as role_rid,
+        r.rname as role_rname,
+        r.rdesc as role_rdesc,
+        r.rval as role_rval,
+        r.created as role_created,
+        r.updated as role_updated
+        from sys_user u
+        left join sys_user_role ur on u.uid = ur.user_id
+        left join sys_role r on ur.role_id = r.rid
+        <where>
+            <trim prefix="set" suffixOverrides="and">
+                <if test="nick != null and nick != ''">
+                    u.`nick` like concat('%',#{nick},'%') and
+                </if>
+                <if test="roleValue == 'common'">
+                    u.uname = #{username} and
+                </if>
+            </trim>
+        </where>
+        order by u.uid
+    </select>
+
 </mapper>

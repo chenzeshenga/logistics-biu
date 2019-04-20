@@ -330,7 +330,7 @@
       },
       initUserList() {
         request({
-          url: '/sys_user/query',
+          url: '/sys_user/query4Option',
           method: 'post',
           data: {
             current: null,
