@@ -259,7 +259,6 @@
           path: '/order-list/mgt/type1/status7',
         });
       },
-      },
       onQuickSearch() {
         const ordno = this.$route.query.ordno;
         if (ordno !== undefined && ordno.length > 0) {
@@ -295,14 +294,16 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo});
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo
+        });
       },
       handleDelete(index, row) {
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
           request({
             url: 'ord/delete/' + row.orderNo,
             method: 'get',
-          }).then(res => {
+          }).then(() => {
             this.fetchData();
             this.$message.success('删除成功');
           });
@@ -370,5 +371,4 @@
       },
     },
   };
-
 </script>
