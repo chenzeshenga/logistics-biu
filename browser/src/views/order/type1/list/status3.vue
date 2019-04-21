@@ -178,7 +178,25 @@
     created() {
       this.fetchData();
     },
+    watch: {
+      $route() {
+        this.onQuickSearch();
+      },
+    },
     methods: {
+      reRouter() {
+        this.$router.push({
+          path: '/order-list/mgt/type1/status3',
+        });
+      },
+      onQuickSearch() {
+        const ordno = this.$route.query.ordno;
+        if (ordno !== undefined && ordno.length > 0) {
+          this.search.ordno = ordno;
+          this.searchOrd();
+          this.reRouter();
+        }
+      },
       fetchData() {
         this.tableLoading = true;
         request({
@@ -191,6 +209,10 @@
         }).then(res => {
           this.tableData = res.data.page.records;
           this.tableLoading = false;
+          this.tablePage.total = res.data.page.total;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.size = res.data.page.size;
+          this.onQuickSearch();
         });
       },
       searchOrd() {

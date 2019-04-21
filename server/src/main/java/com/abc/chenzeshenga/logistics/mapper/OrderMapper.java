@@ -60,4 +60,6 @@ import java.util.Map;
 
     int count();
 
+    ManualOrder quickSearch(String search);
+
 }

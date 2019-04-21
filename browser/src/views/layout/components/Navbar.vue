@@ -8,25 +8,26 @@
       <error-log class="errLog-container right-menu-item"></error-log>
       <div style="display: inline-block;">
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-input placeholder="test" style="display: inline-block;"></el-input>
+          <el-col :span="9">
+            <el-input placeholder="订单号快速搜索" v-model="search" style="display: inline-block;" suffix-icon="el-icon-search" clearable
+                      @input="quickSearch"></el-input>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <span>帐号：</span>
             <el-tag style="margin-right: 20px;">{{name}}</el-tag>
           </el-col>
           <el-col :span="8">
             <span>角色：</span>
-            <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length==0">游客（未配置任何角色）</el-tag>
+            <el-tag style="margin-right: 5px;" type="danger" v-if="roles.length===0">游客（未配置任何角色）</el-tag>
             <el-tag :key="r.val" style="margin-right: 5px;" type="success" v-else v-for="r in roles">{{r.name}}</el-tag>
           </el-col>
         </el-row>
       </div>
-      <div style="display:inline-block;width: 40px;margin-left: 5px">
-        <el-badge :value="12">
-          <span class="el-icon-bell"></span>
-        </el-badge>
-      </div>
+      <!--      <div style="display:inline-block;width: 40px;margin-left: 5px">-->
+      <!--        <el-badge :value="12">-->
+      <!--          <span class="el-icon-bell"></span>-->
+      <!--        </el-badge>-->
+      <!--      </div>-->
       <el-dropdown class="avatar-container right-menu-item" trigger="click" style="margin-bottom: 4px">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
@@ -71,17 +72,19 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
+  import {
+    mapGetters,
+  } from 'vuex';
   import Breadcrumb from '@/components/Breadcrumb';
   import Hamburger from '@/components/Hamburger';
   import ErrorLog from '@/components/ErrorLog';
   import userApi from '@/api/user';
+  import request from '@/utils/request';
 
   export default {
 
     data() {
-
-      let validatePass = (rule, value, callback) => {
+      const validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
@@ -92,7 +95,7 @@
         }
       };
 
-      let validatePass2 = (rule, value, callback) => {
+      const validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
         } else if (value !== this.temp.pwd) {
@@ -108,11 +111,17 @@
           pwd2: null,
         },
         rules: {
-          pwd: [{validator: validatePass, trigger: 'blur'}],
-          pwd2: [{validator: validatePass2, trigger: 'change'}],
+          pwd: [
+            {
+              validator: validatePass, trigger: 'blur',
+            }],
+          pwd2: [
+            {
+              validator: validatePass2, trigger: 'change',
+            }],
         },
+        search: null,
       };
-
     },
     components: {
       Breadcrumb,
@@ -143,12 +152,39 @@
       updatePwd() {
         this.$refs['dataForm'].validate((valid) => {
           if (!valid) return;
-          const tempData = Object.assign({}, this.temp);//copy obj
+          // copy obj
+          const tempData = Object.assign({}, this.temp);
           userApi.updatePwd(tempData).then(res => {
             this.dialogVisible = false;
             this.$message.success('更新密码成功');
           });
         });
+      },
+      quickSearch() {
+        this.search = this.search.replace('http://localhost:9527/#/order-info?ord=', '');
+        if (this.search.length > 3) {
+          request({
+            url: '/ord/quickSearch/' + this.search,
+            method: 'get',
+          }).then(res => {
+            if ((res.data).hasOwnProperty('data')) {
+              this.$confirm('是否查看该订单？', '提示', confirm).then(() => {
+                const ord = res.data.data;
+                const type = ord.category;
+                const orderNo = ord.orderNo;
+                const status = ord.status;
+                this.$router.push({
+                  path: '/order-list/mgt/type' + type + '/status' + status + '?ordno=' + orderNo,
+                });
+              }).catch(() => {
+                this.$message.info('已取消');
+                this.search = null;
+              });
+            }
+          });
+        } else {
+          console.log(this.search);
+        }
       },
 
     },

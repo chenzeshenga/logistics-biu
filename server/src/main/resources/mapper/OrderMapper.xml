@@ -326,4 +326,10 @@
         from l_manual_order;
     </select>
 
+    <select id="quickSearch" resultMap="result">
+        select *
+        from l_manual_order
+        where ord_no like CONCAT('%', #{search}, '%')
+    </select>
+
 </mapper>

@@ -14,6 +14,7 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -373,6 +374,17 @@ import java.util.concurrent.atomic.AtomicReference;
         result.put("totalVolume", totalVolume.get());
         result.put("totalWeight", totalWeight.get());
         return Json.succ().data(result);
+    }
+
+    @GetMapping @RequestMapping("/quickSearch/{search}") public Json quickSearch(@PathVariable String search) {
+        log.info(search);
+        ManualOrder manualOrder = orderMapper.quickSearch(search);
+        if (manualOrder != null) {
+            log.info(manualOrder.toString());
+            return Json.succ().data(manualOrder);
+        } else {
+            return Json.succ();
+        }
     }
 
 }

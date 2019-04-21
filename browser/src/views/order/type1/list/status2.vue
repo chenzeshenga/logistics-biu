@@ -225,7 +225,25 @@
       this.initUserList();
       this.initChannel();
     },
+    watch: {
+      $route() {
+        this.onQuickSearch();
+      },
+    },
     methods: {
+      reRouter() {
+        this.$router.push({
+          path: '/order-list/mgt/type1/status2',
+        });
+      },
+      onQuickSearch() {
+        const ordno = this.$route.query.ordno;
+        if (ordno !== undefined && ordno.length > 0) {
+          this.search.ordno = ordno;
+          this.searchOrd();
+          this.reRouter();
+        }
+      },
       fetchData() {
         this.tableLoading = true;
         request({
@@ -241,6 +259,7 @@
           this.tablePage.total = res.data.page.total;
           this.tablePage.current = res.data.page.current;
           this.tablePage.size = res.data.page.size;
+          this.onQuickSearch();
         });
       },
       searchOrd() {
