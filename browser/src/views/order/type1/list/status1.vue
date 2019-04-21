@@ -7,9 +7,8 @@
             <el-col :span="6">
               <el-tooltip content="订单创建时间" placement="top">
                 <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd"
-                                style="width: 400px">
+                                start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"
+                                value-format="yyyy-MM-dd" style="width: 400px">
                 </el-date-picker>
               </el-tooltip>
             </el-col>
