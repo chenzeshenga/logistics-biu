@@ -488,6 +488,230 @@ export const asyncRouterMap = [
     ],
   },
   {
+    path: '/warehousing-list/mgt',
+    name: 'warehousing-list-mgt',
+    component: Layout,
+    meta: {
+      perm: 'm:warehousing:list',
+      title: '入库单管理',
+      icon: 'chart',
+    },
+    children: [
+      {
+        path: '/warehousing/mgt/dy',
+        name: 'warehousing-mgt-dy',
+        component: _import('warehousing/mgt/dy/index'),
+        meta: {
+          perm: 'm:warehousing:dy:list',
+          title: '东岳入库单',
+          icon: 'chart',
+        },
+        children: [
+          {
+            path: 'status1',
+            component: _import('warehousing/mgt/dy/list/status1'),
+            name: 'warehousing-mgt-dy-list-status1',
+            meta: {
+              perm: 'm:warehousing:dy:list:1',
+              title: '新建',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status2',
+            component: _import('warehousing/mgt/dy/list/status2'),
+            name: 'warehousing-mgt-dy-list-status2',
+            meta: {
+              perm: 'm:warehousing:dy:list:2',
+              title: '前置海外仓',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status3',
+            component: _import('warehousing/mgt/dy/list/status3'),
+            name: 'warehousing-mgt-dy-list-status3',
+            meta: {
+              perm: 'm:warehousing:dy:list:3',
+              title: '头程已收货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status4',
+            component: _import('warehousing/mgt/dy/list/status4'),
+            name: 'warehousing-mgt-dy-list-status4',
+            meta: {
+              perm: 'm:warehousing:dy:list:4',
+              title: '转运中',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status5',
+            component: _import('warehousing/mgt/dy/list/status5'),
+            name: 'warehousing-mgt-dy-list-status5',
+            meta: {
+              perm: 'm:warehousing:dy:list:5',
+              title: '入库清点',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status6',
+            component: _import('warehousing/mgt/dy/list/status6'),
+            name: 'warehousing-mgt-dy-list-status6',
+            meta: {
+              perm: 'm:warehousing:dy:list:6',
+              title: '待上架',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status7',
+            component: _import('warehousing/mgt/dy/list/status7'),
+            name: 'warehousing-mgt-dy-list-status7',
+            meta: {
+              perm: 'm:warehousing:dy:list:7',
+              title: '已上架',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status8',
+            component: _import('warehousing/mgt/dy/list/status8'),
+            name: 'warehousing-mgt-dy-list-status8',
+            meta: {
+              perm: 'm:warehousing:dy:list:8',
+              title: '废弃',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status9',
+            component: _import('warehousing/mgt/dy/list/status9'),
+            name: 'warehousing-mgt-dy-list-status9',
+            meta: {
+              perm: 'm:warehousing:dy:list:9',
+              title: '异常',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+        ],
+      },
+      {
+        path: '/warehousing/mgt/other',
+        name: 'warehousing-mgt-other',
+        component: _import('warehousing/mgt/other/index'),
+        meta: {
+          perm: 'm:warehousing:other:list',
+          title: '其他入库单',
+          icon: 'chart',
+        },
+        children: [
+          {
+            path: 'status1',
+            component: _import('warehousing/mgt/other/list/status1'),
+            name: 'warehousing-mgt-other-list-status1',
+            meta: {
+              perm: 'm:warehousing:other:list:1',
+              title: '新建',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status2',
+            component: _import('warehousing/mgt/other/list/status2'),
+            name: 'warehousing-mgt-other-list-status2',
+            meta: {
+              perm: 'm:warehousing:other:list:2',
+              title: '头程已收货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status3',
+            component: _import('warehousing/mgt/other/list/status3'),
+            name: 'warehousing-mgt-other-list-status3',
+            meta: {
+              perm: 'm:warehousing:other:list:3',
+              title: '转运中',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status4',
+            component: _import('warehousing/mgt/other/list/status4'),
+            name: 'warehousing-mgt-other-list-status4',
+            meta: {
+              perm: 'm:warehousing:other:list:4',
+              title: '入库清点',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status5',
+            component: _import('warehousing/mgt/other/list/status5'),
+            name: 'warehousing-mgt-other-list-status5',
+            meta: {
+              perm: 'm:warehousing:other:list:5',
+              title: '待上架',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status6',
+            component: _import('warehousing/mgt/other/list/status6'),
+            name: 'warehousing-mgt-other-list-status6',
+            meta: {
+              perm: 'm:warehousing:other:list:6',
+              title: '已上架',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status7',
+            component: _import('warehousing/mgt/other/list/status7'),
+            name: 'warehousing-mgt-other-list-status7',
+            meta: {
+              perm: 'm:warehousing:other:list:7',
+              title: '废弃',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status8',
+            component: _import('warehousing/mgt/other/list/status8'),
+            name: 'warehousing-mgt-other-list-status8',
+            meta: {
+              perm: 'm:warehousing:other:list:8',
+              title: '异常',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+        ],
+      },
+
+    ],
+  },
+  {
     path: '/product',
     component: Layout,
     meta: {
