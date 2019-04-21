@@ -1,8 +1,10 @@
 <template>
   <div class="login-container">
     <el-col :offset="8" :span="22" style="margin-top: 10px;margin-bottom: 10px" class="block">
-      <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期"
-                      end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd" style="width: 400px">
+      <el-date-picker v-model="daterange" type="daterange" align="right" unlink-panels range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期" :picker-options="pickerOptions2" value-format="yyyy-MM-dd"
+                      style="width: 400px">
       </el-date-picker>
       <el-button icon="el-icon-search" @click="searchOrd()"></el-button>
     </el-col>
@@ -43,8 +45,12 @@
       <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
       <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip content="归档" placement="top">
+          <el-tooltip content="国内提交发货" placement="top">
             <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
+                       plain></el-button>
+          </el-tooltip>
+          <el-tooltip content="查询物流进度" placement="top">
+            <el-button @click="findWhere(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-question" circle
                        plain></el-button>
           </el-tooltip>
         </template>
@@ -152,15 +158,15 @@
         });
       },
       statusUpdate(index, row) {
-        this.$confirm('您确定要归档该订单？', '提示', confirm).then(() => {
+        this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
           console.log(row);
           console.log(index);
           request({
-            url: 'ord/update/3/' + row.orderNo + '/7',
+            url: 'ord/update/3/' + row.orderNo + '/8',
             method: 'get',
           }).then(res => {
             this.fetchData();
-            this.$message.success('归档成功');
+            this.$message.success('提交发货成功');
           });
         }).catch(() => {
           this.$message.info('已取消提交');
@@ -184,6 +190,9 @@
           this.tableData = res.data.page.records;
           this.tableLoading = false;
         });
+      },
+      findWhere(index, row) {
+        this.$message.info('查询物流进度');
       },
     },
   };

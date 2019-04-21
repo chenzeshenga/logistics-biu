@@ -59,18 +59,18 @@
       <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
       <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip content="提交" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle
-                       plain></el-button>
-          </el-tooltip>
-          <el-tooltip content="编辑" placement="top">
-            <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle
-                       plain></el-button>
-          </el-tooltip>
-          <el-tooltip content="删除" placement="top">
-            <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle
-                       plain></el-button>
-          </el-tooltip>
+          <template slot-scope="scope">
+            <el-tooltip content="日本提交发货" placement="top">
+              <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check"
+                         circle
+                         plain></el-button>
+            </el-tooltip>
+            <el-tooltip content="查询物流进度" placement="top">
+              <el-button @click="findWhere(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-question"
+                         circle
+                         plain></el-button>
+            </el-tooltip>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -145,6 +145,21 @@
           });
         }).catch(() => {
           this.$message.info('已取消删除');
+        });
+      },
+      statusUpdate(index, row) {
+        this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
+          console.log(row);
+          console.log(index);
+          request({
+            url: 'ord/update/3/' + row.orderNo + '/8',
+            method: 'get',
+          }).then(res => {
+            this.fetchData();
+            this.$message.success('提交发货成功');
+          });
+        }).catch(() => {
+          this.$message.info('已取消提交');
         });
       },
     },
