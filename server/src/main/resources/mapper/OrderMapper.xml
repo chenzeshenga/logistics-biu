@@ -332,4 +332,12 @@
         where ord_no like CONCAT('%', #{search}, '%')
     </select>
 
+    <select id="getOrderSeq" resultMap="result">
+        select *
+        from l_manual_order
+        order by create_on desc
+        limit 1
+    </select>
+
+
 </mapper>

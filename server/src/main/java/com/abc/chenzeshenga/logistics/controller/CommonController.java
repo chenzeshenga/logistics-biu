@@ -55,15 +55,16 @@ import java.util.*;
 
     private OrderCache orderCache;
 
-    @Autowired public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache) {
+    @Autowired
+    public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache) {
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.orderCache = orderCache;
     }
 
     @GetMapping("/generate/pk") public Json getOrderNo() {
-        String pk = CommonUtil.generate() + "-" + orderCache.getOrderSeq();
-        orderCache.init();
+        String pk =
+            CommonUtil.generate() + "-" + (Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1);
         return Json.succ().data(pk);
     }
 
@@ -72,32 +73,35 @@ import java.util.*;
         return Json.succ().data(sku);
     }
 
-    @RequestMapping(value = "/img/{uuid}", produces = MediaType.IMAGE_JPEG_VALUE) @ResponseBody public byte[] getImg(@PathVariable String uuid) {
+    @RequestMapping(value = "/img/{uuid}", produces = MediaType.IMAGE_JPEG_VALUE) @ResponseBody
+    public byte[] getImg(@PathVariable String uuid) {
         Img img = imgMapper.selectByPrimaryKey(uuid);
         return img.getImg();
     }
 
-    @GetMapping(value = "/template/file/{uuid}") @ResponseBody public void file(@PathVariable String uuid, HttpServletResponse httpServletResponse)
-        throws IOException {
+    @GetMapping(value = "/template/file/{uuid}") @ResponseBody
+    public void file(@PathVariable String uuid, HttpServletResponse httpServletResponse) throws IOException {
         File file = fileMapper.selectByPrimaryKey(uuid);
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
+        httpServletResponse
+            .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
         httpServletResponse.getOutputStream().write(file.getFile());
         httpServletResponse.flushBuffer();
     }
 
-    @PostMapping @RequestMapping(value = "/img") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, String uuid)
-        throws IOException {
+    @PostMapping @RequestMapping(value = "/img")
+    public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, String uuid) throws IOException {
         Img img = new Img(uuid, multipartFile.getBytes());
         imgMapper.insert(img);
         return Json.succ();
     }
 
-    @GetMapping("/ord/excel/{status}") public void getOrdExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
-        throws IOException {
+    @GetMapping("/ord/excel/{status}")
+    public void getOrdExcel(HttpServletResponse httpServletResponse, @PathVariable String status) throws IOException {
         String fileName = "订单状态.xlsx";
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        httpServletResponse
+            .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
         Map<String, String> request = new HashMap<>(2);
         request.put("cname", UserUtils.getUserName());
         request.put("status", status);
@@ -107,16 +111,14 @@ import java.util.*;
             if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
                 manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
             } else {
-                JpDetailAddress from = japanAddressCache
-                    .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()), Integer.valueOf(manualOrder.getFromCityId()),
-                        Integer.valueOf(manualOrder.getFromTownId()));
+                JpDetailAddress from = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
+                    Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
                 manualOrder.setFromKenName(from.getKenName());
                 manualOrder.setFromCityName(from.getCityName());
                 manualOrder.setFromTownName(from.getTownName());
             }
-            JpDetailAddress to = japanAddressCache
-                .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
-                    Integer.valueOf(manualOrder.getToTownId()));
+            JpDetailAddress to = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()),
+                Integer.valueOf(manualOrder.getToCityId()), Integer.valueOf(manualOrder.getToTownId()));
             manualOrder.setToKenName(to.getKenName());
             manualOrder.setToCityName(to.getCityName());
             manualOrder.setToTownName(to.getTownName());
@@ -132,12 +134,15 @@ import java.util.*;
         httpServletResponse.flushBuffer();
     }
 
-    @GetMapping("/product/excel/{status}") public void getProductExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
+    @GetMapping("/product/excel/{status}")
+    public void getProductExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
         throws IOException {
         String fileName = "商品信息.xlsx";
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
-        List<Product> productList = productMapper.listByStatusWithUser(new Page(1, 500), UserUtils.getUserName(), status);
+        httpServletResponse
+            .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        List<Product> productList =
+            productMapper.listByStatusWithUser(new Page(1, 500), UserUtils.getUserName(), status);
         productList.forEach(product -> {
             if (StringUtils.isEmpty(product.getCategoryName())) {
                 product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));
@@ -156,7 +161,8 @@ import java.util.*;
         httpServletResponse.flushBuffer();
     }
 
-    @PostMapping("/ord/excel") public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    @PostMapping("/ord/excel") public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile)
+        throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes());
         fileMapper.insert(file);
@@ -173,7 +179,8 @@ import java.util.*;
         return Json.succ();
     }
 
-    @PostMapping("/product/excel") public Json parseProductExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    @PostMapping("/product/excel")
+    public Json parseProductExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes());
         fileMapper.insert(file);

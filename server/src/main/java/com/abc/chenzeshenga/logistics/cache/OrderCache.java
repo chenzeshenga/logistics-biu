@@ -23,8 +23,9 @@ import javax.annotation.Resource;
     }
 
     public String getOrderSeq() {
-        log.info(orderSeq);
-        return orderSeq;
+        String resultSeq = this.orderSeq;
+        addSeq();
+        return resultSeq;
     }
 
     public void addSeq() {
