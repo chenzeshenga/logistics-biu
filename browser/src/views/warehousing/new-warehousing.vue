@@ -134,13 +134,12 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-table :data="form.warehousingContentList" v-loading.body="tableLoading"
-                    element-loading-text="加载中" stripe fit highlight-current-row>
-            <el-table-column width="100" prop="boxSeq" label="箱号"></el-table-column>
-            <el-table-column width="250" prop="sku" label="sku"></el-table-column>
-            <el-table-column width="250" prop="name" label="名称"></el-table-column>
-            <el-table-column width="150" prop="totalNum" label="数量"></el-table-column>
-            <el-table-column width="150" prop="wrapType" label="包装方式"></el-table-column>
+          <el-table :data="form.warehousingContentList" stripe highlight-current-row style="width: 90%">
+            <el-table-column prop="boxSeq" label="箱号"></el-table-column>
+            <el-table-column prop="sku" label="sku"></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="totalNum" label="数量"></el-table-column>
+            <el-table-column prop="wrapType" label="包装方式"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
@@ -150,9 +149,11 @@
           </el-table>
         </el-form-item>
         <el-form-item>
-          <el-col :offset="20">
-            <el-button type="primary" @click="submitForm()" v-if="onCreate">立即创建</el-button>
-            <el-button type="primary" @click="updateForm()" v-if="onUpdate">立即更新</el-button>
+          <el-col :offset="18" v-if="onCreate">
+            <el-button type="primary" @click="submitForm()">立即创建</el-button>
+          </el-col>
+          <el-col :offset="18" v-if="onUpdate">
+            <el-button type="primary" @click="updateForm()">立即更新</el-button>
           </el-col>
         </el-form-item>
       </el-form>
