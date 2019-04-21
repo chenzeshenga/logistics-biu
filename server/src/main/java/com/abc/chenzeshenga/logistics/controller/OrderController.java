@@ -55,8 +55,8 @@ import java.util.concurrent.atomic.AtomicReference;
     private TrackNoController trackNoController;
 
     @Autowired
-    public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache, ChannelCache channelCache,
-        TrackNoController trackNoController) {
+    public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache,
+        ChannelCache channelCache, TrackNoController trackNoController) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
@@ -64,7 +64,8 @@ import java.util.concurrent.atomic.AtomicReference;
         this.trackNoController = trackNoController;
     }
 
-    @PostMapping @RequestMapping("/add") public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
+    @PostMapping @RequestMapping("/add")
+    public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errMsg = new StringBuilder();
             for (ObjectError objectError : bindingResult.getAllErrors()) {
@@ -115,7 +116,8 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
-    @PostMapping @RequestMapping("/update/{ordno}") public Json update(@RequestBody Map<String, String> data, @PathVariable String ordno) {
+    @PostMapping @RequestMapping("/update/{ordno}")
+    public Json update(@RequestBody Map<String, String> data, @PathVariable String ordno) {
         ManualOrder manualOrder = new ManualOrder();
         manualOrder.setOrderNo(ordno);
         manualOrder.setTotalVolume(data.get("totalVolume"));
@@ -140,7 +142,8 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
-    @SuppressWarnings("unchecked") @PostMapping @RequestMapping("/trackno/list") public Json fillInTrackNoList(@RequestBody Map ords) {
+    @SuppressWarnings("unchecked") @PostMapping @RequestMapping("/trackno/list")
+    public Json fillInTrackNoList(@RequestBody Map ords) {
         List<String> ordNos = (List<String>)ords.get("ords");
         String carrierNo = ((String)ords.get("carrierNo")).replace(CARRIER, "");
         Date curr = new Date();
@@ -183,15 +186,17 @@ import java.util.concurrent.atomic.AtomicReference;
     }
 
     @PostMapping @RequestMapping("/list/{type}/{status}/{fromDate}/{toDate}")
-    public Json listByRange(@RequestBody String body, @PathVariable String type, @PathVariable String status, @PathVariable String fromDate,
-        @PathVariable String toDate, @RequestParam(required = false) String ordno, @RequestParam(required = false) String creator,
-        @RequestParam(required = false) String channelCode) throws ParseException {
+    public Json listByRange(@RequestBody String body, @PathVariable String type, @PathVariable String status,
+        @PathVariable String fromDate, @PathVariable String toDate, @RequestParam(required = false) String ordno,
+        @RequestParam(required = false) String creator, @RequestParam(required = false) String channelCode)
+        throws ParseException {
         String cname = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Date fromDate1 = DateUtil.getDateFromStr(fromDate);
         Date toDate1 = DateUtil.getDateFromStr(toDate);
-        Page<ManualOrder> manualOrderPage = orderService.listByRange(page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode);
+        Page<ManualOrder> manualOrderPage =
+            orderService.listByRange(page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode);
         enrichOrd(manualOrderPage);
         return Json.succ().data("page", manualOrderPage);
     }
@@ -202,21 +207,21 @@ import java.util.concurrent.atomic.AtomicReference;
             if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
                 manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
             } else {
-                JpDetailAddress from = japanAddressCache
-                    .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()), Integer.valueOf(manualOrder.getFromCityId()),
-                        Integer.valueOf(manualOrder.getFromTownId()));
+                JpDetailAddress from = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
+                    Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
                 manualOrder.setFromKenName(from.getKenName());
                 manualOrder.setFromCityName(from.getCityName());
                 manualOrder.setFromTownName(from.getTownName());
-                manualOrder.setFromAddressDesc(from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
+                manualOrder.setFromAddressDesc(
+                    from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
             }
-            JpDetailAddress to = japanAddressCache
-                .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
-                    Integer.valueOf(manualOrder.getToTownId()));
+            JpDetailAddress to = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()),
+                Integer.valueOf(manualOrder.getToCityId()), Integer.valueOf(manualOrder.getToTownId()));
             manualOrder.setToKenName(to.getKenName());
             manualOrder.setToCityName(to.getCityName());
             manualOrder.setToTownName(to.getTownName());
-            manualOrder.setToAddressDesc(to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
+            manualOrder.setToAddressDesc(
+                to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             //            manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
@@ -224,7 +229,8 @@ import java.util.concurrent.atomic.AtomicReference;
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
             double totalPrice = 0.0;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-                totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double.valueOf(manualOrderContent.getPrice());
+                totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double
+                    .valueOf(manualOrderContent.getPrice() == null ? "0" : manualOrderContent.getPrice());
             }
             final Double finalPrice = totalPrice;
             for (ManualOrderContent content : manualOrderContentList) {
@@ -285,7 +291,8 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(contentList);
     }
 
-    @PostMapping @RequestMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
+    @PostMapping @RequestMapping("/pickup")
+    public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
         log.info(manualOrderContentList.toString());
         String ordno;
         if (!manualOrderContentList.isEmpty()) {
@@ -314,7 +321,8 @@ import java.util.concurrent.atomic.AtomicReference;
     }
 
     @PostMapping @RequestMapping("/update/{category}/{status}")
-    public Json batchStatusUpdate(@RequestBody List<String> ords, @PathVariable String category, @PathVariable String status) {
+    public Json batchStatusUpdate(@RequestBody List<String> ords, @PathVariable String category,
+        @PathVariable String status) {
         if (ONE.equals(category) && THREE.equals(status)) {
             List<ManualOrderContent> manualOrderContentList = orderMapper.listContentBatch(ords.get(0));
             if (whetherPickup(manualOrderContentList)) {
@@ -358,7 +366,8 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/getVolumeAndWeight/{ordno}") public Json getVolumeAndWeight(@PathVariable String ordno) {
+    @GetMapping @RequestMapping("/getVolumeAndWeight/{ordno}")
+    public Json getVolumeAndWeight(@PathVariable String ordno) {
         List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
         Map<String, Double> result = new HashMap<>(2);
         AtomicReference<Double> totalVolume = new AtomicReference<>(0.0);
@@ -367,9 +376,10 @@ import java.util.concurrent.atomic.AtomicReference;
             String sku = manualOrderContent.getSku();
             Product product = orderMapper.getProduct(sku.split("/")[0]);
             totalVolume.updateAndGet(
-                v -> v + Double.valueOf(product.getLength()) * Double.valueOf(product.getHeight()) * Double.valueOf(product.getWidth()) * Double
-                    .valueOf(manualOrderContent.getNum()));
-            totalWeight.updateAndGet(v -> v + Double.valueOf(product.getWeight()) * Double.valueOf(manualOrderContent.getNum()));
+                v -> v + Double.valueOf(product.getLength()) * Double.valueOf(product.getHeight()) * Double
+                    .valueOf(product.getWidth()) * Double.valueOf(manualOrderContent.getNum()));
+            totalWeight.updateAndGet(
+                v -> v + Double.valueOf(product.getWeight()) * Double.valueOf(manualOrderContent.getNum()));
         });
         result.put("totalVolume", totalVolume.get());
         result.put("totalWeight", totalWeight.get());
