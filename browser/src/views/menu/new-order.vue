@@ -14,8 +14,8 @@
             <el-form-item label="订单类型">
               <el-select filterable v-model="form.category" placeholder="请选择订单类型" @change="changeByCategory">
                 <el-option label="海外仓代发订单" value="1"/>
-                <el-option label="虚拟海外仓" value="3"/>
                 <el-option label="单票单清" value="2"/>
+                <el-option label="虚拟海外仓" value="3"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -372,7 +372,6 @@
         if (this.whetherChargeForThem) {
           this.form.collect = false;
         }
-        console.log(this.form);
       },
       handleAddressChange(value) {
         this.form.address.ken = value[0];
@@ -425,9 +424,8 @@
           url: '/ord/update',
           method: 'post',
           data: this.form,
-        }).then(res => {
+        }).then(() => {
           this.$message.success('当前订单已更新');
-          console.log('/order-list/mgt/type' + this.form.category + '/status' + this.status);
           this.$router.push({
             path: '/order-list/mgt/type' + this.form.category + '/status' + this.status,
           });

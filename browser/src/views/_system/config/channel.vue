@@ -13,7 +13,8 @@
           <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchEnable">批量启用</el-button>
         </el-col>
         <el-col :span="2">
-          <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchDisable">批量禁用</el-button>
+          <el-button style="margin-left: 10px" v-if="multiSelected" type="primary" @click="batchDisable">批量禁用
+          </el-button>
         </el-col>
         <el-col :span="4">
           <el-tooltip content="快速查询" placement="top">
@@ -31,7 +32,8 @@
           <el-button type="primary" @click="triggerDialog">新增渠道</el-button>
         </el-col>
       </el-row>
-      <el-table style="width: 100%;margin-top: 10px" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
+      <el-table style="width: 100%;margin-top: 10px" :data="tableData" v-loading.body="tableLoading"
+                element-loading-text="加载中" stripe
                 highlight-current-row @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column width="160" prop="channelCode" label="渠道编码"></el-table-column>
@@ -51,7 +53,8 @@
         <el-table-column label="操作" width="300" fixed="right">
           <template slot-scope="scope">
             <el-tooltip content="编辑" placement="top">
-              <el-button @click="update(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle plain></el-button>
+              <el-button @click="update(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-edit" circle
+                         plain></el-button>
             </el-tooltip>
             <el-tooltip content="快速启用" placement="top">
               <el-button @click="handleEnable(scope.$index,scope.row)" size="small" type="success" circle plain>
@@ -64,15 +67,18 @@
               </el-button>
             </el-tooltip>
             <el-tooltip content="删除" placement="top">
-              <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle
+              <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete"
+                         circle
                          plain></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination style="margin-left: 65%;margin-top: 10px" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      <el-pagination style="margin-left: 65%;margin-top: 10px" background @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
                      :current-page="tablePage.current"
-                     :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size" layout="total, sizes, prev, pager, next, jumper"
+                     :page-sizes="[10, 20, 30, 40, 50]" :page-size="tablePage.size"
+                     layout="total, sizes, prev, pager, next, jumper"
                      :total="tablePage.total">
       </el-pagination>
       <el-dialog title="渠道修改" :visible.sync="dialogVisible" width="55%">
@@ -86,7 +92,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="渠道适用">
-                  <el-select filterable v-model="form.adapter">
+                  <el-select filterable v-model="form.adapter" clearable>
                     <el-option label="头程" value="1"></el-option>
                     <el-option label="单票单请" value="2"></el-option>
                     <el-option label="虚拟海外仓" value="3"></el-option>
@@ -133,7 +139,8 @@
             </el-form-item>
             <el-form-item label="规则">
               <el-col :span="24">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选
+                </el-checkbox>
                 <el-checkbox-group v-model="form.checkedRules2" @change="handleCheckedChange">
                   <el-checkbox v-for="rule in rules" :key="rule.label" :label="rule.value">{{rule.label}}
                   </el-checkbox>

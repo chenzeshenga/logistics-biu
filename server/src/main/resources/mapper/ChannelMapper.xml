@@ -41,18 +41,22 @@
         from l_channel
         where channel_code = #{channelCode,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" keyColumn="channel_code" keyProperty="channelCode" parameterType="com.abc.chenzeshenga.logistics.model.Channel">
+    <insert id="insert" keyColumn="channel_code" keyProperty="channelCode"
+            parameterType="com.abc.chenzeshenga.logistics.model.Channel">
         insert into l_channel (channel_code, channel_name, partner, `min`,
                                `max`, checked_rules, active, adapter, rule,
                                comments, create_by, update_by,
                                create_on, update_on)
-        values (#{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{partner,jdbcType=VARCHAR}, #{min,jdbcType=VARCHAR},
-                #{max,jdbcType=VARCHAR}, #{checkedRules,jdbcType=VARCHAR}, #{active,jdbcType=VARCHAR}, #{adapter,jdbcType=VARCHAR},
+        values (#{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{partner,jdbcType=VARCHAR},
+                #{min,jdbcType=VARCHAR},
+                #{max,jdbcType=VARCHAR}, #{checkedRules,jdbcType=VARCHAR}, #{active,jdbcType=VARCHAR},
+                #{adapter,jdbcType=VARCHAR},
                 #{rule,jdbcType=VARCHAR},
                 #{comments,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
                 #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP})
     </insert>
-    <insert id="insertSelective" keyColumn="channel_code" keyProperty="channelCode" parameterType="com.abc.chenzeshenga.logistics.model.Channel"
+    <insert id="insertSelective" keyColumn="channel_code" keyProperty="channelCode"
+            parameterType="com.abc.chenzeshenga.logistics.model.Channel"
             useGeneratedKeys="true">
         insert into l_channel
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -204,6 +208,7 @@
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">
         select channel_code as value, channel_name as label, partner, checked_rules as checkedRules
         from l_channel
+        order by create_on asc
     </select>
 
     <select id="listByWhere" resultType="com.abc.chenzeshenga.logistics.model.ChannelLabel">

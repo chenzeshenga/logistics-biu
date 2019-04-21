@@ -27,7 +27,8 @@ import java.util.Map;
     @Scheduled(cron = "0 0 0 * * ?") @PostConstruct public void init() {
         List<ChannelLabel> channelLabelList = channelMapper.list();
         channelLabelList.forEach(channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
-        this.channelSeq = String.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", ""));
+        this.channelSeq = String.valueOf(
+            Integer.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", "")) + 1);
     }
 
     public String channelLabel(String channelValue) {
@@ -35,7 +36,9 @@ import java.util.Map;
     }
 
     public String getChannelSeq() {
-        return this.channelSeq;
+        String result = this.channelSeq;
+        this.channelSeq = String.valueOf(Integer.valueOf(this.channelSeq) + 1);
+        return result;
     }
 
 }

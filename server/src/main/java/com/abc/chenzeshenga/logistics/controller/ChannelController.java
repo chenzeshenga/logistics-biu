@@ -35,7 +35,8 @@ import java.util.Map;
 
     private LabelCache labelCache;
 
-    @Autowired public ChannelController(ChannelService channelService, ChannelCache channelCache, LabelCache labelCache) {
+    @Autowired
+    public ChannelController(ChannelService channelService, ChannelCache channelCache, LabelCache labelCache) {
         this.channelService = channelService;
         this.channelCache = channelCache;
         this.labelCache = labelCache;
@@ -43,7 +44,8 @@ import java.util.Map;
 
     @GetMapping @RequestMapping("/list") public Json list() {
         List<ChannelLabel> channelList = channelMapper.list();
-        channelList.forEach(channelLabel -> channelLabel.setPartnerDesc(labelCache.getLabel("carrier_" + channelLabel.getPartner())));
+        channelList.forEach(
+            channelLabel -> channelLabel.setPartnerDesc(labelCache.getLabel("carrier_" + channelLabel.getPartner())));
         return Json.succ().data(channelList);
     }
 
@@ -94,7 +96,7 @@ import java.util.Map;
             channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
             channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
             channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
-            channel.setAdapterDesc(labelCache.getLabel("category_" + channel.getAdapter()));
+            channel.setAdapterDesc(labelCache.getLabel("adapter_" + channel.getAdapter()));
         }
         return Json.succ().data("page", channelPage);
     }
@@ -114,7 +116,7 @@ import java.util.Map;
             channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
             channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
             channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
-            channel.setAdapterDesc(labelCache.getLabel("category_" + channel.getAdapter()));
+            channel.setAdapterDesc(labelCache.getLabel("adapter_" + channel.getAdapter()));
         }
         return Json.succ().data("page", channelPage);
     }
