@@ -155,14 +155,14 @@
                                    height, weight, createdBy,
                                    updateBy, `location`, img_path,
                                    alert_num, create_on, update_on,
-                                   ava_num)
+                                   ava_num,status)
         values (#{sku,jdbcType=VARCHAR}, #{dySku,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
                 #{category,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR},
                 #{price,jdbcType=VARCHAR}, #{length,jdbcType=VARCHAR}, #{width,jdbcType=VARCHAR},
                 #{height,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR},
                 #{updateBy,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR},
                 #{alertNum,jdbcType=INTEGER}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
-                #{avaNum,jdbcType=INTEGER})
+                #{avaNum,jdbcType=INTEGER},#{status,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Product">
@@ -351,13 +351,16 @@
                 ava_num = #{avaNum,jdbcType=INTEGER},
             </if>
             <if test="img1 != null">
-                img1 = #{img1,jdbcType=INTEGER},
+                img1 = #{img1,jdbcType=VARCHAR},
             </if>
             <if test="img2 != null">
-                img2 = #{img2,jdbcType=INTEGER},
+                img2 = #{img2,jdbcType=VARCHAR},
             </if>
             <if test="img3 != null">
-                img3 = #{img3,jdbcType=INTEGER},
+                img3 = #{img3,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
             </if>
         </set>
         where sku = #{sku,jdbcType=VARCHAR}

@@ -56,6 +56,53 @@
                      layout="total, sizes, prev, pager, next, jumper"
                      :total="tablePage.total">
       </el-pagination>
+      <el-dialog title="商品体积重量确认" :visible.sync="dialogVisible" width="30%">
+        <el-alert
+          title="请在当前页面再一次确认商品体积重量，也可在在库商品管理页面进行编辑"
+          type="info"
+          show-icon>
+        </el-alert>
+        <el-form ref="form" :model="form" label-width="100px">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="sku">
+                <span>{{form.sku}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="东岳sku">
+                <span>{{form.sku}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="体积(cm^3)">
+            <el-form-item label="长(cm)">
+              <el-col :span="8">
+                <el-input-number v-model="form.length"></el-input-number>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="宽(cm)" style="margin-top: 2%">
+              <el-col :span="8">
+                <el-input-number v-model="form.width"></el-input-number>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="高(cm)" style="margin-top: 2%">
+              <el-col :span="8">
+                <el-input-number v-model="form.height"></el-input-number>
+              </el-col>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item label="重量(kg)">
+            <el-form-item label="重量">
+              <el-input-number v-model="form.weight"></el-input-number>
+            </el-form-item>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="statusUpdateInDialog">审核通过</el-button>
+          <el-button @click="dialogVisible=false">取消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -77,6 +124,15 @@
         tableData: [],
         multiSelected: false,
         skus: [],
+        form: {
+          sku: null,
+          dySku: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+        },
+        dialogVisible: false,
       };
     },
     created() {
@@ -109,17 +165,34 @@
         this.fetchData();
       },
       statusUpdate(index, row) {
-        console.log(row);
+        this.form.sku = row.sku;
+        this.form.dySku = row.dySku;
+        this.form.length = row.length;
+        this.form.width = row.width;
+        this.form.height = row.height;
+        this.form.weight = row.weight;
+        this.dialogVisible = true;
+      },
+      statusUpdateInDialog() {
         this.$confirm('您确定审核通过该商品？', '提示', confirm).then(() => {
           request({
-            url: '/product/status/' + row.sku + '/1',
-            method: 'get',
+            url: '/product/update',
+            method: 'post',
+            data: this.form,
           }).then(() => {
-            this.$message.success('审核成功');
-            this.fetchData();
+            this.$message.success('体积重量信息更新成功');
+            request({
+              url: '/product/status/' + this.form.sku + '/1',
+              method: 'get',
+            }).then(() => {
+              this.$message.success('审核成功');
+              this.dialogVisible = false;
+              this.fetchData();
+            });
           });
         }).catch(() => {
           this.$message.info('已取消审核');
+          this.dialogVisible = false;
         });
       },
       handleDelete(index, row) {

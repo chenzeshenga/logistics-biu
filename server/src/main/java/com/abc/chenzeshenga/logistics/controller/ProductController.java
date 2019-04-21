@@ -85,10 +85,20 @@ import java.util.UUID;
             product.setUpdateBy(username);
             product.setCreateOn(curr);
             product.setUpdateOn(curr);
+            product.setStatus("0");
             productMapper.insert(product);
+        } else if (StringUtils.isEmpty(ori.getProductName())) {
+            product.setDySku(SkuUtil.generateDySku());
+            product.setCreatedBy(username);
+            product.setUpdateBy(username);
+            product.setCreateOn(curr);
+            product.setUpdateOn(curr);
+            product.setStatus("0");
+            productMapper.updateByPrimaryKeySelective(product);
         } else {
             product.setUpdateBy(username);
             product.setUpdateOn(curr);
+            product.setStatus("0");
             productMapper.updateByPrimaryKeySelective(product);
         }
         return Json.succ();
