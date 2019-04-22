@@ -9,7 +9,8 @@
       <div style="display: inline-block;">
         <el-row :gutter="20">
           <el-col :span="9">
-            <el-input placeholder="订单号快速搜索" v-model="search" style="display: inline-block;" suffix-icon="el-icon-search" clearable
+            <el-input placeholder="订单号快速搜索" v-model="search" style="display: inline-block;" suffix-icon="el-icon-search"
+                      clearable
                       @input="quickSearch"></el-input>
           </el-col>
           <el-col :span="7">
@@ -79,7 +80,7 @@
   import Hamburger from '@/components/Hamburger';
   import ErrorLog from '@/components/ErrorLog';
   import userApi from '@/api/user';
-  import request from '@/utils/request';
+  import request from '@/utils/service';
 
   export default {
 
@@ -161,7 +162,8 @@
         });
       },
       quickSearch() {
-        this.search = this.search.replace('http://localhost:9527/#/order-info?ord=', '');
+        this.search = this.search.replace('http://47.105.107.242:9527/#/order-info?ord=', '');
+        // this.search = this.search.replace('http://localhost:9527/#/order-info?ord=', '');
         if (this.search.length > 3) {
           request({
             url: '/ord/quickSearch/' + this.search,

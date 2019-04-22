@@ -63,7 +63,8 @@
         </el-form-item>
       </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
-                stripe highlight-current-row :row-class-name="tableRowClassNameOuter" @selection-change="handleSelectionChange">
+                stripe highlight-current-row :row-class-name="tableRowClassNameOuter"
+                @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand">
           <template slot-scope="tableData">
@@ -152,13 +153,68 @@
                 <el-button type="primary" @click="updateVolumeAndWeight">确 定</el-button>
             </span>
       </el-dialog>
+      <el-dialog title="提交发货" :visible.sync="dialogVisible" width="50%">
+        <el-form :model="form">
+          <el-col :span="24">
+            <el-form-item label="订单号">
+              <el-input v-model="form.orderNo" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24" style="margin-top: 10px">
+            <el-col :span="8">
+              <el-form-item label="长(cm)">
+                <el-input-number v-model="form.length" @change="calculateIndex"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="宽(cm)">
+                <el-input-number v-model="form.width" @change="calculateIndex"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="高(cm)">
+                <el-input-number v-model="form.height" @change="calculateIndex"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <label>后台计算总体积为:</label>
+            <span>{{form.totalVolume}} cm^3</span><br>
+            <label>根据页面输入计算结果如下:</label>
+            <el-form-item>
+              <el-col :span="8">
+                <el-form-item label="总体积(cm^3)">
+                  <el-input-number v-model="form.totalVolumeFrontEnd"></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="三边和(cm)">
+                  <el-input-number v-model="form.sum"></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="体积重(cm^3)">
+                  <el-input-number v-model="form.totalVolumeWithWeight"></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="当前订单总重量(kg)">
+              <el-input-number v-model="form.totalWeight"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="updateVolumeAndWeight">确 定</el-button>
+            </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 
 <script>
-  import request from '@/utils/request';
+  import request from '@/utils/service';
 
   export default {
     name: 'order-list-mgt-type1-status1',
@@ -372,8 +428,8 @@
       exportExcel() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        // link.href = 'http://47.105.107.242:8888/api/v1/ord/excel/2';
-        link.href = 'http://localhost:8888/api/v1/ord/excel/2';
+        link.href = 'http://47.105.107.242:8888/api/v1/ord/excel/2';
+        // link.href = 'http://localhost:8888/api/v1/ord/excel/2';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
@@ -381,8 +437,8 @@
       print(index, row) {
         const link = document.createElement('a');
         link.style.display = 'none';
-        // link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
-        link.href = 'http://localhost:8888/api/v1/pdf/ord/' + row.orderNo;
+        link.href = 'http://47.105.107.242:8888/api/v1/pdf/ord/' + row.orderNo;
+        // link.href = 'http://localhost:8888/api/v1/pdf/ord/' + row.orderNo;
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
@@ -431,6 +487,11 @@
         }).then(res => {
           this.channels = res.data.data;
         });
+      },
+      calculateIndex() {
+        this.form.totalVolumeFrontEnd = this.form.length * this.form.height * this.form.width;
+        this.form.sum = this.form.length + this.form.height + this.form.width;
+        this.form.totalVolumeWithWeight = this.form.length * this.form.height * this.form.width / 6000;
       },
     },
   };

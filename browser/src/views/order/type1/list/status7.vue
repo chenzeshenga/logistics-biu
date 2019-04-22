@@ -192,7 +192,7 @@
 
 
 <script>
-  import request from '@/utils/request';
+  import request from '@/utils/service';
 
   export default {
     name: 'order-list-mgt-type1-status1',

@@ -75,8 +75,8 @@
           </el-col>
         </el-form-item>
         <el-form-item label="商品图片">
-          <!--          <el-upload action="http://47.105.107.242:8888/api/v1/product/img/put" with-credentials multiple-->
-          <el-upload action="http://localhost:8888/api/v1/product/img/put" with-credentials multiple
+          <!--          <el-upload action="http://localhost:8888/api/v1/product/img/put" with-credentials multiple-->
+          <el-upload action="http://47.105.107.242:8888/api/v1/product/img/put" with-credentials multiple
                      list-type="picture"
                      :file-list="fileList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                      :data="form" :on-change="handleFileChange"
@@ -102,8 +102,8 @@
       <el-dialog title="批量创建" :visible.sync="dialogVisible4Excel" width="30%">
         <el-form :model="form">
           <el-form-item label="商品文件">
-            <!--            <el-upload action="http://47.105.107.242:8888/api/v1/product/excel" with-credentials :on-error="handleError"-->
-            <el-upload action="http://localhost:8888/api/v1/product/excel" with-credentials :on-error="handleError"
+            <!--            <el-upload action="http://localhost:8888/api/v1/product/excel" with-credentials :on-error="handleError"-->
+            <el-upload action="http://47.105.107.242:8888/api/v1/product/excel" with-credentials :on-error="handleError"
                        :limit="1">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload4Excel">上传
@@ -125,7 +125,7 @@
 </template>
 
 <script>
-  import request from '@/utils/request';
+  import request from '@/utils/service';
 
   export default {
     name: 'new-product',
@@ -200,8 +200,8 @@
               const tmp = {
                 'name': 'img1',
                 'index': '1',
-                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img1,
-                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img1,
+                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img1,
+                // 'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img1,
                 'uid': res.data.data.img1,
               };
               this.fileList.push(tmp);
@@ -210,8 +210,8 @@
               const tmp = {
                 'name': 'img2',
                 'index': '2',
-                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img2,
-                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img2,
+                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img2,
+                // 'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img2,
                 'uid': res.data.data.img2,
               };
               this.fileList.push(tmp);
@@ -220,8 +220,8 @@
               const tmp = {
                 'name': 'img3',
                 'index': '3',
-                // 'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img3,
-                'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img3,
+                'url': 'http://47.105.107.242:8888/api/v1/img/' + res.data.data.img3,
+                // 'url': 'http://localhost:8888/api/v1/img/' + res.data.data.img3,
                 'uid': res.data.data.img3,
               };
               this.fileList.push(tmp);
@@ -308,8 +308,8 @@
       downloadTemplate() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        // link.href = 'http://47.105.107.242:8888/api/v1/template/file/PRODUCT_TEMPLATE';
-        link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        link.href = 'http://47.105.107.242:8888/api/v1/template/file/PRODUCT_TEMPLATE';
+        // link.href = 'http://localhost:8888/api/v1/template/file/PRODUCT_TEMPLATE';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

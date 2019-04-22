@@ -78,7 +78,7 @@
         <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
         <el-table-column label="操作" width="250" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip content="国内提交发货" placement="top">
+            <el-tooltip content="日本收货" placement="top">
               <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check"
                          circle
                          plain></el-button>
@@ -106,7 +106,7 @@
 
 
 <script>
-  import request from '@/utils/request';
+  import request from '@/utils/service';
 
   export default {
     name: 'order-list-mgt-type3-status3',
