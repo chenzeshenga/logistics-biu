@@ -27,7 +27,7 @@
         <el-table-column prop="width" label="商品宽度(cm)" width="150"></el-table-column>
         <el-table-column prop="height" label="商品高度(cm)" width="150"></el-table-column>
         <el-table-column prop="weight" label="商品重量(kg)" width="150"></el-table-column>
-        <el-table-column prop="price" label="商品价格" width="150"></el-table-column>
+        <el-table-column prop="price" label="商品价格JPY" width="150"></el-table-column>
         <el-table-column prop="createdBy" label="创建者" width="150"></el-table-column>
         <el-table-column prop="updateBy" label="更新者" width="150"></el-table-column>
         <el-table-column prop="createOn" label="创建时间" width="160"></el-table-column>

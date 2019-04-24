@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column
           prop="price"
-          label="商品价格"
+          label="商品价格JPY"
           width="180">
         </el-table-column>
         <el-table-column

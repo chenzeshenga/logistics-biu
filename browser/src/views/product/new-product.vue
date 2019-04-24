@@ -27,8 +27,9 @@
                 <el-option value="4" label="电子产品"/>
                 <el-option value="5" label="家居用品"/>
                 <el-option value="6" label="玩具"/>
-                <el-option value="7" label="大件"/>
-                <el-option value="8" label="其他"/>
+                <el-option value="7" label="易碎品"/>
+                <el-option value="8" label="大件"/>
+                <el-option value="9" label="其他"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -169,7 +170,7 @@
           ],
           price: [
             {
-              required: true, message: '请输入商品价格', trigger: 'change',
+              required: true, message: '请输入商品价格JPY', trigger: 'change',
             },
           ],
         },
@@ -197,6 +198,7 @@
             this.form = res.data.data;
             this.onCreate = false;
             this.onUpdate = true;
+            this.fileList = [];
             if (res.data.data.img1 !== null && res.data.data.img1.length > 0) {
               const tmp = {
                 'name': 'img1',

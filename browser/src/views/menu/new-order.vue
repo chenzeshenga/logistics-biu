@@ -5,7 +5,8 @@
         <el-form-item label="订单基本信息">
           <el-col :span="12">
             <el-form-item label="订单号">
-              <el-input v-model="form.orderNo" v-bind:disabled="onUpdate" placeholder="请输入或点击按钮获取订单号">
+              <el-input v-model="form.orderNo" v-bind:disabled="onUpdate" placeholder="请输入或点击按钮获取订单号"
+                        @input="trimInput">
                 <el-button slot="append" v-bind:disabled="onUpdate" @click="getOrdNo">获取单号</el-button>
               </el-input>
             </el-form-item>
@@ -182,7 +183,7 @@
           <el-table :data="form.contentList" stripe style="width: 90%">
             <el-table-column prop="sku" label="sku/东岳Sku" width="250"></el-table-column>
             <el-table-column prop="name" label="商品名称"></el-table-column>
-            <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
+            <el-table-column prop="price" label="商品价格JPY" width="180"></el-table-column>
             <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -283,6 +284,9 @@
       this.defaultFormData = JSON.parse(JSON.stringify(this.form));
     },
     methods: {
+      trimInput() {
+        this.form.orderNo = this.form.orderNo.trim();
+      },
       initPage() {
         const ordno = this.$route.query.ordno;
         this.status = this.$route.query.status;

@@ -72,7 +72,7 @@
               <el-table :data="tableData.row.contentList" stripe border :row-class-name="tableRowClassName">
                 <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
                 <el-table-column prop="name" label="商品名称" width="250"></el-table-column>
-                <el-table-column prop="price" label="商品价格" width="180"></el-table-column>
+                <el-table-column prop="price" label="商品价格JPY" width="180"></el-table-column>
                 <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
                 <el-table-column prop="picked" label="已拣货数量" width="180"></el-table-column>
               </el-table>
