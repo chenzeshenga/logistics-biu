@@ -21,10 +21,6 @@ spring:
     #    username: root
     password: Dongyue@123
 #    password: 123456
-logging:
-  path: ./logs
-  level:
-    com.abc: debug
 logistics:
   base:
     url: "localhost:8888/api/v1/"

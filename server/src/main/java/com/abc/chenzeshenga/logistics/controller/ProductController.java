@@ -212,7 +212,7 @@ import java.util.UUID;
         Date curr = new Date();
         product.setUpdateBy(username);
         product.setUpdateOn(curr);
-        productMapper.updateByPrimaryKey(product);
+        productMapper.updateByPrimaryKeySelective(product);
         return Json.succ();
     }
 
