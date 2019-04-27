@@ -9,11 +9,13 @@ import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author chenzesheng
@@ -82,6 +84,10 @@ import java.util.*;
         }
         productStatisticsMapper.deleteAll();
         if (!productStatisticsList.isEmpty()) {
+            productStatisticsList = productStatisticsList.stream().filter(productStatistics ->
+                (StringUtils.isNotBlank(productStatistics.getSku()) && StringUtils
+                    .isNotBlank(productStatistics.getDysku())) && StringUtils.isNotBlank(productStatistics.getOwner()))
+                .collect(Collectors.toList());
             productStatisticsMapper.insertBatch(productStatisticsList);
         }
         log.info("scheduled task countProduct end");
