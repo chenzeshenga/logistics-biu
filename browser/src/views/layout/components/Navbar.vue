@@ -31,7 +31,7 @@
       <!--      </div>-->
       <el-dropdown class="avatar-container right-menu-item" trigger="click" style="margin-bottom: 4px">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img :src="avatar" class="user-avatar" alt="">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -42,6 +42,9 @@
           </router-link>
           <el-dropdown-item>
             <span @click="handleUpdatePwd" style="display:block;">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <span @click="currentVersion" style="display:block;">关于</span>
           </el-dropdown-item>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">退出</span>
@@ -65,6 +68,14 @@
       <div class="dialog-footer" slot="footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button @click="updatePwd" type="primary">确定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible2" title="版本信息" width="20%">
+      <div>
+        <span>当前版本: </span><span><b>{{version}}</b></span><br>
+      </div>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible2 = false">取消</el-button>
       </div>
     </el-dialog>
   </el-menu>
@@ -107,6 +118,8 @@
       };
       return {
         dialogVisible: false,
+        dialogVisible2: false,
+        version: '20190428',
         temp: {
           pwd: null,
           pwd2: null,
@@ -162,8 +175,7 @@
         });
       },
       quickSearch() {
-        this.search = this.search.replace('http://47.105.107.242:9527/#/order-info?ord=', '');
-        // this.search = this.search.replace('http://localhost:9527/#/order-info?ord=', '');
+        this.search = this.search.replace('http://www.jpdyu.com/#/order-info?ord=', '').replace('http://localhost:9527/#/order-info?ord=', '');
         if (this.search.length > 3) {
           request({
             url: '/ord/quickSearch/' + this.search,
@@ -188,7 +200,9 @@
           console.log(this.search);
         }
       },
-
+      currentVersion() {
+        this.dialogVisible2 = true
+      }
     },
   };
 </script>
