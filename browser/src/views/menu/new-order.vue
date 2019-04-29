@@ -394,21 +394,29 @@
         this.content.name = product.name;
         this.content.price = product.price;
         this.selectedProductMaxNum = Number(product.num);
-        console.log(this.selectedProductMaxNum);
+        this.$message.info('您选择的商品' + product.label + '当前可售数量为' + product.num);
       },
       add2Cart() {
         let tmpContent = {};
         tmpContent = JSON.parse(JSON.stringify(this.content));
         tmpContent['index'] = this.form.contentList.length;
         if (this.selectedProductMap.hasOwnProperty(this.content['sku'])) {
-          this.selectedProductMap[this.content['sku']]['num'] += Number(this.content.num);
+          const plannedNum = this.selectedProductMap[this.content['sku']]['num'] + Number(this.content.num);
+          const product = this.productMap[this.content['sku'].split('/')[0]];
+          if (plannedNum > product.num) {
+            this.selectedProductMap[this.content['sku']]['num'] = product.num;
+            this.$message.warning('当前订单中商品' + product.label + '总数量大于该商品可售数量，系统已自动调整为最大可售数量');
+          } else {
+            this.selectedProductMap[this.content['sku']]['num'] += Number(this.content.num);
+          }
         } else {
           this.selectedProductMap[this.content['sku']] = tmpContent;
           this.form.contentList.push(this.selectedProductMap[this.content['sku']]);
         }
-        // this.selectedProductMap[this.content["sku"]] = this.content;
       },
       handleDelete(index, row) {
+        const content = this.form.contentList[index];
+        delete this.selectedProductMap[content.sku];
         this.form.contentList.splice(index, 1);
       },
       createOrd() {
@@ -449,7 +457,8 @@
         document.body.appendChild(link);
         link.click();
       },
-    },
-  };
+    }
+  }
+
 </script>
 
