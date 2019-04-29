@@ -85,6 +85,7 @@
                img3
         from l_productions
         where sku = #{sku,jdbcType=VARCHAR}
+           or dy_sku = #{sku,jdbcType=VARCHAR}
     </select>
 
     <select id="listByStatusWithUser" parameterType="java.lang.String" resultMap="BaseResultMap">

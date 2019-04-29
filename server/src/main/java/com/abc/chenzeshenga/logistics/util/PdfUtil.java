@@ -37,15 +37,13 @@ public class PdfUtil {
         Table table = new Table(new float[] {1});
         table.setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE);
         table.setBorder(Border.NO_BORDER);
-        table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER).add(image)
-            .setBorder(Border.NO_BORDER));
+        table.addCell(
+            new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .add(image).setBorder(Border.NO_BORDER));
         Cell labelCell = new Cell();
         labelCell.setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE)
             .add(new Paragraph(new Text(sku).setBold().setFontSize(10)));
-        if (name.length() > 6) {
-            name = name.substring(0, 6) + "...";
-        }
-        labelCell.add(new Paragraph(new Text(name).setBold().setFontSize(10))).setFont(font).setBorder(Border.NO_BORDER);
+        labelCell.add(new Paragraph(new Text(name).setFontSize(8))).setFont(font).setBorder(Border.NO_BORDER);
         table.addCell(labelCell);
         document.add(table);
         document.close();
