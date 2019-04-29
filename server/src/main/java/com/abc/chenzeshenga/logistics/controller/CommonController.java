@@ -35,6 +35,10 @@ import java.util.*;
  */
 @RestController @Slf4j public class CommonController {
 
+    class Constant {
+        private static final String CARRIER = "carrier_";
+    }
+
     private static final String CARRIER = "carrier_";
 
     @Resource private ImgMapper imgMapper;

@@ -28,16 +28,14 @@
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
+        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num
         from l_productions product
-                 left join l_product_statistic static on (product.sku = static.sku)
         where createdBy = #{username}
     </select>
 
     <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, static.total_num as totalNum
+        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num
         from l_productions product
-                 left join l_product_statistic static on (product.sku = static.sku)
     </select>
 
     <update id="addImg" parameterType="com.abc.chenzeshenga.logistics.model.Product">
@@ -155,14 +153,14 @@
                                    height, weight, createdBy,
                                    updateBy, `location`, img_path,
                                    alert_num, create_on, update_on,
-                                   ava_num,status)
+                                   ava_num, status)
         values (#{sku,jdbcType=VARCHAR}, #{dySku,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
                 #{category,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR},
                 #{price,jdbcType=VARCHAR}, #{length,jdbcType=VARCHAR}, #{width,jdbcType=VARCHAR},
                 #{height,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR},
                 #{updateBy,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR},
                 #{alertNum,jdbcType=INTEGER}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
-                #{avaNum,jdbcType=INTEGER},#{status,jdbcType=VARCHAR})
+                #{avaNum,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Product">

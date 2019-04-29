@@ -172,7 +172,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="商品数量">
-              <el-input-number v-model="content.num" :min="1"></el-input-number>
+              <el-input-number v-model="content.num" :min="1" :max=selectedProductMaxNum></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="2" style="margin-left: 2%">
@@ -268,6 +268,7 @@
         },
         myProducts: [],
         selectedProduct: [],
+        selectedProductMaxNum: Number.POSITIVE_INFINITY,
         productMap: {},
         selectedProductMap: {},
         status: '',
@@ -392,6 +393,8 @@
         this.content.sku = skuLabel;
         this.content.name = product.name;
         this.content.price = product.price;
+        this.selectedProductMaxNum = Number(product.num);
+        console.log(this.selectedProductMaxNum);
       },
       add2Cart() {
         let tmpContent = {};
