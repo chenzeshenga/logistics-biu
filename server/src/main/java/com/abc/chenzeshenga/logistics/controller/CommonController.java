@@ -130,7 +130,7 @@ import java.util.*;
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
-            manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "是" : "否");
+            manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "否" : "是");
             List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
             try {
                 ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
