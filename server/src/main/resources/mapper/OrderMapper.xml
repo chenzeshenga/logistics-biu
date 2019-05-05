@@ -134,6 +134,15 @@
         where ord_no = #{orderNo}
     </update>
 
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder4Input">
+        insert into l_manual_order (ord_no, category, carrier_no, track_no, owner, status, update_on, create_on,
+                                    create_by, update_by, from_ken_id, from_city_id, from_town_id, from_where,
+                                    from_zipcode, to_ken_id, to_city_id, to_town_id, to_where, to_zipcode, on_behalf,
+                                    amount, china_no, from_contact, to_contact, from_whom, to_whom, channel,
+                                    abnormalReason, total_volume, total_weight, ord_fee, china_carrier, collect_num)
+        values (#{orderNo},#{});
+    </insert>
+
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on,
                                    create_by, update_by, from_ken_id,
