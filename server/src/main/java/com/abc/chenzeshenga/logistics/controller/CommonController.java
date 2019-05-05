@@ -15,6 +15,7 @@ import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -129,6 +130,38 @@ import java.util.*;
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+            manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "是" : "否");
+            List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
+            try {
+                ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
+                if (ObjectUtils.anyNotNull(manualOrderContent1)) {
+                    manualOrder.setSku1(manualOrderContent1.getSku());
+                    manualOrder.setName1(manualOrderContent1.getName());
+                    manualOrder.setNum1(manualOrderContent1.getNum());
+                }
+            } catch (IndexOutOfBoundsException e) {
+                log.error("error stack info ", e);
+            }
+            try {
+                ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
+                if (ObjectUtils.anyNotNull(manualOrderContent2)) {
+                    manualOrder.setSku2(manualOrderContent2.getSku());
+                    manualOrder.setName2(manualOrderContent2.getName());
+                    manualOrder.setNum2(manualOrderContent2.getNum());
+                }
+            } catch (IndexOutOfBoundsException e) {
+                log.error("error stack info ", e);
+            }
+            try {
+                ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
+                if (ObjectUtils.anyNotNull(manualOrderContent3)) {
+                    manualOrder.setSku3(manualOrderContent3.getSku());
+                    manualOrder.setName3(manualOrderContent3.getName());
+                    manualOrder.setNum3(manualOrderContent3.getNum());
+                }
+            } catch (IndexOutOfBoundsException e) {
+                log.error("error stack info ", e);
+            }
         });
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
