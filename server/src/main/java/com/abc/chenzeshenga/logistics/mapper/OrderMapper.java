@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
+import com.abc.chenzeshenga.logistics.model.ManualOrder4Input;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -17,6 +18,8 @@ import java.util.Map;
  * @version 1.0
  */
 @Mapper public interface OrderMapper extends BaseMapper<ManualOrder> {
+
+//    int insertSelective(ManualOrder4Input manualOrder4Input);
 
     int add(ManualOrder manualOrder);
 

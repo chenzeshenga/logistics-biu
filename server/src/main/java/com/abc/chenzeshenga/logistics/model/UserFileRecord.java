@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * l_user_file_record
  *
- * @author
+ * @author chenzeshenga
  */
 @Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false) public class UserFileRecord extends UserFileRecordKey
     implements Serializable {

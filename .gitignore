@@ -10,4 +10,4 @@ npm-debug.log
 /server/out/
 /logs/
 /server/target/
-/applog/*
+/applog/
