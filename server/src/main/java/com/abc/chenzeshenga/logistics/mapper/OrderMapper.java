@@ -19,8 +19,6 @@ import java.util.Map;
  */
 @Mapper public interface OrderMapper extends BaseMapper<ManualOrder> {
 
-    int insertSelective(ManualOrder4Input manualOrder4Input);
-
     int add(ManualOrder manualOrder);
 
     int update(ManualOrder manualOrder);

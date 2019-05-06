@@ -216,6 +216,9 @@ import java.util.*;
                 if (manualOrder instanceof ManualOrder4Input) {
                     manualOrder4Input = (ManualOrder4Input)manualOrder;
                     log.info(manualOrder4Input.toString());
+                    ManualOrder subManualOrder = new ManualOrder();
+                    subManualOrder.setOrderNo(CommonUtil.generate() + "-" + (
+                        Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1));
                 }
             }
         });
