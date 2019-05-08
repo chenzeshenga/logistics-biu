@@ -97,11 +97,13 @@
         <el-table-column label="操作" width="250" fixed="right">
           <template slot-scope="scope">
             <el-tooltip content="归档" placement="top">
-              <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check" circle
+              <el-button @click="statusUpdate(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-check"
+                         circle
                          plain></el-button>
             </el-tooltip>
             <el-tooltip content="查询物流进度" placement="top">
-              <el-button @click="findWhere(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-question" circle
+              <el-button @click="findWhere(scope.$index,scope.row)" size="mini" type="info" icon="el-icon-question"
+                         circle
                          plain></el-button>
             </el-tooltip>
           </template>
@@ -177,6 +179,7 @@
     },
     created() {
       this.fetchData();
+      this.initUserList();
     },
     watch: {
       $route() {

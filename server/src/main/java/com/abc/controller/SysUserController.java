@@ -10,6 +10,7 @@ import com.abc.service.SysRoleService;
 import com.abc.service.SysUserRoleService;
 import com.abc.service.SysUserService;
 import com.abc.util.PageUtils;
+import com.abc.vo.AuthVo;
 import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -30,13 +31,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
  * created by CaiBaoHong at 2018/4/17 16:41<br>
  */
-@PermInfo(value = "系统用户模块", pval = "a:sys:接口") @RestController @RequestMapping("/sys_user") public class SysUserController {
+@PermInfo(value = "系统用户模块", pval = "a:sys:接口") @RestController @RequestMapping("/sys_user")
+public class SysUserController {
 
     private static final Logger log = LoggerFactory.getLogger(SysUserController.class);
 
@@ -70,7 +73,8 @@ import java.util.stream.Collectors;
         return Json.result(oper, success).data("uid", user.getUid()).data("created", user.getCreated());
     }
 
-    @PermInfo("删除系统用户") @RequiresPermissions("a:sys:user:del") @DeleteMapping public Json delete(@RequestBody String body) {
+    @PermInfo("删除系统用户") @RequiresPermissions("a:sys:user:del") @DeleteMapping
+    public Json delete(@RequestBody String body) {
 
         String oper = "delete user";
         log.info("{}, body: {}", oper, body);
@@ -131,7 +135,8 @@ import java.util.stream.Collectors;
         return Json.succ(oper);
     }
 
-    @PermInfo("查询所有系统用户") @RequiresPermissions("a:sys:user:list") @PostMapping("/query") public Json query(@RequestBody String body) {
+    @PermInfo("查询所有系统用户") @RequiresPermissions("a:sys:user:list") @PostMapping("/query")
+    public Json query(@RequestBody String body) {
         String oper = "query user";
         log.info("{}, body: {}", oper, body);
         JSONObject json = JSON.parseObject(body);
@@ -148,10 +153,10 @@ import java.util.stream.Collectors;
         String nick = json.getString("nick");
         Subject subject = SecurityUtils.getSubject();
         SysUser user = (SysUser)subject.getPrincipal();
-        List<SysRole> sysRoleList = user.getRoleList();
+        Set<AuthVo> authVos = user.getRoles();
         AtomicBoolean queryAll = new AtomicBoolean(false);
-        sysRoleList.forEach(sysRole -> {
-            if ("root".equals(sysRole.getRval()) || "operator".equals(sysRole.getRval())) {
+        authVos.forEach(authVo -> {
+            if ("root".equals(authVo.getVal()) || "operator".equals(authVo.getVal())) {
                 queryAll.set(true);
             }
         });
@@ -159,19 +164,23 @@ import java.util.stream.Collectors;
         if (queryAll.get()) {
             page = sysUserService.queryUserIncludeRoles(PageUtils.getPageParam(json), nick);
         } else {
-            page = sysUserService.queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName());
+            page = sysUserService
+                .queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName());
         }
         return Json.succ(oper).data("page", page);
     }
 
-    @PermInfo("查询系统用户信息") @RequiresPermissions("a:sys:user:info") @GetMapping("/info") public Json userInfo() {
+    @PermInfo("查询系统用户信息")
+    //    @RequiresPermissions("a:sys:user:info")
+    @GetMapping("/info") public Json userInfo() {
         String oper = "query user info";
         log.info("{}", oper);
         Object userInfo = SecurityUtils.getSubject().getPrincipal();
         return Json.succ(oper, "userInfo", userInfo);
     }
 
-    @PermInfo("更新系统用户的信息") @RequiresPermissions("a:sys:user:info:update") @PatchMapping("/info") public Json update(@RequestBody String body) {
+    @PermInfo("更新系统用户的信息") @RequiresPermissions("a:sys:user:info:update") @PatchMapping("/info")
+    public Json update(@RequestBody String body) {
 
         String oper = "update user";
         log.info("{}, body: {}", oper, body);

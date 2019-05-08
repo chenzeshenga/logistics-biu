@@ -78,9 +78,13 @@ import java.util.concurrent.atomic.AtomicReference;
         Date curr = new Date();
         manualOrder.setCreateOn(curr);
         manualOrder.setUpdateOn(curr);
-        String cname = UserUtils.getUserName();
-        manualOrder.setCreator(cname);
-        manualOrder.setUpdator(cname);
+        if (StringUtils.isBlank(manualOrder.getCreator())) {
+            String cname = UserUtils.getUserName();
+            manualOrder.setCreator(cname);
+            manualOrder.setUpdator(cname);
+        } else {
+            manualOrder.setUpdator(manualOrder.getCreator());
+        }
         if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
             manualOrder.setFromKenId("");
             manualOrder.setFromCityId("");

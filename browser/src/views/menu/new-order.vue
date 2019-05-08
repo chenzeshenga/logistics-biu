@@ -2,6 +2,18 @@
   <div class="login-container">
     <div class="app-container">
       <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item label="订单所属用户" v-if="adminRole">
+          <el-col :span="12">
+            <el-form-item label="所属用户">
+              <el-tooltip content="所属用户" placement="top">
+                <el-select filterable clearable v-model="form.creator" placeholder="请选择所属用户">
+                  <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick"
+                             :value="creator.uname"></el-option>
+                </el-select>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
         <el-form-item label="订单基本信息">
           <el-col :span="12">
             <el-form-item label="订单号">
@@ -231,7 +243,9 @@
         actionLink: process.env.BASE_API + '/ord/excel',
         onUpdate: false,
         onCreate: true,
+        adminRole: false,
         form: {
+          creator: '',
           orderNo: '',
           category: '',
           channel: '',
@@ -277,12 +291,18 @@
         skuFlag: false,
         whetherChargeForThem: false,
         dialogVisible4Excel: false,
+        users: [],
+        search: {
+          creator: '',
+        },
       };
     },
     created() {
       this.getAddress();
       this.getMyProducts();
       this.defaultFormData = JSON.parse(JSON.stringify(this.form));
+      this.initUserList();
+      this.hasAdminRole();
     },
     methods: {
       trimInput() {
@@ -457,6 +477,33 @@
         document.body.appendChild(link);
         link.click();
       },
+      initUserList() {
+        request({
+          url: '/sys_user/query4Option',
+          method: 'post',
+          data: {
+            current: null,
+            size: 'all',
+          },
+        }).then(res => {
+          this.users = res.data.page.records;
+        });
+      },
+      hasAdminRole() {
+        request({
+          url: '/sys_user//info',
+          method: 'get',
+        }).then(res => {
+          const roles = res.data.userInfo.roles;
+          for (let i = 0; i < roles.length; i++) {
+            const role = roles[i];
+            const val = role['val'];
+            if (val === 'root' || val === 'operator') {
+              this.adminRole = true;
+            }
+          }
+        });
+      }
     }
   }
 
