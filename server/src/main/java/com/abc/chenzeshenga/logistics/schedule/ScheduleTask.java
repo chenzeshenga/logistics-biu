@@ -66,13 +66,21 @@ import java.util.stream.Collectors;
                                 .setPendingDeliverNum(String.valueOf(Integer.valueOf(manualOrderContent.getPicked())));
                         } else {
                             productStatistics.setStatisticalTime(new Date());
-                            productStatistics.setPendingPickupNum(String.valueOf(
-                                Integer.valueOf(manualOrderContent.getNum()) - Integer
-                                    .valueOf(manualOrderContent.getPicked()) + Integer
-                                    .valueOf(productStatistics.getPendingPickupNum())));
-                            productStatistics.setPendingDeliverNum(String.valueOf(Integer.valueOf(
-                                Integer.valueOf(manualOrderContent.getPicked()) + Integer
-                                    .valueOf(productStatistics.getPendingDeliverNum()))));
+                            String pendingPickupNum;
+                            pendingPickupNum = String.valueOf(Integer.valueOf(manualOrderContent.getNum()) - Integer
+                                .valueOf(manualOrderContent.getPicked()));
+                            if (!StringUtils.isBlank(productStatistics.getPendingPickupNum())) {
+                                pendingPickupNum = String.valueOf(Integer.valueOf(pendingPickupNum) + Integer
+                                    .valueOf(productStatistics.getPendingPickupNum()));
+                            }
+                            productStatistics.setPendingPickupNum(pendingPickupNum);
+                            String pendingDeliverNum = String.valueOf(Integer.valueOf(manualOrderContent.getPicked()));
+                            if (!StringUtils.isBlank(productStatistics.getPendingDeliverNum())) {
+                                pendingDeliverNum = String.valueOf(Integer.valueOf(pendingDeliverNum) + Integer
+                                    .valueOf(productStatistics.getPendingDeliverNum()));
+                            }
+                            productStatistics.setPendingDeliverNum(pendingDeliverNum);
+
                         }
                         productStatisticsMap.put(key, productStatistics);
                     });

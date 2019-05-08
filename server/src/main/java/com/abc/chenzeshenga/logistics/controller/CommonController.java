@@ -219,6 +219,9 @@ import java.util.*;
                     ManualOrder subManualOrder = new ManualOrder();
                     subManualOrder.setOrderNo(CommonUtil.generate() + "-" + (
                         Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1));
+                    subManualOrder.setCategoryName(manualOrder4Input.getCategoryName());
+                    subManualOrder.setFromKenName(manualOrder4Input.getFromKenName());
+
                 }
             }
         });
