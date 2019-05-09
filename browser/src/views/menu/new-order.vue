@@ -440,6 +440,10 @@
         this.form.contentList.splice(index, 1);
       },
       createOrd() {
+        if (this.adminRole && this.form.creator.length <= 0) {
+          this.$message.warning('请选择订单所属人');
+          return;
+        }
         request({
           url: '/ord/add',
           method: 'post',
