@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,9 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -167,6 +166,23 @@ public class SysUserController {
             page = sysUserService
                 .queryUserIncludeRoles4Option(PageUtils.getPageParam(json), nick, UserUtils.getUserName());
         }
+        List<SysUser> sysUserList = page.getRecords();
+        List<SysUser> result = new ArrayList<>();
+        CollectionUtils.addAll(result, sysUserList.iterator());
+        for (SysUser sysUser : sysUserList) {
+            List<SysRole> sysRoleList = sysUser.getRoleList();
+            boolean managerFlag = false;
+            for (SysRole sysRole : sysRoleList) {
+                if ("root".equals(sysRole.getRval()) || "operator".equals(sysRole.getRval())) {
+                    managerFlag = true;
+                    break;
+                }
+            }
+            if (managerFlag) {
+                result.remove(sysUser);
+            }
+        }
+        page.setRecords(result);
         return Json.succ(oper).data("page", page);
     }
 
