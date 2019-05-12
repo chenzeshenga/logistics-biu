@@ -24,4 +24,5 @@ import java.util.List;
 
     List<JpDetailAddress> getAll();
 
+    JpDetailAddress selectByPk(String zip);
 }

@@ -113,16 +113,18 @@ public class Json extends HashMap<String, Object> {
     ////// 操作动态判定成功或失败的：
 
     public static Json result(String operate, boolean success) {
-        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE), (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null);
+        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
+            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null);
     }
 
     public static Json result(String operate, boolean success, Object data) {
-        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE), (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), data);
+        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
+            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), data);
     }
 
     public static Json result(String operate, boolean success, String dataKey, Object dataVal) {
-        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE), (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null)
-            .data(dataKey, dataVal);
+        return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
+            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null).data(dataKey, dataVal);
     }
 
     /////////////////////// 各种链式调用方法 ///////////////////////
@@ -173,6 +175,10 @@ public class Json extends HashMap<String, Object> {
     public Json data(String dataKey, Object dataVal) {
         this.put(dataKey, dataVal);
         return this;
+    }
+
+    public Object getData() {
+        return this.get(KEY_DATA);
     }
 
 }

@@ -24,11 +24,28 @@
     </select>
 
     <select id="getAll" resultType="com.abc.chenzeshenga.logistics.model.JpDetailAddress">
-        select distinct ken_id as kenId, city_id as cityId, town_id as townId, ken_name as kenName, city_name as cityName, town_name as townName
+        select distinct ken_id    as kenId,
+                        city_id   as cityId,
+                        town_id   as townId,
+                        ken_name  as kenName,
+                        city_name as cityName,
+                        town_name as townName
         from ad_address
         where ken_name != ''
           and city_name != ''
           and town_name != ''
+    </select>
+
+    <select id="selectByPk" resultType="com.abc.chenzeshenga.logistics.model.JpDetailAddress">
+        select distinct ken_id    as kenId,
+                        city_id   as cityId,
+                        town_id   as townId,
+                        ken_name  as kenName,
+                        city_name as cityName,
+                        town_name as townName
+        from ad_address
+        where zip = #{zip}
+        limit 1
     </select>
 
 </mapper>

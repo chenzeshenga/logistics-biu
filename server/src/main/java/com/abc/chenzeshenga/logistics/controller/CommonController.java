@@ -63,6 +63,8 @@ import java.util.concurrent.ExecutorService;
 
     private ExecutorService pool;
 
+    @Resource private AddressMapper addressMapper;
+
     @Autowired
     public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache,
         ExecutorService pool) {
@@ -203,7 +205,8 @@ import java.util.concurrent.ExecutorService;
         httpServletResponse.flushBuffer();
     }
 
-    @PostMapping("/ord/excel") public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile)
+    @PostMapping("/ord/excel")
+    public Json parseExcel(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam String user)
         throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes());
@@ -213,23 +216,105 @@ import java.util.concurrent.ExecutorService;
         userFileRecord.setUid(username);
         userFileRecord.setFileUuid(uuid);
         userFileRecordMapper.insert(userFileRecord);
-        pool.execute(() -> {
-            try {
-                InputStream inputStream = multipartFile.getInputStream();
-                List<Object> manualOrderList =
-                    EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder4Input.class));
-                manualOrderList.forEach(manualOrder -> {
-                    if (manualOrderList.indexOf(manualOrder) >= 1) {
-                        ManualOrder4Input manualOrder4Input;
-                        if (manualOrder instanceof ManualOrder4Input) {
-                            manualOrder4Input = (ManualOrder4Input)manualOrder;
-                            log.info(manualOrder4Input.toString());
-
+        InputStream inputStream = multipartFile.getInputStream();
+        List<Object> manualOrderList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder4Input.class));
+        manualOrderList.forEach(manualOrder -> {
+            if (manualOrderList.indexOf(manualOrder) >= 1) {
+                ManualOrder4Input manualOrder4Input;
+                if (manualOrder instanceof ManualOrder4Input) {
+                    manualOrder4Input = (ManualOrder4Input)manualOrder;
+                    log.info(manualOrder4Input.toString());
+                    ManualOrder manualOrder4Database = new ManualOrder();
+                    String orderno = String.valueOf(getOrderNo().getData());
+                    manualOrder4Database.setOrderNo(orderno);
+                    manualOrder4Database.setCreator(user);
+                    manualOrder4Database.setUpdator(UserUtils.getUserName());
+                    Date curr = new Date();
+                    manualOrder4Database.setCreateOn(curr);
+                    manualOrder4Database.setUpdateOn(curr);
+                    manualOrder4Database.setStatus("1");
+                    if (StringUtils.isNotBlank(manualOrder4Input.getCategoryName())) {
+                        manualOrder4Database
+                            .setCategory(switchOrderCategoryFromCategoryName(manualOrder4Input.getCategoryName()));
+                    } else {
+                        manualOrder4Database.setCategory("1");
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getFromKenName())) {
+                        manualOrder4Database.setFromAddressDesc(manualOrder4Input.getFromKenName());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getFromZipCode())) {
+                        manualOrder4Database.setFromZipCode(manualOrder4Input.getFromZipCode());
+                        JpDetailAddress jpDetailAddress = addressMapper.selectByPk(manualOrder4Input.getFromZipCode());
+                        if (jpDetailAddress != null) {
+                            manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
+                            manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
                         }
                     }
-                });
-            } catch (IOException e) {
-                log.error("error stack info ", e);
+                    if (StringUtils.isNotBlank(manualOrder4Input.getFromName())) {
+                        manualOrder4Database.setFromName(manualOrder4Input.getFromName());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getFromContact())) {
+                        manualOrder4Database.setFromContact(manualOrder4Input.getFromContact());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getToDetailAddress())) {
+                        manualOrder4Database.setToAddressDesc(manualOrder4Input.getToDetailAddress());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getToZipCode())) {
+                        manualOrder4Database.setToZipCode(manualOrder4Input.getToZipCode());
+                        JpDetailAddress jpDetailAddress = addressMapper.selectByPk(manualOrder4Input.getToZipCode());
+                        if (jpDetailAddress != null) {
+                            manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
+                            manualOrder4Database.setToCityId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
+                        }
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getToName())) {
+                        manualOrder4Database.setToName(manualOrder4Input.getToName());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getToContact())) {
+                        manualOrder4Database.setToContact(manualOrder4Input.getToContact());
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getCollectDesc())) {
+                        manualOrder4Database
+                            .setCollect("是".equals(manualOrder4Input.getCollectDesc()) ? "true" : "false");
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getCollectNum())) {
+                        manualOrder4Database.setCollectNum(manualOrder4Input.getCollectNum());
+                    }
+                    List<ManualOrderContent> manualOrderContentList = new ArrayList<>();
+                    if (StringUtils.isNotBlank(manualOrder4Input.getSku1()) && StringUtils
+                        .isNotBlank(manualOrder4Input.getNum1())) {
+                        ManualOrderContent manualOrderContent1 = new ManualOrderContent();
+                        manualOrderContent1.setOrdno(orderno);
+                        manualOrderContent1.setSku(manualOrder4Input.getSku1());
+                        manualOrderContent1.setName(manualOrder4Input.getName1());
+                        manualOrderContent1.setNum(manualOrder4Input.getNum1());
+                        manualOrderContentList.add(manualOrderContent1);
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getSku2()) && StringUtils
+                        .isNotBlank(manualOrder4Input.getNum2())) {
+                        ManualOrderContent manualOrderContent2 = new ManualOrderContent();
+                        manualOrderContent2.setOrdno(orderno);
+                        manualOrderContent2.setSku(manualOrder4Input.getSku2());
+                        manualOrderContent2.setName(manualOrder4Input.getName2());
+                        manualOrderContent2.setNum(manualOrder4Input.getNum2());
+                        manualOrderContentList.add(manualOrderContent2);
+                    }
+                    if (StringUtils.isNotBlank(manualOrder4Input.getSku3()) && StringUtils
+                        .isNotBlank(manualOrder4Input.getNum3())) {
+                        ManualOrderContent manualOrderContent3 = new ManualOrderContent();
+                        manualOrderContent3.setOrdno(orderno);
+                        manualOrderContent3.setSku(manualOrder4Input.getSku3());
+                        manualOrderContent3.setName(manualOrder4Input.getName3());
+                        manualOrderContent3.setNum(manualOrder4Input.getNum3());
+                        manualOrderContentList.add(manualOrderContent3);
+                    }
+                    if (!manualOrderContentList.isEmpty()) {
+                        orderMapper.insertContent(manualOrderContentList);
+                    }
+                    orderMapper.add(manualOrder4Database);
+                }
             }
         });
         return Json.succ();
@@ -280,6 +365,18 @@ import java.util.concurrent.ExecutorService;
                 return "7";
             default:
                 return "8";
+        }
+    }
+
+    private String switchOrderCategoryFromCategoryName(String categoryName) {
+        switch (categoryName) {
+            case "特色小包":
+                return "2";
+            case "单票单清":
+                return "3";
+            case "海外仓代发订单":
+            default:
+                return "1";
         }
     }
 

@@ -220,15 +220,34 @@
         <el-form-item label="订单文件">
           <el-upload :action="actionLink" with-credentials :limit="1">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <!--            <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadExcel">上传</el-button>-->
             <el-button style="margin-left: 150px;" size="small" type="success" @click="downloadTemplate">
               <svg-icon icon-class="doc"></svg-icon>
               模版文件
             </el-button>
-            <div slot="tip" class="el-upload__tip">只能上传excel文件(xls/xlsx)，记录条数小于200条</div>
+            <div slot="tip" class="el-upload__tip">只能上传excel文件(xls/xlsx)，推荐记录条数小于200条</div>
           </el-upload>
         </el-form-item>
       </el-form>
+    </el-dialog>
+    <el-dialog title="代表" :visible.sync="dialogVisible4StandFor" width="25%">
+      <el-form>
+        <el-form-item label="请选择您所代表的用户">
+          <el-tooltip content="请选择您所代表的用户" placement="top">
+            <el-select filterable clearable v-model="standFor" placeholder="请选择您所代表的用户" @change="changeUpdateLink">
+              <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick"
+                         :value="creator.uname"></el-option>
+            </el-select>
+          </el-tooltip>
+        </el-form-item>
+      </el-form>
+      <el-row>
+        <el-col :offset="14" :span="2">
+          <el-button @click="triggerUploadDialog" type="primary">确认</el-button>
+        </el-col>
+        <el-col :offset="3" :span="2">
+          <el-button @click="this.dialogVisible4StandFor=false" type="primary">取消</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -244,6 +263,7 @@
         onUpdate: false,
         onCreate: true,
         adminRole: false,
+        standFor: '',
         form: {
           creator: '',
           orderNo: '',
@@ -291,6 +311,7 @@
         skuFlag: false,
         whetherChargeForThem: false,
         dialogVisible4Excel: false,
+        dialogVisible4StandFor: false,
         users: [],
         search: {
           creator: '',
@@ -471,12 +492,15 @@
         this.skuFlag = (val !== '1');
       },
       createBatchOrd() {
-        this.dialogVisible4Excel = true;
+        if (this.adminRole) {
+          this.dialogVisible4StandFor = true;
+        }
+        // this.dialogVisible4Excel = true;
       },
       downloadTemplate() {
         const link = document.createElement('a');
         link.style.display = 'none';
-        link.href = process.env.BASE_API + '/template/file/PRODUCT_TEMPLATE';
+        link.href = process.env.BASE_API + '/template/file/ORDER_TEMPLATE';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
@@ -522,6 +546,13 @@
             this.productMap[subProduct['value'].split('/')[0]] = subProduct;
           }
         })
+      },
+      changeUpdateLink(val) {
+        this.actionLink += ('?user=' + val)
+      },
+      triggerUploadDialog() {
+        this.dialogVisible4StandFor = false;
+        this.dialogVisible4Excel = true;
       }
     }
   }
