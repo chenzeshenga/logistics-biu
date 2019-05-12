@@ -494,8 +494,9 @@
       createBatchOrd() {
         if (this.adminRole) {
           this.dialogVisible4StandFor = true;
+        } else {
+          this.dialogVisible4Excel = true;
         }
-        // this.dialogVisible4Excel = true;
       },
       downloadTemplate() {
         const link = document.createElement('a');

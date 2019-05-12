@@ -24,33 +24,44 @@
           </el-col>
         </el-row>
       </div>
+      <div style="display: inline-block; width: 30px;">
+        <el-col>
+          <el-badge :value="12" class="el-icon-message"></el-badge>
+        </el-col>
+      </div>
       <!--      <div style="display:inline-block;width: 40px;margin-left: 5px">-->
       <!--        <el-badge :value="12">-->
       <!--          <span class="el-icon-bell"></span>-->
       <!--        </el-badge>-->
       <!--      </div>-->
-      <el-dropdown class="avatar-container right-menu-item" trigger="click" style="margin-bottom: 4px">
-        <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" alt="">
-          <i class="el-icon-caret-bottom"></i>
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              东岳
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item>
-            <span @click="handleUpdatePwd" style="display:block;">修改密码</span>
-          </el-dropdown-item>
-          <el-dropdown-item divided>
-            <span @click="currentVersion" style="display:block;">关于</span>
-          </el-dropdown-item>
-          <el-dropdown-item divided>
-            <span @click="logout" style="display:block;">退出</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <div style="display: inline-block">
+        <el-col>
+          <el-row>
+            <el-dropdown class="avatar-container right-menu-item" trigger="click" style="margin-bottom: 4px">
+              <div class="avatar-wrapper">
+                <img :src="avatar" class="user-avatar" alt="">
+                <i class="el-icon-caret-bottom"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <router-link to="/">
+                  <el-dropdown-item>
+                    东岳
+                  </el-dropdown-item>
+                </router-link>
+                <el-dropdown-item>
+                  <span @click="handleUpdatePwd" style="display:block;">修改密码</span>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <span @click="currentVersion" style="display:block;">关于</span>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <span @click="logout" style="display:block;">退出</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-row>
+        </el-col>
+      </div>
     </div>
     <!--弹出窗口：修改密码-->
     <el-dialog :visible.sync="dialogVisible" title="修改密码" width="20%">
