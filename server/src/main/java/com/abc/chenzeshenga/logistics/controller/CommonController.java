@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author chenzesheng
@@ -60,11 +61,15 @@ import java.util.*;
 
     private OrderCache orderCache;
 
+    private ExecutorService pool;
+
     @Autowired
-    public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache) {
+    public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache,
+        ExecutorService pool) {
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.orderCache = orderCache;
+        this.pool = pool;
     }
 
     @GetMapping("/generate/pk") public Json getOrderNo() {
@@ -208,21 +213,23 @@ import java.util.*;
         userFileRecord.setUid(username);
         userFileRecord.setFileUuid(uuid);
         userFileRecordMapper.insert(userFileRecord);
-        InputStream inputStream = multipartFile.getInputStream();
-        List<Object> manualOrderList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder4Input.class));
-        manualOrderList.forEach(manualOrder -> {
-            if (manualOrderList.indexOf(manualOrder) >= 1) {
-                ManualOrder4Input manualOrder4Input;
-                if (manualOrder instanceof ManualOrder4Input) {
-                    manualOrder4Input = (ManualOrder4Input)manualOrder;
-                    log.info(manualOrder4Input.toString());
-                    ManualOrder subManualOrder = new ManualOrder();
-                    subManualOrder.setOrderNo(CommonUtil.generate() + "-" + (
-                        Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1));
-                    subManualOrder.setCategoryName(manualOrder4Input.getCategoryName());
-                    subManualOrder.setFromKenName(manualOrder4Input.getFromKenName());
+        pool.execute(() -> {
+            try {
+                InputStream inputStream = multipartFile.getInputStream();
+                List<Object> manualOrderList =
+                    EasyExcelFactory.read(inputStream, new Sheet(1, 0, ManualOrder4Input.class));
+                manualOrderList.forEach(manualOrder -> {
+                    if (manualOrderList.indexOf(manualOrder) >= 1) {
+                        ManualOrder4Input manualOrder4Input;
+                        if (manualOrder instanceof ManualOrder4Input) {
+                            manualOrder4Input = (ManualOrder4Input)manualOrder;
+                            log.info(manualOrder4Input.toString());
 
-                }
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                log.error("error stack info ", e);
             }
         });
         return Json.succ();
