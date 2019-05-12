@@ -24,9 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author chenzeshenga
@@ -50,7 +48,8 @@ import java.util.UUID;
 
     private CommonController commonController;
 
-    @Autowired public ProductController(ProductService productService, LabelCache labelCache, CommonController commonController) {
+    @Autowired
+    public ProductController(ProductService productService, LabelCache labelCache, CommonController commonController) {
         this.productService = productService;
         this.labelCache = labelCache;
         this.commonController = commonController;
@@ -104,7 +103,8 @@ import java.util.UUID;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/list/{status}") public Json listProduct(@RequestBody String body, @PathVariable String status) {
+    @PostMapping @RequestMapping("/list/{status}")
+    public Json listProduct(@RequestBody String body, @PathVariable String status) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
@@ -136,8 +136,8 @@ import java.util.UUID;
         return errMsg;
     }
 
-    @PostMapping(value = "/img/put")
-    public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile, @RequestParam(value = "sku") String sku) throws IOException {
+    @PostMapping(value = "/img/put") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile,
+        @RequestParam(value = "sku") String sku) throws IOException {
         if (StringUtils.isEmpty(sku)) {
             throw new IllegalArgumentException("商品sku必填");
         }
@@ -150,7 +150,8 @@ import java.util.UUID;
             } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isEmpty(ori.getImg2())) {
                 ori.setImg2(uuid);
                 commonController.putImg(multipartFile, uuid);
-            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isNotEmpty(ori.getImg2()) && StringUtils.isEmpty(ori.getImg3())) {
+            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isNotEmpty(ori.getImg2()) && StringUtils
+                .isEmpty(ori.getImg3())) {
                 ori.setImg3(uuid);
                 commonController.putImg(multipartFile, uuid);
             }
@@ -202,7 +203,8 @@ import java.util.UUID;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/status/{sku}/{status}") public Json statusUpdate(@PathVariable String sku, @PathVariable String status) {
+    @GetMapping @RequestMapping("/status/{sku}/{status}")
+    public Json statusUpdate(@PathVariable String sku, @PathVariable String status) {
         productMapper.statusUpdate(sku, status);
         return Json.succ();
     }
@@ -224,6 +226,15 @@ import java.util.UUID;
     @PostMapping @RequestMapping("/update/approval") public Json batchApproval(@RequestBody List<String> skus) {
         productMapper.batchUpdate(skus);
         return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
+        List<SkuLabel> skuLabelList = productMapper.list(request.get("user"));
+        skuLabelList.forEach(skuLabel -> {
+            skuLabel.setValue(skuLabel.getSku() + "/" + skuLabel.getDySku());
+            skuLabel.setLabel(skuLabel.getName() + "(" + skuLabel.getValue() + ")");
+        });
+        return Json.succ().data(skuLabelList);
     }
 
 }

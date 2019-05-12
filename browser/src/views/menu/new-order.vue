@@ -6,7 +6,7 @@
           <el-col :span="12">
             <el-form-item label="所属用户">
               <el-tooltip content="所属用户" placement="top">
-                <el-select filterable clearable v-model="form.creator" placeholder="请选择所属用户">
+                <el-select filterable clearable v-model="form.creator" placeholder="请选择所属用户" @change="filterProduct">
                   <el-option v-for="creator in users" :key="creator.uname" :label="creator.nick"
                              :value="creator.uname"></el-option>
                 </el-select>
@@ -507,6 +507,21 @@
             }
           }
         });
+      },
+      filterProduct(val) {
+        request({
+          url: '/product/listByUser',
+          method: 'post',
+          data: {
+            user: val
+          }
+        }).then(res => {
+          this.myProducts = res.data.data;
+          for (const index in this.myProducts) {
+            const subProduct = this.myProducts[index];
+            this.productMap[subProduct['value'].split('/')[0]] = subProduct;
+          }
+        })
       }
     }
   }
