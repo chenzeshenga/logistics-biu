@@ -239,15 +239,25 @@ import java.util.concurrent.ExecutorService;
                     } else {
                         manualOrder4Database.setCategory("1");
                     }
-                    if (StringUtils.isNotBlank(manualOrder4Input.getFromKenName())) {
-                        manualOrder4Database.setFromAddressDesc(manualOrder4Input.getFromKenName());
+                    if (StringUtils.isNotBlank(manualOrder4Input.getChannelCode())) {
+                        manualOrder4Database.setChannel(manualOrder4Input.getChannelCode());
                     }
                     if (StringUtils.isNotBlank(manualOrder4Input.getFromZipCode())) {
                         manualOrder4Database.setFromZipCode(manualOrder4Input.getFromZipCode());
                         JpDetailAddress jpDetailAddress = addressMapper.selectByPk(manualOrder4Input.getFromZipCode());
                         if (jpDetailAddress != null) {
                             manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
-                            manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setFromKenId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
+                        }
+                    } else {
+                        String kenName = manualOrder4Input.getFromKenName();
+                        String cityName = manualOrder4Input.getFromCityName();
+                        String townName = manualOrder4Input.getFromTownName();
+                        JpDetailAddress jpDetailAddress = addressMapper.selectByName(kenName, cityName, townName);
+                        if (jpDetailAddress != null) {
+                            manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
+                            manualOrder4Database.setFromKenId(jpDetailAddress.getCityId());
                             manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
                         }
                     }
@@ -265,7 +275,17 @@ import java.util.concurrent.ExecutorService;
                         JpDetailAddress jpDetailAddress = addressMapper.selectByPk(manualOrder4Input.getToZipCode());
                         if (jpDetailAddress != null) {
                             manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
-                            manualOrder4Database.setToCityId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setToKenId(jpDetailAddress.getCityId());
+                            manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
+                        }
+                    } else {
+                        String kenName = manualOrder4Input.getToKenName();
+                        String cityName = manualOrder4Input.getToCityName();
+                        String townName = manualOrder4Input.getToTownName();
+                        JpDetailAddress jpDetailAddress = addressMapper.selectByName(kenName, cityName, townName);
+                        if (jpDetailAddress != null) {
+                            manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
+                            manualOrder4Database.setToKenId(jpDetailAddress.getCityId());
                             manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
                         }
                     }

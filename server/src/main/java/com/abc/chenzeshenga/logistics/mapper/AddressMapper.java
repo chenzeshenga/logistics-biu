@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.JpAddress;
 import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
+import com.abc.chenzeshenga.logistics.util.StringUtil;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -25,4 +26,6 @@ import java.util.List;
     List<JpDetailAddress> getAll();
 
     JpDetailAddress selectByPk(String zip);
+
+    JpDetailAddress selectByName(String kenName, String cityName, String townName);
 }

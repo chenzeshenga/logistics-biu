@@ -245,7 +245,7 @@
           <el-button @click="triggerUploadDialog" type="primary">确认</el-button>
         </el-col>
         <el-col :offset="3" :span="2">
-          <el-button @click="this.dialogVisible4StandFor=false" type="primary">取消</el-button>
+          <el-button @click="dialogVisible4StandFor=false" type="primary">取消</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -552,8 +552,12 @@
         this.actionLink += ('?user=' + val)
       },
       triggerUploadDialog() {
-        this.dialogVisible4StandFor = false;
-        this.dialogVisible4Excel = true;
+        if (this.standFor.length > 0) {
+          this.dialogVisible4StandFor = false;
+          this.dialogVisible4Excel = true;
+        } else {
+          this.$message.warning('请选择所属用户');
+        }
       }
     }
   }
