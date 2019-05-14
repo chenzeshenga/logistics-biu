@@ -211,16 +211,30 @@ import java.util.concurrent.atomic.AtomicReference;
             if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
                 manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
             } else {
-                JpDetailAddress from = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
-                    Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
+                String fromKenId = manualOrder.getFromKenId();
+                String fromCityId = manualOrder.getFromCityId();
+                String fromTownId = manualOrder.getFromTownId();
+                if (StringUtils.isBlank(fromKenId) || StringUtils.isBlank(fromCityId) || StringUtils
+                    .isBlank(fromTownId)) {
+                    continue;
+                }
+                JpDetailAddress from = japanAddressCache
+                    .getJpDetailAddress(Integer.valueOf(fromKenId), Integer.valueOf(fromCityId),
+                        Integer.valueOf(fromTownId));
                 manualOrder.setFromKenName(from.getKenName());
                 manualOrder.setFromCityName(from.getCityName());
                 manualOrder.setFromTownName(from.getTownName());
                 manualOrder.setFromAddressDesc(
                     from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
             }
-            JpDetailAddress to = japanAddressCache.getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()),
-                Integer.valueOf(manualOrder.getToCityId()), Integer.valueOf(manualOrder.getToTownId()));
+            String toKenId = manualOrder.getToKenId();
+            String toCityId = manualOrder.getToCityId();
+            String toTownId = manualOrder.getToTownId();
+            if (StringUtils.isBlank(toKenId) || StringUtils.isBlank(toCityId) || StringUtils.isBlank(toTownId)) {
+                continue;
+            }
+            JpDetailAddress to = japanAddressCache
+                .getJpDetailAddress(Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
             manualOrder.setToKenName(to.getKenName());
             manualOrder.setToCityName(to.getCityName());
             manualOrder.setToTownName(to.getTownName());
@@ -228,13 +242,16 @@ import java.util.concurrent.atomic.AtomicReference;
                 to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
-            //            manualOrder.setChannelDesc(channelCache.channelLabel(manualOrder.getChannel()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
             double totalPrice = 0.0;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-                totalPrice += Double.valueOf(manualOrderContent.getNum()) * Double
-                    .valueOf(manualOrderContent.getPrice() == null ? "0" : manualOrderContent.getPrice());
+                String num = manualOrderContent.getNum();
+                String price = manualOrderContent.getPrice();
+                if (StringUtils.isBlank(num) || StringUtils.isBlank(price)) {
+                    continue;
+                }
+                totalPrice += Double.valueOf(num) * Double.valueOf(price);
             }
             final Double finalPrice = totalPrice;
             for (ManualOrderContent content : manualOrderContentList) {

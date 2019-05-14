@@ -62,7 +62,8 @@
           </el-row>
         </el-form-item>
       </el-form>
-      <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe highlight-current-row
+      <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
+                highlight-current-row
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand">
@@ -164,13 +165,16 @@
         <el-table-column label="操作" width="250" fixed="right">
           <template slot-scope="scope">
             <el-tooltip content="提交" placement="top">
-              <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>
+              <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check"
+                         circle plain></el-button>
             </el-tooltip>
             <el-tooltip content="编辑" placement="top">
-              <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle plain></el-button>
+              <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit"
+                         circle plain></el-button>
             </el-tooltip>
             <el-tooltip content="删除" placement="top">
-              <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle plain></el-button>
+              <el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete"
+                         circle plain></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -292,7 +296,9 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo});
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo
+        });
       },
       handleDelete(index, row) {
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {

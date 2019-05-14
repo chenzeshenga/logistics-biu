@@ -256,7 +256,9 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo + '&status=2'});
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo
+        });
       },
       handleDelete(index, row) {
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {

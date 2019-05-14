@@ -358,7 +358,7 @@
       },
       handleUpdate(index, row) {
         this.$router.push({
-          path: '/new-order/index?ordno=' + row.orderNo + '&status=2',
+          path: '/new-order/index?ordno=' + row.orderNo,
         });
       },
       handleDelete(index, row) {

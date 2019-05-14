@@ -286,7 +286,7 @@
       },
       handleUpdate(index, row) {
         this.$router.push({
-          path: '/new-order/index?ordno=' + row.orderNo + '&status=1',
+          path: '/new-order/index?ordno=' + row.orderNo,
         });
       },
       statusUpdate(index, row) {

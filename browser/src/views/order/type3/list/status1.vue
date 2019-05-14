@@ -249,7 +249,9 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo + '&status=1'});
+        this.$router.push({
+          path: '/new-order/index?ordno=' + row.orderNo
+        });
       },
       statusUpdate(index, row) {
         this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
