@@ -18,6 +18,33 @@
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="updator" jdbcType="VARCHAR" property="updator"/>
     </resultMap>
+
+    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Warehousing">
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
+        <result column="target" jdbcType="VARCHAR" property="target"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
+        <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
+        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
+        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
+        <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
+        <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
+        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
+        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <collection property="warehousingContentList" ofType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+            <result column="warehousing_no" property="warehousingNo"/>
+            <result column="sku" property="sku"/>
+            <result column="box_seq" property="boxSeq"/>
+            <result column="total_num" property="totalNum"/>
+            <result column="wrap_type" property="wrapType"/>
+            <result column="name" property="name"/>
+        </collection>
+    </resultMap>
     <sql id="Base_Column_List">
         warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,
     tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator, 
@@ -209,4 +236,37 @@
             updator        = #{updator,jdbcType=VARCHAR}
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </update>
+
+    <select id="listAll" resultMap="result">
+        select *
+        from l_warehousing warehousing
+                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        order by warehousing.create_on desc
+    </select>
+
+    <select id="listByOwner" resultMap="result">
+        select *
+        from l_warehousing warehousing
+                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        where warehousing.creator = #{creator}
+        order by warehousing.create_on desc
+    </select>
+
+    <select id="listByOwnerAndStatus" resultMap="result">
+        select *
+        from l_warehousing warehousing
+                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        where warehousing.creator = #{creator}
+          and warehousing.status = #{status}
+        order by warehousing.create_on desc
+    </select>
+
+    <select id="listByStatus" resultMap="result">
+        select *
+        from l_warehousing warehousing
+                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        where warehousing.status = #{status}
+        order by warehousing.create_on desc
+    </select>
+
 </mapper>
