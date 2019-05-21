@@ -28,4 +28,6 @@ import java.util.List;
 
     List<Warehousing> listByStatus(Pagination pagination, String status, String method);
 
+    Warehousing getWarehousingSeq();
+
 }

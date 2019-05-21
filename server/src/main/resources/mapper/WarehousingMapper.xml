@@ -66,12 +66,12 @@
                                    carrier, track_no, deliver_method,
                                    clearance_type, tax_type, insurance,
                                    insurance_num, estimated_date, create_on,
-                                   update_on, creator, updator)
+                                   update_on, creator, updator, status)
         values (#{warehousingNo,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
                 #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR}, #{deliverMethod,jdbcType=VARCHAR},
                 #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR},
                 #{insuranceNum,jdbcType=VARCHAR}, #{estimatedDate,jdbcType=TIMESTAMP}, #{createOn,jdbcType=TIMESTAMP},
-                #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR})
+                #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR}, #{status})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
         insert into l_warehousing
@@ -270,6 +270,13 @@
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
         where warehousing.status = #{status}
         order by warehousing.create_on desc
+    </select>
+
+    <select id="getWarehousingSeq" resultMap="result">
+        select *
+        from l_warehousing
+        order by create_on desc
+        limit 1
     </select>
 
 </mapper>

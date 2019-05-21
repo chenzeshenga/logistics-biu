@@ -47,6 +47,8 @@ import java.util.concurrent.ExecutorService;
 
     @Resource private OrderMapper orderMapper;
 
+    @Resource private WarehousingMapper warehousingMapper;
+
     @Resource private FileMapper fileMapper;
 
     @Resource private UserFileRecordMapper userFileRecordMapper;
@@ -77,6 +79,12 @@ import java.util.concurrent.ExecutorService;
     @GetMapping("/generate/pk") public Json getOrderNo() {
         String pk =
             CommonUtil.generate() + "-" + (Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1);
+        return Json.succ().data(pk);
+    }
+
+    @GetMapping("/generate/pk/warehousing") public Json getWarehousingNo() {
+        String pk = CommonUtil.generate() + "-" + (
+            Integer.valueOf(warehousingMapper.getWarehousingSeq().getWarehousingNo().split("-")[1]) + 1);
         return Json.succ().data(pk);
     }
 
