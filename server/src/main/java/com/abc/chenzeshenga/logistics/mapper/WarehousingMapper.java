@@ -10,7 +10,7 @@ import java.util.List;
 @Repository public interface WarehousingMapper extends BaseMapper<Warehousing> {
     int deleteByPrimaryKey(String warehousingNo);
 
-//    boolean insert(Warehousing record);
+    //    boolean insert(Warehousing record);
 
     int insertSelective(Warehousing record);
 
@@ -20,12 +20,12 @@ import java.util.List;
 
     int updateByPrimaryKey(Warehousing record);
 
-    List<Warehousing> listAll(Pagination pagination);
+    List<Warehousing> listAll(Pagination pagination, String method);
 
-    List<Warehousing> listByOwner(Pagination pagination, String creator);
+    List<Warehousing> listByOwner(Pagination pagination, String creator, String method);
 
-    List<Warehousing> listByOwnerAndStatus(Pagination pagination, String creator, String status);
+    List<Warehousing> listByOwnerAndStatus(Pagination pagination, String creator, String status, String method);
 
-    List<Warehousing> listByStatus(Pagination pagination, String status);
+    List<Warehousing> listByStatus(Pagination pagination, String status, String method);
 
 }

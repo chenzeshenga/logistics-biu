@@ -146,8 +146,7 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
-    @SuppressWarnings("unchecked") @PostMapping @RequestMapping("/trackno/list")
-    public Json fillInTrackNoList(@RequestBody Map ords) {
+    @PostMapping @RequestMapping("/trackno/list") public Json fillInTrackNoList(@RequestBody Map ords) {
         List<String> ordNos = (List<String>)ords.get("ords");
         String carrierNo = ((String)ords.get("carrierNo")).replace(CARRIER, "");
         Date curr = new Date();

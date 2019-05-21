@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
  */
 @Service public class WarehousingService extends ServiceImpl<WarehousingMapper, Warehousing> {
 
-    public Page<Warehousing> listAll(Page page) {
-        return page.setRecords(baseMapper.listAll(page));
+    public Page<Warehousing> listAll(Page page, String method) {
+        return page.setRecords(baseMapper.listAll(page, method));
     }
 
-    public Page<Warehousing> listByOwner(Page page, String creator) {
-        return page.setRecords(baseMapper.listByOwner(page, creator));
+    public Page<Warehousing> listByOwner(Page page, String creator, String method) {
+        return page.setRecords(baseMapper.listByOwner(page, creator, method));
     }
 
-    public Page<Warehousing> listByOwnerAndStatus(Page page, String creator, String status) {
-        return page.setRecords(baseMapper.listByOwnerAndStatus(page, creator, status));
+    public Page<Warehousing> listByOwnerAndStatus(Page page, String creator, String status, String method) {
+        return page.setRecords(baseMapper.listByOwnerAndStatus(page, creator, status, method));
     }
 
-    public Page<Warehousing> listByStatus(Page page, String status) {
-        return page.setRecords(baseMapper.listByStatus(page, status));
+    public Page<Warehousing> listByStatus(Page page, String status, String method) {
+        return page.setRecords(baseMapper.listByStatus(page, status, method));
     }
 
 }

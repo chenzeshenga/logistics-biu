@@ -241,6 +241,7 @@
         select *
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        where deliver_method = #{method}
         order by warehousing.create_on desc
     </select>
 
@@ -249,6 +250,7 @@
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
         where warehousing.creator = #{creator}
+          and deliver_method = #{method}
         order by warehousing.create_on desc
     </select>
 
@@ -258,6 +260,7 @@
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
         where warehousing.creator = #{creator}
           and warehousing.status = #{status}
+          and deliver_method = #{method}
         order by warehousing.create_on desc
     </select>
 
