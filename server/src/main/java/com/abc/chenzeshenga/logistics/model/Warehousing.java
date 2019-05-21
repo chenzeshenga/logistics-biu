@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,31 +20,43 @@ import java.util.List;
 
     private String method;
 
+    private String methodDesc;
+
     private String carrier;
+
+    private String carrierDesc;
 
     private String trackNo;
 
     private String deliverMethod;
 
+    private String deliverMethodDesc;
+
     private String clearanceType;
 
+    private String clearanceTypeDesc;
+
     private String taxType;
+
+    private String taxTypeDesc;
 
     private String insurance;
 
     private String insuranceNum;
 
-    private Date estimatedDate;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8") private Date estimatedDate;
 
-    private Date createOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
 
-    private Date updateOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date updateOn;
 
     private String creator;
 
     private String updator;
 
     private String status;
+
+    private String statusDesc;
 
     private List<WarehousingContent> warehousingContentList;
 

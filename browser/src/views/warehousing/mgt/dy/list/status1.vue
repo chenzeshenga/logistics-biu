@@ -6,30 +6,27 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand">
           <template slot-scope="tableData">
-            <el-table :data="tableData.row.contentList" show-summary :summary-method="getSummary"
-                      style="margin-bottom: 0">
-              <el-table-column prop="sku" label="sku/东岳Sku" width="200"></el-table-column>
-              <el-table-column prop="name" label="商品名称" width="300"></el-table-column>
-              <el-table-column prop="price" label="商品价格(JPY)" width="180"></el-table-column>
-              <el-table-column prop="num" label="商品数量" width="180"></el-table-column>
+            <el-table :data="tableData.row.warehousingContentList">
+              <el-table-column prop="sku" label="sku/东岳Sku" width="250"></el-table-column>
+              <el-table-column prop="name" label="商品名称" width="250"></el-table-column>
+              <el-table-column prop="boxSeq" label="箱号" width="150"></el-table-column>
+              <el-table-column prop="totalNum" label="数量" width="200"></el-table-column>
+              <el-table-column prop="wrapType" label="包装方式" width="250"></el-table-column>
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column width="160" prop="orderNo" label="订单号"></el-table-column>
-        <el-table-column width="150" prop="categoryName" label="订单类型"></el-table-column>
-        <el-table-column width="200" prop="channelDesc" label="运送渠道"></el-table-column>
-        <el-table-column width="100" prop="statusDesc" label="订单状态"></el-table-column>
-        <el-table-column width="150" prop="carrierName" label="承运人"></el-table-column>
-        <el-table-column width="170" prop="trackNo" label="追踪单号"></el-table-column>
-        <el-table-column width="250" prop="fromAddressDesc" label="寄件地址"></el-table-column>
-        <el-table-column width="150" prop="fromName" label="寄件人"></el-table-column>
-        <el-table-column width="150" prop="fromContact" label="寄件人联系方式"></el-table-column>
-        <el-table-column width="150" prop="fromZipCode" label="寄件人邮编"></el-table-column>
-        <el-table-column width="250" prop="toAddressDesc" label="收件地址"></el-table-column>
-        <el-table-column width="150" prop="toName" label="收件人"></el-table-column>
-        <el-table-column width="150" prop="toContact" label="收件人联系方式"></el-table-column>
-        <el-table-column width="150" prop="toZipCode" label="收件人邮编"></el-table-column>
-        <el-table-column width="80" prop="collect" label="是否代收商品费用"></el-table-column>
+        <el-table-column width="160" prop="warehousingNo" label="入库单号"></el-table-column>
+        <el-table-column width="150" prop="target" label="仓库地址"></el-table-column>
+        <el-table-column width="150" prop="statusDesc" label="状态"></el-table-column>
+        <el-table-column width="200" prop="methodDesc" label="头程方式"></el-table-column>
+        <el-table-column width="100" prop="carrierDesc" label="承运人"></el-table-column>
+        <el-table-column width="150" prop="trackNo" label="追踪单号"></el-table-column>
+        <el-table-column width="170" prop="deliverMethodDesc" label="运输方式"></el-table-column>
+        <el-table-column width="250" prop="clearanceTypeDesc" label="报关类型"></el-table-column>
+        <el-table-column width="150" prop="taxTypeDesc" label="关税类型"></el-table-column>
+        <el-table-column width="150" prop="insurance" label="保险服务"></el-table-column>
+        <el-table-column width="150" prop="insuranceNum" label="保险总值(JPY)"></el-table-column>
+        <el-table-column width="180" prop="estimatedDate" label="预计到港时间"></el-table-column>
         <el-table-column width="170" prop="createOn" label="创建时间"></el-table-column>
         <el-table-column width="170" prop="updateOn" label="修改时间"></el-table-column>
         <el-table-column width="150" prop="creator" label="创建人"></el-table-column>

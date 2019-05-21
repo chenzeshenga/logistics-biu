@@ -260,7 +260,7 @@
       },
       getOrdNo() {
         request({
-          url: '/generate/pk',
+          url: '/generate/pk/warehousing',
           method: 'get',
         }).then(res => {
           this.form.warehousingNo = res.data.data;

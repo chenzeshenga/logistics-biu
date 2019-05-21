@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
@@ -38,8 +39,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     private WarehousingService warehousingService;
 
-    @Autowired public WarehousingController(WarehousingService warehousingService) {
+    private LabelCache labelCache;
+
+    @Autowired public WarehousingController(WarehousingService warehousingService, LabelCache labelCache) {
         this.warehousingService = warehousingService;
+        this.labelCache = labelCache;
     }
 
     @PostMapping @RequestMapping("/add") public Json add(@RequestBody Warehousing warehousing) {
@@ -76,7 +80,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
         } else {
             warehousingPage = warehousingService.listByOwnerAndStatus(page, cname, method, status);
         }
+        enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);
+    }
+
+    private void enrichWarehousing(Page<Warehousing> warehousingPage) {
+        List<Warehousing> warehousingList = warehousingPage.getRecords();
+        warehousingList.forEach(warehousing -> {
+            warehousing.setMethodDesc(labelCache.getLabel("head_" + warehousing.getMethod()));
+            warehousing.setCarrierDesc(labelCache.getLabel("carrier_" + warehousing.getCarrier()));
+            warehousing.setDeliverMethodDesc(labelCache.getLabel("method_" + warehousing.getDeliverMethod()));
+            warehousing.setClearanceTypeDesc(labelCache.getLabel("clearanceType_" + warehousing.getClearanceType()));
+            warehousing.setTaxTypeDesc(labelCache.getLabel("taxType_" + warehousing.getTaxType()));
+            warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));
+        });
     }
 
 }
