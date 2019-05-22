@@ -136,10 +136,9 @@
           pwd2: null,
         },
         rules: {
-          pwd: [
-            {
-              validator: validatePass, trigger: 'blur',
-            }],
+          pwd: [{
+            validator: validatePass, trigger: 'blur',
+          }],
           pwd2: [
             {
               validator: validatePass2, trigger: 'change',

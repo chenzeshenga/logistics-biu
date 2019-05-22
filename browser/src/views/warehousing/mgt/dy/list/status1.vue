@@ -72,7 +72,7 @@
   import request from '../../../../../utils/service';
 
   export default {
-    name: 'warehousing-mgt-dy-list-status',
+    name: 'warehousing-mgt-dy-list-status1',
     data() {
       return {
         tablePage: {
@@ -108,7 +108,3 @@
     }
   };
 </script>
-
-<style scoped>
-
-</style>
