@@ -46,7 +46,7 @@
                 v-loading.body="tableLoading"
                 element-loading-text="加载中"
                 stripe
-                border fit highlight-current-row>
+                highlight-current-row>
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-col :span="12">

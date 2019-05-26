@@ -46,7 +46,7 @@
                 v-loading.body="tableLoading"
                 element-loading-text="加载中"
                 stripe
-                border fit highlight-current-row>
+                highlight-current-row>
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-col :span="12">
@@ -98,19 +98,14 @@
         <el-table-column width="170" prop="updateOn" label="修改时间"></el-table-column>
         <el-table-column width="150" prop="creator" label="创建人"></el-table-column>
         <el-table-column width="150" prop="updator" label="修改人"></el-table-column>
-        <!--<el-table-column label="操作" width="250" fixed="right">-->
-        <!--<template slot-scope="scope">-->
-        <!--<el-tooltip content="提交" placement="top">-->
-        <!--<el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check" circle plain></el-button>-->
-        <!--</el-tooltip>-->
-        <!--<el-tooltip content="编辑" placement="top">-->
-        <!--<el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-edit" circle plain></el-button>-->
-        <!--</el-tooltip>-->
-        <!--<el-tooltip content="删除" placement="top">-->
-        <!--<el-button @click="handleDelete(scope.$index,scope.row)" size="small" type="danger" icon="el-icon-delete" circle plain></el-button>-->
-        <!--</el-tooltip>-->
-        <!--</template>-->
-        <!--</el-table-column>-->
+        <el-table-column label="操作" width="250" fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip content="提交发货" placement="top">
+              <el-button @click="handleUpdate(scope.$index,scope.row)" size="small" type="info" icon="el-icon-check"
+                         circle plain></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -208,7 +203,18 @@
         this.fetchData();
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo});
+        this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
+          request({
+            url: 'ord/update/3/' + row.orderNo + '/9',
+            method: 'get',
+          }).then(res => {
+            console.log(res);
+            this.fetchData();
+            this.$message.success('提交成功');
+          });
+        }).catch(() => {
+          this.$message.info('已取消提交');
+        });
       },
       handleDelete(index, row) {
         this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {

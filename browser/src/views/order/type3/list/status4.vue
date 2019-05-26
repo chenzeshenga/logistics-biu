@@ -46,7 +46,7 @@
                 v-loading.body="tableLoading"
                 element-loading-text="加载中"
                 stripe
-                border fit highlight-current-row>
+                highlight-current-row>
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-col :span="12">
@@ -77,7 +77,6 @@
             </el-col>
           </template>
         </el-table-column>
-
         <el-table-column width="160" prop="orderNo" label="订单号"></el-table-column>
         <el-table-column width="150" prop="categoryName" label="订单类型"></el-table-column>
         <el-table-column width="200" prop="channelDesc" label="运送渠道"></el-table-column>

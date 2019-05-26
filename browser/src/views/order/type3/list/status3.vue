@@ -209,7 +209,7 @@
             method: 'get',
           }).then(res => {
             this.fetchData();
-            this.$message.success('提交发货成功');
+            this.$message.success('提交收货成功');
           });
         }).catch(() => {
           this.$message.info('已取消提交');
