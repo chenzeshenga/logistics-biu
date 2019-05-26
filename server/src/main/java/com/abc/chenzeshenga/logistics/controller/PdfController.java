@@ -20,7 +20,9 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.property.VerticalAlignment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +57,9 @@ import java.util.List;
                     new Paragraph().add(DateUtil.getStrFromDate(new Date())).addStyle(new Style().setMarginLeft(50));
                 document.add(time);
                 Image barcode = new Image(ImageDataFactory.create(BarCodeUtil.generate(ordno, "code128")));
-                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(20));
+                Paragraph paragraph =
+                    new Paragraph().add(barcode).addStyle(new Style().setVerticalAlignment(VerticalAlignment.MIDDLE))
+                        .addStyle(new Style().setHorizontalAlignment(HorizontalAlignment.CENTER));
                 document.add(paragraph);
                 Table table = new Table(new float[] {8, 4, 4});
                 table.setWidth(UnitValue.createPercentValue(100));
