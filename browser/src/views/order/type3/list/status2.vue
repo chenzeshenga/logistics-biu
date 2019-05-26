@@ -42,7 +42,7 @@
         </el-form-item>
       </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
-                border fit highlight-current-row>
+                highlight-current-row>
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-col :span="12">
@@ -137,16 +137,16 @@
       <el-dialog title="申请单号" :visible.sync="dialogVisible2" width="30%">
         <el-form :model="dialogForm">
           <el-form-item label="订单号">
-            <span>{{dialogForm.ordno}}</span>
+            <span>{{dialogForm.orderNo}}</span>
           </el-form-item>
           <el-col :span="24">
             <el-form-item label="承运人">
-              <el-input v-model="dialogForm.carrier" placeholder="请输入承运人"></el-input>
+              <el-input v-model="dialogForm.carrierNo" placeholder="请输入承运人"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="追踪单号">
-              <el-input v-model="dialogForm.trackno" placeholder="请输入承运人追踪单号"></el-input>
+              <el-input v-model="dialogForm.trackNo" placeholder="请输入承运人追踪单号"></el-input>
             </el-form-item>
           </el-col>
         </el-form>
@@ -212,9 +212,9 @@
           ordFee: 0,
         },
         dialogForm: {
-          ordno: '',
-          carrier: '',
-          trackno: '',
+          orderNo: '',
+          carrierNo: '',
+          trackNo: '',
         },
         dialogVisible2: false,
         search: {
@@ -300,16 +300,24 @@
             }).then(res => {
               this.fetchData();
               this.$message.success('提交成功');
+              this.dialogVisible = false;
             });
           });
         });
       },
       handleInput(index, row) {
         this.dialogVisible2 = true;
-        this.dialogForm.ordno = row.orderNo;
+        this.dialogForm.orderNo = row.orderNo;
       },
       transformNo() {
-        console.log(this.dialogForm);
+        request({
+          url: 'ord/update',
+          method: 'post',
+          data: this.dialogForm
+        }).then(() => {
+          this.$message.success('追踪单号更新成功');
+          this.dialogVisible2 = false;
+        })
       },
     },
   };

@@ -42,7 +42,7 @@
         </el-form-item>
       </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中"
-                stripe border fit highlight-current-row>
+                stripe highlight-current-row>
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-col :span="12">
@@ -201,7 +201,7 @@
         });
       },
       statusUpdate(index, row) {
-        this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
+        this.$confirm('您确定要提交收货该订单？', '提示', confirm).then(() => {
           console.log(row);
           console.log(index);
           request({
