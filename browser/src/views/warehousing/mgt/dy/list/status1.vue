@@ -104,6 +104,11 @@
           this.tablePage.total = res.data.page.total;
           this.tableLoading = false;
         });
+      },
+      handleUpdate(index, row) {
+        this.$router.push({
+          path: '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo
+        });
       }
     }
   };

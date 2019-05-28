@@ -162,7 +162,7 @@
 </template>
 
 <script>
-  import request from '@/utils/service';
+  import request from '../../utils/service';
 
   export default {
     name: 'new-warehousing',
@@ -237,6 +237,11 @@
     },
     created() {
       this.initPage();
+    },
+    watch: {
+      $route() {
+        console.log(this.$route.query.warehousingNo);
+      }
     },
     methods: {
       initPage() {
