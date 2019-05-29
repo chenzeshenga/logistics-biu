@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository public interface WarehousingMapper extends BaseMapper<Warehousing> {
@@ -29,5 +30,7 @@ import java.util.List;
     List<Warehousing> listByStatus(Pagination pagination, String status, String method);
 
     Warehousing getWarehousingSeq();
+
+    int statusUpdate(String warehousingNo, String from, String to, String username, Date curr);
 
 }

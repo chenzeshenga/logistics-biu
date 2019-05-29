@@ -279,4 +279,13 @@
         limit 1
     </select>
 
+    <update id="statusUpdate">
+        update l_warehousing
+        set status=#{to},
+            updator=#{username},
+            update_on=#{curr}
+        where warehousing_no = #{warehousingNo}
+          and status = #{from}
+    </update>
+
 </mapper>

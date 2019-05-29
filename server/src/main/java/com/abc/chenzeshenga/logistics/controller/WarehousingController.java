@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -94,6 +95,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
             warehousing.setTaxTypeDesc(labelCache.getLabel("taxType_" + warehousing.getTaxType()));
             warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));
         });
+    }
+
+    @PostMapping @RequestMapping("/status/{warehousingNo}")
+    public Json statusUpdate(@RequestBody Map<String, String> request, @PathVariable String warehousingNo) {
+        String from = request.get("from");
+        String to = request.get("to");
+        Date curr = new Date();
+        String username = UserUtils.getUserName();
+        warehousingMapper.statusUpdate(warehousingNo, from, to, username, curr);
+        return Json.succ();
     }
 
 }
