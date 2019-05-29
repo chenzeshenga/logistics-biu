@@ -109,6 +109,20 @@
         this.$router.push({
           path: '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo
         });
+      },
+      statusUpdate(index, row) {
+        this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
+          request({
+            url: 'ord/update/3/' + row.orderNo + '/2',
+            method: 'get',
+          }).then(res => {
+            console.log(res);
+            this.fetchData();
+            this.$message.success('提交成功');
+          });
+        }).catch(() => {
+          this.$message.info('已取消提交');
+        });
       }
     }
   };
