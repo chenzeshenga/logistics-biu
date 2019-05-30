@@ -68,7 +68,8 @@ import java.util.Map;
         abstractBarcodeBean.doQuietZone(false);
         String format = "image/jpeg";
         try {
-            BitmapCanvasProvider canvas = new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+            BitmapCanvasProvider canvas =
+                new BitmapCanvasProvider(ous, format, dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
             abstractBarcodeBean.generateBarcode(canvas, msg);
             canvas.finish();
         } catch (IOException e) {
@@ -82,7 +83,7 @@ import java.util.Map;
      * @reference https://crunchify.com/java-simple-qr-code-generator-example/
      */
     private static void generateQrCode(String content, OutputStream outputStream) {
-        int size = 80;
+        int size = 70;
         String fileType = "png";
         try {
             Map<EncodeHintType, Object> hintMap = new EnumMap<>(EncodeHintType.class);

@@ -47,6 +47,13 @@ import java.util.List;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<ManualOrderContent> manualOrderContentList = orderMapper.listContent2(ordno);
         PdfWriter writer = new PdfWriter(outputStream);
+        generatePdfV2(ordno, manualOrderContentList, writer);
+        response.setContentType("application/pdf");
+        response.getOutputStream().write(outputStream.toByteArray());
+    }
+
+    private void generatePdfV1(@PathVariable String ordno, List<ManualOrderContent> manualOrderContentList,
+        PdfWriter writer) throws IOException {
         try (PdfDocument pdf = new PdfDocument(writer)) {
             try (Document document = new Document(pdf, PageSize.A7)) {
                 document.setMargins(5, 5, 5, 5);
@@ -75,8 +82,26 @@ import java.util.List;
                 document.add(table);
             }
         }
-        response.setContentType("application/pdf");
-        response.getOutputStream().write(outputStream.toByteArray());
+    }
+
+    private void generatePdfV2(@PathVariable String ordno, List<ManualOrderContent> manualOrderContentList,
+        PdfWriter writer) throws IOException {
+        try (PdfDocument pdf = new PdfDocument(writer)) {
+            try (Document document = new Document(pdf, new PageSize(141, 141))) {
+                document.setMargins(3, 3, 3, 3);
+                PdfFont font1 = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
+                PdfFont font2 = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+                Paragraph head = new Paragraph().add("东岳物流配货单").setFont(font1).addStyle(new Style().setMarginLeft(25));
+                document.add(head);
+                Image barcode = new Image(
+                    ImageDataFactory.create(BarCodeUtil.generate("http://www.jpdyu.com/#/order-info?ord=" + ordno)));
+                Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(30));
+                document.add(paragraph);
+                Paragraph footer =
+                    new Paragraph().add("订单号:" + ordno).setFont(font2).addStyle(new Style().setMarginLeft(10));
+                document.add(footer);
+            }
+        }
     }
 
     @GetMapping("/sku/{dySku}") public void skuPdf(HttpServletResponse response, @PathVariable String dySku)
