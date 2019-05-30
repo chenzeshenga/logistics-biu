@@ -3,8 +3,7 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
-import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
-import com.abc.chenzeshenga.logistics.mapper.TrackNoMapper;
+import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
@@ -14,6 +13,7 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import io.swagger.models.auth.In;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +43,10 @@ import java.util.concurrent.atomic.AtomicReference;
     @Resource private OrderMapper orderMapper;
 
     @Resource private TrackNoMapper trackNoMapper;
+
+    @Resource private ImgMapper imgMapper;
+
+    @Resource private ProductMapper productMapper;
 
     private OrderService orderService;
 
@@ -274,6 +278,15 @@ import java.util.concurrent.atomic.AtomicReference;
     @GetMapping @RequestMapping("/get/{ordNo}") public Json selectByPk(@PathVariable String ordNo) {
         ManualOrder manualOrder = orderMapper.selectById(ordNo);
         List<ManualOrderContent> manualOrderContents = orderMapper.listContent(ordNo);
+        if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
+            manualOrderContents.forEach(manualOrderContent -> {
+                Product product = productMapper.selectByPrimaryKey(manualOrderContent.getSku().split("/")[0]);
+                String uuid4Img1 = product.getImg1();
+                if (StringUtils.isNotBlank(uuid4Img1)) {
+                    manualOrderContent.setImgUrl("http://localhost:8888/api/v1/img/" + uuid4Img1);
+                }
+            });
+        }
         manualOrder.setManualOrderContents(manualOrderContents);
         List<String> selectedAddress = new ArrayList<>();
         selectedAddress.add(manualOrder.getFromKenId());
@@ -287,6 +300,12 @@ import java.util.concurrent.atomic.AtomicReference;
         address.put("ken", manualOrder.getFromKenId());
         address.put("city", manualOrder.getFromCityId());
         address.put("town", manualOrder.getFromTownId());
+        JpDetailAddress jpDetailAddress = japanAddressCache
+            .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
+                Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
+        manualOrder.setFromKenName(jpDetailAddress.getKenName());
+        manualOrder.setFromCityName(jpDetailAddress.getCityName());
+        manualOrder.setFromTownName(jpDetailAddress.getTownName());
         List<String> selectedToAddress = new ArrayList<>();
         selectedToAddress.add(manualOrder.getToKenId());
         selectedToAddress.add(manualOrder.getToCityId());
@@ -299,6 +318,12 @@ import java.util.concurrent.atomic.AtomicReference;
         toAddress.put("ken", manualOrder.getToKenId());
         toAddress.put("city", manualOrder.getToCityId());
         toAddress.put("town", manualOrder.getToTownId());
+        JpDetailAddress toJpDetailAddress = japanAddressCache
+            .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
+                Integer.valueOf(manualOrder.getToTownId()));
+        manualOrder.setToKenName(toJpDetailAddress.getKenName());
+        manualOrder.setToCityName(toJpDetailAddress.getCityName());
+        manualOrder.setToTownName(toJpDetailAddress.getTownName());
         return Json.succ().data(manualOrder);
 
     }
