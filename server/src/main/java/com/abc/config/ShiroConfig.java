@@ -42,6 +42,7 @@ import org.springframework.context.annotation.Configuration;
         //二维码扫描相关api，不需要登录验证
         chain.addPathDefinition("/scan/**", "anon");
         chain.addPathDefinition("/ord/get//**", "anon");
+        chain.addPathDefinition("/img/**", "anon");
 
         //除了以上的请求外，其它请求都需要登录
         chain.addPathDefinition("/**", "authc");

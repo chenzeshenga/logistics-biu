@@ -283,7 +283,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 Product product = productMapper.selectByPrimaryKey(manualOrderContent.getSku().split("/")[0]);
                 String uuid4Img1 = product.getImg1();
                 if (StringUtils.isNotBlank(uuid4Img1)) {
-                    manualOrderContent.setImgUrl("http://localhost:8888/api/v1/img/" + uuid4Img1);
+                    manualOrderContent.setImgUrl("http://47.105.107.242:8888/api/v1/img/" + uuid4Img1);
                 }
             });
         }
