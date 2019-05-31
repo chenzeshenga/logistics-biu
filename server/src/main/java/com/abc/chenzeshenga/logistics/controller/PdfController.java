@@ -16,10 +16,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
@@ -89,17 +86,16 @@ import java.util.List;
         try (PdfDocument pdf = new PdfDocument(writer)) {
             try (Document document = new Document(pdf, new PageSize(141, 141))) {
                 document.setMargins(3, 3, 3, 3);
-                PdfFont font1 = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
-                PdfFont font2 = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
-                Paragraph head = new Paragraph().add("东岳物流配货单").setFont(font1).addStyle(new Style().setMarginLeft(25));
+                PdfFont font = PdfFontFactory.createFont("HeiseiKakuGo-W5", "UniJIS-UCS2-H", false);
+                Paragraph head = new Paragraph().add("東岳配信QRコード").setFont(font).addStyle(new Style().setMarginLeft(15));
                 document.add(head);
                 Image barcode = new Image(
                     ImageDataFactory.create(BarCodeUtil.generate("http://www.jpdyu.com/#/order-info?ord=" + ordno)));
                 Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(30));
                 document.add(paragraph);
-                Paragraph footer =
-                    new Paragraph().add("订单号:" + ordno).setFont(font2).addStyle(new Style().setMarginLeft(10));
-                document.add(footer);
+                Paragraph ordnoTitle = new Paragraph().add(new Text("お問い合わせ番号: " + ordno).setFontSize(8)).setFont(font)
+                    .addStyle(new Style().setMarginLeft(5));
+                document.add(ordnoTitle);
             }
         }
     }
