@@ -46,13 +46,24 @@
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
-        warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,
-    tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator, 
-    updator
+        warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator,updator
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
+        select warehousing_no,
+               target,
+               `method`,
+               carrier,
+               track_no,
+               deliver_method,
+               clearance_type,
+               tax_type,
+               insurance,
+               insurance_num,
+               estimated_date,
+               create_on,
+               update_on,
+               creator,
+               updator
         from l_warehousing
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </select>

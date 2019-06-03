@@ -238,13 +238,18 @@
     created() {
       this.initPage();
     },
+    inject: ['reload'],
     watch: {
       $route() {
-        console.log(this.$route.query.warehousingNo);
+        this.initPage();
       }
     },
     methods: {
       initPage() {
+        const warehousingNo = this.$route.query.warehousingNo;
+        if (warehousingNo.length > 0) {
+          request({})
+        }
         request({
           url: '/product/list',
           method: 'get',

@@ -20,4 +20,7 @@ import java.util.List;
     int updateByPrimaryKeySelective(WarehousingContent record);
 
     int updateByPrimaryKey(WarehousingContent record);
+
+    List<WarehousingContent> listContent(String warehousingNo);
+
 }

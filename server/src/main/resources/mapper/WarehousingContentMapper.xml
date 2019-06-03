@@ -114,4 +114,16 @@
           and sku = #{sku,jdbcType=VARCHAR}
           and box_seq = #{boxSeq,jdbcType=VARCHAR}
     </update>
+
+    <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        select warehousing_no as warehousingNo,
+               sku,
+               box_seq        as boxSeq,
+               total_num      as totalNum,
+               wrap_type      as wrapType,
+               `name`         as name
+        from l_warehousing_content
+        where warehousing_no = #{warehousingNo}
+    </select>
+
 </mapper>
