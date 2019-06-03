@@ -20,8 +20,8 @@
           <el-col :span="12">
             <el-form-item label="头程方式">
               <el-select filterable v-model="form.method" placeholder="请选择头程方式" clearable>
-                <el-option label="东岳头程" value="1"></el-option>
-                <el-option label="其他头程" value="2"></el-option>
+                <el-option label="东岳头程" value="东岳头程"></el-option>
+                <el-option label="其他头程" value="其他头程"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -50,12 +50,12 @@
           <el-col :span="12">
             <el-form-item label="运输方式">
               <el-select v-model="form.deliverMethod" clearable filterable placeholder="请选择运输方式">
-                <el-option label="海运整柜20GP/HQ" value="1"></el-option>
-                <el-option label="海运整柜40GP/HQ" value="2"></el-option>
-                <el-option label="海运散货" value="3"></el-option>
-                <el-option label="空运" value="4"></el-option>
-                <el-option label="卡车派送" value="5"></el-option>
-                <el-option label="其他" value="6"></el-option>
+                <el-option label="海运整柜20GP/HQ" value="海运整柜20GP/HQ"></el-option>
+                <el-option label="海运整柜40GP/HQ" value="海运整柜40GP/HQ"></el-option>
+                <el-option label="海运散货" value="海运散货"></el-option>
+                <el-option label="空运" value="空运"></el-option>
+                <el-option label="卡车派送" value="卡车派送"></el-option>
+                <el-option label="其他" value="其他"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -63,14 +63,14 @@
         <el-form-item label="关税相关">
           <el-col :span="12">
             <el-form-item label="报关类型">
-              <el-radio v-model="form.clearanceType" label="1">单独退税报关</el-radio>
-              <el-radio v-model="form.clearanceType" label="2">无退税报关</el-radio>
+              <el-radio v-model="form.clearanceType" label="单独退税报关">单独退税报关</el-radio>
+              <el-radio v-model="form.clearanceType" label="无退税报关">无退税报关</el-radio>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="关税类型">
-              <el-radio v-model="form.taxType" label="1">预缴关税</el-radio>
-              <el-radio v-model="form.taxType" label="2">实报实销</el-radio>
+              <el-radio v-model="form.taxType" label="预缴关税">预缴关税</el-radio>
+              <el-radio v-model="form.taxType" label="实报实销">实报实销</el-radio>
             </el-form-item>
           </el-col>
         </el-form-item>
