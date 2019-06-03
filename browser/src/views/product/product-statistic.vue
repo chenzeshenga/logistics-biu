@@ -76,7 +76,6 @@
         this.fetchData();
       },
       statusUpdate(index, row) {
-        console.log(row);
         this.$confirm('您确定审核通过该商品？', '提示', confirm).then(() => {
           request({
             url: '/statistics/list',
@@ -90,7 +89,6 @@
         });
       },
       handleDelete(index, row) {
-        console.log(row);
         this.$confirm('您确定删除该商品？', '提示', confirm).then(() => {
           request({
             url: '/product/delete/' + row.sku,

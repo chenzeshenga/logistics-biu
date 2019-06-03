@@ -110,7 +110,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
     @GetMapping @RequestMapping("/info")
     public Json getWarehousing(@RequestParam("warehousingNo") String warehousingNo) {
         Warehousing warehousing = warehousingMapper.selectByPrimaryKey(warehousingNo);
-        warehousingContentMapper.listContent(warehousingNo);
+        List<WarehousingContent> warehousingContentList = warehousingContentMapper.listContent(warehousingNo);
+        warehousing.setWarehousingContentList(warehousingContentList);
         return Json.succ().data(warehousing);
     }
 

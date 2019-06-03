@@ -248,7 +248,12 @@
       initPage() {
         const warehousingNo = this.$route.query.warehousingNo;
         if (warehousingNo.length > 0) {
-          request({})
+          request({
+            url: '/warehousing/info?warehousingNo=' + warehousingNo,
+            method: 'get'
+          }).then(res => {
+            console.log(res);
+          })
         }
         request({
           url: '/product/list',
