@@ -8,43 +8,62 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * l_warehousing
- *
- * @author
+ * @author chenzeshenga
  */
 @Data public class Warehousing implements Serializable {
 
-    private String warehousingNo;
-
     private String target;
-
+    private String warehousingNo;
+    /**
+     * 头程方式
+     */
     private String method;
-
-    private String methodDesc;
-
+    /**
+     * 头程承运人
+     */
     private String carrier;
-
-    private String carrierDesc;
-
+    /**
+     * 承运人追踪号
+     */
     private String trackNo;
-
+    /**
+     * 头程渠道
+     */
+    private String channelCode;
+    /**
+     * 渠道名称
+     */
+    private String channelName;
+    /**
+     * 运输方式
+     */
     private String deliverMethod;
-
-    private String deliverMethodDesc;
-
+    /**
+     * 报关类型
+     */
     private String clearanceType;
-
-    private String clearanceTypeDesc;
-
+    /**
+     * 关税类型
+     */
     private String taxType;
-
-    private String taxTypeDesc;
-
+    /**
+     * 保险服务 Y/N
+     */
     private String insurance;
-
+    /**
+     * 保险金额
+     */
     private String insuranceNum;
-
+    /**
+     * 预计到港时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8") private Date estimatedDate;
+
+    private List<WarehousingContent> warehousingContentList;
+
+    private String status;
+
+    private String statusDesc;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
 
@@ -53,11 +72,5 @@ import java.util.List;
     private String creator;
 
     private String updator;
-
-    private String status;
-
-    private String statusDesc;
-
-    private List<WarehousingContent> warehousingContentList;
 
 }

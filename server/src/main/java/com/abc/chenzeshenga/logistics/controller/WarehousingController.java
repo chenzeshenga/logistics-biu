@@ -55,6 +55,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         warehousing.setCreateOn(curr);
         warehousing.setUpdateOn(curr);
         warehousing.setStatus("1");
+        warehousing.setCarrier("东岳头程");
+        warehousing.setTrackNo(warehousing.getWarehousingNo());
         List<WarehousingContent> warehousingContentList = warehousing.getWarehousingContentList();
         warehousingMapper.insert(warehousing);
         warehousingContentMapper.insertList(warehousingContentList);

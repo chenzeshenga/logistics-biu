@@ -45,9 +45,11 @@
             <result column="name" property="name"/>
         </collection>
     </resultMap>
+
     <sql id="Base_Column_List">
         warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator,updator
     </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select warehousing_no,
                target,
@@ -67,11 +69,13 @@
         from l_warehousing
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from l_warehousing
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </delete>
+
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
         insert into l_warehousing (warehousing_no, target, `method`,
                                    carrier, track_no, deliver_method,
