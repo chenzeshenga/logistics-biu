@@ -90,22 +90,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
     private void enrichWarehousing(Page<Warehousing> warehousingPage) {
         List<Warehousing> warehousingList = warehousingPage.getRecords();
         warehousingList.forEach(warehousing -> {
-            warehousing.setMethodDesc(labelCache.getLabel("head_" + warehousing.getMethod()));
-            warehousing.setCarrierDesc(labelCache.getLabel("carrier_" + warehousing.getCarrier()));
-            warehousing.setDeliverMethodDesc(labelCache.getLabel("method_" + warehousing.getDeliverMethod()));
-            warehousing.setClearanceTypeDesc(labelCache.getLabel("clearanceType_" + warehousing.getClearanceType()));
-            warehousing.setTaxTypeDesc(labelCache.getLabel("taxType_" + warehousing.getTaxType()));
             warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));
         });
     }
 
-    @PostMapping @RequestMapping("/status/{warehousingNo}")
-    public Json statusUpdate(@RequestBody Map<String, String> request, @PathVariable String warehousingNo) {
-        String from = request.get("from");
+    @PostMapping @RequestMapping("/status") public Json statusUpdate(@RequestBody Map<String, String> request) {
         String to = request.get("to");
+        String warehousingNo = request.get("warehousingNo");
         Date curr = new Date();
         String username = UserUtils.getUserName();
-        warehousingMapper.statusUpdate(warehousingNo, from, to, username, curr);
+        Warehousing warehousing = new Warehousing();
+        warehousing.setWarehousingNo(warehousingNo);
+        warehousing.setStatus(to);
+        warehousing.setUpdator(username);
+        warehousing.setUpdateOn(curr);
+        warehousingMapper.updateByPrimaryKeySelective(warehousing);
         return Json.succ();
     }
 

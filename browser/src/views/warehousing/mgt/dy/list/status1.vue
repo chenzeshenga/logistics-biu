@@ -78,12 +78,12 @@
         <el-table-column width="160" prop="warehousingNo" label="入库单号"></el-table-column>
         <el-table-column width="150" prop="target" label="仓库地址"></el-table-column>
         <el-table-column width="150" prop="statusDesc" label="状态"></el-table-column>
-        <el-table-column width="200" prop="methodDesc" label="头程方式"></el-table-column>
-        <el-table-column width="100" prop="carrierDesc" label="承运人"></el-table-column>
+        <el-table-column width="200" prop="method" label="头程方式"></el-table-column>
+        <el-table-column width="100" prop="carrier" label="承运人"></el-table-column>
         <el-table-column width="150" prop="trackNo" label="追踪单号"></el-table-column>
-        <el-table-column width="170" prop="deliverMethodDesc" label="运输方式"></el-table-column>
-        <el-table-column width="250" prop="clearanceTypeDesc" label="报关类型"></el-table-column>
-        <el-table-column width="150" prop="taxTypeDesc" label="关税类型"></el-table-column>
+        <el-table-column width="170" prop="deliverMethod" label="运输方式"></el-table-column>
+        <el-table-column width="250" prop="clearanceType" label="报关类型"></el-table-column>
+        <el-table-column width="150" prop="taxType" label="关税类型"></el-table-column>
         <el-table-column width="150" prop="insurance" label="保险服务"></el-table-column>
         <el-table-column width="150" prop="insuranceNum" label="保险总值(JPY)"></el-table-column>
         <el-table-column width="180" prop="estimatedDate" label="预计到港时间"></el-table-column>
@@ -111,7 +111,7 @@
                          plain></el-button>
             </el-tooltip>
             <el-tooltip content="暂存" placement="top">
-              <el-button @click="abandon(scope.$index,scope.row)" size="mini" type="danger"
+              <el-button @click="hold(scope.$index,scope.row)" size="mini" type="danger"
                          icon="el-icon-remove-outline" circle
                          plain></el-button>
             </el-tooltip>
@@ -208,7 +208,7 @@
       statusUpdate(index, row) {
         this.$confirm('您确定要提交该订单？', '提示', confirm).then(() => {
           request({
-            url: 'ord/update/3/' + row.orderNo + '/2',
+            url: 'ord/update/3/' + row.warehousingNo + '/2',
             method: 'get',
           }).then(res => {
             console.log(res);
@@ -223,6 +223,21 @@
         this.$router.push({
           path: '/new-warehousing/new-warehousing'
         })
+      },
+      hold(index, row) {
+        const warehousingNo = row.warehousingNo;
+        this.$confirm('您确定要暂存该入库单？', '提示', confirm).then(() => {
+          request({
+            url: 'ord/update/3/' + warehousingNo + '/2',
+            method: 'get',
+          }).then(res => {
+            console.log(res);
+            this.fetchData();
+            this.$message.success('提交成功');
+          });
+        }).catch(() => {
+          this.$message.info('已取消提交');
+        });
       }
     }
   };
