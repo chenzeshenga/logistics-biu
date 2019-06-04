@@ -27,12 +27,12 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-col :span="12" v-if="form.method==='2'">
+          <el-col :span="12" v-if="form.method==='其他头程'">
             <el-form-item label="头程承运人">
               <el-input v-model="form.carrier" placeholder="请输入承运人" clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.method==='2'">
+          <el-col :span="12" v-if="form.method==='其他头程'">
             <el-form-item label="承运人追踪号">
               <el-input v-model="form.trackNo" placeholder="请输入承运人追踪号" clearable></el-input>
             </el-form-item>
@@ -175,7 +175,7 @@
         form: {
           target: '岡山县岡山市中区新京橋3丁目4-26',
           warehousingNo: '',
-          method: '1',
+          method: '东岳头程',
           carrier: '',
           trackNo: '',
           deliverMethod: '',
@@ -247,7 +247,7 @@
     methods: {
       initPage() {
         const warehousingNo = this.$route.query.warehousingNo;
-        if (warehousingNo.length > 0) {
+        if (warehousingNo !== undefined && warehousingNo.length > 0) {
           request({
             url: '/warehousing/info?warehousingNo=' + warehousingNo,
             method: 'get'
