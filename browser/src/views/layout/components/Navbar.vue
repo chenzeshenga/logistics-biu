@@ -130,7 +130,7 @@
       return {
         dialogVisible: false,
         dialogVisible2: false,
-        version: '20190531',
+        version: '20190604',
         temp: {
           pwd: null,
           pwd2: null,
