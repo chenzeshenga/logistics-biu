@@ -65,6 +65,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     @PostMapping @RequestMapping("/list/{method}/{status}")
     public Json list(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
+        method = switchMethod(method);
         String cname = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
@@ -85,6 +86,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
         }
         enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);
+    }
+
+    private String switchMethod(String method) {
+        switch (method) {
+            case "2":
+                return "其他头程";
+            case "1":
+            default:
+                return "东岳头程";
+        }
     }
 
     private void enrichWarehousing(Page<Warehousing> warehousingPage) {
@@ -114,6 +125,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
         List<WarehousingContent> warehousingContentList = warehousingContentMapper.listContent(warehousingNo);
         warehousing.setWarehousingContentList(warehousingContentList);
         return Json.succ().data(warehousing);
+    }
+
+    @GetMapping("/drop") public Json dropWarehousing(@RequestParam String warehousingNo) {
+        warehousingMapper.deleteByPrimaryKey(warehousingNo);
+        warehousingContentMapper.deleteByWarehousingNo(warehousingNo);
+        return Json.succ();
     }
 
 }

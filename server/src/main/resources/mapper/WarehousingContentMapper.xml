@@ -28,6 +28,12 @@
           and sku = #{sku,jdbcType=VARCHAR}
           and box_seq = #{boxSeq,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteByWarehousingNo">
+        delete
+        from l_warehousing_content
+        where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
+    </delete>
+
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
                                            total_num, wrap_type, `name`)

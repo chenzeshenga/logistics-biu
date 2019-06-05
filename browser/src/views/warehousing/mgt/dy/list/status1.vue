@@ -62,7 +62,8 @@
         </el-form-item>
       </el-form>
       <el-table style="width: 100%" :data="tableData" v-loading.body="tableLoading" element-loading-text="加载中" stripe
-                highlight-current-row @selection-change="handleSelectionChange">
+                highlight-current-row>
+        <!--                @selection-change="handleSelectionChange"-->
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand">
           <template slot-scope="tableData">
@@ -107,7 +108,8 @@
                          circle plain></el-button>
             </el-tooltip>
             <el-tooltip content="删除" placement="top">
-              <el-button @click="delete(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove" circle
+              <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger" icon="el-icon-remove"
+                         circle
                          plain></el-button>
             </el-tooltip>
             <el-tooltip content="暂存" placement="top">
@@ -145,6 +147,7 @@
         },
         tableLoading: false,
         tableData: [],
+        daterange: null,
         pickerOptions2: {
           shortcuts: [
             {
@@ -173,6 +176,8 @@
               },
             }],
         },
+        users: [],
+        channels: [],
         search: {
           ordno: '',
           creator: '',
@@ -191,7 +196,6 @@
           method: 'post',
           data: this.tablePage,
         }).then(res => {
-          console.log(res);
           this.tableData = res.data.page.records;
           this.tablePage.current = res.data.page.current;
           this.tablePage.pages = res.data.page.pages;
@@ -238,7 +242,28 @@
         }).catch(() => {
           this.$message.info('已取消提交');
         });
-      }
+      },
+      handleDelete(index, row) {
+        this.$confirm('您确定要删除该入库单？', '提示', confirm).then(() => {
+          request({
+            url: 'warehousing/drop?warehousingNo=' + row.warehousingNo,
+            method: 'get',
+          }).then(res => {
+            this.fetchData();
+            this.$message.success('提交成功');
+          });
+        }).catch(() => {
+          this.$message.info('已取消');
+        });
+      },
+      handleSizeChange(val) {
+        this.tablePage.size = val;
+        this.fetchData();
+      },
+      handleCurrentChange(val) {
+        this.tablePage.current = val;
+        this.fetchData();
+      },
     }
   };
 </script>

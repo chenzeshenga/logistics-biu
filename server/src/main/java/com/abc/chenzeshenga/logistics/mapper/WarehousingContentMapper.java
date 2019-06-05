@@ -9,6 +9,8 @@ import java.util.List;
 @Repository public interface WarehousingContentMapper {
     int deleteByPrimaryKey(WarehousingContentKey key);
 
+    int deleteByWarehousingNo(String warehousingNo);
+
     int insert(WarehousingContent record);
 
     int insertList(List<WarehousingContent> warehousingContentList);
