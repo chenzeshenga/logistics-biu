@@ -273,6 +273,14 @@
           this.channels = res.data.data;
         });
       },
+      initChannel() {
+        request({
+          url: '/channel/list',
+          method: 'get',
+        }).then(res => {
+          this.channels = res.data.data;
+        });
+      },
       getOrdNo() {
         request({
           url: '/generate/pk/warehousing',
