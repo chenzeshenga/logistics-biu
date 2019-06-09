@@ -88,8 +88,8 @@
                             <el-button
                                 type="primary"
                                 @click="route2NewWarehousing()"
-                                >新建入库单</el-button
-                            >
+                                >新建入库单
+                            </el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button
@@ -174,13 +174,13 @@
                                     v-on:click="
                                         channelLink(scope.$index, scope.row)
                                     "
-                                    >查看详情</el-button
-                                >
+                                    >查看详情
+                                </el-button>
                             </p>
                             <div slot="reference" class="name-wrapper">
-                                <el-tag size="medium">{{
-                                    scope.row.channelDesc
-                                }}</el-tag>
+                                <el-tag size="medium"
+                                    >{{ scope.row.channelDesc }}
+                                </el-tag>
                             </div>
                         </el-popover>
                     </template>
@@ -409,10 +409,13 @@ export default {
             this.$confirm('您确定要提交该订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/3/' + row.warehousingNo + '/2',
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
+                        url: 'warehousing/status',
+                        method: 'post',
+                        data: {
+                            to: '2',
+                            warehousingNo: row.warehousingNo,
+                        },
+                    }).then(() => {
                         this.fetchData()
                         this.$message.success('提交成功')
                     })
@@ -432,7 +435,10 @@ export default {
                 .then(() => {
                     request({
                         url: 'ord/update/3/' + warehousingNo + '/2',
-                        method: 'get',
+                        method: 'post',
+                        data: {
+                            to,
+                        },
                     }).then(res => {
                         console.log(res)
                         this.fetchData()
