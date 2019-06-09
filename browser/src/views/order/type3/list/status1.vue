@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column width="160" prop="orderNo" label="订单号"></el-table-column>
         <el-table-column width="150" prop="categoryName" label="订单类型"></el-table-column>
-        <el-table-column width="200" prop="channelDesc" label="运送渠道"></el-table-column>
+        <el-table-column width="200" prop="channel" label="运送渠道"></el-table-column>
         <el-table-column width="100" prop="statusDesc" label="订单状态"></el-table-column>
         <el-table-column width="150" prop="carrierName" label="承运人"></el-table-column>
         <el-table-column width="170" prop="trackNo" label="追踪单号"></el-table-column>
