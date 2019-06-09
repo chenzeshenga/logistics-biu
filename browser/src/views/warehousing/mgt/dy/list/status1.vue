@@ -166,16 +166,17 @@
                             <p>渠道名称: {{ scope.row.channelDesc }}</p>
                             <p>渠道编码: {{ scope.row.channel }}</p>
                             <p>
-                                <a
+                                <el-button
+                                    type="text"
                                     v-on:click="
                                         channelLink(scope.$index, scope.row)
                                     "
-                                    >查看详情</a
+                                    >查看详情</el-button
                                 >
                             </p>
                             <div slot="reference" class="name-wrapper">
                                 <el-tag size="medium">{{
-                                    scope.row.channel
+                                    scope.row.channelDesc
                                 }}</el-tag>
                             </div>
                         </el-popover>

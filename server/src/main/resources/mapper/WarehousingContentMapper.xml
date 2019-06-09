@@ -132,4 +132,10 @@
         where warehousing_no = #{warehousingNo}
     </select>
 
+    <delete id="deleteContent">
+        delete
+        from l_warehousing_content
+        where warehousing_no = #{warehousingNo}
+    </delete>
+
 </mapper>

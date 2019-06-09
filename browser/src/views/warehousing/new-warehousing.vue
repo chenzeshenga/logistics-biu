@@ -322,6 +322,7 @@ export default {
                 taxType: '',
                 insurance: false,
                 insuranceNum: 0,
+                channel: '',
                 estimatedDate: new Date(),
                 warehousingContentList: [],
             },
@@ -388,15 +389,6 @@ export default {
     },
     methods: {
         initPage() {
-            const warehousingNo = this.$route.query.warehousingNo
-            if (warehousingNo !== undefined && warehousingNo.length > 0) {
-                request({
-                    url: '/warehousing/info?warehousingNo=' + warehousingNo,
-                    method: 'get',
-                }).then(res => {
-                    console.log(res)
-                })
-            }
             request({
                 url: '/product/list',
                 method: 'get',
@@ -412,6 +404,32 @@ export default {
             }).then(res => {
                 this.channels = res.data.data
             })
+            const warehousingNo = this.$route.query.warehousingNo
+            if (warehousingNo !== undefined && warehousingNo.length > 0) {
+                this.onUpdate = true
+                this.onCreate = false
+                request({
+                    url: '/warehousing/info?warehousingNo=' + warehousingNo,
+                    method: 'get',
+                }).then(res => {
+                    const warehousing = res.data.data
+                    this.form.warehousingNo = warehousing.warehousingNo
+                    this.form.method = warehousing.method
+                    this.form.carrier = warehousing.carrier
+                    this.form.trackNo = warehousing.trackNo
+                    this.form.deliverMethod = warehousing.deliverMethod
+                    this.form.clearanceType = warehousing.clearanceType
+                    this.form.taxType = warehousing.taxType
+                    if (this.form.insurance === 'Y') {
+                        this.form.insurance = true
+                        this.form.insuranceNum = warehousing.insuranceNum
+                    }
+                    this.form.channel = warehousing.channel
+                    this.form.estimatedDate = warehousing.estimatedDate
+                    this.form.warehousingContentList =
+                        warehousing.warehousingContentList
+                })
+            }
         },
         initChannel() {
             request({
@@ -496,6 +514,23 @@ export default {
                 data: this.form,
             }).then(res => {
                 this.$message.success('成功新建订单')
+                this.reload()
+            })
+        },
+        updateForm() {
+            if (this.form.insurance) {
+                this.form.insurance = 'Y'
+            } else {
+                this.form.insurance = 'N'
+            }
+            request({
+                url: '/warehousing/update',
+                method: 'post',
+                data: this.form,
+            }).then(res => {
+                this.$message.success('更新订单')
+                this.$router.push({ path: '/new-warehousing/new-warehousing' })
+                this.initPage()
                 this.reload()
             })
         },

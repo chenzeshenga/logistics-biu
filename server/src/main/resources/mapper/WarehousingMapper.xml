@@ -12,6 +12,8 @@
         <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
         <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
         <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
+        <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
+        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
         <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
@@ -64,11 +66,14 @@
                insurance,
                insurance_num,
                estimated_date,
-               create_on,
-               update_on,
+               warehousing.create_on,
+               warehousing.update_on,
                creator,
-               updator
-        from l_warehousing
+               updator,
+               warehousing.channel_code,
+               channel_name
+        from l_warehousing warehousing
+                 left join l_channel channel on (warehousing.channel_code = channel.channel_code)
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </select>
 
@@ -233,6 +238,12 @@
             <if test="updator != null">
                 updator = #{updator,jdbcType=VARCHAR},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="channel != null">
+                channel_code = #{channel,jdbcType=VARCHAR}
+            </if>
         </set>
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </update>
@@ -276,7 +287,7 @@
         select *
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
-                 left join l_channel channel on (warehousing.channel_code=channel.channel_code)
+                 left join l_channel channel on (warehousing.channel_code = channel.channel_code)
         where warehousing.creator = #{creator}
           and warehousing.status = #{status}
           and deliver_method = #{method}
@@ -287,7 +298,7 @@
         select *
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
-                 left join l_channel channel on (warehousing.channel_code=channel.channel_code)
+                 left join l_channel channel on (warehousing.channel_code = channel.channel_code)
         where warehousing.status = #{status}
         order by warehousing.create_on desc
     </select>

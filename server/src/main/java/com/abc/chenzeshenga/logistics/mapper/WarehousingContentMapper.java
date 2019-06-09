@@ -25,4 +25,6 @@ import java.util.List;
 
     List<WarehousingContent> listContent(String warehousingNo);
 
+    int deleteContent(String warehousingNo);
+
 }

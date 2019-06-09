@@ -63,6 +63,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ();
     }
 
+    @PostMapping @RequestMapping("/update") public Json update(@RequestBody Warehousing warehousing) {
+        String username = UserUtils.getUserName();
+        warehousing.setUpdator(username);
+        Date curr = new Date();
+        warehousing.setUpdateOn(curr);
+        List<WarehousingContent> warehousingContentList = warehousing.getWarehousingContentList();
+        warehousingMapper.updateByPrimaryKeySelective(warehousing);
+        warehousingContentMapper.deleteContent(warehousing.getWarehousingNo());
+        warehousingContentMapper.insertList(warehousingContentList);
+        return Json.succ();
+    }
+
     @PostMapping @RequestMapping("/list/{method}/{status}")
     public Json list(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
         method = switchMethod(method);
