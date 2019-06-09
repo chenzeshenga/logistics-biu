@@ -91,11 +91,14 @@
                                 >新建入库单</el-button
                             >
                         </el-col>
-                        <!--            <el-col :span="2">-->
-                        <!--              <el-button type="primary" @click="exportExcel()"-->
-                        <!--                         icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang">导出excel-->
-                        <!--              </el-button>-->
-                        <!--            </el-col>-->
+                        <el-col :span="2">
+                            <el-button
+                                type="primary"
+                                @click="exportExcel()"
+                                icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang"
+                                >导出excel
+                            </el-button>
+                        </el-col>
                     </el-row>
                 </el-form-item>
             </el-form>
@@ -469,6 +472,23 @@ export default {
             this.$router.push({
                 path: '/system/channel?filter=' + row.channel,
             })
+        },
+        exportExcel() {
+            const link = document.createElement('a')
+            link.style.display = 'none'
+            if (this.search.creator.length > 0) {
+                link.href =
+                    process.env.BASE_API +
+                    '/warehousing/excel/1?method=东岳头程&creator=' +
+                    this.search.creator
+            } else {
+                link.href =
+                    process.env.BASE_API +
+                    '/warehousing/excel/1?method=东岳头程'
+            }
+            link.target = '_blank'
+            document.body.appendChild(link)
+            link.click()
         },
     },
 }

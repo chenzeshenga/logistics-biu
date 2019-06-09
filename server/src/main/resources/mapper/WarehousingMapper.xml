@@ -286,11 +286,19 @@
     <select id="listByOwnerAndStatus" resultMap="result">
         select *
         from l_warehousing warehousing
-                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
-                 left join l_channel channel on (warehousing.channel_code = channel.channel_code)
-        where warehousing.creator = #{creator}
-          and warehousing.status = #{status}
-          and deliver_method = #{method}
+        left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        left join l_channel channel on (warehousing.channel_code = channel.channel_code)
+        where
+        1=1
+        <if test="creator != null and creator != ''">
+            and warehousing.creator = #{creator}
+        </if>
+        <if test="status != null and status != ''">
+            and warehousing.status = #{status}
+        </if>
+        <if test="method != null and method != ''">
+            and deliver_method = #{method}
+        </if>
         order by warehousing.create_on desc
     </select>
 

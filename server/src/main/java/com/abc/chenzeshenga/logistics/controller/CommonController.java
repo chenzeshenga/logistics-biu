@@ -27,6 +27,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -412,8 +413,24 @@ import java.util.concurrent.ExecutorService;
 
     }
 
-    @GetMapping("/warehousing/excel/{ordno}") public void getWarehousingExcel(@PathVariable String ordno) {
+    @GetMapping("/warehousing/excel/{status}")
+    public void getWarehousingExcel(@PathVariable String status, HttpServletResponse httpServletResponse,
+        @RequestParam String method, @RequestParam String creator) throws IOException {
+        String fileName = "入库单信息.xlsx";
+        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse
+            .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        List<Warehousing> warehousingList =
+            warehousingMapper.listByOwnerAndStatus(new Page(1, 500), creator, status, method);
+        warehousingList.forEach(warehousing -> {
 
+        });
+        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+        ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
+        Sheet sheet1 = new Sheet(1, 0, Product.class);
+        excelWriter.write(warehousingList, sheet1);
+        excelWriter.finish();
+        httpServletResponse.flushBuffer();
     }
 
     @GetMapping("/warehousing/csv/{ordno}") public void getWarehousingCsv(@PathVariable String ordno) {

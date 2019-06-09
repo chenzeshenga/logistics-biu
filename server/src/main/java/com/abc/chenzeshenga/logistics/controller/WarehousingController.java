@@ -3,7 +3,6 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
-import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.abc.chenzeshenga.logistics.service.WarehousingService;
@@ -16,12 +15,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +50,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
         this.labelCache = labelCache;
     }
 
-    @PostMapping @RequestMapping("/add") public Json add(@RequestBody Warehousing warehousing) {
+    @PostMapping @RequestMapping("/add")
+    public Json add(@RequestBody @Valid Warehousing warehousing, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errMsg = getErrMsg(bindingResult);
+            return Json.fail().msg(errMsg.toString());
+        }
         String username = UserUtils.getUserName();
-        warehousing.setCreator(username);
+        if (StringUtils.isEmpty(warehousing.getCreator())) {
+            warehousing.setCreator(username);
+        }
         warehousing.setUpdator(username);
         Date curr = new Date();
         warehousing.setCreateOn(curr);
@@ -143,6 +153,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
         warehousingMapper.deleteByPrimaryKey(warehousingNo);
         warehousingContentMapper.deleteByWarehousingNo(warehousingNo);
         return Json.succ();
+    }
+
+    private StringBuilder getErrMsg(BindingResult bindingResult) {
+        StringBuilder errMsg = new StringBuilder();
+        for (ObjectError objectError : bindingResult.getAllErrors()) {
+            errMsg.append(objectError.getDefaultMessage()).append(";");
+        }
+        return errMsg;
     }
 
 }

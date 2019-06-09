@@ -2,6 +2,28 @@
     <div class="login-container">
         <div class="app-container">
             <el-form ref="form" label-width="120px" :model="form">
+                <el-form-item label="入库单所属用户" v-if="adminRole">
+                    <el-col :span="12">
+                        <el-form-item label="所属用户">
+                            <el-tooltip content="所属用户" placement="top">
+                                <el-select
+                                    filterable
+                                    clearable
+                                    v-model="form.creator"
+                                    placeholder="请选择所属用户"
+                                    @change="filterProduct"
+                                >
+                                    <el-option
+                                        v-for="creator in users"
+                                        :key="creator.uname"
+                                        :label="creator.nick"
+                                        :value="creator.uname"
+                                    ></el-option>
+                                </el-select>
+                            </el-tooltip>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="仓库地址">
                     <el-col :span="12">
                         <el-form-item label="默认地址">
@@ -307,6 +329,7 @@ export default {
     name: 'new-warehousing',
     data() {
         return {
+            adminRole: false,
             onUpdate: false,
             onCreate: true,
             dialogImageUrl: '',
@@ -315,6 +338,7 @@ export default {
                 target: '岡山县岡山市中区新京橋3丁目4-26',
                 warehousingNo: '',
                 method: '东岳头程',
+                creator: '',
                 carrier: '',
                 trackNo: '',
                 deliverMethod: '',
@@ -343,6 +367,7 @@ export default {
             tableLoading: false,
             arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             wrapTypeArr: ['自带包装', '非自带包装'],
+            users: [],
             pickerOptions1: {
                 disabledDate(time) {
                     return time.getTime() < Date.now()
@@ -380,6 +405,8 @@ export default {
     },
     created() {
         this.initPage()
+        this.initUserList()
+        this.hasAdminRole()
     },
     inject: ['reload'],
     watch: {
@@ -388,16 +415,48 @@ export default {
         },
     },
     methods: {
-        initPage() {
+        initUserList() {
             request({
-                url: '/product/list',
+                url: '/sys_user/query4Option',
+                method: 'post',
+                data: {
+                    current: null,
+                    size: 'all',
+                },
+            }).then(res => {
+                this.users = res.data.page.records
+            })
+        },
+        hasAdminRole() {
+            request({
+                url: '/sys_user//info',
                 method: 'get',
+            }).then(res => {
+                const roles = res.data.userInfo.roles
+                for (let i = 0; i < roles.length; i++) {
+                    const role = roles[i]
+                    const val = role['val']
+                    if (val === 'root' || val === 'operator') {
+                        this.adminRole = true
+                    }
+                }
+            })
+        },
+        filterProduct(val) {
+            request({
+                url: '/product/listByUser',
+                method: 'post',
+                data: {
+                    user: val,
+                },
             }).then(res => {
                 this.products = res.data.data
                 this.products.forEach(product => {
                     this.productMap[product['value']] = product
                 })
             })
+        },
+        initPage() {
             request({
                 url: '/channel/list/1',
                 method: 'get',
@@ -503,6 +562,10 @@ export default {
             delete this.selectedProductMap[row.boxSeq][row.sku]
         },
         submitForm() {
+            if (this.adminRole && this.form.creator.length <= 0) {
+                this.$message.warning('请选择入库单所属人')
+                return
+            }
             if (this.form.insurance) {
                 this.form.insurance = 'Y'
             } else {
@@ -527,7 +590,7 @@ export default {
                 url: '/warehousing/update',
                 method: 'post',
                 data: this.form,
-            }).then(res => {
+            }).then(() => {
                 this.$message.success('更新订单')
                 this.$router.push({ path: '/new-warehousing/new-warehousing' })
                 this.initPage()
