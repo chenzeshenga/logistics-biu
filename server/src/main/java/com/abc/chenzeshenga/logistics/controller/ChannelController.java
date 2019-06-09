@@ -50,6 +50,12 @@ import java.util.Map;
     }
 
     @GetMapping @RequestMapping("/list/{where}") public Json listByWhere(@PathVariable String where) {
+        /*
+          1 入库单
+          2 单票单清
+          3 虚拟海外仓
+          4 海外仓代发
+         */
         List<ChannelLabel> channelList = channelMapper.listByWhere(where);
         return Json.succ().data(channelList);
     }
@@ -64,7 +70,6 @@ import java.util.Map;
         channel.setUpdateOn(curr);
         channel.setCheckedRules(String.join(",", channel.getCheckedRules2()));
         channelMapper.insert(channel);
-        //        channelCache.init();
         return Json.succ().data(channel);
     }
 
