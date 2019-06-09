@@ -419,7 +419,31 @@ import java.util.concurrent.ExecutorService;
         List<Warehousing> warehousingList =
             warehousingMapper.listByOwnerAndStatus(new Page(1, 500), creator, status, method);
         warehousingList.forEach(warehousing -> {
-
+            warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));
+            List<WarehousingContent> warehousingContentList = warehousing.getWarehousingContentList();
+            if (warehousingContentList != null && !warehousingContentList.isEmpty()) {
+                if (warehousingContentList.size() >= 1) {
+                    WarehousingContent warehousingContent1 = warehousingContentList.get(0);
+                    warehousing.setSku1(warehousingContent1.getSku());
+                    warehousing.setName1(warehousingContent1.getName());
+                    warehousing.setNum1(warehousingContent1.getTotalNum());
+                    warehousing.setWrapType1(warehousingContent1.getWrapType());
+                }
+                if (warehousingContentList.size() >= 2) {
+                    WarehousingContent warehousingContent2 = warehousingContentList.get(1);
+                    warehousing.setSku2(warehousingContent2.getSku());
+                    warehousing.setName2(warehousingContent2.getName());
+                    warehousing.setNum2(warehousingContent2.getTotalNum());
+                    warehousing.setWrapType2(warehousingContent2.getWrapType());
+                }
+                if (warehousingContentList.size() >= 3) {
+                    WarehousingContent warehousingContent3 = warehousingContentList.get(2);
+                    warehousing.setSku3(warehousingContent3.getSku());
+                    warehousing.setName3(warehousingContent3.getName());
+                    warehousing.setNum3(warehousingContent3.getTotalNum());
+                    warehousing.setWrapType3(warehousingContent3.getWrapType());
+                }
+            }
         });
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
