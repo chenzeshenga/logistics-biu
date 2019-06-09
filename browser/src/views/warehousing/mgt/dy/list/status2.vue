@@ -154,12 +154,12 @@
                     label="仓库地址"
                 ></el-table-column>
                 <el-table-column
-                    width="150"
+                    width="100"
                     prop="statusDesc"
                     label="状态"
                 ></el-table-column>
                 <el-table-column
-                    width="200"
+                    width="150"
                     prop="method"
                     label="头程方式"
                 ></el-table-column>
@@ -201,7 +201,7 @@
                     label="运输方式"
                 ></el-table-column>
                 <el-table-column
-                    width="250"
+                    width="200"
                     prop="clearanceType"
                     label="报关类型"
                 ></el-table-column>
@@ -287,7 +287,7 @@
                                 plain
                             ></el-button>
                         </el-tooltip>
-                        <el-tooltip content="暂存" placement="top">
+                        <el-tooltip content="废弃" placement="top">
                             <el-button
                                 @click="hold(scope.$index, scope.row)"
                                 size="mini"
@@ -312,6 +312,36 @@
                 :total="tablePage.total"
             >
             </el-pagination>
+            <el-dialog
+                title="申请单号"
+                :visible.sync="dialogVisible1"
+                width="30%"
+            >
+                <el-form :model="dialog">
+                    <el-form-item label="承运人">
+                        <el-tooltip
+                            content="东岳头程默认承运人为东岳"
+                            placement="top"
+                        >
+                            <el-input v-model="dialog.carrier"></el-input>
+                        </el-tooltip>
+                    </el-form-item>
+                    <el-form-item label="追踪单号">
+                        <el-tooltip
+                            content="东岳头程默认追踪单号为订单号"
+                            placement="top"
+                        >
+                            <el-input v-model="dialog.trackNo"></el-input>
+                        </el-tooltip>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible1 = false">取 消</el-button>
+                    <el-button type="primary" @click="fillInTrackNo"
+                        >确 定</el-button
+                    >
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -333,6 +363,7 @@ export default {
             tableLoading: false,
             tableData: [],
             daterange: null,
+            dialogVisible1: false,
             pickerOptions2: {
                 shortcuts: [
                     {
@@ -376,6 +407,11 @@ export default {
                 ordno: '',
                 creator: '',
                 channelCode: '',
+            },
+            dialog: {
+                carrier: '',
+                trackNo: '',
+                warehousingNo: '',
             },
         }
     },
@@ -431,15 +467,22 @@ export default {
         },
         hold(index, row) {
             const warehousingNo = row.warehousingNo
-            this.$confirm('您确定要暂存该入库单？', '提示', confirm)
+            this.$confirm(
+                '您确定要暂存该入库单？（该订单可在暂存页面查看）',
+                '提示',
+                confirm
+            )
                 .then(() => {
                     request({
-                        url: 'ord/update/3/' + warehousingNo + '/2',
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
+                        url: 'warehousing/status',
+                        method: 'post',
+                        data: {
+                            to: '8',
+                            warehousingNo: warehousingNo,
+                        },
+                    }).then(() => {
                         this.fetchData()
-                        this.$message.success('提交成功')
+                        this.$message.success('暂存成功')
                     })
                 })
                 .catch(() => {
@@ -447,7 +490,11 @@ export default {
                 })
         },
         handleDelete(index, row) {
-            this.$confirm('您确定要删除该入库单？', '提示', confirm)
+            this.$confirm(
+                '您确定要删除该入库单？(该订单将无法恢复)',
+                '提示',
+                confirm
+            )
                 .then(() => {
                     request({
                         url:
@@ -456,7 +503,7 @@ export default {
                         method: 'get',
                     }).then(res => {
                         this.fetchData()
-                        this.$message.success('提交成功')
+                        this.$message.success('删除成功')
                     })
                 })
                 .catch(() => {
@@ -492,6 +539,22 @@ export default {
             link.target = '_blank'
             document.body.appendChild(link)
             link.click()
+        },
+        applyTrackno(index, row) {
+            this.dialog.warehousingNo = row.warehousingNo
+            this.dialog.carrier = row.carrier
+            this.dialog.trackNo = row.trackNo
+            this.dialogVisible1 = true
+        },
+        fillInTrackNo() {
+            request({
+                url: 'warehousing/trackno',
+                method: 'post',
+                data: this.dialog,
+            }).then(() => {
+                this.dialogVisible1 = false
+                this.fetchData()
+            })
         },
     },
 }

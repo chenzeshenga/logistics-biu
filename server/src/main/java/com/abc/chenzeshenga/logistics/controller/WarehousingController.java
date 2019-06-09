@@ -163,4 +163,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return errMsg;
     }
 
+    @PostMapping @RequestMapping("/trackno") public Json fillInTrackNo(@RequestBody Warehousing warehousing) {
+        Date curr = new Date();
+        String username = UserUtils.getUserName();
+        warehousing.setUpdateOn(curr);
+        warehousing.setUpdator(username);
+        warehousingMapper.updateByPrimaryKeySelective(warehousing);
+        return Json.succ();
+    }
+
 }
