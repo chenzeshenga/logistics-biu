@@ -36,6 +36,8 @@
         <result column="creator" jdbcType="VARCHAR" property="creator"/>
         <result column="updator" jdbcType="VARCHAR" property="updator"/>
         <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
+        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
         <collection property="warehousingContentList" ofType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
             <result column="warehousing_no" property="warehousingNo"/>
             <result column="sku" property="sku"/>
@@ -84,7 +86,7 @@
                                    update_on, creator, updator, status)
         values (#{warehousingNo,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
                 #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR},
-                #{channelCode}, #{deliverMethod,jdbcType=VARCHAR},
+                #{channel}, #{deliverMethod,jdbcType=VARCHAR},
                 #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR},
                 #{insuranceNum,jdbcType=VARCHAR}, #{estimatedDate,jdbcType=TIMESTAMP}, #{createOn,jdbcType=TIMESTAMP},
                 #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR}, #{status})
@@ -274,6 +276,7 @@
         select *
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+                 left join l_channel channel on (warehousing.channel_code=channel.channel_code)
         where warehousing.creator = #{creator}
           and warehousing.status = #{status}
           and deliver_method = #{method}
@@ -284,6 +287,7 @@
         select *
         from l_warehousing warehousing
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+                 left join l_channel channel on (warehousing.channel_code=channel.channel_code)
         where warehousing.status = #{status}
         order by warehousing.create_on desc
     </select>

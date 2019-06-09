@@ -29,11 +29,11 @@ import java.util.List;
     /**
      * 头程渠道
      */
-    private String channelCode;
+    private String channel;
     /**
-     * 渠道名称
+     * 渠道描述
      */
-    private String channelName;
+    private String channelDesc;
     /**
      * 运输方式
      */

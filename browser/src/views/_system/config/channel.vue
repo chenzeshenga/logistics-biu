@@ -432,21 +432,44 @@ export default {
     created() {
         this.fetch()
     },
+    watch: {
+        $route() {
+            this.fetch()
+        },
+    },
     methods: {
         fetch() {
-            this.tableLoading = true
-            request({
-                url: '/channel/page',
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
+            const filter = this.$route.query.filter
+            if (filter !== undefined && filter.length > 0) {
+                this.regTxt = filter
+                this.tableLoading = true
+                request({
+                    url: '/channel/pageReg?reg=' + this.regTxt,
+                    method: 'post',
+                    data: this.tablePage,
+                }).then(res => {
+                    this.tableData = res.data.page.records
+                    this.tablePage.current = res.data.page.current
+                    this.tablePage.pages = res.data.page.pages
+                    this.tablePage.size = res.data.page.size
+                    this.tablePage.total = res.data.page.total
+                    this.tableLoading = false
+                })
+            } else {
+                this.tableLoading = true
+                request({
+                    url: '/channel/page',
+                    method: 'post',
+                    data: this.tablePage,
+                }).then(res => {
+                    this.tableData = res.data.page.records
+                    this.tablePage.current = res.data.page.current
+                    this.tablePage.pages = res.data.page.pages
+                    this.tablePage.size = res.data.page.size
+                    this.tablePage.total = res.data.page.total
+                    this.tableLoading = false
+                })
+            }
         },
         handleCheckAllChange(val) {
             if (val) {

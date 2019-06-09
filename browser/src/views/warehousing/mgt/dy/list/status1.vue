@@ -160,6 +160,27 @@
                     prop="method"
                     label="头程方式"
                 ></el-table-column>
+                <el-table-column width="150" label="头程渠道">
+                    <template slot-scope="scope">
+                        <el-popover trigger="hover" placement="top">
+                            <p>渠道名称: {{ scope.row.channelDesc }}</p>
+                            <p>渠道编码: {{ scope.row.channel }}</p>
+                            <p>
+                                <a
+                                    v-on:click="
+                                        channelLink(scope.$index, scope.row)
+                                    "
+                                    >查看详情</a
+                                >
+                            </p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag size="medium">{{
+                                    scope.row.channel
+                                }}</el-tag>
+                            </div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     width="100"
                     prop="carrier"
@@ -442,6 +463,11 @@ export default {
         handleCurrentChange(val) {
             this.tablePage.current = val
             this.fetchData()
+        },
+        channelLink(index, row) {
+            this.$router.push({
+                path: '/system/channel?filter=' + row.channel,
+            })
         },
     },
 }
