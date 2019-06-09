@@ -7,6 +7,8 @@
         <result column="method" jdbcType="VARCHAR" property="method"/>
         <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
         <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
+        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan"/>
+        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan"/>
         <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
         <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
         <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
@@ -27,6 +29,8 @@
         <result column="method" jdbcType="VARCHAR" property="method"/>
         <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
         <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
+        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan"/>
+        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan"/>
         <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
         <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
         <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
@@ -208,6 +212,12 @@
             <if test="trackNo != null">
                 track_no = #{trackNo,jdbcType=VARCHAR},
             </if>
+            <if test="carrierInJapan != null">
+                carrier_in_japan = #{carrierInJapan,jdbcType=VARCHAR},
+            </if>
+            <if test="trackNoInJapan != null">
+                track_no_in_japan = #{trackNoInJapan,jdbcType=VARCHAR},
+            </if>
             <if test="deliverMethod != null">
                 deliver_method = #{deliverMethod,jdbcType=VARCHAR},
             </if>
@@ -308,7 +318,20 @@
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
                  left join l_channel channel on (warehousing.channel_code = channel.channel_code)
         where warehousing.status = #{status}
+          and warehousing.method = #{method}
+        order by warehousing.create_on desc
+    </select>
+
+    <select id="listByStatusAndFilter" resultMap="result">
+        select *
+        from l_warehousing warehousing
+        left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        left join l_channel channel on (warehousing.channel_code = channel.channel_code)
+        where warehousing.status = #{status}
         and warehousing.method=#{method}
+        <if test="method != null and method != ''">
+            and method = #{method}
+        </if>
         order by warehousing.create_on desc
     </select>
 

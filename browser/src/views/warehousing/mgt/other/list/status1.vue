@@ -24,7 +24,7 @@
                         <el-col :span="4">
                             <el-tooltip content="入库单号" placement="top">
                                 <el-input
-                                    v-model="search.ordno"
+                                    v-model="search.warehousingNo"
                                     clearable
                                     placeholder="请输入入库单号"
                                 ></el-input>
@@ -404,7 +404,7 @@ export default {
             users: [],
             channels: [],
             search: {
-                ordno: '',
+                warehousingNo: '',
                 creator: '',
                 channelCode: '',
             },

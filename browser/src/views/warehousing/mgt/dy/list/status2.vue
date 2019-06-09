@@ -24,7 +24,7 @@
                         <el-col :span="4">
                             <el-tooltip content="入库单号" placement="top">
                                 <el-input
-                                    v-model="search.ordno"
+                                    v-model="search.warehousingNo"
                                     clearable
                                     placeholder="请输入入库单号"
                                 ></el-input>
@@ -245,24 +245,14 @@
                     prop="updator"
                     label="修改人"
                 ></el-table-column>
-                <el-table-column label="操作" width="300" fixed="right">
+                <el-table-column label="操作" width="250" fixed="right">
                     <template slot-scope="scope">
-                        <el-tooltip content="送往前置海外仓" placement="top">
+                        <el-tooltip content="提交" placement="top">
                             <el-button
                                 @click="statusUpdate(scope.$index, scope.row)"
                                 size="mini"
                                 type="info"
                                 icon="el-icon-check"
-                                circle
-                                plain
-                            ></el-button>
-                        </el-tooltip>
-                        <el-tooltip content="预申请单号" placement="top">
-                            <el-button
-                                @click="applyTrackno(scope.$index, scope.row)"
-                                size="mini"
-                                type="info"
-                                icon="el-icon-info"
                                 circle
                                 plain
                             ></el-button>
@@ -404,7 +394,7 @@ export default {
             users: [],
             channels: [],
             search: {
-                ordno: '',
+                warehousingNo: '',
                 creator: '',
                 channelCode: '',
             },

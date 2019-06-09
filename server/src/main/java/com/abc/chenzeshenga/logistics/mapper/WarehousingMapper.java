@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Warehousing;
+import com.abc.chenzeshenga.logistics.model.WarehousingReq;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,13 @@ import java.util.List;
 
     List<Warehousing> listByOwnerAndStatus(Pagination pagination, String creator, String status, String method);
 
+    List<Warehousing> listByOwnerAndStatusAndFilter(Pagination pagination, String creator, String status, String method,
+        WarehousingReq warehousingReq);
+
     List<Warehousing> listByStatus(Pagination pagination, String status, String method);
+
+    List<Warehousing> listByStatusAndFilter(Pagination pagination, String status, String method,
+        WarehousingReq warehousingReq);
 
     Warehousing getWarehousingSeq();
 

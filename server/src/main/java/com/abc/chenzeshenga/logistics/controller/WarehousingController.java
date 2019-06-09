@@ -5,6 +5,7 @@ import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
+import com.abc.chenzeshenga.logistics.model.WarehousingReq;
 import com.abc.chenzeshenga.logistics.service.WarehousingService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.entity.SysUser;
@@ -105,6 +106,38 @@ import java.util.concurrent.atomic.AtomicBoolean;
             warehousingPage = warehousingService.listByStatus(page, status, method);
         } else {
             warehousingPage = warehousingService.listByOwnerAndStatus(page, cname, method, status);
+        }
+        enrichWarehousing(warehousingPage);
+        return Json.succ().data("page", warehousingPage);
+    }
+
+    @PostMapping @RequestMapping("/listByFilter/{method}/{status}")
+    public Json listByFilter(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
+        method = switchMethod(method);
+        String cname = UserUtils.getUserName();
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        WarehousingReq warehousingReq = new WarehousingReq();
+        warehousingReq.setWarehousingNo(jsonObject.getString("warehousingNo"));
+        warehousingReq.setCreator(jsonObject.getString("creator"));
+        warehousingReq.setChannelCode(jsonObject.getString("channelCode"));
+        warehousingReq.setFrom(jsonObject.getDate("from"));
+        warehousingReq.setTo(jsonObject.getDate("to"));
+        Subject subject = SecurityUtils.getSubject();
+        SysUser user = (SysUser)subject.getPrincipal();
+        Set<AuthVo> authVos = user.getRoles();
+        AtomicBoolean queryAll = new AtomicBoolean(false);
+        authVos.forEach(authVo -> {
+            if ("root".equals(authVo.getVal()) || "operator".equals(authVo.getVal())) {
+                queryAll.set(true);
+            }
+        });
+        Page<Warehousing> warehousingPage;
+        if (queryAll.get()) {
+            warehousingPage = warehousingService.listByStatusAndFilter(page, status, method, warehousingReq);
+        } else {
+            warehousingPage =
+                warehousingService.listByOwnerAndStatusAndFilter(page, cname, method, status, warehousingReq);
         }
         enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);

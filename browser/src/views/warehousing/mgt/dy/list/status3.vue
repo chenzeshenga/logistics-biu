@@ -24,7 +24,7 @@
                         <el-col :span="4">
                             <el-tooltip content="入库单号" placement="top">
                                 <el-input
-                                    v-model="search.ordno"
+                                    v-model="search.warehousingNo"
                                     clearable
                                     placeholder="请输入入库单号"
                                 ></el-input>
@@ -68,7 +68,7 @@
                             <el-form-item label="">
                                 <el-button
                                     icon="el-icon-search"
-                                    @click="searchOrd()"
+                                    @click="searchWarehousing()"
                                 ></el-button>
                             </el-form-item>
                         </el-col>
@@ -196,6 +196,16 @@
                     label="追踪单号"
                 ></el-table-column>
                 <el-table-column
+                    width="100"
+                    prop="carrierInJapan"
+                    label="日本承运人"
+                ></el-table-column>
+                <el-table-column
+                    width="150"
+                    prop="trackNoInJapan"
+                    label="日本追踪单号"
+                ></el-table-column>
+                <el-table-column
                     width="170"
                     prop="deliverMethod"
                     label="运输方式"
@@ -257,7 +267,7 @@
                                 plain
                             ></el-button>
                         </el-tooltip>
-                        <el-tooltip content="预申请单号" placement="top">
+                        <el-tooltip content="申请日本单号" placement="top">
                             <el-button
                                 @click="applyTrackno(scope.$index, scope.row)"
                                 size="mini"
@@ -318,21 +328,11 @@
                 width="30%"
             >
                 <el-form :model="dialog">
-                    <el-form-item label="承运人">
-                        <el-tooltip
-                            content="东岳头程默认承运人为东岳"
-                            placement="top"
-                        >
-                            <el-input v-model="dialog.carrier"></el-input>
-                        </el-tooltip>
+                    <el-form-item label="日本承运人">
+                        <el-input v-model="dialog.carrierInJapan"></el-input>
                     </el-form-item>
-                    <el-form-item label="追踪单号">
-                        <el-tooltip
-                            content="东岳头程默认追踪单号为订单号"
-                            placement="top"
-                        >
-                            <el-input v-model="dialog.trackNo"></el-input>
-                        </el-tooltip>
+                    <el-form-item label="日本追踪单号">
+                        <el-input v-model="dialog.trackNoInJapan"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -404,13 +404,15 @@ export default {
             users: [],
             channels: [],
             search: {
-                ordno: '',
+                warehousingNo: '',
                 creator: '',
                 channelCode: '',
+                from: '',
+                to: '',
             },
             dialog: {
-                carrier: '',
-                trackNo: '',
+                carrierInJapan: '',
+                trackNoInJapan: '',
                 warehousingNo: '',
             },
         }
@@ -542,8 +544,8 @@ export default {
         },
         applyTrackno(index, row) {
             this.dialog.warehousingNo = row.warehousingNo
-            this.dialog.carrier = row.carrier
-            this.dialog.trackNo = row.trackNo
+            this.dialog.carrierInJapan = row.carrierInJapan
+            this.dialog.trackNoInJapan = row.trackNoInJapan
             this.dialogVisible1 = true
         },
         fillInTrackNo() {
@@ -554,6 +556,30 @@ export default {
             }).then(() => {
                 this.dialogVisible1 = false
                 this.fetchData()
+            })
+        },
+        searchWarehousing() {
+            this.search.from = this.daterange[0]
+            this.search.to = this.daterange[1]
+            this.tableLoading = true
+            request({
+                url: 'warehousing/listByFilter/1/3',
+                method: 'post',
+                data: {
+                    page: this.tablePage,
+                    warehousingNo:this.search.warehousingNo,
+                    creator:this.search.creator,
+                    channelCode:this.search.channelCode,
+                    from:this.search.from,
+                    to:this.search.to,
+                },
+            }).then(res => {
+                this.tableData = res.data.page.records
+                this.tablePage.current = res.data.page.current
+                this.tablePage.pages = res.data.page.pages
+                this.tablePage.size = res.data.page.size
+                this.tablePage.total = res.data.page.total
+                this.tableLoading = false
             })
         },
     },
