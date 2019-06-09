@@ -409,13 +409,9 @@ import java.util.concurrent.ExecutorService;
         }
     }
 
-    @GetMapping("/ord/csv/{ordno}") public void getOrdCsv(@PathVariable String ordno) {
-
-    }
-
     @GetMapping("/warehousing/excel/{status}")
     public void getWarehousingExcel(@PathVariable String status, HttpServletResponse httpServletResponse,
-        @RequestParam String method, @RequestParam String creator) throws IOException {
+        @RequestParam String method, @RequestParam(required = false) String creator) throws IOException {
         String fileName = "入库单信息.xlsx";
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpServletResponse
@@ -427,14 +423,10 @@ import java.util.concurrent.ExecutorService;
         });
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
-        Sheet sheet1 = new Sheet(1, 0, Product.class);
+        Sheet sheet1 = new Sheet(1, 0, Warehousing.class);
         excelWriter.write(warehousingList, sheet1);
         excelWriter.finish();
         httpServletResponse.flushBuffer();
-    }
-
-    @GetMapping("/warehousing/csv/{ordno}") public void getWarehousingCsv(@PathVariable String ordno) {
-
     }
 
 }

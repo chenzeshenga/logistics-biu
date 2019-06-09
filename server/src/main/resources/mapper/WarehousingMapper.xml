@@ -297,7 +297,7 @@
             and warehousing.status = #{status}
         </if>
         <if test="method != null and method != ''">
-            and deliver_method = #{method}
+            and method = #{method}
         </if>
         order by warehousing.create_on desc
     </select>
