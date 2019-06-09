@@ -308,6 +308,7 @@
                  left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
                  left join l_channel channel on (warehousing.channel_code = channel.channel_code)
         where warehousing.status = #{status}
+        and warehousing.method=#{method}
         order by warehousing.create_on desc
     </select>
 
