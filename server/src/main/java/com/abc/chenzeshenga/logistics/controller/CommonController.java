@@ -2,7 +2,6 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
-import com.abc.chenzeshenga.logistics.cache.OrderCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
@@ -11,6 +10,7 @@ import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -27,20 +27,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 
 /**
  * @author chenzesheng
  * @version 1.0
  */
 @RestController @Slf4j public class CommonController {
-
-    class Constant {
-        private static final String CARRIER = "carrier_";
-    }
 
     private static final String CARRIER = "carrier_";
 
@@ -56,25 +50,15 @@ import java.util.concurrent.ExecutorService;
 
     @Resource private ProductMapper productMapper;
 
-    @Resource private TemplateMapper templateMapper;
+    @Resource private AddressMapper addressMapper;
 
     private JapanAddressCache japanAddressCache;
 
     private LabelCache labelCache;
 
-    private OrderCache orderCache;
-
-    private ExecutorService pool;
-
-    @Resource private AddressMapper addressMapper;
-
-    @Autowired
-    public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache, OrderCache orderCache,
-        ExecutorService pool) {
+    @Autowired public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache) {
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
-        this.orderCache = orderCache;
-        this.pool = pool;
     }
 
     @GetMapping("/generate/pk") public Json getOrderNo() {
@@ -179,10 +163,15 @@ import java.util.concurrent.ExecutorService;
                 log.error("error stack info ", e);
             }
         });
+        writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);
+    }
+
+    private void writeServletResp(HttpServletResponse httpServletResponse, List<? extends BaseRowModel> baseRowModels,
+        Class<? extends BaseRowModel> clazz) throws IOException {
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
-        Sheet sheet1 = new Sheet(1, 0, ManualOrder.class);
-        excelWriter.write(manualOrderList, sheet1);
+        Sheet sheet1 = new Sheet(1, 0, clazz);
+        excelWriter.write(baseRowModels, sheet1);
         excelWriter.finish();
         httpServletResponse.flushBuffer();
     }
@@ -206,12 +195,7 @@ import java.util.concurrent.ExecutorService;
                 product.setStatusDesc("在库");
             }
         });
-        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
-        ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
-        Sheet sheet1 = new Sheet(1, 0, Product.class);
-        excelWriter.write(productList, sheet1);
-        excelWriter.finish();
-        httpServletResponse.flushBuffer();
+        writeServletResp(httpServletResponse, productList, Product.class);
     }
 
     @PostMapping("/ord/excel")
@@ -445,12 +429,7 @@ import java.util.concurrent.ExecutorService;
                 }
             }
         });
-        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
-        ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
-        Sheet sheet1 = new Sheet(1, 0, Warehousing.class);
-        excelWriter.write(warehousingList, sheet1);
-        excelWriter.finish();
-        httpServletResponse.flushBuffer();
+        writeServletResp(httpServletResponse, warehousingList, Warehousing.class);
     }
 
 }
