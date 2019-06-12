@@ -245,7 +245,7 @@
                     prop="updator"
                     label="修改人"
                 ></el-table-column>
-                <el-table-column label="操作" width="300" fixed="right">
+                <el-table-column label="操作" width="350" fixed="right">
                     <template slot-scope="scope">
                         <el-tooltip content="送往前置海外仓" placement="top">
                             <el-button
@@ -263,6 +263,16 @@
                                 size="mini"
                                 type="info"
                                 icon="el-icon-info"
+                                circle
+                                plain
+                            ></el-button>
+                        </el-tooltip>
+                        <el-tooltip content="获取报关单" placement="top">
+                            <el-button
+                                @click="handlePrint(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-printer"
                                 circle
                                 plain
                             ></el-button>
@@ -342,6 +352,36 @@
                     >
                 </span>
             </el-dialog>
+            <el-dialog
+                title="申请报关单"
+                :visible.sync="dialogVisible2"
+                width="30%"
+            >
+                <el-form :model="dialog">
+                    <el-form-item label="承运人">
+                        <el-tooltip
+                            content="东岳头程默认承运人为东岳"
+                            placement="top"
+                        >
+                            <el-input v-model="dialog.carrier"></el-input>
+                        </el-tooltip>
+                    </el-form-item>
+                    <el-form-item label="追踪单号">
+                        <el-tooltip
+                            content="东岳头程默认追踪单号为订单号"
+                            placement="top"
+                        >
+                            <el-input v-model="dialog.trackNo"></el-input>
+                        </el-tooltip>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible2 = false">取 消</el-button>
+                    <el-button type="primary" @click="printAndSave"
+                        >确 定</el-button
+                    >
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -364,6 +404,7 @@ export default {
             tableData: [],
             daterange: null,
             dialogVisible1: false,
+            dialogVisible2: false,
             pickerOptions2: {
                 shortcuts: [
                     {
@@ -509,6 +550,9 @@ export default {
                 .catch(() => {
                     this.$message.info('已取消')
                 })
+        },
+        handlePrint(index, row) {
+            this.dialogVisible2 = true
         },
         handleSizeChange(val) {
             this.tablePage.size = val
