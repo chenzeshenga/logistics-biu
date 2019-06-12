@@ -104,12 +104,7 @@ import java.util.UUID;
 
     @GetMapping("/info") public Json info() {
         String oper = "get user info";
-
         Subject subject = SecurityUtils.getSubject();
-
-        Serializable sessionId = subject.getSession().getId();
-        log.debug("{}, sessionId: {}", oper, sessionId);
-
         //从session取出用户信息
         SysUser user = (SysUser)subject.getPrincipal();
         if (user == null) {

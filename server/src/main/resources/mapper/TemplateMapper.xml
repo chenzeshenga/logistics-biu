@@ -68,6 +68,14 @@
 
     <select id="list" resultMap="BaseResultMap">
         select *
-        from l_template;
+        from l_template
+        <trim prefix="where" prefixOverrides="or">
+            <if test="reg!=''">
+                uuid like CONCAT('%', #{reg}, '%')
+            </if>
+            <if test="reg!=''">
+                or file_name like CONCAT('%', #{reg}, '%')
+            </if>
+        </trim>
     </select>
 </mapper>
