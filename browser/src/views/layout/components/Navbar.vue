@@ -32,15 +32,15 @@
                             style="margin-right: 5px;"
                             type="danger"
                             v-if="roles.length === 0"
-                            >游客（未配置任何角色）</el-tag
-                        >
+                            >游客（未配置任何角色）
+                        </el-tag>
                         <el-tag
                             :key="r.val"
                             type="success"
                             v-else
                             v-for="r in roles"
-                            >{{ r.name }}</el-tag
-                        >
+                            >{{ r.name }}
+                        </el-tag>
                     </el-col>
                 </el-row>
             </div>
@@ -79,6 +79,13 @@
                                         >修改密码</span
                                     >
                                 </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span
+                                        @click="handlePersonalProfile"
+                                        style="display:block;"
+                                        >企业信息</span
+                                    >
+                                </el-dropdown-item>
                                 <el-dropdown-item divided>
                                     <span
                                         @click="currentVersion"
@@ -112,6 +119,44 @@
 
                 <el-form-item label="确认密码" prop="pwd2">
                     <el-input type="password" v-model="temp.pwd2"></el-input>
+                </el-form-item>
+            </el-form>
+            <div class="dialog-footer" slot="footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button @click="updatePwd" type="primary">确定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog :visible.sync="dialogVisible3" title="企业信息" width="30%">
+            <el-form :model="profile" label-position="left" label-width="135px">
+                <el-form-item label="企业名称（中文）" prop="chineseName">
+                    <el-input v-model="profile.chineseName"></el-input>
+                </el-form-item>
+                <el-form-item label="企业名称（英文）" prop="englishName">
+                    <el-input v-model="profile.englishName"></el-input>
+                </el-form-item>
+                <el-form-item label="企业地址（中文）" prop="chineseAddr">
+                    <el-input v-model="profile.chineseAddr"></el-input>
+                </el-form-item>
+                <el-form-item label="企业地址（英文）" prop="englishAddr">
+                    <el-input v-model="profile.englishAddr"></el-input>
+                </el-form-item>
+                <el-form-item label="企业邮编" prop="zipCode">
+                    <el-input v-model="profile.zipCode"></el-input>
+                </el-form-item>
+                <el-form-item
+                    label="企业联系人姓名（中文）"
+                    prop="contactEnglishName"
+                >
+                    <el-input v-model="profile.contactEnglishName"></el-input>
+                </el-form-item>
+                <el-form-item
+                    label="企业联系人姓名（英文）"
+                    prop="contactChineseName"
+                >
+                    <el-input v-model="profile.contactChineseName"></el-input>
+                </el-form-item>
+                <el-form-item label="企业联系方式" prop="phone">
+                    <el-input v-model="profile.phone"></el-input>
                 </el-form-item>
             </el-form>
             <div class="dialog-footer" slot="footer">
@@ -166,6 +211,7 @@ export default {
         return {
             dialogVisible: false,
             dialogVisible2: false,
+            dialogVisible3: false,
             version: '201906112',
             temp: {
                 pwd: null,
@@ -186,6 +232,16 @@ export default {
                 ],
             },
             search: null,
+            profile: {
+                chineseName: '',
+                englishName: '',
+                chineseAddr: '',
+                englishAddr: '',
+                zipCode: '',
+                contactEnglishName: '',
+                contactChineseName: '',
+                phone: '',
+            },
         }
     },
     components: {
@@ -258,6 +314,9 @@ export default {
         },
         currentVersion() {
             this.dialogVisible2 = true
+        },
+        handlePersonalProfile() {
+            this.dialogVisible3 = true
         },
     },
 }
