@@ -345,7 +345,7 @@ export default {
                 url: '/profile/update',
                 method: 'post',
                 data: this.profile,
-            }).then(res => {
+            }).then(() => {
                 this.$message.success('更新成功')
                 this.dialogVisible3 = false
             })

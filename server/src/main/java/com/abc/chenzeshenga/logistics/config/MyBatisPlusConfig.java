@@ -1,4 +1,4 @@
-package com.abc.config;
+package com.abc.chenzeshenga.logistics.config;
 
 import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
