@@ -128,6 +128,15 @@
         </el-dialog>
         <el-dialog :visible.sync="dialogVisible3" title="企业信息" width="30%">
             <el-form :model="profile" label-position="left" label-width="135px">
+                <el-col>
+                    <el-alert
+                        title="以下信息用于生成报关单"
+                        type="info"
+                        show-icon
+                        style="margin-bottom: 2%"
+                    >
+                    </el-alert>
+                </el-col>
                 <el-form-item label="企业名称（中文）" prop="chineseName">
                     <el-input v-model="profile.chineseName"></el-input>
                 </el-form-item>
@@ -160,8 +169,10 @@
                 </el-form-item>
             </el-form>
             <div class="dialog-footer" slot="footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button @click="updatePwd" type="primary">确定</el-button>
+                <el-button @click="dialogVisible3 = false">取消</el-button>
+                <el-button @click="updateProfile" type="primary"
+                    >更新
+                </el-button>
             </div>
         </el-dialog>
         <el-dialog :visible.sync="dialogVisible2" title="版本信息" width="20%">
@@ -317,6 +328,27 @@ export default {
         },
         handlePersonalProfile() {
             this.dialogVisible3 = true
+            request({
+                url: '/profile/init',
+                method: 'get',
+            }).then(res => {
+                const profile = res.data.data
+                if (profile == null) {
+                    console.log(profile)
+                } else {
+                    this.profile = profile
+                }
+            })
+        },
+        updateProfile() {
+            request({
+                url: '/profile/update',
+                method: 'post',
+                data: this.profile,
+            }).then(res => {
+                this.$message.success('更新成功')
+                this.dialogVisible3 = false
+            })
         },
     },
 }

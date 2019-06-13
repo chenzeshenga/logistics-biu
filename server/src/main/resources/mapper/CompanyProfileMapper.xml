@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.CompanyProfileMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+
+    <select id="init" resultType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
+        select user_id              as userId,
+               chinese_name         as chineseName,
+               english_name         as englishName,
+               chinese_addr         as chineseAddr,
+               english_addr         as englishAddr,
+               zip_code             as zipCode,
+               contact_english_name as contactEnglishName,
+               contact_chinese_name as contactChineseName,
+               phone
+        from l_company_profile
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
+        insert into l_company_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="chineseName != null">
+                chinese_name,
+            </if>
+            <if test="englishName != null">
+                english_name,
+            </if>
+            <if test="chineseAddr != null">
+                chinese_addr,
+            </if>
+            <if test="englishAddr != null">
+                english_addr,
+            </if>
+            <if test="zipCode != null">
+                zip_code,
+            </if>
+            <if test="contactEnglishName != null">
+                contact_english_name,
+            </if>
+            <if test="contactChineseName != null">
+                contact_chinese_name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="chineseName != null">
+                #{chineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null">
+                #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="chineseAddr != null">
+                #{chineseAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="englishAddr != null">
+                #{englishAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="zipCode != null">
+                #{zipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="contactEnglishName != null">
+                #{contactEnglishName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactChineseName != null">
+                #{contactChineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
+        update l_company_profile
+        <set>
+            <if test="chineseName != null">
+                chinese_name = #{chineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null">
+                english_name = #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="chineseAddr != null">
+                chinese_addr = #{chineseAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="englishAddr != null">
+                english_addr = #{englishAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="zipCode != null">
+                zip_code = #{zipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="contactEnglishName != null">
+                contact_english_name = #{contactEnglishName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactChineseName != null">
+                contact_chinese_name = #{contactChineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
