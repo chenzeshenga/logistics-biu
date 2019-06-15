@@ -1,15 +1,15 @@
-package com.abc.chenzeshenga.logistics.util;
+package com.abc.chenzeshenga.logistics.util.print;
 
 import com.deepoove.poi.data.RowRenderData;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author chenzeshenga
+ * @version 1.0
+ */
 @Data public class DetailData {
-    // 货品数据
     private List<RowRenderData> goods;
-
-    // 人工费数据
-    private List<RowRenderData> labors;
 
 }

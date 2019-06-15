@@ -1,42 +1,23 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * l_warehousing_content
  *
- * @author
+ * @author chenzesheng
  */
-public class WarehousingContent extends WarehousingContentKey implements Serializable {
+@Data public class WarehousingContent extends WarehousingContentKey implements Serializable {
     private String totalNum;
 
     private String wrapType;
 
     private String name;
 
-    private static final long serialVersionUID = 1L;
+    private String price;
 
-    public String getTotalNum() {
-        return totalNum;
-    }
+    private String weight;
 
-    public void setTotalNum(String totalNum) {
-        this.totalNum = totalNum;
-    }
-
-    public String getWrapType() {
-        return wrapType;
-    }
-
-    public void setWrapType(String wrapType) {
-        this.wrapType = wrapType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
