@@ -1,8 +1,10 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
+import com.abc.chenzeshenga.logistics.mapper.CompanyProfileMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
+import com.abc.chenzeshenga.logistics.model.CompanyProfile;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.abc.chenzeshenga.logistics.model.WarehousingReq;
@@ -41,6 +43,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
     @Resource private WarehousingMapper warehousingMapper;
 
     @Resource private WarehousingContentMapper warehousingContentMapper;
+
+    @Resource private CompanyProfileMapper companyProfileMapper;
 
     private WarehousingService warehousingService;
 
@@ -202,6 +206,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
         warehousing.setUpdateOn(curr);
         warehousing.setUpdator(username);
         warehousingMapper.updateByPrimaryKeySelective(warehousing);
+        return Json.succ();
+    }
+
+    @PostMapping @RequestMapping("/printCustomsDeclaration")
+    public Json printCustomsDeclaration(@RequestBody CompanyProfile companyProfile) {
+        CompanyProfile dyCompanyProfile = companyProfileMapper.init("dy");
         return Json.succ();
     }
 

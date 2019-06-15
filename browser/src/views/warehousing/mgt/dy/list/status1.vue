@@ -357,11 +357,11 @@
                 :visible.sync="dialogVisible2"
                 width="40%"
             >
-                <el-form :model="print" label-width="135px">
+                <el-form :model="profile" label-width="135px">
                     <el-col :span="12">
                         <el-form-item label="发货时间">
                             <el-date-picker
-                                v-model="print.deliverDate"
+                                v-model="profile.deliverDate"
                                 type="date"
                                 placeholder="选择日期"
                             ></el-date-picker>
@@ -369,7 +369,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="国际运单号">
-                            <el-input v-model="print.trackNo"></el-input>
+                            <el-input v-model="profile.trackNo"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -524,6 +524,9 @@ export default {
                 contactEnglishName: '',
                 contactChineseName: '',
                 phone: '',
+                deliverDate: '',
+                trackNo: '',
+                warehousingNo: '',
             },
         }
     },
@@ -623,6 +626,22 @@ export default {
                 })
         },
         handlePrint(index, row) {
+            this.profile.trackNo = row.trackNo
+            this.profile.warehousingNo = row.warehousingNo
+            request({
+                url: '/profile/init',
+                method: 'get',
+            }).then(res => {
+                const profile = res.data.data
+                this.profile.chineseName = profile.chineseName
+                this.profile.englishName = profile.englishName
+                this.profile.chineseAddr = profile.chineseAddr
+                this.profile.englishAddr = profile.englishAddr
+                this.profile.zipCode = profile.zipCode
+                this.profile.contactEnglishName = profile.contactEnglishName
+                this.profile.contactChineseName = profile.contactChineseName
+                this.profile.phone = profile.phone
+            })
             this.dialogVisible2 = true
         },
         handleSizeChange(val) {
@@ -671,7 +690,9 @@ export default {
                 this.fetchData()
             })
         },
-        printAndSave() {},
+        printAndSave() {
+            console.log(this.profile)
+        },
     },
 }
 </script>

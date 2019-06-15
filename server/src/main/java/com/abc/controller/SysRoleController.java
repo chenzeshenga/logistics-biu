@@ -1,6 +1,6 @@
 package com.abc.controller;
 
-import com.abc.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.annotation.PermInfo;
 import com.abc.constant.PermType;
 import com.abc.entity.SysPerm;
 import com.abc.entity.SysRole;
@@ -27,9 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * created by CaiBaoHong at 2018/4/17 16:41<br>

@@ -9,6 +9,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import java.util.List;
 
+/**
+ * @author chenzeshenga
+ * @version 1.0
+ */
 public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
     // 货品填充数据所在行数
@@ -21,7 +25,6 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             return;
         }
         DetailData detailData = (DetailData)data;
-
         List<RowRenderData> labors = detailData.getLabors();
         if (null != labors) {
             table.removeRow(laborsStartRow);
@@ -35,18 +38,6 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 // 合并单元格
                 TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
                 MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
-            }
-        }
-
-        List<RowRenderData> goods = detailData.getGoods();
-        if (null != goods) {
-            table.removeRow(goodsStartRow);
-            for (int i = 0; i < goods.size(); i++) {
-                XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
-                for (int j = 0; j < 7; j++) {
-                    insertNewTableRow.createCell();
-                }
-                MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
             }
         }
     }

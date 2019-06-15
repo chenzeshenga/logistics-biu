@@ -163,6 +163,16 @@ export const asyncRouterMap = [
                     icon: 'chart',
                 },
             },
+            {
+                path: 'dyProfile',
+                name: 'dyProfile',
+                component: _import('_system/config/dyProfile'),
+                meta: {
+                    perm: 'm:profile:dy',
+                    title: '东岳资料',
+                    icon: 'chart',
+                },
+            },
         ],
     },
     {
@@ -652,7 +662,9 @@ export const asyncRouterMap = [
                 children: [
                     {
                         path: 'status1',
-                        component: _import('returns/withoutOrderNo/list/status1'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status1'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status1',
                         meta: {
                             perm: 'm:returns2:list:1',
@@ -663,7 +675,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status2',
-                        component: _import('returns/withoutOrderNo/list/status2'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status2'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status2',
                         meta: {
                             perm: 'm:returns2:list:2',
@@ -674,7 +688,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status3',
-                        component: _import('returns/withoutOrderNo/list/status3'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status3'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status3',
                         meta: {
                             perm: 'm:returns2:list:3',
@@ -685,7 +701,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status4',
-                        component: _import('returns/withoutOrderNo/list/status4'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status4'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status4',
                         meta: {
                             perm: 'm:returns2:list:4',
@@ -696,7 +714,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status5',
-                        component: _import('returns/withoutOrderNo/list/status5'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status5'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status5',
                         meta: {
                             perm: 'm:returns2:list:5',
@@ -707,7 +727,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status6',
-                        component: _import('returns/withoutOrderNo/list/status6'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status6'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status6',
                         meta: {
                             perm: 'm:returns2:list:6',
@@ -718,7 +740,9 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status7',
-                        component: _import('returns/withoutOrderNo/list/status7'),
+                        component: _import(
+                            'returns/withoutOrderNo/list/status7'
+                        ),
                         name: 'returns-list-mgt-withoutOrderNo-status7',
                         meta: {
                             perm: 'm:returns2:list:7',

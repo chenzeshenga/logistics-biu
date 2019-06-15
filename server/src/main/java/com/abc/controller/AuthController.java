@@ -1,6 +1,6 @@
 package com.abc.controller;
 
-import com.abc.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.annotation.PermInfo;
 import com.abc.constant.Codes;
 import com.abc.entity.SysUser;
 import com.abc.vo.Json;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 /**

@@ -2,6 +2,8 @@ package com.abc.chenzeshenga.logistics.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author chenzeshenga
  * @version 1.0
@@ -18,5 +20,9 @@ import lombok.Data;
     private String contactEnglishName;
     private String contactChineseName;
     private String phone;
+
+    private Date deliverDate;
+    private String trackNo;
+    private String warehousingNo;
 
 }

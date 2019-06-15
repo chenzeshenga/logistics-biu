@@ -1,6 +1,6 @@
 package com.abc.controller;
 
-import com.abc.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.annotation.PermInfo;
 import com.abc.entity.SysRole;
 import com.abc.service.SysRoleService;
 import com.abc.vo.Json;

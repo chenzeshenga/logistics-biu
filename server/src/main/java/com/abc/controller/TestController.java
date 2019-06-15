@@ -1,6 +1,6 @@
 package com.abc.controller;
 
-import com.abc.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.annotation.PermInfo;
 import org.apache.shiro.authz.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
