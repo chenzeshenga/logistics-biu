@@ -691,7 +691,13 @@ export default {
             })
         },
         printAndSave() {
-            console.log(this.profile)
+            request({
+                url: '/warehousing/printCustomsDeclaration',
+                method: 'post',
+                data: this.profile,
+            }).then(res => {
+                console.log(new Blob(res.data))
+            })
         },
     },
 }

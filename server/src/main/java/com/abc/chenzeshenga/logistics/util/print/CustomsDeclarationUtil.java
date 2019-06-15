@@ -1,13 +1,17 @@
 package com.abc.chenzeshenga.logistics.util.print;
 
+import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.CompanyProfile;
+import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.style.TableStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,9 +23,11 @@ import java.util.List;
  * @author chenzeshenga
  * @version 1.0
  */
-public class CustomsDeclarationUtil {
+@Component public class CustomsDeclarationUtil {
 
-    public static void print(CompanyProfile from, CompanyProfile to, List<WarehousingContent> warehousingContentList,
+    @Resource private ProductMapper productMapper;
+
+    public void print(CompanyProfile from, CompanyProfile to, List<WarehousingContent> warehousingContentList,
         InputStream templateInputStream, OutputStream resultOutputStream) throws IOException {
         TableStyle rowStyle = new TableStyle();
         rowStyle.setAlign(STJc.CENTER);
@@ -44,7 +50,11 @@ public class CustomsDeclarationUtil {
         customsDeclarationData.setToZipCode(to.getZipCode());
 
         List<RowRenderData> rowRenderDataList = new ArrayList<>();
-        warehousingContentList.forEach(warehousingContent -> {
+        for (WarehousingContent warehousingContent : warehousingContentList) {
+            String sku = warehousingContent.getSku().split("/")[0];
+            Product product = productMapper.selectByPrimaryKey(sku);
+            warehousingContent.setPrice(product.getPrice());
+            warehousingContent.setWeight(product.getWeight());
             RowRenderData rowRenderData = RowRenderData
                 .build(warehousingContent.getName(), warehousingContent.getTotalNum(), warehousingContent.getPrice(),
                     String.valueOf(Double.valueOf(warehousingContent.getTotalNum()) * Double
@@ -53,7 +63,7 @@ public class CustomsDeclarationUtil {
                             .valueOf(warehousingContent.getWeight())));
             rowRenderData.setRowStyle(rowStyle);
             rowRenderDataList.add(rowRenderData);
-        });
+        }
         DetailData detailTable = new DetailData();
         detailTable.setGoods(rowRenderDataList);
         customsDeclarationData.setDetailTable(detailTable);

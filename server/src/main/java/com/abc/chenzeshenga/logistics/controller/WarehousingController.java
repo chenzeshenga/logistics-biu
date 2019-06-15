@@ -1,15 +1,13 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
-import com.abc.chenzeshenga.logistics.mapper.CompanyProfileMapper;
-import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
-import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
-import com.abc.chenzeshenga.logistics.model.CompanyProfile;
-import com.abc.chenzeshenga.logistics.model.Warehousing;
-import com.abc.chenzeshenga.logistics.model.WarehousingContent;
-import com.abc.chenzeshenga.logistics.model.WarehousingReq;
+import com.abc.chenzeshenga.logistics.mapper.*;
+import com.abc.chenzeshenga.logistics.model.*;
+import com.abc.chenzeshenga.logistics.model.File;
+import com.abc.chenzeshenga.logistics.service.TemplateService;
 import com.abc.chenzeshenga.logistics.service.WarehousingService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.chenzeshenga.logistics.util.print.CustomsDeclarationUtil;
 import com.abc.entity.SysUser;
 import com.abc.util.PageUtils;
 import com.abc.vo.AuthVo;
@@ -22,16 +20,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -46,13 +45,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     @Resource private CompanyProfileMapper companyProfileMapper;
 
+    @Resource private FileMapper fileMapper;
+
     private WarehousingService warehousingService;
 
     private LabelCache labelCache;
 
-    @Autowired public WarehousingController(WarehousingService warehousingService, LabelCache labelCache) {
+    private CustomsDeclarationUtil customsDeclarationUtil;
+
+    @Autowired public WarehousingController(WarehousingService warehousingService, LabelCache labelCache,
+        CustomsDeclarationUtil customsDeclarationUtil) {
         this.warehousingService = warehousingService;
         this.labelCache = labelCache;
+        this.customsDeclarationUtil = customsDeclarationUtil;
     }
 
     @PostMapping @RequestMapping("/add")
@@ -210,9 +215,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
     }
 
     @PostMapping @RequestMapping("/printCustomsDeclaration")
-    public Json printCustomsDeclaration(@RequestBody CompanyProfile companyProfile) {
+    public Json printCustomsDeclaration(@RequestBody CompanyProfile companyProfile) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         CompanyProfile dyCompanyProfile = companyProfileMapper.init("dy");
-        return Json.succ();
+        File file = fileMapper.selectByPrimaryKey("COMMERCIAL_INVOICE_TEMPLATE");
+        InputStream templateInputStream = new ByteArrayInputStream(file.getFile());
+        List<WarehousingContent> warehousingContentList =
+            warehousingContentMapper.listContent(companyProfile.getWarehousingNo());
+        customsDeclarationUtil
+            .print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream, outputStream);
+        byte[] fileBytes = outputStream.toByteArray();
+        File resultFile = new File(UUID.randomUUID().toString(), fileBytes, "入库单.docx");
+        fileMapper.insert(resultFile);
+        return Json.succ().data(resultFile.getUuid());
     }
 
 }
