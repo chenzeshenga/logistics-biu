@@ -696,7 +696,13 @@ export default {
                 method: 'post',
                 data: this.profile,
             }).then(res => {
-                console.log(new Blob(res.data))
+                const uuid = res.data.data
+                const link = document.createElement('a')
+                link.style.display = 'none'
+                link.href = process.env.BASE_API + '/file/' + uuid
+                link.target = '_blank'
+                document.body.appendChild(link)
+                link.click()
             })
         },
     },

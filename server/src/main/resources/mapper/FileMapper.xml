@@ -8,12 +8,26 @@
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.File">
         <result column="file" jdbcType="LONGVARBINARY" property="file"/>
     </resultMap>
+    <resultMap id="ResultMapWithBLOBs2" type="com.abc.chenzeshenga.logistics.model.File">
+        <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
+        <result column="file" jdbcType="LONGVARBINARY" property="file"/>
+        <result column="fileName" jdbcType="VARCHAR" property="fileName"/>
+    </resultMap>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select file.uuid,
                `file`,
                template.file_name
         from l_file file
                  left join l_template template on (file.uuid = template.uuid)
+        where file.uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByPrimaryKeyWithName" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs2">
+        select file.uuid,
+               `file`,
+               name as fileName
+        from l_file file
         where file.uuid = #{uuid,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -24,6 +38,10 @@
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file (uuid, `file`)
         values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY})
+    </insert>
+    <insert id="insertWithName" parameterType="com.abc.chenzeshenga.logistics.model.File">
+        insert into l_file (uuid, `file`, name)
+        values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY}, #{fileName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file

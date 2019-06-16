@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.CompanyProfile;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.RowRenderData;
@@ -32,8 +33,7 @@ import java.util.List;
         TableStyle rowStyle = new TableStyle();
         rowStyle.setAlign(STJc.CENTER);
         CustomsDeclarationData customsDeclarationData = new CustomsDeclarationData();
-        //todo format this
-        customsDeclarationData.setDeliverDate(from.getDeliverDate().toString());
+        customsDeclarationData.setDeliverDate(DateUtil.getOnlyDateStrFromDate(from.getDeliverDate()));
         customsDeclarationData.setTrackNo(from.getTrackNo());
 
         customsDeclarationData.setCompanyName(from.getEnglishName() + "(" + from.getChineseName() + ")");
@@ -50,6 +50,7 @@ import java.util.List;
         customsDeclarationData.setToZipCode(to.getZipCode());
 
         List<RowRenderData> rowRenderDataList = new ArrayList<>();
+        Double totalPrice = 0.0;
         for (WarehousingContent warehousingContent : warehousingContentList) {
             String sku = warehousingContent.getSku().split("/")[0];
             Product product = productMapper.selectByPrimaryKey(sku);
@@ -61,14 +62,17 @@ import java.util.List;
                         .valueOf(warehousingContent.getPrice())), warehousingContent.getWeight(), String.valueOf(
                         Double.valueOf(warehousingContent.getTotalNum()) * Double
                             .valueOf(warehousingContent.getWeight())));
+            totalPrice +=
+                Double.valueOf(warehousingContent.getTotalNum()) * Double.valueOf(warehousingContent.getPrice());
             rowRenderData.setRowStyle(rowStyle);
             rowRenderDataList.add(rowRenderData);
         }
+        customsDeclarationData.setTotalPrice(String.valueOf(totalPrice));
         DetailData detailTable = new DetailData();
         detailTable.setGoods(rowRenderDataList);
         customsDeclarationData.setDetailTable(detailTable);
 
-        customsDeclarationData.setDate(new Date().toString());
+        customsDeclarationData.setDate(DateUtil.getOnlyDateStrFromDate(new Date()));
 
         Configure config = Configure.newBuilder().customPolicy("detailTable", new DetailTablePolicy()).build();
         XWPFTemplate template = XWPFTemplate.compile(templateInputStream, config).render(customsDeclarationData);

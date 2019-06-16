@@ -8,9 +8,13 @@ import org.springframework.stereotype.Repository;
 
     int insert(File record);
 
+    int insertWithName(File record);
+
     int insertSelective(File record);
 
     File selectByPrimaryKey(String uuid);
+
+    File selectByPrimaryKeyWithName(String uuid);
 
     int updateByPrimaryKeySelective(File record);
 

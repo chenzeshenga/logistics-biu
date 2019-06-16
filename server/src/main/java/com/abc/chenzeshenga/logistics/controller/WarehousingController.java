@@ -225,8 +225,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
         customsDeclarationUtil
             .print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream, outputStream);
         byte[] fileBytes = outputStream.toByteArray();
-        File resultFile = new File(UUID.randomUUID().toString(), fileBytes, "入库单.docx");
-        fileMapper.insert(resultFile);
+        File resultFile = new File(UUID.randomUUID().toString(), fileBytes, "报关单.docx");
+        fileMapper.insertWithName(resultFile);
+        templateInputStream.close();
+        outputStream.close();
         return Json.succ().data(resultFile.getUuid());
     }
 

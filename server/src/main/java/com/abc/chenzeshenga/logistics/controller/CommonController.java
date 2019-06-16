@@ -86,8 +86,17 @@ import java.util.*;
 
     @GetMapping(value = "/template/file/{uuid}") @ResponseBody
     public void file(@PathVariable String uuid, HttpServletResponse httpServletResponse) throws IOException {
-        //todo 每个文件保存文件名
         File file = fileMapper.selectByPrimaryKey(uuid);
+        httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse
+            .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
+        httpServletResponse.getOutputStream().write(file.getFile());
+        httpServletResponse.flushBuffer();
+    }
+
+    @GetMapping(value = "/file/{uuid}") @ResponseBody
+    public void commonFile(@PathVariable String uuid, HttpServletResponse httpServletResponse) throws IOException {
+        File file = fileMapper.selectByPrimaryKeyWithName(uuid);
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpServletResponse
             .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));

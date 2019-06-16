@@ -22,4 +22,8 @@ public class DateUtil {
         return SIMPLE_STR_FORMAT.format(date);
     }
 
+    public static String getOnlyDateStrFromDate(Date date) {
+        return SIMPLE_DATE_FORMAT.format(date);
+    }
+
 }
