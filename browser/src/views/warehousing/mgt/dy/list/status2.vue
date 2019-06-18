@@ -247,7 +247,7 @@
                 ></el-table-column>
                 <el-table-column label="操作" width="350" fixed="right">
                     <template slot-scope="scope">
-                        <el-tooltip content="送往日本仓库" placement="top">
+                        <el-tooltip content="头程完成收货" placement="top">
                             <el-button
                                 @click="statusUpdate(scope.$index, scope.row)"
                                 size="mini"
