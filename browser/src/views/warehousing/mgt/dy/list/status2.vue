@@ -245,9 +245,9 @@
                     prop="updator"
                     label="修改人"
                 ></el-table-column>
-                <el-table-column label="操作" width="250" fixed="right">
+                <el-table-column label="操作" width="350" fixed="right">
                     <template slot-scope="scope">
-                        <el-tooltip content="提交" placement="top">
+                        <el-tooltip content="送往日本仓库" placement="top">
                             <el-button
                                 @click="statusUpdate(scope.$index, scope.row)"
                                 size="mini"
@@ -257,7 +257,30 @@
                                 plain
                             ></el-button>
                         </el-tooltip>
-                        <el-tooltip content="编辑" placement="top">
+                        <el-tooltip content="调整货运单号" placement="top">
+                            <el-button
+                                @click="applyTrackno(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-info"
+                                circle
+                                plain
+                            ></el-button>
+                        </el-tooltip>
+                        <el-tooltip content="获取报关单" placement="top">
+                            <el-button
+                                @click="handlePrint(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-printer"
+                                circle
+                                plain
+                            ></el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            content="调整整体体积和重量"
+                            placement="top"
+                        >
                             <el-button
                                 @click="handleUpdate(scope.$index, scope.row)"
                                 size="mini"
@@ -332,6 +355,96 @@
                     >
                 </span>
             </el-dialog>
+            <el-dialog
+                title="申请报关单"
+                :visible.sync="dialogVisible2"
+                width="40%"
+            >
+                <el-form :model="profile" label-width="135px">
+                    <el-col :span="12">
+                        <el-form-item label="发货时间">
+                            <el-date-picker
+                                v-model="profile.deliverDate"
+                                type="date"
+                                placeholder="选择日期"
+                            ></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="国际运单号">
+                            <el-input v-model="profile.trackNo"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业名称（中文）"
+                            prop="chineseName"
+                        >
+                            <el-input v-model="profile.chineseName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业名称（英文）"
+                            prop="englishName"
+                        >
+                            <el-input v-model="profile.englishName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业地址（中文）"
+                            prop="chineseAddr"
+                        >
+                            <el-input v-model="profile.chineseAddr"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业地址（英文）"
+                            prop="englishAddr"
+                        >
+                            <el-input v-model="profile.englishAddr"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="企业邮编" prop="zipCode">
+                            <el-input v-model="profile.zipCode"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业联系人姓名（中文）"
+                            prop="contactEnglishName"
+                        >
+                            <el-input
+                                v-model="profile.contactEnglishName"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item
+                            label="企业联系人姓名（英文）"
+                            prop="contactChineseName"
+                        >
+                            <el-input
+                                v-model="profile.contactChineseName"
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="企业联系方式" prop="phone">
+                            <el-input v-model="profile.phone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible2 = false">取 消</el-button>
+                    <el-button type="primary" @click="printAndSave"
+                        >确 定</el-button
+                    >
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -354,6 +467,7 @@ export default {
             tableData: [],
             daterange: null,
             dialogVisible1: false,
+            dialogVisible2: false,
             pickerOptions2: {
                 shortcuts: [
                     {
@@ -400,6 +514,20 @@ export default {
             },
             dialog: {
                 carrier: '',
+                trackNo: '',
+                warehousingNo: '',
+            },
+            print: {},
+            profile: {
+                chineseName: '',
+                englishName: '',
+                chineseAddr: '',
+                englishAddr: '',
+                zipCode: '',
+                contactEnglishName: '',
+                contactChineseName: '',
+                phone: '',
+                deliverDate: '',
                 trackNo: '',
                 warehousingNo: '',
             },
@@ -491,7 +619,7 @@ export default {
                             'warehousing/drop?warehousingNo=' +
                             row.warehousingNo,
                         method: 'get',
-                    }).then(res => {
+                    }).then(() => {
                         this.fetchData()
                         this.$message.success('删除成功')
                     })
@@ -499,6 +627,25 @@ export default {
                 .catch(() => {
                     this.$message.info('已取消')
                 })
+        },
+        handlePrint(index, row) {
+            this.profile.trackNo = row.trackNo
+            this.profile.warehousingNo = row.warehousingNo
+            request({
+                url: '/profile/init',
+                method: 'get',
+            }).then(res => {
+                const profile = res.data.data
+                this.profile.chineseName = profile.chineseName
+                this.profile.englishName = profile.englishName
+                this.profile.chineseAddr = profile.chineseAddr
+                this.profile.englishAddr = profile.englishAddr
+                this.profile.zipCode = profile.zipCode
+                this.profile.contactEnglishName = profile.contactEnglishName
+                this.profile.contactChineseName = profile.contactChineseName
+                this.profile.phone = profile.phone
+            })
+            this.dialogVisible2 = true
         },
         handleSizeChange(val) {
             this.tablePage.size = val
@@ -544,6 +691,21 @@ export default {
             }).then(() => {
                 this.dialogVisible1 = false
                 this.fetchData()
+            })
+        },
+        printAndSave() {
+            request({
+                url: '/warehousing/printCustomsDeclaration',
+                method: 'post',
+                data: this.profile,
+            }).then(res => {
+                const uuid = res.data.data
+                const link = document.createElement('a')
+                link.style.display = 'none'
+                link.href = process.env.BASE_API + '/file/' + uuid
+                link.target = '_blank'
+                document.body.appendChild(link)
+                link.click()
             })
         },
     },
