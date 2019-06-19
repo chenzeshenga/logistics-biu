@@ -706,6 +706,7 @@ export default {
                 link.target = '_blank'
                 document.body.appendChild(link)
                 link.click()
+                this.dialogVisible2 = false
             })
         },
     },
