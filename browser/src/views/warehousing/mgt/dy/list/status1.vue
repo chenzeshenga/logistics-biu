@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <warehousing-table></warehousing-table>
+            <warehousing-table v-bind:msg="this.msg"></warehousing-table>
         </div>
     </div>
 </template>
@@ -12,5 +12,12 @@ import WarehousingTable from '../../../../../components/dy/WarehousingTable/inde
 export default {
     name: 'warehousing-mgt-dy-list-status1',
     components: { WarehousingTable },
+    data() {
+        return {
+            msg: {
+                status: '1',
+            },
+        }
+    },
 }
 </script>

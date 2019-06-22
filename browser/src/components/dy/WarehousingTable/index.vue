@@ -435,6 +435,7 @@ export default {
     name: 'warehousingTable',
     data() {
         return {
+            msgData: this.msg,
             // page data
             tablePage: {
                 current: 1,
@@ -512,11 +513,13 @@ export default {
             },
         }
     },
+    props: ['msg'],
     created() {
         this.fetchData()
     },
     methods: {
         fetchData() {
+            console.log(this.msgData)
             this.tableLoading = true
             request({
                 url: 'warehousing/list/1/1',

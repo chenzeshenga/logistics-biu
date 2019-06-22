@@ -40,7 +40,6 @@ export default {
     methods: {
         getBreadcrumb() {
             let matched = this.$route.matched.filter(item => {
-                console.log(item)
                 return item.name
             })
             const first = matched[0]
