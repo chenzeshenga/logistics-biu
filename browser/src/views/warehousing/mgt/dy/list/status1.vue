@@ -16,6 +16,8 @@ export default {
         return {
             msg: {
                 status: '1',
+                statusUpdateTo: '2',
+                statusHoldTo: '8',
             },
         }
     },

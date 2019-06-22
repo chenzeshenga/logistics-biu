@@ -519,10 +519,9 @@ export default {
     },
     methods: {
         fetchData() {
-            console.log(this.msgData)
             this.tableLoading = true
             request({
-                url: 'warehousing/list/1/1',
+                url: 'warehousing/list/1/' + this.msgData.status,
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
@@ -548,7 +547,7 @@ export default {
                         url: 'warehousing/status',
                         method: 'post',
                         data: {
-                            to: '2',
+                            to: this.msgData.statusUpdateTo,
                             warehousingNo: row.warehousingNo,
                         },
                     }).then(() => {
@@ -577,7 +576,7 @@ export default {
                         url: 'warehousing/status',
                         method: 'post',
                         data: {
-                            to: '8',
+                            to: this.msgData.statusHoldTo,
                             warehousingNo: warehousingNo,
                         },
                     }).then(() => {
@@ -601,7 +600,7 @@ export default {
                             'warehousing/drop?warehousingNo=' +
                             row.warehousingNo,
                         method: 'get',
-                    }).then(res => {
+                    }).then(() => {
                         this.fetchData()
                         this.$message.success('删除成功')
                     })
