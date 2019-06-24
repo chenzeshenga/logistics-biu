@@ -116,7 +116,6 @@
             stripe
             highlight-current-row
         >
-            <!--                @selection-change="handleSelectionChange"-->
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
@@ -266,27 +265,30 @@
                         <p>点击按钮下载文件</p>
                         <p>
                             <el-button
-                                    type="text"
-                                    v-on:click="
-                                    handleUserWarehousingFile(scope.$index, scope.row)
+                                type="text"
+                                v-on:click="
+                                    handleUserWarehousingFile(
+                                        scope.$index,
+                                        scope.row
+                                    )
                                 "
-                            >下载
+                                >下载
                             </el-button>
                         </p>
                         <div slot="reference" class="name-wrapper">
                             <el-tag size="medium">
                                 <svg-icon icon-class="doc"></svg-icon
-                                ></el-tag>
+                            ></el-tag>
                         </div>
                     </el-popover>
                 </template>
                 <el-button
-                        size="mini"
-                        circle
-                        plain
-                        @click="handleSystemFile(scope.$index, scope.row)"
-                        icon="el-icon-download"
-                >下载</el-button
+                    size="mini"
+                    circle
+                    plain
+                    @click="handleSystemFile(scope.$index, scope.row)"
+                    icon="el-icon-download"
+                    >下载</el-button
                 >
             </el-table-column>
             <el-table-column
@@ -309,15 +311,85 @@
                 prop="updator"
                 label="修改人"
             ></el-table-column>
-            <el-table-column label="操作" width="350" fixed="right">
+            <el-table-column label="操作" width="400" fixed="right">
                 <template slot-scope="scope">
                     <el-tooltip
-                        content="送往前置海外仓"
+                        content="发往东岳国内前置海外仓"
                         placement="top"
                         v-if="msgData.buttonVisible1"
                     >
                         <el-button
-                            @click="statusUpdate(scope.$index, scope.row)"
+                            @click="statusUpdate(scope.$index, scope.row, 2)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="东岳国内前置海外仓已收货，发往头程校验"
+                        placement="top"
+                        v-if="msgData.buttonVisible8"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row, 3)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="头程校验完成，发往日本"
+                        placement="top"
+                        v-if="msgData.buttonVisible9"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row, 4)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="日本仓库已收货，发往入库清点"
+                        placement="top"
+                        v-if="msgData.buttonVisibleA"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row, 5)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="入库清点完成，发往仓库上架"
+                        placement="top"
+                        v-if="msgData.buttonVisibleB"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row, 6)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="上架完成，开始计仓储费"
+                        placement="top"
+                        v-if="msgData.buttonVisibleC"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row, 7)"
                             size="mini"
                             type="info"
                             icon="el-icon-check"
@@ -457,7 +529,7 @@
         >
             <el-form :model="profile" label-width="135px">
                 <el-alert
-                    title="此按钮提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写响应的报关单通过上传报关单功能进行上传"
+                    title="此页面提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写响应的报关单通过上传报关单功能进行上传.当前页面所有输入框必填"
                     type="info"
                     style="margin-bottom: 2%"
                 ></el-alert>
@@ -559,7 +631,7 @@
                             >上传</el-button
                         >
                         <div slot="tip" class="el-upload__tip">
-                            上传文件大小必须小于20M<br>
+                            上传文件大小必须小于20M<br />
                             请点击上传按钮进行上传
                         </div>
                     </el-upload>
@@ -578,15 +650,18 @@ export default {
         return {
             msgData: {
                 status: this.msg.status,
-                buttonVisible1: this.msg.buttonVisible1 === undefined,
-                buttonVisible2: this.msg.buttonVisible2 === undefined,
-                buttonVisible3: this.msg.buttonVisible3 === undefined,
-                buttonVisible4: this.msg.buttonVisible4 === undefined,
-                buttonVisible5: this.msg.buttonVisible5 === undefined,
-                buttonVisible6: this.msg.buttonVisible6 === undefined,
-                buttonVisible7: this.msg.buttonVisible7 === undefined,
-                statusHoldTo: this.msg.statusHoldTo,
-                statusUpdateTo: this.msg.statusUpdateTo,
+                buttonVisible1: this.msg.buttonVisible1 === true,
+                buttonVisible2: this.msg.buttonVisible2 === true,
+                buttonVisible3: this.msg.buttonVisible3 === true,
+                buttonVisible4: this.msg.buttonVisible4 === true,
+                buttonVisible5: this.msg.buttonVisible5 === true,
+                buttonVisible6: this.msg.buttonVisible6 === true,
+                buttonVisible7: this.msg.buttonVisible7 === true,
+                buttonVisible8: this.msg.buttonVisible8 === true,
+                buttonVisible9: this.msg.buttonVisible9 === true,
+                buttonVisibleA: this.msg.buttonVisibleA === true,
+                buttonVisibleB: this.msg.buttonVisibleB === true,
+                buttonVisibleC: this.msg.buttonVisibleC === true,
             },
             // page data
             tablePage: {
@@ -695,14 +770,14 @@ export default {
                     row.warehousingNo,
             })
         },
-        statusUpdate(index, row) {
+        statusUpdate(index, row, statusUpdateTo) {
             this.$confirm('您确定要提交该订单？', '提示', confirm)
                 .then(() => {
                     request({
                         url: 'warehousing/status',
                         method: 'post',
                         data: {
-                            to: this.msgData.statusUpdateTo,
+                            to: statusUpdateTo,
                             warehousingNo: row.warehousingNo,
                         },
                     }).then(() => {
@@ -731,7 +806,7 @@ export default {
                         url: 'warehousing/status',
                         method: 'post',
                         data: {
-                            to: this.msgData.statusHoldTo,
+                            to: '8',
                             warehousingNo: warehousingNo,
                         },
                     }).then(() => {
@@ -874,9 +949,7 @@ export default {
         },
         handleUserWarehousingFile(index, row) {
             if (row.userWarehousingFileUuid == null) {
-                this.$message.warning(
-                    '报关单未上传，请点击上传报关单进行上传'
-                )
+                this.$message.warning('报关单未上传，请点击上传报关单进行上传')
             } else {
                 const link = document.createElement('a')
                 const uuid = row.userWarehousingFileUuid

@@ -15,9 +15,19 @@ export default {
     data() {
         return {
             msg: {
-                status: '5',
-                statusUpdateTo: '6',
-                statusHoldTo: '8',
+                status: '6',
+                buttonVisible1: false,
+                buttonVisible2: true,
+                buttonVisible3: true,
+                buttonVisible4: true,
+                buttonVisible5: true,
+                buttonVisible6: true,
+                buttonVisible7: true,
+                buttonVisible8: false,
+                buttonVisible9: false,
+                buttonVisibleA: false,
+                buttonVisibleB: false,
+                buttonVisibleC: true,
             },
         }
     },
