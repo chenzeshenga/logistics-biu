@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -230,6 +231,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
         templateInputStream.close();
         outputStream.close();
         return Json.succ().data(resultFile.getUuid());
+    }
+
+    @PostMapping @RequestMapping("/userFile")
+    public Json uploadFile4Warehousing(@RequestParam(value = "file") MultipartFile multipartFile,
+        @RequestParam String warehousingNo) throws IOException {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        File file = new File(uuid, multipartFile.getBytes(), multipartFile.getOriginalFilename());
+        fileMapper.insertWithName(file);
+        Warehousing warehousing = new Warehousing();
+        warehousing.setWarehousingNo(warehousingNo);
+        warehousing.setUserWarehousingFileUuid(uuid);
+        warehousingMapper.updateByPrimaryKeySelective(warehousing);
+        return Json.succ();
     }
 
 }

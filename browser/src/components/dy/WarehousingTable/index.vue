@@ -101,6 +101,13 @@
                 </el-row>
             </el-form-item>
         </el-form>
+        <el-alert
+            title="您可点击获取报关单按钮使用系统生成的报关单进行报关，也可使用您自己制作的报关单报关。若您使用您自己制作的报关单，请使用上传报关单按钮进行报关单上传，方便我们后期追踪"
+            type="info"
+            show-icon
+            center
+            style="margin-bottom: 2%"
+        ></el-alert>
         <el-table
             style="width: 100%"
             :data="tableData"
@@ -276,6 +283,16 @@
                             plain
                         ></el-button>
                     </el-tooltip>
+                    <el-tooltip content="上传报关单" placement="top">
+                        <el-button
+                            @click="handleUploadFile(scope.$index, scope.row)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-upload"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
                     <el-tooltip content="编辑" placement="top">
                         <el-button
                             @click="handleUpdate(scope.$index, scope.row)"
@@ -353,6 +370,11 @@
             width="40%"
         >
             <el-form :model="profile" label-width="135px">
+                <el-alert
+                    title="此按钮提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写响应的报关单通过上传报关单功能进行上传"
+                    type="info"
+                    style="margin-bottom: 2%"
+                ></el-alert>
                 <el-col :span="12">
                     <el-form-item label="发货时间">
                         <el-date-picker
@@ -425,6 +447,38 @@
                 >
             </span>
         </el-dialog>
+        <el-dialog
+            title="上传报关单"
+            :visible.sync="dialogVisible3"
+            width="20%"
+        >
+            <el-form :model="dialogForm3">
+                <el-form-item label="报关单文件">
+                    <el-upload
+                        ref="upload"
+                        :action="uploadLink"
+                        :auto-upload="false"
+                        with-credentials
+                        :on-error="handleError"
+                        :limit="1"
+                    >
+                        <el-button slot="trigger" size="small" type="primary"
+                            >选取文件</el-button
+                        >
+                        <el-button
+                            style="margin-left: 10px;"
+                            size="small"
+                            type="success"
+                            @click="submitUpload"
+                            >上传</el-button
+                        >
+                        <div slot="tip" class="el-upload__tip">
+                            上传文件大小必须小于20M
+                        </div>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -448,6 +502,7 @@ export default {
             daterange: null,
             dialogVisible1: false,
             dialogVisible2: false,
+            dialogVisible3: false,
             pickerOptions2: {
                 shortcuts: [
                     {
@@ -511,6 +566,8 @@ export default {
                 trackNo: '',
                 warehousingNo: '',
             },
+            dialogForm3: {},
+            uploadLink: process.env.BASE_API + '/warehousing/userFile',
         }
     },
     props: ['msg'],
@@ -689,6 +746,18 @@ export default {
                 link.click()
                 this.dialogVisible2 = false
             })
+        },
+        handleUploadFile(index, row) {
+            this.dialogVisible3 = true
+            this.uploadLink =
+                this.uploadLink + '?warehousingNo=' + row.warehousingNo
+        },
+        submitUpload() {
+            this.$refs.upload.submit()
+            this.$message.success('上传成功')
+        },
+        handleError(err) {
+            this.$message.error(JSON.parse(err.message)['message'])
         },
     },
 }

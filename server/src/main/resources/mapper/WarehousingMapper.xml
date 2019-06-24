@@ -254,6 +254,9 @@
             <if test="channel != null">
                 channel_code = #{channel,jdbcType=VARCHAR}
             </if>
+            <if test="userWarehousingFileUuid != null">
+                user_warehousing_file_uuid = #{userWarehousingFileUuid,jdbcType=VARCHAR}
+            </if>
         </set>
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
     </update>

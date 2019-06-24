@@ -98,4 +98,6 @@ import java.util.List;
     private String status;
     @NotEmpty(message = "入库商品必填") private List<WarehousingContent> warehousingContentList;
 
+    private String userWarehousingFileUuid;
+
 }
