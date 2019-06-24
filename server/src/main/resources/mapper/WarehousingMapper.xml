@@ -44,6 +44,8 @@
         <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
         <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
+        <result column="user_warehousing_file_uuid" jdbcType="VARCHAR" property="userWarehousingFileUuid"/>
+        <result column="system_file_uuid" jdbcType="VARCHAR" property="systemFileUuid"/>
         <collection property="warehousingContentList" ofType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
             <result column="warehousing_no" property="warehousingNo"/>
             <result column="sku" property="sku"/>

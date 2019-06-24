@@ -99,5 +99,6 @@ import java.util.List;
     @NotEmpty(message = "入库商品必填") private List<WarehousingContent> warehousingContentList;
 
     private String userWarehousingFileUuid;
+    private String systemFileUuid;
 
 }

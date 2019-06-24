@@ -231,6 +231,64 @@
                 prop="estimatedDate"
                 label="预计到港时间"
             ></el-table-column>
+            <el-table-column width="150" label="系统生成报关单下载">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>点击按钮下载文件</p>
+                        <p>
+                            <el-button
+                                type="text"
+                                v-on:click="
+                                    handleSystemFile(scope.$index, scope.row)
+                                "
+                                >下载
+                            </el-button>
+                        </p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">
+                                <svg-icon icon-class="doc"></svg-icon
+                            ></el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+                <el-button
+                    size="mini"
+                    circle
+                    plain
+                    @click="handleSystemFile(scope.$index, scope.row)"
+                    icon="el-icon-download"
+                    >下载</el-button
+                >
+            </el-table-column>
+            <el-table-column width="150" label="用户上传报关单下载">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>点击按钮下载文件</p>
+                        <p>
+                            <el-button
+                                    type="text"
+                                    v-on:click="
+                                    handleUserWarehousingFile(scope.$index, scope.row)
+                                "
+                            >下载
+                            </el-button>
+                        </p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">
+                                <svg-icon icon-class="doc"></svg-icon
+                                ></el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+                <el-button
+                        size="mini"
+                        circle
+                        plain
+                        @click="handleSystemFile(scope.$index, scope.row)"
+                        icon="el-icon-download"
+                >下载</el-button
+                >
+            </el-table-column>
             <el-table-column
                 width="170"
                 prop="createOn"
@@ -253,7 +311,11 @@
             ></el-table-column>
             <el-table-column label="操作" width="350" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip content="送往前置海外仓" placement="top">
+                    <el-tooltip
+                        content="送往前置海外仓"
+                        placement="top"
+                        v-if="msgData.buttonVisible1"
+                    >
                         <el-button
                             @click="statusUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -263,7 +325,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="预申请单号" placement="top">
+                    <el-tooltip
+                        content="预申请单号"
+                        placement="top"
+                        v-if="msgData.buttonVisible2"
+                    >
                         <el-button
                             @click="applyTrackno(scope.$index, scope.row)"
                             size="mini"
@@ -273,7 +339,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="获取报关单" placement="top">
+                    <el-tooltip
+                        content="获取报关单"
+                        placement="top"
+                        v-if="msgData.buttonVisible3"
+                    >
                         <el-button
                             @click="handlePrint(scope.$index, scope.row)"
                             size="mini"
@@ -283,7 +353,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="上传报关单" placement="top">
+                    <el-tooltip
+                        content="上传报关单"
+                        placement="top"
+                        v-if="msgData.buttonVisible4"
+                    >
                         <el-button
                             @click="handleUploadFile(scope.$index, scope.row)"
                             size="mini"
@@ -293,7 +367,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="编辑" placement="top">
+                    <el-tooltip
+                        content="编辑"
+                        placement="top"
+                        v-if="msgData.buttonVisible5"
+                    >
                         <el-button
                             @click="handleUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -303,7 +381,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="删除" placement="top">
+                    <el-tooltip
+                        content="删除"
+                        placement="top"
+                        v-if="msgData.buttonVisible6"
+                    >
                         <el-button
                             @click="handleDelete(scope.$index, scope.row)"
                             size="mini"
@@ -313,7 +395,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="废弃" placement="top">
+                    <el-tooltip
+                        content="废弃"
+                        placement="top"
+                        v-if="msgData.buttonVisible7"
+                    >
                         <el-button
                             @click="hold(scope.$index, scope.row)"
                             size="mini"
@@ -473,7 +559,8 @@
                             >上传</el-button
                         >
                         <div slot="tip" class="el-upload__tip">
-                            上传文件大小必须小于20M
+                            上传文件大小必须小于20M<br>
+                            请点击上传按钮进行上传
                         </div>
                     </el-upload>
                 </el-form-item>
@@ -489,7 +576,18 @@ export default {
     name: 'warehousingTable',
     data() {
         return {
-            msgData: this.msg,
+            msgData: {
+                status: this.msg.status,
+                buttonVisible1: this.msg.buttonVisible1 === undefined,
+                buttonVisible2: this.msg.buttonVisible2 === undefined,
+                buttonVisible3: this.msg.buttonVisible3 === undefined,
+                buttonVisible4: this.msg.buttonVisible4 === undefined,
+                buttonVisible5: this.msg.buttonVisible5 === undefined,
+                buttonVisible6: this.msg.buttonVisible6 === undefined,
+                buttonVisible7: this.msg.buttonVisible7 === undefined,
+                statusHoldTo: this.msg.statusHoldTo,
+                statusUpdateTo: this.msg.statusUpdateTo,
+            },
             // page data
             tablePage: {
                 current: 1,
@@ -758,6 +856,36 @@ export default {
         },
         handleError(err) {
             this.$message.error(JSON.parse(err.message)['message'])
+        },
+        handleSystemFile(index, row) {
+            if (row.systemFileUuid == null) {
+                this.$message.warning(
+                    '报关单未生成，请点击获取报关单生成报关单'
+                )
+            } else {
+                const link = document.createElement('a')
+                const uuid = row.systemFileUuid
+                link.style.display = 'none'
+                link.href = process.env.BASE_API + '/file/' + uuid
+                link.target = '_blank'
+                document.body.appendChild(link)
+                link.click()
+            }
+        },
+        handleUserWarehousingFile(index, row) {
+            if (row.userWarehousingFileUuid == null) {
+                this.$message.warning(
+                    '报关单未上传，请点击上传报关单进行上传'
+                )
+            } else {
+                const link = document.createElement('a')
+                const uuid = row.userWarehousingFileUuid
+                link.style.display = 'none'
+                link.href = process.env.BASE_API + '/file/' + uuid
+                link.target = '_blank'
+                document.body.appendChild(link)
+                link.click()
+            }
         },
     },
 }
