@@ -281,7 +281,7 @@ export default {
                 if (!valid) return
                 // copy obj
                 const tempData = Object.assign({}, this.temp)
-                userApi.updatePwd(tempData).then(res => {
+                userApi.updatePwd(tempData).then(() => {
                     this.dialogVisible = false
                     this.$message.success('更新密码成功')
                 })
