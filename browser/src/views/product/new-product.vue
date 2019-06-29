@@ -149,8 +149,8 @@
                         :limit="3"
                     >
                         <el-button slot="trigger" size="small" type="primary"
-                            >选取文件</el-button
-                        >
+                            >选取文件
+                        </el-button>
                         <el-button
                             style="margin-left: 10px;"
                             size="small"
@@ -172,20 +172,20 @@
                             type="primary"
                             @click="createByFile"
                             v-if="onCreate"
-                            >批量创建</el-button
-                        >
+                            >批量创建
+                        </el-button>
                         <el-button
                             type="primary"
                             @click="submitForm('form')"
                             v-if="onCreate"
-                            >立即创建</el-button
-                        >
+                            >立即创建
+                        </el-button>
                         <el-button
                             type="primary"
                             @click="updateForm()"
                             v-if="onUpdate"
-                            >立即更新</el-button
-                        >
+                            >立即更新
+                        </el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-col>
                 </el-form-item>
@@ -207,8 +207,8 @@
                                 slot="trigger"
                                 size="small"
                                 type="primary"
-                                >选取文件</el-button
-                            >
+                                >选取文件
+                            </el-button>
                             <el-button
                                 style="margin-left: 10px;"
                                 size="small"
@@ -400,6 +400,7 @@ export default {
                 method: 'get',
             }).then(res => {
                 console.log(res)
+                //todo here
             })
         },
         handleRemove(file, fileList) {

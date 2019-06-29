@@ -746,6 +746,7 @@ export default {
     props: ['msg'],
     created() {
         this.fetchData()
+        this.initUserList()
     },
     methods: {
         fetchData() {
@@ -959,6 +960,18 @@ export default {
                 document.body.appendChild(link)
                 link.click()
             }
+        },
+        initUserList() {
+            request({
+                url: '/sys_user/query4Option',
+                method: 'post',
+                data: {
+                    current: null,
+                    size: 'all',
+                },
+            }).then(res => {
+                this.users = res.data.page.records
+            })
         },
     },
 }
