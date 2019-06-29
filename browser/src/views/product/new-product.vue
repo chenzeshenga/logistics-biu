@@ -7,6 +7,28 @@
                 :model="form"
                 label-width="120px"
             >
+                <el-form-item label="商品所属用户" v-if="adminRole">
+                    <el-col :span="12">
+                        <el-form-item label="所属用户">
+                            <el-tooltip content="所属用户" placement="top">
+                                <el-select
+                                    filterable
+                                    clearable
+                                    v-model="form.creator"
+                                    placeholder="请选择所属用户"
+                                    @change="filterProduct"
+                                >
+                                    <el-option
+                                        v-for="creator in users"
+                                        :key="creator.uname"
+                                        :label="creator.nick"
+                                        :value="creator.uname"
+                                    ></el-option>
+                                </el-select>
+                            </el-tooltip>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="商品信息">
                     <el-col :span="12">
                         <el-form-item label="sku" prop="sku">
@@ -232,6 +254,7 @@ export default {
             onCreate: true,
             dialogImageUrl: '',
             dialogVisible: false,
+            adminRole: false,
             form: {
                 sku: '',
                 productName: '',
@@ -243,6 +266,7 @@ export default {
                 width: 0,
                 height: 0,
                 weight: 0,
+                creator: '',
             },
             checkRules: {
                 sku: [
@@ -286,6 +310,7 @@ export default {
     },
     created() {
         this.initPage()
+        this.hasAdminRole()
     },
     inject: ['reload'],
     watch: {
@@ -294,6 +319,21 @@ export default {
         },
     },
     methods: {
+        hasAdminRole() {
+            request({
+                url: '/sys_user//info',
+                method: 'get',
+            }).then(res => {
+                const roles = res.data.userInfo.roles
+                for (let i = 0; i < roles.length; i++) {
+                    const role = roles[i]
+                    const val = role['val']
+                    if (val === 'root' || val === 'operator') {
+                        this.adminRole = true
+                    }
+                }
+            })
+        },
         initPage() {
             const sku = this.$route.query.sku
             if (sku !== undefined && sku.length > 0) {
@@ -389,6 +429,10 @@ export default {
             })
         },
         submitForm(formName) {
+            if (this.adminRole && this.form.creator.length <= 0) {
+                this.$message.warning('请选择商品所属人')
+                return
+            }
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     request({
@@ -418,6 +462,10 @@ export default {
             this.$message.error(JSON.parse(err.message)['message'])
         },
         updateForm() {
+            if (this.adminRole && this.form.creator.length <= 0) {
+                this.$message.warning('请选择商品所属人')
+                return
+            }
             request({
                 url: '/product/update',
                 method: 'post',
