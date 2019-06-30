@@ -237,6 +237,49 @@
                     >
                 </span>
             </el-dialog>
+            <el-dialog
+                title="代表"
+                :visible.sync="dialogVisible4StandFor"
+                width="25%"
+            >
+                <el-form>
+                    <el-form-item label="请选择您所代表的用户">
+                        <el-tooltip
+                            content="请选择您所代表的用户"
+                            placement="top"
+                        >
+                            <el-select
+                                filterable
+                                clearable
+                                v-model="standFor"
+                                placeholder="请选择您所代表的用户"
+                                @change="changeUpdateLink"
+                            >
+                                <el-option
+                                    v-for="creator in users"
+                                    :key="creator.uname"
+                                    :label="creator.nick"
+                                    :value="creator.uname"
+                                ></el-option>
+                            </el-select>
+                        </el-tooltip>
+                    </el-form-item>
+                </el-form>
+                <el-row>
+                    <el-col :offset="14" :span="2">
+                        <el-button @click="triggerUploadDialog" type="primary"
+                            >确认</el-button
+                        >
+                    </el-col>
+                    <el-col :offset="3" :span="2">
+                        <el-button
+                            @click="dialogVisible4StandFor = false"
+                            type="primary"
+                            >取消</el-button
+                        >
+                    </el-col>
+                </el-row>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -255,6 +298,8 @@ export default {
             dialogImageUrl: '',
             dialogVisible: false,
             adminRole: false,
+            standFor: '',
+            users: [],
             form: {
                 sku: '',
                 productName: '',
@@ -306,11 +351,13 @@ export default {
             },
             fileList: [],
             dialogVisible4Excel: false,
+            dialogVisible4StandFor: false,
         }
     },
     created() {
         this.initPage()
         this.hasAdminRole()
+        this.initUserList()
     },
     inject: ['reload'],
     watch: {
@@ -319,9 +366,21 @@ export default {
         },
     },
     methods: {
+        initUserList() {
+            request({
+                url: '/sys_user/query4Option',
+                method: 'post',
+                data: {
+                    current: null,
+                    size: 'all',
+                },
+            }).then(res => {
+                this.users = res.data.page.records
+            })
+        },
         hasAdminRole() {
             request({
-                url: '/sys_user//info',
+                url: '/sys_user/info',
                 method: 'get',
             }).then(res => {
                 const roles = res.data.userInfo.roles
@@ -482,7 +541,11 @@ export default {
             file.index = fileList.length
         },
         createByFile() {
-            this.dialogVisible4Excel = true
+            if (this.adminRole) {
+                this.dialogVisible4StandFor = true
+            } else {
+                this.dialogVisible4Excel = true
+            }
         },
         downloadTemplate() {
             const link = document.createElement('a')
@@ -491,6 +554,14 @@ export default {
             link.target = '_blank'
             document.body.appendChild(link)
             link.click()
+        },
+        triggerUploadDialog() {
+            if (this.standFor.length > 0) {
+                this.dialogVisible4StandFor = false
+                this.dialogVisible4Excel = true
+            } else {
+                this.$message.warning('请选择所属用户')
+            }
         },
     },
 }
