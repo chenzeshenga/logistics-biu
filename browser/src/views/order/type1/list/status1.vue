@@ -419,7 +419,6 @@
           method: 'post',
           data: this.form,
         }).then(res => {
-          console.log(res);
           this.$message.success('追踪单号申请成功');
           this.dialogVisible = false;
           this.fetchData();
