@@ -315,6 +315,20 @@
                             plain
                         ></el-button>
                     </el-tooltip>
+                    <el-tooltip
+                        content="提交发货"
+                        placement="top"
+                        v-if="msgData.buttonVisible6"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row)"
+                            size="small"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -409,6 +423,7 @@ export default {
                 buttonVisible3: this.msg.buttonVisible3,
                 buttonVisible4: this.msg.buttonVisible4,
                 buttonVisible5: this.msg.buttonVisible5,
+                buttonVisible6: this.msg.buttonVisible6,
             },
             tablePage: {
                 current: 1,
