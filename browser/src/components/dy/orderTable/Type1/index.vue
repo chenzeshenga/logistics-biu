@@ -245,7 +245,11 @@
             ></el-table-column>
             <el-table-column label="操作" width="300" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip content="提交拣货" placement="top">
+                    <el-tooltip
+                        content="提交拣货"
+                        placement="top"
+                        v-if="msgData.buttonVisible1"
+                    >
                         <el-button
                             @click="statusUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -255,7 +259,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="申请单号" placement="top">
+                    <el-tooltip
+                        content="申请单号"
+                        placement="top"
+                        v-if="msgData.buttonVisible2"
+                    >
                         <el-button
                             @click="applyTrackno(scope.$index, scope.row)"
                             size="mini"
@@ -265,7 +273,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="编辑" placement="top">
+                    <el-tooltip
+                        content="编辑"
+                        placement="top"
+                        v-if="msgData.buttonVisible3"
+                    >
                         <el-button
                             @click="handleUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -275,7 +287,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="打印配货单" placement="top">
+                    <el-tooltip
+                        content="打印配货单"
+                        placement="top"
+                        v-if="msgData.buttonVisible4"
+                    >
                         <el-button
                             @click="print(scope.$index, scope.row)"
                             size="mini"
@@ -285,7 +301,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="废弃" placement="top">
+                    <el-tooltip
+                        content="废弃"
+                        placement="top"
+                        v-if="msgData.buttonVisible5"
+                    >
                         <el-button
                             @click="abandon(scope.$index, scope.row)"
                             size="mini"
@@ -373,12 +393,23 @@
 </template>
 
 <script>
-import request from '@/utils/service'
+import request from '../../../../utils/service'
 
 export default {
     name: 'orderType1',
     data() {
         return {
+            msgData: {
+                category: this.msg.category,
+                status: this.msg.status,
+                statusTo: this.msg.statusTo,
+                statusAbandon: this.msg.statusAbandon,
+                buttonVisible1: this.msg.buttonVisible1,
+                buttonVisible2: this.msg.buttonVisible2,
+                buttonVisible3: this.msg.buttonVisible3,
+                buttonVisible4: this.msg.buttonVisible4,
+                buttonVisible5: this.msg.buttonVisible5,
+            },
             tablePage: {
                 current: 1,
                 pages: null,
@@ -445,6 +476,7 @@ export default {
             channels: [],
         }
     },
+    props: ['msg'],
     created() {
         this.fetchData()
         this.initTrackno()
@@ -473,7 +505,11 @@ export default {
         fetchData() {
             this.tableLoading = true
             request({
-                url: 'ord/list/1/1',
+                url:
+                    'ord/list/' +
+                    this.msgData.category +
+                    '/' +
+                    this.msgData.status,
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
@@ -503,7 +539,13 @@ export default {
             this.$confirm('您确定要提交该订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/1/' + row.orderNo + '/2',
+                        url:
+                            'ord/update/' +
+                            this.msgData.category +
+                            '/' +
+                            row.orderNo +
+                            '/' +
+                            this.msgData.statusTo,
                         method: 'get',
                     }).then(res => {
                         console.log(res)
@@ -523,7 +565,11 @@ export default {
             this.$confirm('您确定要提交这些订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/1/2',
+                        url:
+                            'ord/update/' +
+                            this.msgData.category +
+                            '/' +
+                            this.msgData.statusTo,
                         method: 'post',
                         data: this.ord4TrackNo,
                     }).then(res => {
@@ -540,7 +586,13 @@ export default {
             this.$confirm('您确定要废弃该订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/1/' + row.orderNo + '/5',
+                        url:
+                            'ord/update/' +
+                            this.msgData.category +
+                            '/' +
+                            row.orderNo +
+                            '/' +
+                            this.msgData.statusAbandon,
                         method: 'get',
                     }).then(res => {
                         console.log(res)
@@ -561,7 +613,11 @@ export default {
             ) {
                 this.$message.warning('请选择您想要查询的日期范围')
                 url =
-                    'ord/list/1/1/2000-01-01/2099-01-01?ordno=' +
+                    'ord/list/' +
+                    this.msgData.category +
+                    '/' +
+                    this.msgData.status +
+                    '/2000-01-01/2099-01-01?ordno=' +
                     this.search.ordno +
                     '&creator=' +
                     this.search.creator +
@@ -569,7 +625,10 @@ export default {
                     this.search.channelCode
             } else {
                 url =
-                    'ord/list/1/1/' +
+                    'ord/list/' +
+                    this.msgData.category +
+                    '/' +
+                    this.msgData.status +
                     this.daterange[0] +
                     '/' +
                     this.daterange[1] +
@@ -653,7 +712,7 @@ export default {
                 method: 'post',
                 data: this.form,
             })
-                .then(res => {
+                .then(() => {
                     this.$message.success('追踪单号申请成功')
                     this.dialogVisible = false
                     this.fetchData()
