@@ -51,7 +51,7 @@
                                 @change="changeByCategory"
                             >
                                 <el-option label="海外仓代发订单" value="1" />
-                                <el-option label="单票单清" value="2" />
+                                <el-option label="特色小包" value="2" />
                                 <el-option label="虚拟海外仓" value="3" />
                             </el-select>
                         </el-form-item>

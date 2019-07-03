@@ -10,7 +10,7 @@
 import OrderType1 from '../../../../components/dy/orderTable/Type1/index'
 
 export default {
-    name: 'order-list-mgt-type1-status1',
+    name: 'order-list-mgt-type1-status3',
     components: { OrderType1 },
     data() {
         return {
