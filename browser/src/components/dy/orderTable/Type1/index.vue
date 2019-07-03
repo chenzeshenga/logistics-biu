@@ -329,6 +329,48 @@
                             plain
                         ></el-button>
                     </el-tooltip>
+                    <el-tooltip
+                        content="归档"
+                        placement="top"
+                        v-if="msgData.buttonVisible7"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row)"
+                            size="small"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="查询物流进度"
+                        placement="top"
+                        v-if="msgData.buttonVisible8"
+                    >
+                        <el-button
+                            @click="findWhere(scope.$index, scope.row)"
+                            size="mini"
+                            type="info"
+                            icon="el-icon-question"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        content="还原"
+                        placement="top"
+                        v-if="msgData.buttonVisible9"
+                    >
+                        <el-button
+                            @click="statusUpdate(scope.$index, scope.row)"
+                            size="small"
+                            type="info"
+                            icon="el-icon-check"
+                            circle
+                            plain
+                        ></el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -424,6 +466,9 @@ export default {
                 buttonVisible4: this.msg.buttonVisible4,
                 buttonVisible5: this.msg.buttonVisible5,
                 buttonVisible6: this.msg.buttonVisible6,
+                buttonVisible7: this.msg.buttonVisible7,
+                buttonVisible8: this.msg.buttonVisible8,
+                buttonVisible9: this.msg.buttonVisible9,
             },
             tablePage: {
                 current: 1,
