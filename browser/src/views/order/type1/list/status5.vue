@@ -19,6 +19,7 @@ export default {
                 status: '5',
                 statusTo: '1',
                 statusAbandon: '5',
+                // todo delete one of below
                 buttonVisible5: true,
                 buttonVisible9: true,
             },

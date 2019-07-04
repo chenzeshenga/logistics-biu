@@ -300,6 +300,7 @@ import java.util.concurrent.atomic.AtomicReference;
         address.put("ken", manualOrder.getFromKenId());
         address.put("city", manualOrder.getFromCityId());
         address.put("town", manualOrder.getFromTownId());
+        //todo fix format issue here
         JpDetailAddress jpDetailAddress = japanAddressCache
             .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
                 Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));

@@ -348,6 +348,7 @@
                         placement="top"
                         v-if="msgData.buttonVisible8"
                     >
+                        <!-- todo write a function with this name-->
                         <el-button
                             @click="findWhere(scope.$index, scope.row)"
                             size="mini"

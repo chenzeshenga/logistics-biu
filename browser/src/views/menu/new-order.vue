@@ -497,7 +497,6 @@ export default {
     },
     created() {
         this.getAddress()
-        this.getMyProducts()
         this.defaultFormData = JSON.parse(JSON.stringify(this.form))
         this.initUserList()
         this.hasAdminRole()
@@ -550,9 +549,9 @@ export default {
                 this.form.trackNo = res.data.data
             })
         },
-        listChannel() {
+        listChannel(val) {
             request({
-                url: '/channel/list',
+                url: '/channel/list/' + val,
                 method: 'get',
             }).then(res => {
                 this.channels = res.data.data
@@ -569,7 +568,6 @@ export default {
                 method: 'get',
             }).then(res => {
                 this.address = res.data.data
-                this.listChannel()
             })
         },
         getMyProducts() {
@@ -691,6 +689,7 @@ export default {
         },
         changeByCategory(val) {
             this.skuFlag = val !== '1'
+            this.listChannel(val)
         },
         createBatchOrd() {
             if (this.adminRole) {
@@ -761,6 +760,10 @@ export default {
             } else {
                 this.$message.warning('请选择所属用户')
             }
+        },
+        checkChannelSize() {
+            console.log(this.channels)
+            return false
         },
     },
 }
