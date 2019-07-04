@@ -247,7 +247,7 @@ import java.util.concurrent.atomic.AtomicReference;
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
             String channelDesc = channelCache.channelLabel(manualOrder.getChannel());
-            if (StringUtils.isBlank(channelDesc)) {
+            if (StringUtils.isNotBlank(channelDesc)) {
                 manualOrder.setChannelDesc(channelDesc);
             }
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();

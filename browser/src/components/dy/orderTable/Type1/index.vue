@@ -167,7 +167,7 @@
                             <el-button
                                 type="text"
                                 v-on:click="
-                                    channelLink(scope.$index, scope.row)
+                                    route2ChannelPage(scope.$index, scope.row)
                                 "
                                 >查看详情
                             </el-button>
@@ -860,6 +860,11 @@ export default {
             link.target = '_blank'
             document.body.appendChild(link)
             link.click()
+        },
+        route2ChannelPage(index, row) {
+            this.$router.push({
+                path: '/system/channel?filter=' + row.channel,
+            })
         },
     },
 }

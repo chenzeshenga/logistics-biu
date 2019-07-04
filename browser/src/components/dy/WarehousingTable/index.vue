@@ -176,7 +176,9 @@
                         <p>
                             <el-button
                                 type="text"
-                                v-on:click="this.channelLink(scope.$index, scope.row)"
+                                v-on:click="
+                                    route2ChannelPage(scope.$index, scope.row)
+                                "
                                 >查看详情
                             </el-button>
                         </p>
@@ -865,7 +867,7 @@ export default {
             this.tablePage.current = val
             this.fetchData()
         },
-        channelLink(index, row) {
+        route2ChannelPage(index, row) {
             this.$router.push({
                 path: '/system/channel?filter=' + row.channel,
             })
