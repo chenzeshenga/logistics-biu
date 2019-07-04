@@ -576,6 +576,7 @@ export default {
                 },
             }).then(() => {
                 this.$message.success('启用成功')
+                this.fetch()
             })
         },
         handleDisable(index, row) {

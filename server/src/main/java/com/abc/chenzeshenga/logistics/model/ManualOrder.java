@@ -66,7 +66,7 @@ import java.util.Map;
     private String chinaCarrier;
     private String updator;
     @NotEmpty(message = "订单类型必选") private String category;
-    private String channel;
+    @NotEmpty(message = "运送渠道必选") private String channel;
     private String channelDesc;
     private String chinaNo;
     @NotEmpty(message = "订单内容必选") @JsonProperty("contentList") private List<ManualOrderContent> manualOrderContents;

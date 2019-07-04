@@ -555,6 +555,13 @@ export default {
                 method: 'get',
             }).then(res => {
                 this.channels = res.data.data
+                console.log(this.channels)
+                if (this.channels.length <= 0) {
+                    this.$message.warning(
+                        '当前无激活的渠道，请到渠道页面进行配置或者联系管理员'
+                    )
+                    return
+                }
                 for (const index in this.channels) {
                     const channel = this.channels[index]
                     this.channelMap[channel['value']] = channel

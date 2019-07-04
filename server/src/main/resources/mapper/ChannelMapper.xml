@@ -215,6 +215,7 @@
         select channel_code as value, channel_name as label, checked_rules as checkedRules
         from l_channel
         where adapter = #{adapter}
+          and active = 'Y'
     </select>
 
     <select id="page" resultMap="BaseResultMap">
