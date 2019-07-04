@@ -246,6 +246,10 @@ import java.util.concurrent.atomic.AtomicReference;
             manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
             manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
             manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+            String channelDesc = channelCache.channelLabel(manualOrder.getChannel());
+            if (StringUtils.isBlank(channelDesc)) {
+                manualOrder.setChannelDesc(channelDesc);
+            }
             List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
             double totalPrice = 0.0;
             for (ManualOrderContent manualOrderContent : manualOrderContentList) {
@@ -256,7 +260,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 }
                 totalPrice += Double.valueOf(num) * Double.valueOf(price);
             }
-            final Double finalPrice = totalPrice;
+            Double finalPrice = totalPrice;
             for (ManualOrderContent content : manualOrderContentList) {
                 content.setTotalPrice(finalPrice);
                 String total = content.getNum();

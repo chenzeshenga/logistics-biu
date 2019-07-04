@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.cache;
 import com.abc.chenzeshenga.logistics.mapper.ChannelMapper;
 import com.abc.chenzeshenga.logistics.model.ChannelLabel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,12 @@ import java.util.Map;
     }
 
     public String channelLabel(String channelValue) {
-        return channelLabelCache.get(channelValue).getLabel();
+        ChannelLabel channelLabel = channelLabelCache.get(channelValue);
+        if (ObjectUtils.allNotNull(channelLabel)) {
+            return channelLabel.getLabel();
+        } else {
+            return "";
+        }
     }
 
     public String getChannelSeq() {

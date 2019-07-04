@@ -158,11 +158,28 @@
                 prop="categoryName"
                 label="订单类型"
             ></el-table-column>
-            <el-table-column
-                width="200"
-                prop="channelDesc"
-                label="运送渠道"
-            ></el-table-column>
+            <el-table-column width="200" label="运送渠道">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>渠道名称: {{ scope.row.channelDesc }}</p>
+                        <p>渠道编码: {{ scope.row.channel }}</p>
+                        <p>
+                            <el-button
+                                type="text"
+                                v-on:click="
+                                    channelLink(scope.$index, scope.row)
+                                "
+                                >查看详情
+                            </el-button>
+                        </p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium"
+                                >{{ scope.row.channelDesc }}
+                            </el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
             <el-table-column
                 width="100"
                 prop="statusDesc"

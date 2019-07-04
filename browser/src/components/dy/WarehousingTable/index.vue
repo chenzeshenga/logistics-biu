@@ -176,9 +176,7 @@
                         <p>
                             <el-button
                                 type="text"
-                                v-on:click="
-                                    channelLink(scope.$index, scope.row)
-                                "
+                                v-on:click="this.channelLink(scope.$index, scope.row)"
                                 >查看详情
                             </el-button>
                         </p>
