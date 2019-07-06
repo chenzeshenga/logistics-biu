@@ -1,4 +1,3 @@
-<!--todo format as a component-->
 <template>
     <div>
         <el-form>
@@ -242,7 +241,11 @@
             ></el-table-column>
             <el-table-column label="操作" width="300" fixed="right">
                 <template slot-scope="scope">
-                    <el-tooltip content="提交拣货" placement="top">
+                    <el-tooltip
+                        content="提交拣货"
+                        placement="top"
+                        v-if="msgData.buttonVisible1"
+                    >
                         <el-button
                             @click="statusUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -252,7 +255,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="申请单号" placement="top">
+                    <el-tooltip
+                        content="申请单号"
+                        placement="top"
+                        v-if="msgData.buttonVisible2"
+                    >
                         <el-button
                             @click="applyTrackno(scope.$index, scope.row)"
                             size="mini"
@@ -262,7 +269,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="编辑" placement="top">
+                    <el-tooltip
+                        content="编辑"
+                        placement="top"
+                        v-if="msgData.buttonVisible3"
+                    >
                         <el-button
                             @click="handleUpdate(scope.$index, scope.row)"
                             size="mini"
@@ -272,7 +283,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="打印配货单" placement="top">
+                    <el-tooltip
+                        content="打印配货单"
+                        placement="top"
+                        v-if="msgData.buttonVisible4"
+                    >
                         <el-button
                             @click="print(scope.$index, scope.row)"
                             size="mini"
@@ -282,7 +297,11 @@
                             plain
                         ></el-button>
                     </el-tooltip>
-                    <el-tooltip content="废弃" placement="top">
+                    <el-tooltip
+                        content="废弃"
+                        placement="top"
+                        v-if="msgData.buttonVisible5"
+                    >
                         <el-button
                             @click="abandon(scope.$index, scope.row)"
                             size="mini"
@@ -364,6 +383,80 @@
                 >
             </span>
         </el-dialog>
+<!--        <el-dialog title="提交发货" :visible.sync="dialogVisible2" width="50%">-->
+<!--            <el-form :model="form">-->
+<!--                <el-col :span="24">-->
+<!--                    <el-form-item label="订单号">-->
+<!--                        <el-input v-model="form.orderNo" disabled></el-input>-->
+<!--                    </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="24" style="margin-top: 10px">-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="长(cm)">-->
+<!--                            <el-input-number-->
+<!--                                v-model="form.length"-->
+<!--                                @change="calculateIndex"-->
+<!--                            ></el-input-number>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="宽(cm)">-->
+<!--                            <el-input-number-->
+<!--                                v-model="form.width"-->
+<!--                                @change="calculateIndex"-->
+<!--                            ></el-input-number>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="高(cm)">-->
+<!--                            <el-input-number-->
+<!--                                v-model="form.height"-->
+<!--                                @change="calculateIndex"-->
+<!--                            ></el-input-number>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <label>后台计算总体积为:</label>-->
+<!--                    <span>{{ form.totalVolume }} cm^3</span><br />-->
+<!--                    <label>根据页面输入计算结果如下:</label>-->
+<!--                    <el-form-item>-->
+<!--                        <el-col :span="8">-->
+<!--                            <el-form-item label="总体积(cm^3)">-->
+<!--                                <el-input-number-->
+<!--                                    v-model="form.totalVolumeFrontEnd"-->
+<!--                                ></el-input-number>-->
+<!--                            </el-form-item>-->
+<!--                        </el-col>-->
+<!--                        <el-col :span="8">-->
+<!--                            <el-form-item label="三边和(cm)">-->
+<!--                                <el-input-number-->
+<!--                                    v-model="form.sum"-->
+<!--                                ></el-input-number>-->
+<!--                            </el-form-item>-->
+<!--                        </el-col>-->
+<!--                        <el-col :span="8">-->
+<!--                            <el-form-item label="体积重(cm^3)">-->
+<!--                                <el-input-number-->
+<!--                                    v-model="form.totalVolumeWithWeight"-->
+<!--                                ></el-input-number>-->
+<!--                            </el-form-item>-->
+<!--                        </el-col>-->
+<!--                    </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="24">-->
+<!--                    <el-form-item label="当前订单总重量(kg)">-->
+<!--                        <el-input-number-->
+<!--                            v-model="form.totalWeight"-->
+<!--                        ></el-input-number>-->
+<!--                    </el-form-item>-->
+<!--                </el-col>-->
+<!--            </el-form>-->
+<!--            <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="updateVolumeAndWeight"-->
+<!--                    >确 定</el-button-->
+<!--                >-->
+<!--            </span>-->
+<!--        </el-dialog>-->
     </div>
 </template>
 
@@ -384,10 +477,7 @@ export default {
                 buttonVisible3: this.msg.buttonVisible3,
                 buttonVisible4: this.msg.buttonVisible4,
                 buttonVisible5: this.msg.buttonVisible5,
-                buttonVisible6: this.msg.buttonVisible6,
-                buttonVisible7: this.msg.buttonVisible7,
-                buttonVisible8: this.msg.buttonVisible8,
-                buttonVisible9: this.msg.buttonVisible9,
+
             },
             tablePage: {
                 current: null,
@@ -436,6 +526,7 @@ export default {
                 ],
             },
             dialogVisible: false,
+            dialogVisible2: false,
             carrier: [],
             form: {
                 orderNo: '',
@@ -463,7 +554,11 @@ export default {
         fetchData() {
             this.tableLoading = true
             request({
-                url: 'ord/list/2/1',
+                url:
+                    'ord/list/' +
+                    this.msgData.category +
+                    '/' +
+                    this.msgData.status,
                 method: 'post',
                 data: {
                     current: this.tablePage.current,
@@ -491,7 +586,13 @@ export default {
             this.$confirm('您确定要提交该订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/2/' + row.orderNo + '/2',
+                        url:
+                            'ord/update/' +
+                            this.msgData.category +
+                            '/' +
+                            row.orderNo +
+                            '/' +
+                            this.msgData.statusTo,
                         method: 'get',
                     }).then(res => {
                         console.log(res)
@@ -507,7 +608,13 @@ export default {
             this.$confirm('您确定要废弃该订单？', '提示', confirm)
                 .then(() => {
                     request({
-                        url: 'ord/update/2/' + row.orderNo + '/5',
+                        url:
+                            'ord/update/' +
+                            this.msgData.category +
+                            '/' +
+                            row.orderNo +
+                            '/' +
+                            this.msgData.statusAbandon,
                         method: 'get',
                     }).then(res => {
                         console.log(res)
@@ -531,7 +638,11 @@ export default {
             this.tableLoading = true
             request({
                 url:
-                    'ord/list/2/1/' +
+                    'ord/list/' +
+                    this.msgData.category +
+                    '/' +
+                    this.msgData.status +
+                    '/' +
                     this.daterange[0] +
                     '/' +
                     this.daterange[1],
@@ -651,4 +762,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.el-table .success-row {
+    background: rgba(103, 194, 58, 0.1);
+}
+
+.el-table .danger-row {
+    background: rgb(253, 226, 226);
+}
+</style>
