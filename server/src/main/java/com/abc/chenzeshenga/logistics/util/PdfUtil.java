@@ -31,19 +31,28 @@ public class PdfUtil {
         PdfWriter pdfWriter = new PdfWriter(byteArrayOutputStreamResult);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         Document document = new Document(pdfDocument, new PageSize(135, 135));
-        document.setMargins(0, 0, 0, 0);
+        document.setMargins(5, 0, 0, 0);
         PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
         //1列的表格
         Table table = new Table(new float[] {1});
-        table.setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE);
+        table.setAutoLayout();
+        table.setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER);
         table.setBorder(Border.NO_BORDER);
-        table.addCell(
-            new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER)
-                .add(image).setBorder(Border.NO_BORDER));
+        image.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        Cell imgCell = new Cell();
+        imgCell.add(image);
+        imgCell.setBorder(Border.NO_BORDER);
+        table.addCell(imgCell);
         Cell labelCell = new Cell();
-        labelCell.setHorizontalAlignment(HorizontalAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE)
-            .add(new Paragraph(new Text(sku).setBold().setFontSize(10)));
-        labelCell.add(new Paragraph(new Text(name).setFontSize(8))).setFont(font).setBorder(Border.NO_BORDER);
+        labelCell.setBorder(Border.NO_BORDER);
+        Paragraph paragraph1 = new Paragraph(
+            new Text("sku: " + sku).setHorizontalAlignment(HorizontalAlignment.CENTER).setBold().setFontSize(10)
+                .setFont(font));
+        Paragraph paragraph2 = new Paragraph(new Text("名称: " + name).setBold().setFontSize(10).setFont(font)
+            .setHorizontalAlignment(HorizontalAlignment.CENTER));
+        paragraph1.setMarginLeft(5);
+        paragraph2.setMarginLeft(5);
+        labelCell.add(paragraph1).add(paragraph2);
         table.addCell(labelCell);
         document.add(table);
         document.close();
