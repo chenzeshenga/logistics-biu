@@ -223,7 +223,7 @@ export default {
             dialogVisible: false,
             dialogVisible2: false,
             dialogVisible3: false,
-            version: '20190704',
+            version: '20190706',
             temp: {
                 pwd: null,
                 pwd2: null,
