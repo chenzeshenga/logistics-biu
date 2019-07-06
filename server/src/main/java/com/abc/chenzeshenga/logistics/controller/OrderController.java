@@ -447,4 +447,10 @@ import java.util.concurrent.atomic.AtomicReference;
         }
     }
 
+    @PostMapping @RequestMapping("/fetchOrderNo") public Json fetchOrderNo(@RequestBody Map<String, String> request) {
+        String creator = request.get("creator");
+        List<ManualOrder> manualOrderList=orderMapper.fetchOrderNo(creator);
+        return Json.succ().data(manualOrderList);
+    }
+
 }

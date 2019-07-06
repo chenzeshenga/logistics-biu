@@ -43,7 +43,6 @@
         </collection>
     </resultMap>
 
-
     <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         update l_manual_order
         <trim prefix="set" suffixOverrides=",">
@@ -339,5 +338,10 @@
         limit 1
     </select>
 
-
+    <select id="fetchOrderNo" resultMap="result">
+        select *
+        from l_manual_order ord
+                 left join l_manual_order_content content on (ord.ord_no = content.ordno)
+        where ord.create_by = #{creator}
+    </select>
 </mapper>
