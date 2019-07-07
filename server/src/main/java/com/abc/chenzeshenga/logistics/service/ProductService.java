@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
  */
 @Service public class ProductService extends ServiceImpl<ProductMapper, Product> {
 
-    public Page<Product> listByStatusWithUser(Page page, String username, String status) {
-        return page.setRecords(baseMapper.listByStatusWithUser(page, username, status));
+    public Page<Product> listByStatusWithUser(Page page, String username, String status, String sku, String dySku,
+        String name) {
+        return page.setRecords(baseMapper.listByStatusWithUser(page, username, status, sku, dySku, name));
     }
 
-    public Page<Product> listByStatus(Page page, String status) {
-        return page.setRecords(baseMapper.listByStatus(page, status));
+    public Page<Product> listByStatus(Page page, String status, String sku, String dySku, String name, String creator) {
+        return page.setRecords(baseMapper.listByStatus(page, status, sku, dySku, name, creator));
     }
 
 }

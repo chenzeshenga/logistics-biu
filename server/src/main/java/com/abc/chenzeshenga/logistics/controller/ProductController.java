@@ -107,12 +107,23 @@ import java.util.*;
     public Json listProduct(@RequestBody String body, @PathVariable String status) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
+        String searchSku = jsonObject.getString("sku");
+        String searchDySku = jsonObject.getString("dySku");
+        String searchName = jsonObject.getString("name");
+        String searchCreator = jsonObject.getString("creator");
         Page page = PageUtils.getPageParam(jsonObject);
         Page<Product> productPage;
         if (ADMIN.equals(username)) {
-            productPage = productService.listByStatus(page, status);
+            productPage = productService.listByStatus(page, status, searchSku, searchDySku, searchName, searchCreator);
         } else {
-            productPage = productService.listByStatusWithUser(page, username, status);
+            if (StringUtils.isNotBlank(searchCreator)) {
+                productPage = productService
+                    .listByStatusWithUser(page, searchCreator, status, searchSku, searchDySku, searchName);
+            } else {
+                productPage =
+                    productService.listByStatusWithUser(page, username, status, searchSku, searchDySku, searchName);
+            }
+
         }
         List<Product> productList = productPage.getRecords();
         productList.forEach(product -> {

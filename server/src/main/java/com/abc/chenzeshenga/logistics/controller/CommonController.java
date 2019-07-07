@@ -194,7 +194,7 @@ import java.util.*;
         httpServletResponse
             .setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
         List<Product> productList =
-            productMapper.listByStatusWithUser(new Page(1, 500), UserUtils.getUserName(), status);
+            productMapper.listByStatusWithUser(new Page(1, 500), UserUtils.getUserName(), status, null, null, null);
         productList.forEach(product -> {
             if (StringUtils.isEmpty(product.getCategoryName())) {
                 product.setCategoryName(labelCache.getLabel("classification_" + product.getCategory()));

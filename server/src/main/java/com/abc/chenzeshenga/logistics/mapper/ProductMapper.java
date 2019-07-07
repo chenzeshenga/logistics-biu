@@ -36,9 +36,10 @@ import java.util.List;
 
     Product selectByPrimaryKey(String sku);
 
-    List<Product> listByStatusWithUser(Page page, String username, String status);
+    List<Product> listByStatusWithUser(Page page, String username, String status, String sku, String dySku,
+        String name);
 
-    List<Product> listByStatus(Page page, String status);
+    List<Product> listByStatus(Page page, String status, String sku, String dySku, String name, String creator);
 
     int statusUpdate(String sku, String status);
 

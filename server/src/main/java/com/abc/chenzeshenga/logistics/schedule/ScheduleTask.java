@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
         log.info("scheduled task countProduct begin");
         List<ProductStatistics> productStatisticsList = new ArrayList<>();
         List<ManualOrder> manualOrderList = orderMapper.listAll();
-        List<Product> productList = productMapper.listByStatus(new Page(0, 999), "1");
+        List<Product> productList = productMapper.listByStatus(new Page(0, 999), "1", null, null, null, null);
         Map<String, ProductStatistics> productStatisticsMap = new HashMap<>(12);
         for (Product product : productList) {
             ProductStatistics productStatistics = new ProductStatistics();

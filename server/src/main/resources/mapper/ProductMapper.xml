@@ -129,15 +129,41 @@
         <if test="username != null and username != 'admin' and username != 'operator'">
             and createdBy = #{username}
         </if>
+        <if test="sku != null and sku != ''">
+            and product.sku like CONCAT('%', #{sku}, '%')
+        </if>
+        <if test="dySku != null and dySku != ''">
+            and product.dy_sku like CONCAT('%', #{dySku}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and product.product_name like CONCAT('%', #{name}, '%')
+        </if>
     </select>
 
     <select id="listByStatus" parameterType="java.lang.String" resultMap="resultWithShelfContent">
-        select product.*,content.sku as subSku,content.dySku as subDySku,content.name as subName,content.location as
-                                        subLocation,content.num as subNum
+        select product.*,
+        content.sku as subSku,
+        content.dySku as subDySku,
+        content.name as subName,
+        content.location as
+        subLocation,
+        content.num as subNum
         from l_productions product
-                 left join l_product_shelf_layout content on (product.sku = content.sku and
-                                                              product.dy_sku = content.dySku)
+        left join l_product_shelf_layout content on (product.sku = content.sku and
+        product.dy_sku = content.dySku)
         where status = #{status}
+        <if test="creator != null and creator !='' and creator != 'admin' and creator != 'operator'">
+            and createdBy = #{creator}
+        </if>
+        <if test="sku != null and sku != ''">
+            and product.sku like CONCAT('%', #{sku}, '%')
+        </if>
+        <if test="dySku != null and dySku != ''">
+            and product.dy_sku like CONCAT('%', #{dySku}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and product.product_name like CONCAT('%', #{name}, '%')
+        </if>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">

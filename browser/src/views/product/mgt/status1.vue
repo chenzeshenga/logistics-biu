@@ -1,7 +1,71 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <el-form> </el-form>
+            <el-form>
+                <el-row :gutter="20" style="margin-left: 4%">
+                    <el-col :span="6">
+                        <el-tooltip
+                            content="请输入或者扫描商品sku"
+                            placement="top"
+                        >
+                            <el-input
+                                placeholder="请输入或者扫描商品sku"
+                                clearable
+                                v-model="search.sku"
+                                @clear="searchProduct"
+                            ></el-input>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-tooltip
+                            content="请输入或者扫描商品东岳sku"
+                            placement="top"
+                        >
+                            <el-input
+                                placeholder="请输入或者扫描商品东岳sku"
+                                clearable
+                                v-model="search.dySku"
+                                @clear="searchProduct"
+                            ></el-input>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-tooltip content="请输入商品名称" placement="top">
+                            <el-input
+                                placeholder="请输入商品名称"
+                                clearable
+                                v-model="search.name"
+                                @clear="searchProduct"
+                            ></el-input>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-tooltip content="创建人" placement="top">
+                            <el-select
+                                filterable
+                                clearable
+                                v-model="search.creator"
+                                placeholder="请选择创建人"
+                            >
+                                <el-option
+                                    v-for="creator in users"
+                                    :key="creator.uname"
+                                    :label="creator.nick"
+                                    :value="creator.uname"
+                                ></el-option>
+                            </el-select>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="1">
+                        <el-form-item label="">
+                            <el-button
+                                icon="el-icon-search"
+                                @click="searchProduct()"
+                            ></el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
             <el-table
                 :data="tableData"
                 element-loading-text="加载中"
@@ -167,7 +231,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
             >
             </el-pagination>
-            <el-dialog> </el-dialog>
+            <el-dialog></el-dialog>
         </div>
     </div>
 </template>
@@ -187,12 +251,32 @@ export default {
             },
             tableLoading: false,
             tableData: [],
+            search: {
+                sku: '',
+                dySku: '',
+                name: '',
+                creator: '',
+            },
+            users: [],
         }
     },
     created() {
         this.fetchData()
+        this.initUserList()
     },
     methods: {
+        initUserList() {
+            request({
+                url: '/sys_user/query4Option',
+                method: 'post',
+                data: {
+                    current: null,
+                    size: 'all',
+                },
+            }).then(res => {
+                this.users = res.data.page.records
+            })
+        },
         fetchData() {
             this.tableLoading = true
             request({
@@ -263,6 +347,28 @@ export default {
             link.target = '_blank'
             document.body.appendChild(link)
             link.click()
+        },
+        searchProduct() {
+            this.tableLoading = true
+            request({
+                url: 'product/list/1',
+                method: 'post',
+                data: {
+                    current: this.tablePage.current,
+                    size: this.tablePage.size,
+                    sku: this.search.sku,
+                    dySku: this.search.dySku,
+                    creator: this.search.creator,
+                    name: this.search.name,
+                },
+            }).then(res => {
+                this.tableData = res.data.page.records
+                this.tablePage.current = res.data.page.current
+                this.tablePage.pages = res.data.page.pages
+                this.tablePage.size = res.data.page.size
+                this.tablePage.total = res.data.page.total
+                this.tableLoading = false
+            })
         },
     },
 }
