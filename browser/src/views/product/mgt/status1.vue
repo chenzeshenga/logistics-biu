@@ -1,9 +1,7 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <el-form>
-
-            </el-form>
+            <el-form> </el-form>
             <el-table
                 :data="tableData"
                 element-loading-text="加载中"
@@ -12,7 +10,37 @@
                 style="width: 100%;margin: 10px"
                 v-loading.body="tableLoading"
             >
-                <el-table-column type="expand"> </el-table-column>
+                <el-table-column type="expand">
+                    <template slot-scope="tableData">
+                        <el-table :data="tableData.row.productOnShelfList">
+                            <el-table-column
+                                prop="sku"
+                                label="sku"
+                                width="150"
+                            ></el-table-column>
+                            <el-table-column
+                                prop="dySku"
+                                label="东岳sku"
+                                width="150"
+                            ></el-table-column>
+                            <el-table-column
+                                prop="name"
+                                label="商品名称"
+                                width="300"
+                            ></el-table-column>
+                            <el-table-column
+                                prop="location"
+                                label="货架位置"
+                                width="180"
+                            ></el-table-column>
+                            <el-table-column
+                                prop="num"
+                                label="商品数量"
+                                width="180"
+                            ></el-table-column>
+                        </el-table>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     label="sku"
                     prop="sku"

@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductMapper">
 
+    <resultMap id="resultWithShelfContent" type="com.abc.chenzeshenga.logistics.model.Product">
+        <id column="sku" jdbcType="VARCHAR" property="sku"/>
+        <result column="dy_sku" jdbcType="VARCHAR" property="dySku"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="length" jdbcType="VARCHAR" property="length"/>
+        <result column="width" jdbcType="VARCHAR" property="width"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="weight" jdbcType="VARCHAR" property="weight"/>
+        <result column="createdBy" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="updateBy" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath"/>
+        <result column="alert_num" jdbcType="INTEGER" property="alertNum"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="ava_num" jdbcType="INTEGER" property="avaNum"/>
+        <result column="img1" jdbcType="VARCHAR" property="img1"/>
+        <result column="img2" jdbcType="VARCHAR" property="img2"/>
+        <result column="img3" jdbcType="VARCHAR" property="img3"/>
+        <collection property="productOnShelfList" ofType="com.abc.chenzeshenga.logistics.model.ProductOnShelf">
+            <result column="subSku" property="sku"/>
+            <result column="subDySku" property="dySku"/>
+            <result column="subName" property="name"/>
+            <result column="subLocation" property="location"/>
+            <result column="subNum" property="num"/>
+        </collection>
+    </resultMap>
+
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Product">
         <id column="sku" jdbcType="VARCHAR" property="sku"/>
         <result column="dy_sku" jdbcType="VARCHAR" property="dySku"/>
@@ -88,56 +120,23 @@
            or dy_sku = #{sku,jdbcType=VARCHAR}
     </select>
 
-    <select id="listByStatusWithUser" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select sku,
-        dy_sku,
-        product_name,
-        category,
-        color,
-        `size`,
-        price,
-        `length`,
-        width,
-        height,
-        weight,
-        createdBy,
-        updateBy,
-        `location`,
-        img_path,
-        alert_num,
-        create_on,
-        update_on,
-        ava_num,
-        status
-        from l_productions
+    <select id="listByStatusWithUser" parameterType="java.lang.String" resultMap="resultWithShelfContent">
+        select product.*,content.sku as subSku,content.dySku as subDySku,content.name as subName,content.location as
+        subLocation,content.num as subNum
+        from l_productions product left join l_product_shelf_layout content on(product.sku=content.sku and
+        product.dy_sku=content.dySku)
         where status = #{status}
         <if test="username != null and username != 'admin' and username != 'operator'">
             and createdBy = #{username}
         </if>
     </select>
 
-    <select id="listByStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select sku,
-               dy_sku,
-               product_name,
-               category,
-               color,
-               `size`,
-               price,
-               `length`,
-               width,
-               height,
-               weight,
-               createdBy,
-               updateBy,
-               `location`,
-               img_path,
-               alert_num,
-               create_on,
-               update_on,
-               ava_num,
-               status
-        from l_productions
+    <select id="listByStatus" parameterType="java.lang.String" resultMap="resultWithShelfContent">
+        select product.*,content.sku as subSku,content.dySku as subDySku,content.name as subName,content.location as
+                                        subLocation,content.num as subNum
+        from l_productions product
+                 left join l_product_shelf_layout content on (product.sku = content.sku and
+                                                              product.dy_sku = content.dySku)
         where status = #{status}
     </select>
 

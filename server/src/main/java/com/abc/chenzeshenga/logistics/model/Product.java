@@ -7,9 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotEmpty;
-import java.awt.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author chenzesheng
@@ -42,4 +42,5 @@ import java.util.Date;
     private String img3;
     private String status;
     private String statusDesc;
+    private List<ProductOnShelf> productOnShelfList;
 }
