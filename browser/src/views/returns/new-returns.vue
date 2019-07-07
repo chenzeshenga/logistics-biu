@@ -194,7 +194,7 @@
                             <el-input-number
                                 v-model="content.num"
                                 :min="1"
-                                :max="selectedProductMaxNum"
+                                :max="content.selectedProductMaxNum"
                             ></el-input-number>
                         </el-form-item>
                     </el-col>
@@ -280,6 +280,7 @@ export default {
                 sku: '',
                 num: '',
                 name: '',
+                selectedProductMaxNum: 20,
             },
         }
     },
@@ -359,6 +360,27 @@ export default {
         },
         initOrderContent(val) {
             console.log(val)
+        },
+        add2Cart() {
+            let tmpContent = {}
+            tmpContent = JSON.parse(JSON.stringify(this.content))
+            tmpContent['index'] = this.form.contentList.length
+            let oriContentList = this.form.contentList
+            let productInOriContentListFlag = false
+            for (let i = 0; i < oriContentList.length; i++) {
+                let subContent = oriContentList[i]
+                if (
+                    productInOriContentListFlag &&
+                    subContent['sku'] === this.content.sku
+                ) {
+                    subContent['num'] += this.content.num
+                    productInOriContentListFlag = true
+                    break
+                }
+            }
+            if (!productInOriContentListFlag) {
+                this.form.contentList.push(this.content)
+            }
         },
     },
 }
