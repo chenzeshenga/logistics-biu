@@ -505,21 +505,6 @@ export default {
         trimInput() {
             this.form.orderNo = this.form.orderNo.trim()
         },
-        initPage() {
-            const ordno = this.$route.query.ordno
-            this.status = this.$route.query.status
-            if (ordno != null && ordno.length > 0) {
-                request({
-                    url: 'ord/get/' + ordno,
-                    method: 'get',
-                }).then(res => {
-                    this.form = res.data.data
-                    this.selectedChannels.push(res.data.data.channel)
-                    this.onUpdate = true
-                    this.onCreate = false
-                })
-            }
-        },
         onSubmit() {
             this.$message('submit!')
         },
@@ -566,8 +551,23 @@ export default {
                     const channel = this.channels[index]
                     this.channelMap[channel['value']] = channel
                 }
-                this.initPage()
             })
+            this.initPage()
+        },
+        initPage() {
+            const ordno = this.$route.query.ordno
+            this.status = this.$route.query.status
+            if (ordno != null && ordno.length > 0) {
+                request({
+                    url: 'ord/get/' + ordno,
+                    method: 'get',
+                }).then(res => {
+                    this.form = res.data.data
+                    this.selectedChannels.push(res.data.data.channel)
+                    this.onUpdate = true
+                    this.onCreate = false
+                })
+            }
         },
         getAddress() {
             request({

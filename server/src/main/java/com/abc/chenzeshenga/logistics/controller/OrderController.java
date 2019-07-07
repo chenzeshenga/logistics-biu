@@ -56,16 +56,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
     private ChannelCache channelCache;
 
-    private TrackNoController trackNoController;
-
     @Autowired
     public OrderController(OrderService orderService, JapanAddressCache japanAddressCache, LabelCache labelCache,
-        ChannelCache channelCache, TrackNoController trackNoController) {
+        ChannelCache channelCache) {
         this.orderService = orderService;
         this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
-        this.trackNoController = trackNoController;
+    }
+
+    @PostMapping @RequestMapping("/detail") public Json getOrdDetail(@RequestBody Map<String, String> request) {
+        ManualOrder manualOrder = orderMapper.getOrdDetail(request.get("ordNo"));
+        return Json.succ().data(manualOrder);
     }
 
     @PostMapping @RequestMapping("/add")
@@ -449,7 +451,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
     @PostMapping @RequestMapping("/fetchOrderNo") public Json fetchOrderNo(@RequestBody Map<String, String> request) {
         String creator = request.get("creator");
-        List<ManualOrder> manualOrderList=orderMapper.fetchOrderNo(creator);
+        List<ManualOrder> manualOrderList = orderMapper.fetchOrderNo(creator);
         return Json.succ().data(manualOrderList);
     }
 

@@ -344,4 +344,12 @@
                  left join l_manual_order_content content on (ord.ord_no = content.ordno)
         where ord.create_by = #{creator}
     </select>
+
+    <select id="getOrdDetail" resultMap="result">
+        select *
+        from l_manual_order ord
+                 left join l_manual_order_content content on (ord.ord_no = content.ordno)
+        where ord.ord_no like CONCAT('%', #{ordNo}, '%')
+        limit 1
+    </select>
 </mapper>

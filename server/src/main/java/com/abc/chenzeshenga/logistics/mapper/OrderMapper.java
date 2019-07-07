@@ -66,6 +66,8 @@ import java.util.Map;
 
     ManualOrder getOrderSeq();
 
-    List<ManualOrder>  fetchOrderNo(String creator);
+    List<ManualOrder> fetchOrderNo(String creator);
+
+    ManualOrder getOrdDetail(String ordNo);
 
 }
