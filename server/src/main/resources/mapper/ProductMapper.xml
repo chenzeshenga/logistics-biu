@@ -25,6 +25,7 @@
         <result column="img1" jdbcType="VARCHAR" property="img1"/>
         <result column="img2" jdbcType="VARCHAR" property="img2"/>
         <result column="img3" jdbcType="VARCHAR" property="img3"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
         <collection property="productOnShelfList" ofType="com.abc.chenzeshenga.logistics.model.ProductOnShelf">
             <result column="subSku" property="sku"/>
             <result column="subDySku" property="dySku"/>
