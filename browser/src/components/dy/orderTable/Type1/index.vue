@@ -365,7 +365,6 @@
                         placement="top"
                         v-if="msgData.buttonVisible8"
                     >
-                        <!-- todo write a function with this name-->
                         <el-button
                             @click="findWhere(scope.$index, scope.row)"
                             size="mini"
@@ -865,6 +864,9 @@ export default {
             this.$router.push({
                 path: '/system/channel?filter=' + row.channel,
             })
+        },
+        findWhere() {
+            this.$message.info('物流查询，功能待开发')
         },
     },
 }
