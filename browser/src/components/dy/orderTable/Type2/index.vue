@@ -94,221 +94,338 @@
             >
         </el-col>
         <el-table
-            style="width: 100%"
-            :data="tableData"
-            v-loading.body="tableLoading"
-            element-loading-text="加载中"
-            stripe
-            highlight-current-row
-            @selection-change="handleSelectionChange"
+                style="width: 100%"
+                :data="tableData"
+                v-loading.body="tableLoading"
+                element-loading-text="加载中"
+                stripe
+                highlight-current-row
+                @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
                     <el-table
-                        :data="tableData.row.contentList"
-                        show-summary
-                        :summary-method="getSummary"
-                        style="margin-bottom: 0"
+                            :data="tableData.row.contentList"
+                            show-summary
+                            :summary-method="getSummary"
+                            style="margin-bottom: 0"
                     >
                         <el-table-column
-                            prop="sku"
-                            label="sku/东岳Sku"
-                            width="200"
+                                prop="sku"
+                                label="sku/东岳Sku"
+                                width="200"
                         ></el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="商品名称"
-                            width="300"
+                                prop="name"
+                                label="商品名称"
+                                width="300"
                         ></el-table-column>
                         <el-table-column
-                            prop="price"
-                            label="商品价格(JPY)"
-                            width="180"
+                                prop="price"
+                                label="商品价格(JPY)"
+                                width="180"
                         ></el-table-column>
                         <el-table-column
-                            prop="num"
-                            label="商品数量"
-                            width="180"
+                                prop="num"
+                                label="商品数量"
+                                width="180"
                         ></el-table-column>
                     </el-table>
                 </template>
             </el-table-column>
             <el-table-column
-                width="160"
-                prop="orderNo"
-                label="订单号"
+                    width="160"
+                    prop="orderNo"
+                    label="订单号"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="categoryName"
-                label="订单类型"
+                    width="150"
+                    prop="categoryName"
+                    label="订单类型"
+            ></el-table-column>
+            <el-table-column width="200" label="运送渠道">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>渠道名称: {{ scope.row.channelDesc }}</p>
+                        <p>渠道编码: {{ scope.row.channel }}</p>
+                        <p>
+                            <el-button
+                                    type="text"
+                                    v-on:click="
+                                    route2ChannelPage(scope.$index, scope.row)
+                                "
+                            >查看详情
+                            </el-button>
+                        </p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium"
+                            >{{ scope.row.channelDesc }}
+                            </el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    width="100"
+                    prop="statusDesc"
+                    label="订单状态"
             ></el-table-column>
             <el-table-column
-                width="200"
-                prop="channelDesc"
-                label="运送渠道"
+                    width="150"
+                    prop="carrierName"
+                    label="承运人"
             ></el-table-column>
             <el-table-column
-                width="100"
-                prop="statusDesc"
-                label="订单状态"
+                    width="170"
+                    prop="trackNo"
+                    label="追踪单号"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="carrierName"
-                label="承运人"
+                    width="250"
+                    prop="fromAddressDesc"
+                    label="寄件地址"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="trackNo"
-                label="追踪单号"
+                    width="150"
+                    prop="fromName"
+                    label="寄件人"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="chinaCarrier"
-                label="国内承运人"
+                    width="150"
+                    prop="fromContact"
+                    label="寄件人联系方式"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="chinaNo"
-                label="国内单号"
+                    width="150"
+                    prop="fromZipCode"
+                    label="寄件人邮编"
             ></el-table-column>
             <el-table-column
-                width="250"
-                prop="fromAddressDesc"
-                label="寄件地址"
+                    width="250"
+                    prop="toAddressDesc"
+                    label="收件地址"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="fromName"
-                label="寄件人"
+                    width="150"
+                    prop="toName"
+                    label="收件人"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="fromContact"
-                label="寄件人联系方式"
+                    width="150"
+                    prop="toContact"
+                    label="收件人联系方式"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="fromZipCode"
-                label="寄件人邮编"
+                    width="150"
+                    prop="toZipCode"
+                    label="收件人邮编"
             ></el-table-column>
             <el-table-column
-                width="250"
-                prop="toAddressDesc"
-                label="收件地址"
+                    width="80"
+                    prop="collect"
+                    label="是否代收商品费用"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="toName"
-                label="收件人"
+                    width="80"
+                    prop="collectNum"
+                    label="总计代收费用"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="toContact"
-                label="收件人联系方式"
+                    width="80"
+                    prop="length"
+                    label="长"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="toZipCode"
-                label="收件人邮编"
+                    width="80"
+                    prop="width"
+                    label="宽"
             ></el-table-column>
             <el-table-column
-                width="80"
-                prop="collect"
-                label="是否代收商品费用"
+                    width="80"
+                    prop="height"
+                    label="高"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="createOn"
-                label="创建时间"
+                    width="80"
+                    prop="totalVolumeFrontEnd"
+                    label="总体积"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="updateOn"
-                label="修改时间"
+                    width="80"
+                    prop="sum"
+                    label="三边和"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="creator"
-                label="创建人"
+                    width="80"
+                    prop="totalVolumeWithWeight"
+                    label="体积重"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="updator"
-                label="修改人"
+                    width="80"
+                    prop="totalWeight"
+                    label="总重量"
             ></el-table-column>
-            <el-table-column label="操作" width="300" fixed="right">
+            <el-table-column
+                    width="170"
+                    prop="createOn"
+                    label="创建时间"
+            ></el-table-column>
+            <el-table-column
+                    width="170"
+                    prop="updateOn"
+                    label="修改时间"
+            ></el-table-column>
+            <el-table-column
+                    width="150"
+                    prop="creator"
+                    label="创建人"
+            ></el-table-column>
+            <el-table-column
+                    width="150"
+                    prop="updator"
+                    label="修改人"
+            ></el-table-column>
+            <el-table-column label="操作" width="350" fixed="right">
                 <template slot-scope="scope">
                     <el-tooltip
-                        content="提交拣货"
-                        placement="top"
-                        v-if="msgData.buttonVisible1"
+                            content="提交拣货"
+                            placement="top"
+                            v-if="msgData.buttonVisible1"
                     >
                         <el-button
-                            @click="statusUpdate(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-check"
-                            circle
-                            plain
+                                @click="statusUpdate(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="申请单号"
-                        placement="top"
-                        v-if="msgData.buttonVisible2"
+                            content="申请单号"
+                            placement="top"
+                            v-if="msgData.buttonVisible2"
                     >
                         <el-button
-                            @click="applyTrackno(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-info"
-                            circle
-                            plain
+                                @click="applyTrackno(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-info"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="编辑"
-                        placement="top"
-                        v-if="msgData.buttonVisible3"
+                            content="编辑"
+                            placement="top"
+                            v-if="msgData.buttonVisible3"
                     >
                         <el-button
-                            @click="handleUpdate(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-edit"
-                            circle
-                            plain
+                                @click="handleUpdate(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-edit"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="打印配货单"
-                        placement="top"
-                        v-if="msgData.buttonVisible4"
+                            content="打印配货单"
+                            placement="top"
+                            v-if="msgData.buttonVisible4"
                     >
                         <el-button
-                            @click="print(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-printer"
-                            circle
-                            plain
+                                @click="print(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-printer"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="废弃"
-                        placement="top"
-                        v-if="msgData.buttonVisible5"
+                            content="废弃"
+                            placement="top"
+                            v-if="msgData.buttonVisible5"
                     >
                         <el-button
-                            @click="abandon(scope.$index, scope.row)"
-                            size="mini"
-                            type="danger"
-                            icon="el-icon-remove"
-                            circle
-                            plain
+                                @click="abandon(scope.$index, scope.row)"
+                                size="mini"
+                                type="danger"
+                                icon="el-icon-remove"
+                                circle
+                                plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="提交发货"
+                            placement="top"
+                            v-if="msgData.buttonVisible6"
+                    >
+                        <el-button
+                                @click="triggerVolumeAndWeight(scope.$index, scope.row)"
+                                size="small"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="编辑体积重量"
+                            placement="top"
+                            v-if="msgData.buttonVisible10"
+                    >
+                        <el-button
+                                @click="triggerVolumeAndWeightWithOutStatus(scope.$index, scope.row)"
+                                size="small"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="归档"
+                            placement="top"
+                            v-if="msgData.buttonVisible7"
+                    >
+                        <el-button
+                                @click="statusUpdate(scope.$index, scope.row)"
+                                size="small"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="查询物流进度"
+                            placement="top"
+                            v-if="msgData.buttonVisible8"
+                    >
+                        <el-button
+                                @click="findWhere(scope.$index, scope.row)"
+                                size="mini"
+                                type="info"
+                                icon="el-icon-question"
+                                circle
+                                plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="还原"
+                            placement="top"
+                            v-if="msgData.buttonVisible9"
+                    >
+                        <el-button
+                                @click="statusUpdate(scope.$index, scope.row)"
+                                size="small"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                 </template>
@@ -383,80 +500,6 @@
                 >
             </span>
         </el-dialog>
-<!--        <el-dialog title="提交发货" :visible.sync="dialogVisible2" width="50%">-->
-<!--            <el-form :model="form">-->
-<!--                <el-col :span="24">-->
-<!--                    <el-form-item label="订单号">-->
-<!--                        <el-input v-model="form.orderNo" disabled></el-input>-->
-<!--                    </el-form-item>-->
-<!--                </el-col>-->
-<!--                <el-col :span="24" style="margin-top: 10px">-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="长(cm)">-->
-<!--                            <el-input-number-->
-<!--                                v-model="form.length"-->
-<!--                                @change="calculateIndex"-->
-<!--                            ></el-input-number>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="宽(cm)">-->
-<!--                            <el-input-number-->
-<!--                                v-model="form.width"-->
-<!--                                @change="calculateIndex"-->
-<!--                            ></el-input-number>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="高(cm)">-->
-<!--                            <el-input-number-->
-<!--                                v-model="form.height"-->
-<!--                                @change="calculateIndex"-->
-<!--                            ></el-input-number>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <label>后台计算总体积为:</label>-->
-<!--                    <span>{{ form.totalVolume }} cm^3</span><br />-->
-<!--                    <label>根据页面输入计算结果如下:</label>-->
-<!--                    <el-form-item>-->
-<!--                        <el-col :span="8">-->
-<!--                            <el-form-item label="总体积(cm^3)">-->
-<!--                                <el-input-number-->
-<!--                                    v-model="form.totalVolumeFrontEnd"-->
-<!--                                ></el-input-number>-->
-<!--                            </el-form-item>-->
-<!--                        </el-col>-->
-<!--                        <el-col :span="8">-->
-<!--                            <el-form-item label="三边和(cm)">-->
-<!--                                <el-input-number-->
-<!--                                    v-model="form.sum"-->
-<!--                                ></el-input-number>-->
-<!--                            </el-form-item>-->
-<!--                        </el-col>-->
-<!--                        <el-col :span="8">-->
-<!--                            <el-form-item label="体积重(cm^3)">-->
-<!--                                <el-input-number-->
-<!--                                    v-model="form.totalVolumeWithWeight"-->
-<!--                                ></el-input-number>-->
-<!--                            </el-form-item>-->
-<!--                        </el-col>-->
-<!--                    </el-form-item>-->
-<!--                </el-col>-->
-<!--                <el-col :span="24">-->
-<!--                    <el-form-item label="当前订单总重量(kg)">-->
-<!--                        <el-input-number-->
-<!--                            v-model="form.totalWeight"-->
-<!--                        ></el-input-number>-->
-<!--                    </el-form-item>-->
-<!--                </el-col>-->
-<!--            </el-form>-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="dialogVisible = false">取 消</el-button>-->
-<!--                <el-button type="primary" @click="updateVolumeAndWeight"-->
-<!--                    >确 定</el-button-->
-<!--                >-->
-<!--            </span>-->
-<!--        </el-dialog>-->
     </div>
 </template>
 
@@ -714,7 +757,11 @@ export default {
                     sums[index] = ''
                 }
             })
-            sums[3] = data[0].totalPrice
+            if(data[0].hasOwnProperty("totalPrice")){
+                sums[3] = data[0].totalPrice
+            }else {
+                sums[3] = 0
+            }
             return sums
         },
         print(index, row) {

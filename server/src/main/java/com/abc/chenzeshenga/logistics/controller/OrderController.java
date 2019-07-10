@@ -126,13 +126,22 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
+    @PostMapping @RequestMapping("/updateOrd") public Json updateOrd(@RequestBody ManualOrder manualOrder) {
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        int result = orderMapper.update(manualOrder);
+        return Json.succ().data(result);
+    }
+
     @PostMapping @RequestMapping("/update/{ordno}")
-    public Json update(@RequestBody Map<String, String> data, @PathVariable String ordno) {
+    public Json update(@RequestBody Map<String, Object> data, @PathVariable String ordno) {
         ManualOrder manualOrder = new ManualOrder();
         manualOrder.setOrderNo(ordno);
-        manualOrder.setTotalVolume(data.get("totalVolume"));
-        manualOrder.setTotalWeight(data.get("totalWeight"));
-        manualOrder.setOrdFee(data.get("ordFee"));
+        manualOrder.setTotalVolume((double)data.get("totalVolume"));
+        manualOrder.setTotalWeight((double)data.get("totalWeight"));
+        manualOrder.setOrdFee((String)data.get("ordFee"));
         Date curr = new Date();
         manualOrder.setUpdateOn(curr);
         String cname = UserUtils.getUserName();

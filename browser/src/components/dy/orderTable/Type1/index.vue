@@ -241,6 +241,46 @@
                 label="是否代收商品费用"
             ></el-table-column>
             <el-table-column
+                    width="80"
+                    prop="collectNum"
+                    label="总计代收费用"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="length"
+                    label="长"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="width"
+                    label="宽"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="height"
+                    label="高"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="totalVolumeFrontEnd"
+                    label="总体积"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="sum"
+                    label="三边和"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="totalVolumeWithWeight"
+                    label="体积重"
+            ></el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="totalWeight"
+                    label="总重量"
+            ></el-table-column>
+            <el-table-column
                 width="170"
                 prop="createOn"
                 label="创建时间"
@@ -260,7 +300,7 @@
                 prop="updator"
                 label="修改人"
             ></el-table-column>
-            <el-table-column label="操作" width="300" fixed="right">
+            <el-table-column label="操作" width="350" fixed="right">
                 <template slot-scope="scope">
                     <el-tooltip
                         content="提交拣货"
@@ -338,12 +378,26 @@
                         v-if="msgData.buttonVisible6"
                     >
                         <el-button
-                            @click="statusUpdate(scope.$index, scope.row)"
+                            @click="triggerVolumeAndWeight(scope.$index, scope.row)"
                             size="small"
                             type="info"
                             icon="el-icon-check"
                             circle
                             plain
+                        ></el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                            content="编辑体积重量"
+                            placement="top"
+                            v-if="msgData.buttonVisible10"
+                    >
+                        <el-button
+                                @click="triggerVolumeAndWeightWithOutStatus(scope.$index, scope.row)"
+                                size="small"
+                                type="info"
+                                icon="el-icon-check"
+                                circle
+                                plain
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
@@ -462,6 +516,78 @@
                 >
             </span>
         </el-dialog>
+        <el-dialog title="提交发货" :visible.sync="dialogVisible2" width="50%">
+           <el-form :model="form">
+                        <el-col :span="24">
+                            <el-form-item label="订单号">
+                                <el-input v-model="form.orderNo" disabled></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24" style="margin-top: 10px">
+                            <el-col :span="8">
+                                <el-form-item label="长(cm)">
+                                    <el-input-number
+                                        v-model="form.length"
+                                        @change="calculateIndex"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="宽(cm)">
+                                    <el-input-number
+                                        v-model="form.width"
+                                        @change="calculateIndex"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="高(cm)">
+                                    <el-input-number
+                                        v-model="form.height"
+                                        @change="calculateIndex"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-col>
+                            <label>根据页面输入计算结果如下(仅供参考):</label>
+                            <el-form-item style="margin-top: 2%">
+                                <el-col :span="8">
+                                    <el-form-item label="总体积(cm^3)">
+                                        <el-input-number
+                                            v-model="form.totalVolumeFrontEnd"
+                                        ></el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-form-item label="三边和(cm)">
+                                        <el-input-number
+                                            v-model="form.sum"
+                                        ></el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-form-item label="体积重(cm^3)">
+                                        <el-input-number
+                                            v-model="form.totalVolumeWithWeight"
+                                        ></el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item label="当前订单总重量(kg)">
+                                <el-input-number
+                                    v-model="form.totalWeight"
+                                ></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                    </el-form>
+           <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible2 = false">取 消</el-button>
+                        <el-button type="primary" @click="updateOrd"
+                            >确 定</el-button
+                        >
+                    </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -486,6 +612,7 @@ export default {
                 buttonVisible7: this.msg.buttonVisible7,
                 buttonVisible8: this.msg.buttonVisible8,
                 buttonVisible9: this.msg.buttonVisible9,
+                buttonVisible10: this.msg.buttonVisible10,
             },
             tablePage: {
                 current: 1,
@@ -534,12 +661,21 @@ export default {
                 ],
             },
             dialogVisible: false,
+            dialogVisible2:false,
             carrier: [],
             form: {
                 orderNo: '',
+                status:'',
                 selectedCarrier: [],
                 carrierNo: '',
                 trackNo: '',
+                length:0,
+                width:0,
+                height:0,
+                totalVolumeFrontEnd:0,
+                sum:0,
+                totalVolumeWithWeight:0,
+                totalWeight:0
             },
             ord4TrackNo: [],
             dialogVisibleList: false,
@@ -868,6 +1004,46 @@ export default {
         findWhere() {
             this.$message.info('物流查询，功能待开发')
         },
+        triggerVolumeAndWeight(index,row){
+            this.dialogVisible2=true
+            this.form.orderNo=row.orderNo
+            this.form.length=row.length
+            this.form.width=row.width
+            this.form.height=row.height
+            this.form.sum=row.sum
+            this.form.totalWeight=row.totalWeight
+            this.form.totalVolumeFrontEnd=row.totalVolume
+            this.form.totalVolumeWithWeight=row.totalVolumeWithWeight
+
+            this.form.status=this.msgData.statusTo
+        },
+        triggerVolumeAndWeightWithOutStatus(index,row){
+            this.dialogVisible2=true
+            this.form.orderNo=row.orderNo
+            this.form.length=row.length
+            this.form.width=row.width
+            this.form.height=row.height
+            this.form.sum=row.sum
+            this.form.totalWeight=row.totalWeight
+            this.form.totalVolumeFrontEnd=row.totalVolume
+            this.form.totalVolumeWithWeight=row.totalVolumeWithWeight
+        },
+        calculateIndex() {
+            this.form.totalVolumeFrontEnd = this.form.length * this.form.height * this.form.width;
+            this.form.sum = this.form.length + this.form.height + this.form.width;
+            this.form.totalVolumeWithWeight = this.form.length * this.form.height * this.form.width / 6000;
+        },
+        updateOrd(){
+            request({
+                url: '/ord/update',
+                method: 'post',
+                data: this.form,
+            }).then(() => {
+                this.$message.success('当前订单已更新')
+                this.dialogVisible2=false
+                this.fetchData()
+            })
+        }
     },
 }
 </script>

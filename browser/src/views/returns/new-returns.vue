@@ -238,6 +238,39 @@
                         </el-table-column>
                     </el-table>
                 </el-form-item>
+                <el-form-item label="退件相关图片">
+                    <el-upload
+                            :action="actionLink1"
+                            with-credentials
+                            multiple
+                            list-type="picture"
+                            :file-list="fileList"
+                            :on-preview="handlePictureCardPreview"
+                            :on-remove="handleRemove"
+                            :data="form"
+                            :on-change="handleFileChange"
+                            ref="upload"
+                            :on-error="handleError"
+                            :limit="3"
+                    >
+                        <el-button slot="trigger" size="small" type="primary"
+                        >选取文件
+                        </el-button>
+                        <el-button
+                                style="margin-left: 10px;"
+                                size="small"
+                                type="success"
+                                @click="submitUpload"
+                        >上传到服务器
+                        </el-button>
+                        <div slot="tip" class="el-upload__tip">
+                            只能上传jpg/png文件，且不超过2MB
+                        </div>
+                    </el-upload>
+                    <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="" />
+                    </el-dialog>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -250,6 +283,8 @@ export default {
     name: 'new-returns',
     data() {
         return {
+            actionLink1: process.env.BASE_API + '/returns/img/put',
+            fileList: [],
             adminRole: false,
             showFlag: false,
             users: [],
@@ -290,11 +325,11 @@ export default {
         this.getAddress()
     },
     inject: ['reload'],
-    watch: {
-        $route() {
-            this.initPage()
-        },
-    },
+    // watch: {
+    //     $route() {
+    //         this.initPage()
+    //     },
+    // },
     methods: {
         getAddress() {
             request({

@@ -25,6 +25,7 @@
         <result property="toDetailAddress" column="to_where"/>
         <result property="toZipCode" column="to_zipcode"/>
         <result property="collect" column="on_behalf"/>
+        <result property="collectNum" column="collect_num"/>
         <result property="amount" column="amount"/>
         <result property="chinaNo" column="china_no"/>
         <result property="fromContact" column="from_contact"/>
@@ -32,6 +33,13 @@
         <result property="fromName" column="from_whom"/>
         <result property="toName" column="to_whom"/>
         <result property="channel" column="channel"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="height" column="height"/>
+        <result property="sum" column="sum"/>
+        <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
+        <result property="totalVolume" column="total_volume"/>
+        <result property="totalWeight" column="total_weight"/>
         <collection property="manualOrderContents" ofType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
             <result column="sku" property="sku"/>
             <result column="name" property="name"/>
@@ -120,6 +128,30 @@
             </if>
             <if test="collectNum != null and collectNum != ''">
                 collect_num=#{collectNum},
+            </if>
+            <if test="length != null">
+                length=#{length},
+            </if>
+            <if test="width != null">
+                width=#{width},
+            </if>
+            <if test="height != null">
+                height=#{height},
+            </if>
+            <if test="sum != null">
+                sum=#{sum},
+            </if>
+            <if test="totalVolumeWithWeight != null">
+                total_volume_with_weight=#{totalVolumeWithWeight},
+            </if>
+            <if test="totalWeight != null">
+                total_weight=#{totalWeight},
+            </if>
+            <if test="totalVolume != null">
+                total_volume=#{totalVolume},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
             </if>
         </trim>
         where ord_no=#{orderNo}

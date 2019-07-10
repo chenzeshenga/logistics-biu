@@ -399,7 +399,7 @@
                             clearable
                             v-model="standFor"
                             placeholder="请选择您所代表的用户"
-                            @change="changeUpdateLink"
+                            :on-change="changeUpdateLink"
                         >
                             <el-option
                                 v-for="creator in users"
@@ -540,7 +540,6 @@ export default {
                 method: 'get',
             }).then(res => {
                 this.channels = res.data.data
-                console.log(this.channels)
                 if (this.channels.length <= 0) {
                     this.$message.warning(
                         '当前无激活的渠道，请到渠道页面进行配置或者联系管理员'

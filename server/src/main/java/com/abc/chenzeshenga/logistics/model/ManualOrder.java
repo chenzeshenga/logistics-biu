@@ -88,9 +88,15 @@ import java.util.Map;
     private Map<String, String> address;
     private Map<String, String> toAddress;
     private String abnormalReason;
-    private String totalVolume;
-    private String totalWeight;
     private String ordFee;
     private boolean satisfied = true;
+
+    private double length;
+    private double width;
+    private double height;
+    private double sum;
+    private double totalVolumeWithWeight;
+    @JsonProperty("totalVolumeFrontEnd") private double totalVolume;
+    private double totalWeight;
 
 }

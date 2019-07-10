@@ -96,72 +96,17 @@ export default {
     components: { OrderType2 },
     data() {
         return {
-            tablePage: {
-                current: null,
-                pages: null,
-                size: null,
-                total: null,
+            msg: {
+                category: '2',
+                status: '1',
+                statusTo: '2',
+                statusAbandon: '5',
+                buttonVisible1: true,
+                buttonVisible2: true,
+                buttonVisible3: true,
+                buttonVisible4: true,
+                buttonVisible5: true,
             },
-            tableLoading: false,
-            tableData: [],
-            daterange: null,
-            pickerOptions2: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 7
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 30
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 90
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                ],
-            },
-            dialogVisible: false,
-            form: {
-                ordno: '',
-                totalVolume: 0,
-                totalWeight: 0,
-                ordFee: 0,
-                length: 0,
-                width: 0,
-                height: 0,
-                totalVolumeFrontEnd: 0,
-                sum: 0,
-                totalVolumeWithWeight: 0,
-            },
-            search: {
-                ordno: '',
-                creator: '',
-                channelCode: '',
-            },
-            users: [],
-            channels: [],
         }
     },
     created() {
