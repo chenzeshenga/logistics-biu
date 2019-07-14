@@ -60,11 +60,13 @@ import java.util.Map;
             abstractBarcodeBean = new EAN13Bean();
         }
         // 精细度
-        final int dpi = 170;
+        final int dpi = 1024;
         // module宽度
-        final double moduleWidth = UnitConv.in2mm(1.1f / dpi);
+        final double moduleWidth = UnitConv.in2mm(2.6f / dpi);
         // 配置对象
         abstractBarcodeBean.setModuleWidth(moduleWidth);
+        abstractBarcodeBean.setHeight(5);
+        abstractBarcodeBean.setFontSize(0.8);
         abstractBarcodeBean.doQuietZone(false);
         String format = "image/jpeg";
         try {

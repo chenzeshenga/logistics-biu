@@ -59,4 +59,31 @@ public class PdfUtil {
         return byteArrayOutputStreamResult.toByteArray();
     }
 
+    public static byte[] skuBarCode(String sku, String name) throws IOException {
+        PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Image image = new Image(ImageDataFactory.create(BarCodeUtil.generate(sku, "ean13")));
+        image.setMargins(0, 0, 0, 0);
+        PdfWriter pdfWriter = new PdfWriter(byteArrayOutputStream);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        Document document = new Document(pdfDocument, new PageSize(135, 135));
+        document.setMargins(7, 7, 7, 7);
+        document.add(image);
+        Table table = new Table(1);
+        Cell labelCell = new Cell();
+        labelCell.setBorder(Border.NO_BORDER);
+        Paragraph paragraph1 = new Paragraph(
+            new Text("sku: " + sku).setHorizontalAlignment(HorizontalAlignment.CENTER).setBold().setFontSize(10)
+                .setFont(font));
+        Paragraph paragraph2 = new Paragraph(new Text("名称: " + name).setBold().setFontSize(10).setFont(font)
+            .setHorizontalAlignment(HorizontalAlignment.CENTER));
+        paragraph1.setMarginLeft(5);
+        paragraph2.setMarginLeft(5);
+        labelCell.add(paragraph1).add(paragraph2);
+        table.addCell(labelCell);
+        document.add(table);
+        document.close();
+        return byteArrayOutputStream.toByteArray();
+    }
+
 }

@@ -104,7 +104,8 @@ import java.util.List;
         throws IOException {
         response.setContentType("application/pdf");
         Product product = productMapper.selectByPrimaryKey(dySku);
-        response.getOutputStream().write(PdfUtil.skuPdf(dySku, product.getProductName()));
+        //        response.getOutputStream().write(PdfUtil.skuPdf(dySku, product.getProductName()));
+        response.getOutputStream().write(PdfUtil.skuBarCode(dySku, product.getProductName()));
     }
 
 }
