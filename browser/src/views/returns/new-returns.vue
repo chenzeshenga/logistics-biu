@@ -24,6 +24,24 @@
                         </el-form-item>
                     </el-col>
                 </el-form-item>
+                <el-form-item label="退货单号">
+                    <el-col :span="12">
+                        <el-form-item label="退货单号">
+                            <el-input
+                                placeholder="请输入或点击按钮获取退货单号"
+                                v-model="form.returnNo"
+                                @input="trimInput"
+                            >
+                                <el-button
+                                    slot="append"
+                                    v-bind:disabled="onUpdate"
+                                    @click="getOrdNo"
+                                    >获取单号</el-button
+                                >
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="订单号">
                     <el-col :span="12">
                         <el-form-item label="是否对应订单号">
@@ -240,28 +258,28 @@
                 </el-form-item>
                 <el-form-item label="退件相关图片">
                     <el-upload
-                            :action="actionLink1"
-                            with-credentials
-                            multiple
-                            list-type="picture"
-                            :file-list="fileList"
-                            :on-preview="handlePictureCardPreview"
-                            :on-remove="handleRemove"
-                            :data="form"
-                            :on-change="handleFileChange"
-                            ref="upload"
-                            :on-error="handleError"
-                            :limit="3"
+                        :action="actionLink1"
+                        with-credentials
+                        multiple
+                        list-type="picture"
+                        :file-list="fileList"
+                        :on-preview="handlePictureCardPreview"
+                        :on-remove="handleRemove"
+                        :data="form"
+                        :on-change="handleFileChange"
+                        ref="upload"
+                        :on-error="handleError"
+                        :limit="3"
                     >
                         <el-button slot="trigger" size="small" type="primary"
-                        >选取文件
+                            >选取文件
                         </el-button>
                         <el-button
-                                style="margin-left: 10px;"
-                                size="small"
-                                type="success"
-                                @click="submitUpload"
-                        >上传到服务器
+                            style="margin-left: 10px;"
+                            size="small"
+                            type="success"
+                            @click="submitUpload"
+                            >上传到服务器
                         </el-button>
                         <div slot="tip" class="el-upload__tip">
                             只能上传jpg/png文件，且不超过2MB
@@ -292,6 +310,7 @@ export default {
             ordersOption: [],
             address: [],
             form: {
+                returnNo: '',
                 creator: '',
                 withoutOrderNoFlag: false,
                 toName: '',
@@ -331,6 +350,17 @@ export default {
     //     },
     // },
     methods: {
+        getOrdNo() {
+            request({
+                url: '/generate/pk',
+                method: 'get',
+            }).then(res => {
+                this.form.orderNo = res.data.data
+            })
+        },
+        trimInput() {
+            this.form.orderNo = this.form.orderNo.trim()
+        },
         getAddress() {
             request({
                 url: '/address/getKen',

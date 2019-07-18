@@ -73,6 +73,12 @@ import java.util.*;
         return Json.succ().data(pk);
     }
 
+    @GetMapping("/generate/pk/returning") public Json getReturnNo() {
+        String pk = CommonUtil.generate() + "-" + (
+            Integer.valueOf(warehousingMapper.getWarehousingSeq().getWarehousingNo().split("-")[1]) + 1);
+        return Json.succ().data(pk);
+    }
+
     @GetMapping("/generate/sku") public Json getDySku() {
         String sku = SkuUtil.generateDySku();
         return Json.succ().data(sku);
