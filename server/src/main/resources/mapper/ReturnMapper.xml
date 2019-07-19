@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.ReturnMapper">
+    <!--    <cache eviction="FIFO" flushInterval="600000" size="512"/>-->
+    <!--    <select id="get" resultType="com.chenzeshenga.logistics.model.claim.Claim">-->
+    <!--        select claim_id as claimId, order_no as orderNo, track_no as trackNo, remarks-->
+    <!--        from l_claim-->
+    <!--        where create_by=#{username} or create_by is null-->
+    <!--    </select>-->
+
+    <!--    <insert id="add" parameterType="com.chenzeshenga.logistics.model.claim.Claim">-->
+    <!--      insert into l_claim(claim_id, order_no, track_no, remarks, create_on, create_by)-->
+    <!--      values (#{claimId},#{orderNo},#{trackNo},#{remarks},#{createOn},#{createBy})-->
+    <!--      on duplicate key-->
+    <!--      update-->
+    <!--      order_no=#{orderNo},track_no=#{trackNo}, remarks=#{remarks}, update_on=current_timestamp(),-->
+    <!--      update_by=#{createBy}, create_by=#{createBy}-->
+    <!--    </insert>-->
+
+    <!--    <select id="distinctOrdno" resultType="com.chenzeshenga.logistics.model.sale.order.ManualOrderTmpContent">-->
+    <!--        select-->
+    <!--        ordno as saleRecNo, sku, name, num, price-->
+    <!--        from l_manual_order_content t1 inner join l_manual_order t2 on t1.ordno=t2.ord_no-->
+    <!--        where t1.ordno like CONCAT('%', #{ordno}, '%') and t2.create_by=#{username}-->
+    <!--    </select>-->
+
+    <!--    <select id="getByPk" resultType="com.chenzeshenga.logistics.model.claim.Claim">-->
+    <!--        select claim_id as claimId, order_no as orderNo, track_no as trackNo, remarks-->
+    <!--        from l_claim-->
+    <!--        where claim_id=#{claimId}-->
+    <!--    </select>-->
+
+    <!--    <delete id="delete" parameterType="java.lang.String">-->
+    <!--        delete-->
+    <!--        from l_claim-->
+    <!--        where claim_id = #{claimId}-->
+    <!--    </delete>-->
+
+    <!--    <insert id="addImgDesc" parameterType="java.lang.String">-->
+    <!--        insert-->
+    <!--        into-->
+    <!--            l_claim-->
+    <!--            (claim_id,img_path)-->
+    <!--        values-->
+    <!--            (#{returnId},#{imgPath})-->
+    <!--        on duplicate key update-->
+    <!--        img_path=#{imgPath}-->
+    <!--    </insert>-->
+
+    <!--    <insert id="cleanImgDesc" parameterType="java.lang.String">-->
+    <!--        update-->
+    <!--            l_claim-->
+    <!--        set-->
+    <!--            img_path=''-->
+    <!--        where-->
+    <!--            claim_id=#{returnId}-->
+    <!--    </insert>-->
+
+    <!--    <insert id="addContent" parameterType="java.util.List">-->
+    <!--        insert into l_claim_content(claim_id, sku, name, num, deal_with)-->
+    <!--        values-->
+    <!--        <foreach collection="list" item="item" index="index" separator=",">-->
+    <!--            (-->
+    <!--            #{item.claimId},#{item.sku},#{item.name},#{item.num},#{item.dealWith}-->
+    <!--            )-->
+    <!--        </foreach>-->
+    <!--    </insert>-->
+
+    <!--    <select id="getTmpClaims" resultType="com.chenzeshenga.logistics.model.claim.TmpClaim">-->
+    <!--        select claim_id as claimId, sku, name, deal_with as dealWith, num-->
+    <!--        from l_claim_content-->
+    <!--        where claim_id=#{claimId};-->
+    <!--    </select>-->
+
+    <!--    <select id="getPicUrl" resultType="java.lang.String">-->
+    <!--        select img_path-->
+    <!--        from l_claim-->
+    <!--        where claim_id=#{claimId}-->
+    <!--    </select>-->
+
+    <!--    <select id="getRejectsPage" resultType="com.chenzeshenga.logistics.model.claim.TmpClaim">-->
+    <!--        select claim.claim_id as claimId, track_no as trackno, order_no as orderno,sku,name,num,deal_with as dealWith,-->
+    <!--        claim.create_by as owner-->
+    <!--        from l_claim claim inner join l_claim_content content-->
+    <!--        where claim.claim_id=content.claim_id and claim.create_by=#{username}-->
+    <!--    </select>-->
+
+</mapper>
