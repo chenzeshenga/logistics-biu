@@ -62,12 +62,12 @@ public class PdfUtil {
     public static byte[] skuBarCode(String sku, String name) throws IOException {
         PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Image image = new Image(ImageDataFactory.create(BarCodeUtil.generate(sku, "ean13")));
+        Image image = new Image(ImageDataFactory.create(BarCodeUtil.generate(sku, "code128")));
         image.setMargins(0, 0, 0, 0);
         PdfWriter pdfWriter = new PdfWriter(byteArrayOutputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         Document document = new Document(pdfDocument, new PageSize(135, 135));
-        document.setMargins(7, 7, 7, 7);
+        document.setMargins(10, 10, 10, 10);
         document.add(image);
         Table table = new Table(1);
         Cell labelCell = new Cell();
