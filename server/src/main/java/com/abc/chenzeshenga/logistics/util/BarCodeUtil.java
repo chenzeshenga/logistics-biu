@@ -62,11 +62,11 @@ import java.util.Map;
         // 精细度
         final int dpi = 1024;
         // module宽度
-        final double moduleWidth = UnitConv.in2mm(2.4f / dpi);
+        final double moduleWidth = UnitConv.in2mm(2.3f / dpi);
         // 配置对象
         abstractBarcodeBean.setModuleWidth(moduleWidth);
-        abstractBarcodeBean.setHeight(5);
-        abstractBarcodeBean.setFontSize(0.6);
+        abstractBarcodeBean.setHeight(7);
+        abstractBarcodeBean.setFontSize(0.2);
         abstractBarcodeBean.doQuietZone(false);
         String format = "image/jpeg";
         try {
@@ -112,69 +112,6 @@ import java.util.Map;
         } catch (WriterException | IOException e) {
             log.error("error stack info", e);
         }
-    }
-
-    public static void test() {
-        BufferedOutputStream bos = null;
-        FileOutputStream fos = null;
-        File file = null;
-        try {
-            file = new File("D://test.png");
-            fos = new FileOutputStream(file);
-            bos = new BufferedOutputStream(fos);
-            bos.write(BarCodeUtil.generate("8184645419778"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void test2() {
-        BufferedOutputStream bos = null;
-        FileOutputStream fos = null;
-        File file = null;
-        try {
-            file = new File("D://test2.jpeg");
-            fos = new FileOutputStream(file);
-            bos = new BufferedOutputStream(fos);
-            bos.write(BarCodeUtil.generate("8184645419778", "code128"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        BarCodeUtil.test();
-        BarCodeUtil.test2();
     }
 
 }
