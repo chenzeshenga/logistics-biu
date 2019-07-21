@@ -45,88 +45,82 @@
         limit 1
     </select>
 
+    <select id="selectByPk" resultMap="result">
+        select *
+        from l_returning
+        where return_no = #{returnNo}
+    </select>
 
-    <!--    <select id="get" resultType="com.chenzeshenga.logistics.model.claim.Claim">-->
-    <!--        select claim_id as claimId, order_no as orderNo, track_no as trackNo, remarks-->
-    <!--        from l_claim-->
-    <!--        where create_by=#{username} or create_by is null-->
-    <!--    </select>-->
+    <update id="updateByPk" parameterType="com.abc.chenzeshenga.logistics.model.Return">
+        update l_returning
+        set without_order_no_flag = #{withoutOrderNoFlag},
+            order_no              = #{orderNo},
+            to_name               = #{toName},
+            to_contact            = #{toContact},
+            to_zip_code           = #{toZipCode},
+            to_detail_address     = #{toDetailAddress},
+            to_ken_id             = #{toKenId},
+            to_city_id            = #{toCityId},
+            to_town_id            = #{toTownId},
+            from_name             = #{fromName},
+            from_contact          = #{fromContact},
+            from_zip_code         = #{fromZipCode},
+            from_detail_address   = #{fromDetailAddress},
+            from_ken_id           = #{fromKenId},
+            from_city_id          = #{fromCityId},
+            from_town_id          = #{fromTownId},
+            carrier               = #{carrier},
+            track_no              = #{trackNo},
+            imgs                  = #{imgs},
+            status                = #{status},
+            create_by             = #{creator},
+            update_by             = #{updator},
+            create_on             = #{createOn,jdbcType=TIMESTAMP},
+            update_on             = #{updateOn,jdbcType=TIMESTAMP}
+        where return_no = #{sku}
+    </update>
 
-    <!--    <insert id="add" parameterType="com.chenzeshenga.logistics.model.claim.Claim">-->
-    <!--      insert into l_claim(claim_id, order_no, track_no, remarks, create_on, create_by)-->
-    <!--      values (#{claimId},#{orderNo},#{trackNo},#{remarks},#{createOn},#{createBy})-->
-    <!--      on duplicate key-->
-    <!--      update-->
-    <!--      order_no=#{orderNo},track_no=#{trackNo}, remarks=#{remarks}, update_on=current_timestamp(),-->
-    <!--      update_by=#{createBy}, create_by=#{createBy}-->
-    <!--    </insert>-->
+    <insert id="insertReturnOrder" parameterType="com.abc.chenzeshenga.logistics.model.Return">
+        insert into l_returning (return_no, without_order_no_flag, to_name, to_contact, to_zip_code, to_detail_address,
+                                 to_ken_id, to_city_id, to_town_id, from_name, from_contact, from_zip_code,
+                                 from_detail_address, from_ken_id, from_city_id, from_town_id, carrier, track_no, imgs,
+                                 status, create_on, update_on, create_by, update_by, order_no)
+        values (#{returnNo}, #{withoutOrderNoFlag}, #{toName}, #{toContact}, #{toZipCode}, #{toDetailAddress},
+                #{toKenId}, #{toCityId}, #{toTownId}, #{fromName}, #{fromContact}, #{fromZipCode},
+                #{fromDetailAddress}, #{fromKenId}, #{fromCityId}, #{fromTownId}, #{carrier}, #{trackNo}, #{imgs},
+                #{status}, #{creator}, #{updator}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
+                #{orderNo})
+    </insert>
 
-    <!--    <select id="distinctOrdno" resultType="com.chenzeshenga.logistics.model.sale.order.ManualOrderTmpContent">-->
-    <!--        select-->
-    <!--        ordno as saleRecNo, sku, name, num, price-->
-    <!--        from l_manual_order_content t1 inner join l_manual_order t2 on t1.ordno=t2.ord_no-->
-    <!--        where t1.ordno like CONCAT('%', #{ordno}, '%') and t2.create_by=#{username}-->
-    <!--    </select>-->
+    <insert id="insertContent" parameterType="java.util.List">
+        insert into l_returning_content(return_no, sku, name, deal_with, num)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.returnNo}, #{item.sku}, #{item.name}, #{item.num}, #{item.dealWith})
+        </foreach>
+    </insert>
 
-    <!--    <select id="getByPk" resultType="com.chenzeshenga.logistics.model.claim.Claim">-->
-    <!--        select claim_id as claimId, order_no as orderNo, track_no as trackNo, remarks-->
-    <!--        from l_claim-->
-    <!--        where claim_id=#{claimId}-->
-    <!--    </select>-->
+    <delete id="deleteContent" parameterType="java.lang.String">
+        delete
+        from l_returning_content
+        where return_no = #{returnNo}
+    </delete>
 
-    <!--    <delete id="delete" parameterType="java.lang.String">-->
-    <!--        delete-->
-    <!--        from l_claim-->
-    <!--        where claim_id = #{claimId}-->
-    <!--    </delete>-->
+    <select id="list" resultMap="result">
+        select *
+        from l_returning returning
+                 left join l_returning_content content on returning.return_no = content.return_no
+        where status = #{status}
+          and create_by = #{creator}
+          and create_on between #{from} and #{to}
+    </select>
 
-    <!--    <insert id="addImgDesc" parameterType="java.lang.String">-->
-    <!--        insert-->
-    <!--        into-->
-    <!--            l_claim-->
-    <!--            (claim_id,img_path)-->
-    <!--        values-->
-    <!--            (#{returnId},#{imgPath})-->
-    <!--        on duplicate key update-->
-    <!--        img_path=#{imgPath}-->
-    <!--    </insert>-->
-
-    <!--    <insert id="cleanImgDesc" parameterType="java.lang.String">-->
-    <!--        update-->
-    <!--            l_claim-->
-    <!--        set-->
-    <!--            img_path=''-->
-    <!--        where-->
-    <!--            claim_id=#{returnId}-->
-    <!--    </insert>-->
-
-    <!--    <insert id="addContent" parameterType="java.util.List">-->
-    <!--        insert into l_claim_content(claim_id, sku, name, num, deal_with)-->
-    <!--        values-->
-    <!--        <foreach collection="list" item="item" index="index" separator=",">-->
-    <!--            (-->
-    <!--            #{item.claimId},#{item.sku},#{item.name},#{item.num},#{item.dealWith}-->
-    <!--            )-->
-    <!--        </foreach>-->
-    <!--    </insert>-->
-
-    <!--    <select id="getTmpClaims" resultType="com.chenzeshenga.logistics.model.claim.TmpClaim">-->
-    <!--        select claim_id as claimId, sku, name, deal_with as dealWith, num-->
-    <!--        from l_claim_content-->
-    <!--        where claim_id=#{claimId};-->
-    <!--    </select>-->
-
-    <!--    <select id="getPicUrl" resultType="java.lang.String">-->
-    <!--        select img_path-->
-    <!--        from l_claim-->
-    <!--        where claim_id=#{claimId}-->
-    <!--    </select>-->
-
-    <!--    <select id="getRejectsPage" resultType="com.chenzeshenga.logistics.model.claim.TmpClaim">-->
-    <!--        select claim.claim_id as claimId, track_no as trackno, order_no as orderno,sku,name,num,deal_with as dealWith,-->
-    <!--        claim.create_by as owner-->
-    <!--        from l_claim claim inner join l_claim_content content-->
-    <!--        where claim.claim_id=content.claim_id and claim.create_by=#{username}-->
-    <!--    </select>-->
+    <select id="listAll" resultMap="result">
+        select *
+        from l_returning returning
+                 left join l_returning_content content on returning.return_no = content.return_no
+        where status = #{status}
+          and create_on between #{from} and #{to}
+    </select>
 
 </mapper>

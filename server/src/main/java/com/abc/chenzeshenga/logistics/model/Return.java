@@ -19,8 +19,6 @@ import java.util.List;
 
     private boolean withoutOrderNoFlag;
 
-    private String orderNo;
-
     private String toName;
 
     private String toContact;
@@ -64,6 +62,8 @@ import java.util.List;
     private Date updateOn;
 
     private String status;
+
+    private String orderNo;
 
     private List<ReturnContent> returnContentList;
 

@@ -11,7 +11,6 @@
                                     clearable
                                     v-model="form.creator"
                                     placeholder="请选择所属用户"
-                                    @change="filterOrderContent"
                                 >
                                     <el-option
                                         v-for="creator in users"
@@ -352,10 +351,10 @@ export default {
     methods: {
         getOrdNo() {
             request({
-                url: '/generate/pk',
+                url: '/generate/pk/returning',
                 method: 'get',
             }).then(res => {
-                this.form.orderNo = res.data.data
+                this.form.returnNo = res.data.data
             })
         },
         trimInput() {
