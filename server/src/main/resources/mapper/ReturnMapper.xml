@@ -3,40 +3,42 @@
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ReturnMapper">
     <cache eviction="FIFO" flushInterval="600000" size="512"/>
 
-    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Warehousing">
-        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
-        <result column="target" jdbcType="VARCHAR" property="target"/>
-        <result column="method" jdbcType="VARCHAR" property="method"/>
-        <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
-        <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
-        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan"/>
-        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan"/>
-        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
-        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
-        <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
-        <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
-        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
-        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
+    <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Return">
+        <id column="return_no" property="returnNo"/>
+        <result column="without_order_no_flag" property="withoutOrderNoFlag"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="to_name" property="toName"/>
+        <result column="to_contact" property="toContact"/>
+        <result column="to_zip_code" property="toZipCode"/>
+        <result column="to_detail_address" property="toDetailAddress"/>
+        <result column="to_ken_id" property="toKenId"/>
+        <result column="to_city_id" property="toCityId"/>
+        <result column="to_town_id" property="toTownId"/>
+        <result column="from_name" property="fromName"/>
+        <result column="from_contact" property="fromContact"/>
+        <result column="from_zip_code" property="fromZipCode"/>
+        <result column="from_detail_address" property="fromDetailAddress"/>
+        <result column="from_ken_id" property="fromKenId"/>
+        <result column="from_city_id" property="fromCityId"/>
+        <result column="from_town_id" property="fromTownId"/>
+        <result column="carrier" property="carrier"/>
+        <result column="track_no" property="trackNo"/>
+        <result column="imgs" property="imgs"/>
+        <result column="status" property="status"/>
+        <result column="creator" property="creator"/>
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="updator" property="updator"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
-        <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="updator" jdbcType="VARCHAR" property="updator"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
-        <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
-        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
-        <result column="user_warehousing_file_uuid" jdbcType="VARCHAR" property="userWarehousingFileUuid"/>
-        <result column="system_file_uuid" jdbcType="VARCHAR" property="systemFileUuid"/>
-        <collection property="warehousingContentList" ofType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
-            <result column="warehousing_no" property="warehousingNo"/>
+        <collection property="returnContentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+            <result column="return_no" property="returnNo"/>
             <result column="sku" property="sku"/>
-            <result column="box_seq" property="boxSeq"/>
-            <result column="total_num" property="totalNum"/>
-            <result column="wrap_type" property="wrapType"/>
-            <result column="name" property="name"/>
+            <result column="box_seq" property="name"/>
+            <result column="total_num" property="num"/>
+            <result column="deal_with" property="dealWith"/>
         </collection>
     </resultMap>
 
-    <select id="getReturnSeq">
+    <select id="getReturnSeq" resultMap="result">
         select *
         from l_returning
         order by create_on desc

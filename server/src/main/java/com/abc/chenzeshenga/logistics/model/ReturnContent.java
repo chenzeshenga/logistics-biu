@@ -1,11 +1,19 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
 /**
  * @author chenzeshenga
  * @version 1.0
  * @since 2019.07.20
  */
-public class ReturnContent {
+@Data @AllArgsConstructor @NoArgsConstructor public class ReturnContent implements Serializable {
+
+    private String returnNo;
 
     private String sku;
 
