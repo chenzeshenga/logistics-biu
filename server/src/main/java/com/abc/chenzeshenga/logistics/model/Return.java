@@ -65,6 +65,6 @@ import java.util.List;
 
     private String orderNo;
 
-    private List<ReturnContent> returnContentList;
+    private List<ReturnContent> contentList;
 
 }

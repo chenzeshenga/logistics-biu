@@ -29,7 +29,7 @@
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
         <result column="updator" property="updator"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
-        <collection property="returnContentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+        <collection property="contentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
             <result column="return_no" property="returnNo"/>
             <result column="sku" property="sku"/>
             <result column="box_seq" property="name"/>
@@ -88,7 +88,7 @@
         values (#{returnNo}, #{withoutOrderNoFlag}, #{toName}, #{toContact}, #{toZipCode}, #{toDetailAddress},
                 #{toKenId}, #{toCityId}, #{toTownId}, #{fromName}, #{fromContact}, #{fromZipCode},
                 #{fromDetailAddress}, #{fromKenId}, #{fromCityId}, #{fromTownId}, #{carrier}, #{trackNo}, #{imgs},
-                #{status}, #{creator}, #{updator}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP},
+                #{status}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP}, #{creator}, #{updator},
                 #{orderNo})
     </insert>
 
@@ -96,7 +96,7 @@
         insert into l_returning_content(return_no, sku, name, deal_with, num)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.returnNo}, #{item.sku}, #{item.name}, #{item.num}, #{item.dealWith})
+            (#{item.returnNo}, #{item.sku}, #{item.name}, #{item.dealWith}, #{item.num})
         </foreach>
     </insert>
 

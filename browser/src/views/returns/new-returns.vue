@@ -35,8 +35,8 @@
                                     slot="append"
                                     v-bind:disabled="onUpdate"
                                     @click="getOrdNo"
-                                    >获取单号</el-button
-                                >
+                                    >获取单号
+                                </el-button>
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -177,19 +177,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="退件货物">
-                    <el-col :span="5" v-if="form.withoutOrderNoFlag">
-                        <el-form-item label="sku">
-                            <el-select
-                                placeholder="请选择商品sku"
-                                clearable
-                                filterable
-                                v-model="content.sku"
-                            >
-                                <el-option></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5" v-if="!form.withoutOrderNoFlag">
+                    <el-col :span="5">
                         <el-form-item label="sku">
                             <el-input
                                 v-model="content.sku"
@@ -200,7 +188,6 @@
                     <el-col :span="5">
                         <el-form-item label="名称">
                             <el-input
-                                :disabled="form.withoutOrderNoFlag"
                                 v-model="content.name"
                                 placeholder="请输入产品名称"
                             ></el-input>
@@ -211,14 +198,13 @@
                             <el-input-number
                                 v-model="content.num"
                                 :min="1"
-                                :max="content.selectedProductMaxNum"
                             ></el-input-number>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" style="margin-left: 2%">
                         <el-button type="primary" round @click="add2Cart"
-                            >添加</el-button
-                        >
+                            >添加
+                        </el-button>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="">
@@ -249,8 +235,8 @@
                                     @click="
                                         handleDelete(scope.$index, scope.row)
                                     "
-                                    >删除</el-button
-                                >
+                                    >删除
+                                </el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -265,7 +251,6 @@
                         :on-preview="handlePictureCardPreview"
                         :on-remove="handleRemove"
                         :data="form"
-                        :on-change="handleFileChange"
                         ref="upload"
                         :on-error="handleError"
                         :limit="3"
@@ -286,9 +271,29 @@
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="" />
-                    </el-dialog>
+                    </el-dialog> </el-form-item
+                ><el-form-item>
+                    <el-col :offset="18">
+                        <el-button
+                            type="primary"
+                            @click="submitForm('form')"
+                            v-if="onCreate"
+                            >立即创建
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            @click="updateForm()"
+                            v-if="onUpdate"
+                            >立即更新
+                        </el-button>
+                        <el-button @click="resetForm('form')">重置</el-button>
+                    </el-col>
                 </el-form-item>
             </el-form>
+
+            <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="" />
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -300,8 +305,12 @@ export default {
     name: 'new-returns',
     data() {
         return {
-            actionLink1: process.env.BASE_API + '/returns/img/put',
+            actionLink1: process.env.BASE_API + '/return/img/put',
             fileList: [],
+            onCreate: true,
+            dialogImageUrl: '',
+            dialogVisible: false,
+            onUpdate: false,
             adminRole: false,
             showFlag: false,
             users: [],
@@ -328,8 +337,15 @@ export default {
                 carrier: '',
                 trackNo: '',
                 contentList: [],
+                fromKenId: '',
+                fromCityId: '',
+                fromTownId: '',
+                toKenId: '',
+                toCityId: '',
+                toTownId: '',
             },
             content: {
+                returnNo: '',
                 sku: '',
                 num: '',
                 name: '',
@@ -395,23 +411,6 @@ export default {
                 }
             })
         },
-        filterOrderContent(val) {
-            request({
-                url: '/ord/fetchOrderNo',
-                method: 'post',
-                data: this.form,
-            }).then(res => {
-                const backEndOrder = res.data
-                for (let i = 0; i < backEndOrder.length; i++) {
-                    const subOrder = backEndOrder[i]
-                    this.orders[subOrder.orderNo] = subOrder
-                    this.ordersOption.push(subOrder.orderNo)
-                }
-            })
-            if (this.orders.length > 0 && this.form.withoutOrderNoFlag) {
-                this.showFlag = true
-            }
-        },
         handleAddressChange(value) {
             this.form.address.ken = value[0]
             this.form.address.city = value[1]
@@ -443,8 +442,50 @@ export default {
                 }
             }
             if (!productInOriContentListFlag) {
+                this.content.returnNo = this.form.returnNo
                 this.form.contentList.push(this.content)
             }
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url
+            this.dialogVisible = true
+        },
+        handleRemove(file) {
+            request({
+                url: '/return/img/drop?returnNo=' + this.form.returnNo,
+                method: 'get',
+            }).then(() => {
+                this.$message.success('成功删除关联图片')
+            })
+        },
+        handleError(err) {
+            this.$message.error(JSON.parse(err.message)['message'])
+        },
+        submitUpload() {
+            this.$refs.upload.submit()
+        },
+        submitForm(formName) {
+            if (this.adminRole && this.form.creator.length <= 0) {
+                this.$message.warning('请选择商品所属人')
+                return
+            }
+            const fromAddr = this.form.address
+            this.form.fromKenId = fromAddr.ken
+            this.form.fromCityId = fromAddr.city
+            this.form.fromTownId = fromAddr.town
+            const toAddr = this.form.toAddress
+            this.form.toKenId = toAddr.ken
+            this.form.toCityId = toAddr.city
+            this.form.toTownId = toAddr.town
+
+            request({
+                url: '/return/add',
+                method: 'post',
+                data: this.form,
+            }).then(() => {
+                this.$message.success('退货创建成功')
+                this.reload()
+            })
         },
     },
 }
