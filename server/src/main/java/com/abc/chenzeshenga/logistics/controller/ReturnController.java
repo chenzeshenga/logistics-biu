@@ -1,11 +1,18 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
+import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.service.ReturnService;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.util.PageUtils;
 import com.abc.vo.Json;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,10 +35,13 @@ import java.util.UUID;
 
     @Resource private ReturnMapper returnMapper;
 
+    private ReturnService returnService;
+
     private CommonController commonController;
 
-    @Autowired public ReturnController(CommonController commonController) {
+    @Autowired public ReturnController(CommonController commonController, ReturnService returnService) {
         this.commonController = commonController;
+        this.returnService = returnService;
     }
 
     @PostMapping(value = "/img/put") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile,
@@ -147,6 +158,23 @@ import java.util.UUID;
             }
         }
         return Json.succ();
+    }
+
+    @PostMapping("/list")
+    public Json list(@RequestBody String body, @RequestParam String type, @RequestParam String status,
+        @RequestParam String from, @RequestParam String to) throws ParseException {
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        String cname = UserUtils.getUserName();
+        Date fromDate = DateUtil.getDateFromStr(from);
+        Date toDate = DateUtil.getDateFromStr(to);
+        Page<Return> returnPage;
+        if ("1".equals(type)) {
+            returnPage = returnService.list(page, status, cname, fromDate, toDate);
+        } else {
+            returnPage = returnService.listAll(page, status, fromDate, toDate);
+        }
+        return Json.succ().data("page", returnPage);
     }
 
 }

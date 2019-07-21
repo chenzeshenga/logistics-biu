@@ -567,7 +567,7 @@ export const asyncRouterMap = [
                 component: _import('returns/withOrderNo/index'),
                 meta: {
                     perm: 'm:returns1:list',
-                    title: '海外仓代发',
+                    title: '有主退货单',
                     icon: 'chart',
                 },
                 children: [
@@ -656,7 +656,7 @@ export const asyncRouterMap = [
                 component: _import('returns/withoutOrderNo/index'),
                 meta: {
                     perm: 'm:returns2:list',
-                    title: '单票单请',
+                    title: '无主退货单',
                     icon: 'chart',
                 },
                 children: [

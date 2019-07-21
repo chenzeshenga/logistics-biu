@@ -3,7 +3,9 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -27,8 +29,10 @@ import java.util.List;
 
     int deleteContent(String returnNo);
 
-    List<Return> list(String status, String creator, Date from, Date to);
+    List<Return> list(Pagination pagination, @Param("status") String status, @Param("creator") String creator,
+        @Param("from") Date from, @Param("to") Date to);
 
-    List<Return> listAll(String status, Date from, Date to);
+    List<Return> listAll(Pagination pagination, @Param("status") String status, @Param("from") Date from,
+        @Param("to") Date to);
 
 }
