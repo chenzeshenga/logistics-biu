@@ -46,23 +46,6 @@
                             </el-select>
                         </el-tooltip>
                     </el-col>
-                    <el-col :span="4">
-                        <el-tooltip content="相关渠道" placement="top">
-                            <el-select
-                                clearable
-                                filterable
-                                v-model="search.channelCode"
-                                placeholder="对应渠道"
-                            >
-                                <el-option
-                                    v-for="item in channels"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                ></el-option>
-                            </el-select>
-                        </el-tooltip>
-                    </el-col>
                     <el-col :span="1">
                         <el-form-item label="">
                             <el-button
@@ -73,41 +56,14 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="20" style="margin-top: 1%;margin-left: 4%">
-                    <!--            <el-col :span="2">-->
-                    <!--              <el-button type="primary" @click="applyTrackNo()" v-if="multiSelection">-->
-                    <!--                批量申请单号-->
-                    <!--              </el-button>-->
-                    <!--            </el-col>-->
-                    <!--            <el-col :span="2">-->
-                    <!--              <el-button type="primary" @click="batchStatusUpdate()" v-if="multiSelection">-->
-                    <!--                批量提交-->
-                    <!--              </el-button>-->
-                    <!--            </el-col>-->
                     <el-col :span="2">
-                        <el-button
-                            type="primary"
-                            @click="route2NewWarehousing()"
-                            >新建入库单
-                        </el-button>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button
-                            type="primary"
-                            @click="exportExcel()"
-                            icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang"
-                            >导出excel
+                        <el-button type="primary" @click="route2NewReturning()"
+                            >新建退货单
                         </el-button>
                     </el-col>
                 </el-row>
             </el-form-item>
         </el-form>
-        <el-alert
-            title="您可点击获取报关单按钮使用系统生成的报关单进行报关，也可使用您自己制作的报关单报关。若您使用您自己制作的报关单，请使用上传报关单按钮进行报关单上传，方便我们后期追踪"
-            type="info"
-            show-icon
-            center
-            style="margin-bottom: 2%"
-        ></el-alert>
         <el-table
             style="width: 100%"
             :data="tableData"
@@ -149,155 +105,67 @@
                 </template>
             </el-table-column>
             <el-table-column
-                width="160"
-                prop="warehousingNo"
-                label="入库单号"
+                width="200"
+                prop="returnNo"
+                label="退货单号"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="target"
-                label="仓库地址"
+                width="200"
+                prop="withoutOrderNoFlag"
+                label="是否对应订单"
             ></el-table-column>
             <el-table-column
-                width="100"
-                prop="statusDesc"
+                width="200"
+                prop="toName"
                 label="状态"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="method"
+                width="200"
+                prop="toContact"
                 label="头程方式"
             ></el-table-column>
-            <el-table-column width="150" label="头程渠道">
-                <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>渠道名称: {{ scope.row.channelDesc }}</p>
-                        <p>渠道编码: {{ scope.row.channel }}</p>
-                        <p>
-                            <el-button
-                                type="text"
-                                v-on:click="
-                                    route2ChannelPage(scope.$index, scope.row)
-                                "
-                                >查看详情
-                            </el-button>
-                        </p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium"
-                                >{{ scope.row.channelDesc }}
-                            </el-tag>
-                        </div>
-                    </el-popover>
-                </template>
-            </el-table-column>
             <el-table-column
-                width="100"
-                prop="carrier"
+                width="200"
+                prop="toZipCode"
                 label="承运人"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="trackNo"
+                width="200"
+                prop="toDetailAddress"
                 label="追踪单号"
             ></el-table-column>
             <el-table-column
-                width="170"
-                prop="deliverMethod"
+                width="200"
+                prop="toKenId"
                 label="运输方式"
             ></el-table-column>
             <el-table-column
                 width="200"
-                prop="clearanceType"
+                prop="toCityId"
                 label="报关类型"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="taxType"
+                width="200"
+                prop="toTownId"
                 label="关税类型"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="insurance"
+                width="200"
+                prop="fromName"
                 label="保险服务"
             ></el-table-column>
             <el-table-column
-                width="150"
-                prop="insuranceNum"
+                width="200"
+                prop="fromContact"
                 label="保险总值(JPY)"
             ></el-table-column>
             <el-table-column
-                width="180"
-                prop="estimatedDate"
-                label="预计到港时间"
-            ></el-table-column>
-            <el-table-column width="150" label="系统生成报关单下载">
-                <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>点击按钮下载文件</p>
-                        <p>
-                            <el-button
-                                type="text"
-                                v-on:click="
-                                    handleSystemFile(scope.$index, scope.row)
-                                "
-                                >下载
-                            </el-button>
-                        </p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium">
-                                <svg-icon icon-class="doc"></svg-icon
-                            ></el-tag>
-                        </div>
-                    </el-popover>
-                </template>
-                <el-button
-                    size="mini"
-                    circle
-                    plain
-                    @click="handleSystemFile(scope.$index, scope.row)"
-                    icon="el-icon-download"
-                    >下载</el-button
-                >
-            </el-table-column>
-            <el-table-column width="150" label="用户上传报关单下载">
-                <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                        <p>点击按钮下载文件</p>
-                        <p>
-                            <el-button
-                                type="text"
-                                v-on:click="
-                                    handleUserWarehousingFile(
-                                        scope.$index,
-                                        scope.row
-                                    )
-                                "
-                                >下载
-                            </el-button>
-                        </p>
-                        <div slot="reference" class="name-wrapper">
-                            <el-tag size="medium">
-                                <svg-icon icon-class="doc"></svg-icon
-                            ></el-tag>
-                        </div>
-                    </el-popover>
-                </template>
-                <el-button
-                    size="mini"
-                    circle
-                    plain
-                    @click="handleSystemFile(scope.$index, scope.row)"
-                    icon="el-icon-download"
-                    >下载</el-button
-                >
-            </el-table-column>
-            <el-table-column
-                width="170"
+                width="200"
                 prop="createOn"
                 label="创建时间"
             ></el-table-column>
             <el-table-column
-                width="170"
+                width="200"
                 prop="updateOn"
                 label="修改时间"
             ></el-table-column>
@@ -790,9 +658,9 @@ export default {
                     this.$message.info('已取消提交')
                 })
         },
-        route2NewWarehousing() {
+        route2NewReturning() {
             this.$router.push({
-                path: '/new-warehousing/new-warehousing',
+                path: '/new-returns/new-returns',
             })
         },
         hold(index, row) {
