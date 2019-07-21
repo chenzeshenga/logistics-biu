@@ -52,6 +52,8 @@ import java.util.*;
 
     @Resource private AddressMapper addressMapper;
 
+    @Resource private ReturnMapper returnMapper;
+
     private JapanAddressCache japanAddressCache;
 
     private LabelCache labelCache;
@@ -74,8 +76,9 @@ import java.util.*;
     }
 
     @GetMapping("/generate/pk/returning") public Json getReturnNo() {
-        String pk = CommonUtil.generate() + "-" + (
-            Integer.valueOf(warehousingMapper.getWarehousingSeq().getWarehousingNo().split("-")[1]) + 1);
+        String pk =
+            CommonUtil.generate() + "-" + (Integer.valueOf(returnMapper.getReturnSeq().getReturnNo().split("-")[1])
+                + 1);
         return Json.succ().data(pk);
     }
 

@@ -10,4 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2019.7.19
  */
 @Mapper public interface ReturnMapper extends BaseMapper<Return> {
+
+    Return getReturnSeq();
+
 }

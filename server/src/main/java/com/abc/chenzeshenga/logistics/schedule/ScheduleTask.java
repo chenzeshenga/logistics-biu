@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author chenzesheng
  * @version 1.0
+ * @since 2019.07.20
  */
 @Service @Slf4j public class ScheduleTask {
 
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
     @Resource private ProductMapper productMapper;
 
     @Scheduled(fixedDelay = 120000) public void countProduct() {
-        log.info("scheduled task countProduct begin");
         List<ProductStatistics> productStatisticsList = new ArrayList<>();
         List<ManualOrder> manualOrderList = orderMapper.listAll();
         List<Product> productList = productMapper.listByStatus(new Page(0, 999), "1", null, null, null, null);
@@ -98,7 +98,6 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
             productStatisticsMapper.insertBatch(productStatisticsList);
         }
-        log.info("scheduled task countProduct end");
     }
 
 }
