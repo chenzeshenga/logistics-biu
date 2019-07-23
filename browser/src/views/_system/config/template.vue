@@ -107,7 +107,7 @@ export default {
         downloadFile(index, row) {
             const link = document.createElement('a')
             link.style.display = 'none'
-            link.href = row.link
+            link.href = process.env.BASE_API + '/template/file/' + row.uuid
             link.target = '_blank'
             document.body.appendChild(link)
             link.click()
