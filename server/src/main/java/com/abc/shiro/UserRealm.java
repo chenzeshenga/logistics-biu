@@ -68,33 +68,26 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
-
         if (username == null) {
             throw new AccountException("用户名不能为空");
         }
-
         SysUser userDB = userService.selectOne(new EntityWrapper<SysUser>().eq("uname", username));
         if (userDB == null) {
             throw new UnknownAccountException("找不到用户（"+username+"）的帐号信息");
         }
-
         //查询用户的角色和权限存到SimpleAuthenticationInfo中，这样在其它地方
         //SecurityUtils.getSubject().getPrincipal()就能拿出用户的所有信息，包括角色和权限
         Set<AuthVo> roles = roleService.getRolesByUserId(userDB.getUid());
         Set<AuthVo> perms = permService.getPermsByUserId(userDB.getUid());
         userDB.getRoles().addAll(roles);
         userDB.getPerms().addAll(perms);
-
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userDB, userDB.getPwd(), getName());
         if (userDB.getSalt() != null) {
             info.setCredentialsSalt(ByteSource.Util.bytes(userDB.getSalt()));
         }
-
         return info;
-
     }
 
 
