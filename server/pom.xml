@@ -6,6 +6,8 @@
     <groupId>com.abc</groupId>
     <artifactId>server</artifactId>
     <version>20190725-SNAPSHOT</version>
+
+
     <packaging>jar</packaging>
 
     <name>logistics</name>
