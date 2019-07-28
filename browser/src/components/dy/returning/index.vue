@@ -620,7 +620,8 @@ export default {
         fetchData() {
             this.tableLoading = true
             request({
-                url: 'warehousing/list/1/' + this.msgData.status,
+                url:
+                    'return/list?type=1&status=1&from=2000-01-01&to=2099-12-31',
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
