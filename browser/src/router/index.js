@@ -567,7 +567,7 @@ export const asyncRouterMap = [
                 component: _import('returns/withOrderNo/index'),
                 meta: {
                     perm: 'm:returns1:list',
-                    title: '有主退货单',
+                    title: '无主退货单',
                     icon: 'chart',
                 },
                 children: [
@@ -577,76 +577,13 @@ export const asyncRouterMap = [
                         name: 'returns-list-mgt-withOrderNo-status1',
                         meta: {
                             perm: 'm:returns1:list:2',
-                            title: '待审核',
+                            title: '待认领退货单',
                             icon: 'chart',
                             noCache: true,
                         },
                     },
                     {
-                        path: 'status2',
-                        component: _import('returns/withOrderNo/list/status2'),
-                        name: 'status2',
-                        meta: {
-                            perm: 'm:returns1:list:3',
-                            title: '待发货',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status3',
-                        component: _import('returns/withOrderNo/list/status3'),
-                        name: 'status3',
-                        meta: {
-                            perm: 'm:returns1:list:4',
-                            title: '已发货',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status4',
-                        component: _import('returns/withOrderNo/list/status4'),
-                        name: 'status4',
-                        meta: {
-                            perm: 'm:returns1:list:5',
-                            title: '问题件',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status5',
-                        component: _import('returns/withOrderNo/list/status5'),
-                        name: 'status5',
-                        meta: {
-                            perm: 'm:returns1:list:6',
-                            title: '已废弃',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status6',
-                        component: _import('returns/withOrderNo/list/status6'),
-                        name: 'status6',
-                        meta: {
-                            perm: 'm:returns1:list:7',
-                            title: '暂存',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status7',
-                        component: _import('returns/withOrderNo/list/status7'),
-                        name: 'status7',
-                        meta: {
-                            perm: 'm:returns1:list:8',
-                            title: '历史',
-                            icon: 'chart',
-                            noCache: true,
-                        },
+                        path: '/dashboard',
                     },
                 ],
             },
@@ -656,7 +593,7 @@ export const asyncRouterMap = [
                 component: _import('returns/withoutOrderNo/index'),
                 meta: {
                     perm: 'm:returns2:list',
-                    title: '无主退货单',
+                    title: '有主退货单',
                     icon: 'chart',
                 },
                 children: [
@@ -668,7 +605,7 @@ export const asyncRouterMap = [
                         name: 'returns-list-mgt-withoutOrderNo-status1',
                         meta: {
                             perm: 'm:returns2:list:1',
-                            title: '待审核',
+                            title: '退货单处理',
                             icon: 'chart',
                             noCache: true,
                         },
@@ -681,72 +618,7 @@ export const asyncRouterMap = [
                         name: 'returns-list-mgt-withoutOrderNo-status2',
                         meta: {
                             perm: 'm:returns2:list:2',
-                            title: '国内待发货',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status3',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status3'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status3',
-                        meta: {
-                            perm: 'm:returns2:list:3',
-                            title: '国内已发货',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status4',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status4'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status4',
-                        meta: {
-                            perm: 'm:returns2:list:4',
-                            title: '问题件',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status5',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status5'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status5',
-                        meta: {
-                            perm: 'm:returns2:list:5',
-                            title: '已废弃',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status6',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status6'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status6',
-                        meta: {
-                            perm: 'm:returns2:list:6',
-                            title: '暂存',
-                            icon: 'chart',
-                            noCache: true,
-                        },
-                    },
-                    {
-                        path: 'status7',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status7'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status7',
-                        meta: {
-                            perm: 'm:returns2:list:7',
-                            title: '历史',
+                            title: '历史退货单',
                             icon: 'chart',
                             noCache: true,
                         },
