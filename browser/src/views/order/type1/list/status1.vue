@@ -1,17 +1,17 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <order-type1 v-bind:msg="this.msg"></order-type1>
+            <order-table v-bind:msg="this.msg"></order-table>
         </div>
     </div>
 </template>
 
 <script>
-import OrderType1 from '../../../../components/dy/orderTable/Type1/index'
+import OrderTable from '../../../../components/dy/orderTable/index'
 
 export default {
     name: 'order-list-mgt-type1-status1',
-    components: { OrderType1 },
+    components: { OrderTable },
     data() {
         return {
             msg: {
