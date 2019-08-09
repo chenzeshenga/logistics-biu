@@ -2,29 +2,47 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.util.PageUtils;
 import com.abc.vo.Json;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author chenzeshenga
+ * @version 1.0
+ * @since 20190809
+ */
 @RestController @RequestMapping("/statistics") public class ProductStatisticsController {
 
     @Resource private ProductStatisticsMapper productStatisticsMapper;
 
-    @GetMapping @RequestMapping("/list") public Json list() {
+    private ProductStatisticsService productStatisticsService;
+
+    @Autowired public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
+        this.productStatisticsService = productStatisticsService;
+    }
+
+    @PostMapping @RequestMapping("/list") public Json list(@RequestBody String body) {
         String username = UserUtils.getUserName();
-        List<ProductStatistics> productStatisticsList = new ArrayList<>();
+        JSONObject jsonObject = JSON.parseObject(body);
+        Page page = PageUtils.getPageParam(jsonObject);
+        List<ProductStatistics> productStatisticsList;
+        Page<ProductStatistics> productStatisticsPage = new Page<>();
         if ("admin".equals(username)) {
-            productStatisticsList = productStatisticsMapper.selectAll();
+            productStatisticsPage = productStatisticsService.selectAll(page);
         } else {
             productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
         }
-        return Json.succ().data(productStatisticsList);
+        return Json.succ().data("page", productStatisticsPage);
     }
 
 }
