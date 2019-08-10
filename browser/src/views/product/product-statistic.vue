@@ -20,9 +20,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-tooltip content="请选择商品属主" placement="top">
-                        <el-select>
-
-                        </el-select>
+                        <el-select> </el-select>
                     </el-tooltip>
                 </el-col>
             </el-row>
@@ -126,6 +124,9 @@ export default {
                 sku: '',
                 name: '',
                 owner: '',
+            },
+            options: {
+                owners: [],
             },
             tablePage: {
                 current: 1,

@@ -121,7 +121,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ().data("page", warehousingPage);
     }
 
-    @PostMapping @RequestMapping("/listByFilter/{method}/{status}")
+    @PostMapping("/listByFilter/{method}/{status}")
     public Json listByFilter(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
         method = switchMethod(method);
         String cname = UserUtils.getUserName();

@@ -42,9 +42,16 @@ public class SysUserController {
 
     private static final Logger log = LoggerFactory.getLogger(SysUserController.class);
 
-    @Autowired private SysUserService sysUserService;
-    @Autowired private SysRoleService sysRoleService;
-    @Autowired private SysUserRoleService sysUserRoleService;
+    private SysUserService sysUserService;
+    private SysRoleService sysRoleService;
+    private SysUserRoleService sysUserRoleService;
+
+    @Autowired public SysUserController(SysUserService sysUserService, SysRoleService sysRoleService,
+        SysUserRoleService sysUserRoleService) {
+        this.sysUserService = sysUserService;
+        this.sysRoleService = sysRoleService;
+        this.sysUserRoleService = sysUserRoleService;
+    }
 
     @PermInfo("添加系统用户") @RequiresPermissions("a:sys:user:add") @PostMapping public Json add(@RequestBody String body) {
         String oper = "add sys user";
