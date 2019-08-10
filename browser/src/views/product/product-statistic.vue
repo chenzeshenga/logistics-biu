@@ -1,6 +1,31 @@
 <template>
     <div class="login-container">
         <div class="app-container">
+            <el-row :gutter="20" style="margin: 1%">
+                <el-col :span="6">
+                    <el-tooltip content="请输入商品sku/东岳sku" placement="top">
+                        <el-input
+                            v-model="sku"
+                            placeholder="请输入商品sku/东岳sku"
+                        ></el-input>
+                    </el-tooltip>
+                </el-col>
+                <el-col :span="6">
+                    <el-tooltip content="请输入商品名称" placement="top">
+                        <el-input
+                            v-model="name"
+                            placeholder="请输入商品名称"
+                        ></el-input>
+                    </el-tooltip>
+                </el-col>
+                <el-col :span="6">
+                    <el-tooltip content="请选择商品属主" placement="top">
+                        <el-select>
+
+                        </el-select>
+                    </el-tooltip>
+                </el-col>
+            </el-row>
             <el-alert
                 title="可售数量=在库总数量-待拣货数量-待出库数量-瑕疵品数量"
                 type="info"
@@ -97,6 +122,11 @@ export default {
     name: 'product-statistic',
     data() {
         return {
+            search: {
+                sku: '',
+                name: '',
+                owner: '',
+            },
             tablePage: {
                 current: 1,
                 pages: null,
