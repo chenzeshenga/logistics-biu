@@ -5,7 +5,7 @@
                 <el-col :span="6">
                     <el-tooltip content="请输入商品sku/东岳sku" placement="top">
                         <el-input
-                            v-model="sku"
+                            v-model="search.sku"
                             placeholder="请输入商品sku/东岳sku"
                         ></el-input>
                     </el-tooltip>
@@ -13,14 +13,26 @@
                 <el-col :span="6">
                     <el-tooltip content="请输入商品名称" placement="top">
                         <el-input
-                            v-model="name"
+                            v-model="search.name"
                             placeholder="请输入商品名称"
                         ></el-input>
                     </el-tooltip>
                 </el-col>
                 <el-col :span="6">
                     <el-tooltip content="请选择商品属主" placement="top">
-                        <el-select> </el-select>
+                        <el-select
+                            filterable
+                            clearable
+                            v-model="search.creator"
+                            placeholder="请选择商品属主"
+                        >
+                            <el-option
+                                v-for="creator in options.owners"
+                                :key="creator.uname"
+                                :label="creator.nick"
+                                :value="creator.uname"
+                            ></el-option>
+                        </el-select>
                     </el-tooltip>
                 </el-col>
             </el-row>
@@ -140,6 +152,7 @@ export default {
     },
     created() {
         this.fetchData()
+        this.initUserList()
     },
     methods: {
         fetchData() {
@@ -155,6 +168,18 @@ export default {
                 this.tablePage.size = res.data.page.size
                 this.tablePage.total = res.data.page.total
                 this.tableLoading = false
+            })
+        },
+        initUserList() {
+            request({
+                url: '/sys_user/query4Option',
+                method: 'post',
+                data: {
+                    current: null,
+                    size: 'all',
+                },
+            }).then(res => {
+                this.options.owners = res.data.page.records
             })
         },
         handleSizeChange(val) {
