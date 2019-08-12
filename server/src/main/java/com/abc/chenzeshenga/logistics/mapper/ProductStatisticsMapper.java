@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,6 +31,9 @@ import java.util.List;
     int updateByPrimaryKey(ProductStatistics record);
 
     List<ProductStatistics> selectAll(Pagination pagination);
+
+    List<ProductStatistics> selectAllBySearch(Pagination pagination, @Param("sku") String sku,
+        @Param("name") String name, @Param("owner") String owner);
 
     List<ProductStatistics> selectAllByUsername(String username);
 

@@ -45,4 +45,21 @@ import java.util.List;
         return Json.succ().data("page", productStatisticsPage);
     }
 
+    @PostMapping("/listBySearch") public Json listBySearch(@RequestBody String body) {
+        String username = UserUtils.getUserName();
+        JSONObject jsonObject = JSON.parseObject(body);
+        String sku = jsonObject.getString("sku");
+        String name = jsonObject.getString("name");
+        String owner = jsonObject.getString("owner");
+        Page page = PageUtils.getPageParam(jsonObject);
+        List<ProductStatistics> productStatisticsList;
+        Page<ProductStatistics> productStatisticsPage = new Page<>();
+        if ("admin".equals(username)) {
+            productStatisticsPage = productStatisticsService.selectAllBySearch(page, sku, name, owner);
+        } else {
+            productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
+        }
+        return Json.succ().data("page", productStatisticsPage);
+    }
+
 }

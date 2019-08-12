@@ -28,6 +28,22 @@
         from l_product_statistic
     </select>
 
+    <select id="selectAllBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sku,
+               dySku,
+               total_num,
+               on_way_num,
+               uncheck_num,
+               pending_pickup_num,
+               pending_deliver_num,
+               defect_num,
+               statistical_time,
+               owner
+        from l_product_statistic
+        where (sku like CONCAT('%', #{sku}, '%') or dySku like CONCAT('%', #{sku}, '%'))
+          and owner = #{owner}
+    </select>
+
     <select id="selectAllByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
         select sku,
                dySku,
@@ -68,7 +84,8 @@
                                          pending_deliver_num, defect_num, statistical_time, owner)
         values (#{sku,jdbcType=VARCHAR}, #{dysku,jdbcType=VARCHAR}, #{totalNum,jdbcType=VARCHAR},
                 #{onWayNum,jdbcType=VARCHAR}, #{uncheckNum,jdbcType=VARCHAR}, #{pendingPickupNum,jdbcType=VARCHAR},
-                #{pendingDeliverNum,jdbcType=VARCHAR}, #{defectNum,jdbcType=VARCHAR}, #{statisticalTime,jdbcType=TIMESTAMP},
+                #{pendingDeliverNum,jdbcType=VARCHAR}, #{defectNum,jdbcType=VARCHAR},
+                #{statisticalTime,jdbcType=TIMESTAMP},
                 #{owner,jdbcType=VARCHAR})
     </insert>
 
@@ -79,8 +96,10 @@
         values
         <foreach collection="list" item="item" separator="," index="index">
             (#{item.sku,jdbcType=VARCHAR}, #{item.dysku,jdbcType=VARCHAR}, #{item.totalNum,jdbcType=VARCHAR},
-            #{item.onWayNum,jdbcType=VARCHAR}, #{item.uncheckNum,jdbcType=VARCHAR}, #{item.pendingPickupNum,jdbcType=VARCHAR},
-            #{item.pendingDeliverNum,jdbcType=VARCHAR}, #{item.defectNum,jdbcType=VARCHAR}, #{item.statisticalTime,jdbcType=TIMESTAMP},
+            #{item.onWayNum,jdbcType=VARCHAR}, #{item.uncheckNum,jdbcType=VARCHAR},
+            #{item.pendingPickupNum,jdbcType=VARCHAR},
+            #{item.pendingDeliverNum,jdbcType=VARCHAR}, #{item.defectNum,jdbcType=VARCHAR},
+            #{item.statisticalTime,jdbcType=TIMESTAMP},
             #{item.owner,jdbcType=VARCHAR})
         </foreach>
     </insert>

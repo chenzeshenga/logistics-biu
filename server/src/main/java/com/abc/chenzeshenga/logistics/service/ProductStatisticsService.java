@@ -16,4 +16,9 @@ import org.springframework.stereotype.Service;
     public Page<ProductStatistics> selectAll(Page page) {
         return page.setRecords(baseMapper.selectAll(page));
     }
+
+    public Page<ProductStatistics> selectAllBySearch(Page page, String sku, String name, String owner) {
+        return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
+    }
+
 }

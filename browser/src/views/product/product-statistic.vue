@@ -18,12 +18,12 @@
                         ></el-input>
                     </el-tooltip>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="3">
                     <el-tooltip content="请选择商品属主" placement="top">
                         <el-select
                             filterable
                             clearable
-                            v-model="search.creator"
+                            v-model="search.owner"
                             placeholder="请选择商品属主"
                         >
                             <el-option
@@ -34,6 +34,12 @@
                             ></el-option>
                         </el-select>
                     </el-tooltip>
+                </el-col>
+                <el-col :span="1">
+                    <el-button
+                        icon="el-icon-search"
+                        @click="searchProductStatistics()"
+                    ></el-button>
                 </el-col>
             </el-row>
             <el-alert
@@ -223,6 +229,24 @@ export default {
         handleUpdate(index, row) {
             this.$router.push({
                 path: '/new-product/new-product?sku=' + row.sku,
+            })
+        },
+        searchProductStatistics() {
+            let postData = this.tablePage
+            postData['sku'] = this.search.sku
+            postData['name'] = this.search.name
+            postData['owner'] = this.search.owner
+            request({
+                url: '/statistics/listBySearch',
+                method: 'post',
+                data: postData,
+            }).then(res => {
+                this.tableData = res.data.page.records
+                this.tablePage.current = res.data.page.current
+                this.tablePage.pages = res.data.page.pages
+                this.tablePage.size = res.data.page.size
+                this.tablePage.total = res.data.page.total
+                this.tableLoading = false
             })
         },
     },
