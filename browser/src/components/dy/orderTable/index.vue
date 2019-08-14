@@ -617,6 +617,104 @@
                 <el-button type="primary" @click="updateOrd">确 定</el-button>
             </span>
         </el-dialog>
+        <el-dialog
+            title="编辑订单体积重量"
+            :visible.sync="dialogVisible3"
+            width="50%"
+        >
+            <el-form :model="form">
+                <el-col :span="24">
+                    <el-form-item label="订单号">
+                        <el-input v-model="form.orderNo" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24" style="margin-top: 10px">
+                    <el-col :span="7">
+                        <el-form-item label="长(cm)">
+                            <el-input-number
+                                v-model="form.length"
+                            ></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                        <el-form-item label="宽(cm)">
+                            <el-input-number
+                                v-model="form.width"
+                            ></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                        <el-form-item label="高(cm)">
+                            <el-input-number
+                                v-model="form.height"
+                            ></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="1"> </el-col>
+                    <el-col :span="2">
+                        <el-tooltip content="计算" placement="top">
+                            <el-button circle @click="calculateIndex">
+                                <svg-icon icon-class="calculate"></svg-icon>
+                            </el-button>
+                        </el-tooltip>
+                    </el-col>
+                    <el-col :span="24" style="margin-bottom: 2%">
+                        <label>根据页面输入计算结果如下(仅供参考):</label>
+                    </el-col>
+                    <el-form-item style="margin-top: 2%">
+                        <el-col :span="8">
+                            <el-tooltip
+                                placement="top"
+                                content="总体积(cm^3)=长*宽*高"
+                            >
+                                <el-form-item label="总体积(cm^3)">
+                                    <el-input-number
+                                        v-model="form.totalVolumeFrontEnd"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-tooltip>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-tooltip
+                                content="三边和(cm)=长+宽+高"
+                                placement="top"
+                            >
+                                <el-form-item label="三边和(cm)">
+                                    <el-input-number
+                                        v-model="form.sum"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-tooltip>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-tooltip
+                                content="体积重=长*宽*高/6000"
+                                placement="top"
+                            >
+                                <el-form-item label="体积重(cm^3)">
+                                    <el-input-number
+                                        v-model="form.totalVolumeWithWeight"
+                                    ></el-input-number>
+                                </el-form-item>
+                            </el-tooltip>
+                        </el-col>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                    <el-form-item label="当前订单总重量(kg)">
+                        <el-input-number
+                            v-model="form.totalWeight"
+                        ></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible3 = false">取 消</el-button>
+                <el-button type="primary" @click="updateOrdWithOutStatus"
+                    >确 定</el-button
+                >
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -691,6 +789,7 @@ export default {
             },
             dialogVisible: false,
             dialogVisible2: false,
+            dialogVisible3: false,
             carrier: [],
             form: {
                 orderNo: '',
@@ -1041,20 +1140,19 @@ export default {
             this.form.height = row.height
             this.form.sum = row.sum
             this.form.totalWeight = row.totalWeight
-            this.form.totalVolumeFrontEnd = row.totalVolume
+            this.form.totalVolumeFrontEnd = row.totalVolumeFrontEnd
             this.form.totalVolumeWithWeight = row.totalVolumeWithWeight
-
             this.form.status = this.msgData.statusTo
         },
         triggerVolumeAndWeightWithOutStatus(index, row) {
-            this.dialogVisible2 = true
+            this.dialogVisible3 = true
             this.form.orderNo = row.orderNo
             this.form.length = row.length
             this.form.width = row.width
             this.form.height = row.height
             this.form.sum = row.sum
             this.form.totalWeight = row.totalWeight
-            this.form.totalVolumeFrontEnd = row.totalVolume
+            this.form.totalVolumeFrontEnd = row.totalVolumeFrontEnd
             this.form.totalVolumeWithWeight = row.totalVolumeWithWeight
         },
         calculateIndex() {
@@ -1085,6 +1183,23 @@ export default {
                     this.$message.error(resp['msg'])
                 }
                 this.dialogVisible2 = false
+                this.fetchData()
+            })
+        },
+        updateOrdWithOutStatus() {
+            delete this.form['statusTo']
+            request({
+                url: '/ord/update',
+                method: 'post',
+                data: this.form,
+            }).then(resp => {
+                const succ = resp['succ']
+                if (succ) {
+                    this.$message.success('当前订单已更新')
+                } else {
+                    this.$message.error(resp['msg'])
+                }
+                this.dialogVisible3 = false
                 this.fetchData()
             })
         },
