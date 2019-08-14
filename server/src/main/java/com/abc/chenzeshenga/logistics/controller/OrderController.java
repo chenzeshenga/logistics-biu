@@ -109,7 +109,22 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
-    @PostMapping @RequestMapping("/update") public Json update(@RequestBody ManualOrder manualOrder) {
+    @PostMapping("/update") public Json update(@RequestBody ManualOrder manualOrder) {
+        String ordno = manualOrder.getOrderNo();
+        ManualOrder manualOrderOri = orderMapper.selectById(ordno);
+        if ("3".equals(manualOrder.getStatus()) && "1".equals(manualOrderOri.getCategory())) {
+            List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
+            boolean satisfied = true;
+            for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+                if (!manualOrderContent.getPicked().equals(manualOrderContent.getNum())) {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) {
+                return Json.fail("update ord fail", "该订单商品未完成拣货操作");
+            }
+        }
         log.info(manualOrder.toString());
         setAddress(manualOrder);
         Date curr = new Date();

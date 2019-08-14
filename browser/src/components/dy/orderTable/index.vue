@@ -554,14 +554,15 @@
                             ></el-input-number>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="3">
+                    <el-col :span="1"> </el-col>
+                    <el-col :span="2">
                         <el-tooltip content="计算" placement="top">
                             <el-button circle @click="calculateIndex">
                                 <svg-icon icon-class="calculate"></svg-icon>
                             </el-button>
                         </el-tooltip>
                     </el-col>
-                    <el-col :span="24">
+                    <el-col :span="24" style="margin-bottom: 2%">
                         <label>根据页面输入计算结果如下(仅供参考):</label>
                     </el-col>
                     <el-form-item style="margin-top: 2%">
@@ -1076,8 +1077,13 @@ export default {
                 url: '/ord/update',
                 method: 'post',
                 data: this.form,
-            }).then(() => {
-                this.$message.success('当前订单已更新')
+            }).then(resp => {
+                const succ = resp['succ']
+                if (succ) {
+                    this.$message.success('当前订单已更新')
+                } else {
+                    this.$message.error(resp['msg'])
+                }
                 this.dialogVisible2 = false
                 this.fetchData()
             })
