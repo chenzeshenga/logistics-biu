@@ -141,7 +141,7 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(result);
     }
 
-    @PostMapping @RequestMapping("/updateOrd") public Json updateOrd(@RequestBody ManualOrder manualOrder) {
+    @PostMapping("/updateOrd") public Json updateOrd(@RequestBody ManualOrder manualOrder) {
         Date curr = new Date();
         manualOrder.setUpdateOn(curr);
         String cname = UserUtils.getUserName();

@@ -1188,12 +1188,13 @@ export default {
         },
         updateOrdWithOutStatus() {
             delete this.form['statusTo']
+            delete this.form['status']
             request({
                 url: '/ord/update',
                 method: 'post',
                 data: this.form,
             }).then(resp => {
-                const succ = resp['succ']
+                const succ = resp['data']['succ']
                 if (succ) {
                     this.$message.success('当前订单已更新')
                 } else {
