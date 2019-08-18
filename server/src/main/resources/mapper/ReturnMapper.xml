@@ -25,12 +25,12 @@
         <result column="track_no" property="trackNo"/>
         <result column="imgs" property="imgs"/>
         <result column="status" property="status"/>
-        <result column="creator" property="creator"/>
+        <result column="create_by" property="creator"/>
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
-        <result column="updator" property="updator"/>
+        <result column="update_by" property="updator"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
         <collection property="contentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
-            <result column="return_no" property="returnNo"/>
+            <result column="subReturnNo" property="returnNo"/>
             <result column="sku" property="sku"/>
             <result column="box_seq" property="name"/>
             <result column="total_num" property="num"/>
@@ -107,7 +107,7 @@
     </delete>
 
     <select id="list" resultMap="result">
-        select *
+        select returning.*, content.return_no as subReturnNo, content.sku, content.name, content.deal_with, content.num
         from l_returning returning
                  left join l_returning_content content on returning.return_no = content.return_no
         where status = #{status}
@@ -116,7 +116,7 @@
     </select>
 
     <select id="listAll" resultMap="result">
-        select *
+        select returning.*, content.return_no as subReturnNo, content.sku, content.name, content.deal_with, content.num
         from l_returning returning
                  left join l_returning_content content on returning.return_no = content.return_no
         where status = #{status}

@@ -111,7 +111,7 @@
             ></el-table-column>
             <el-table-column
                 width="200"
-                prop="withoutOrderNoFlag"
+                prop="withoutOrderNoFlagLabel"
                 label="是否对应订单"
             ></el-table-column>
             <el-table-column
@@ -481,10 +481,19 @@ export default {
             this.tableLoading = true
             request({
                 url:
-                    'return/list?type=1&status=1&from=2000-01-01&to=2099-12-31',
+                    'return/list?type=2&status=新建&from=2000-01-01&to=2099-12-31',
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
+                let records = res.data.page.records
+                for (let i = 0; i < records.length; i++) {
+                    let subRecords = records[i]
+                    if (subRecords['withoutOrderNoFlag']) {
+                        subRecords['withoutOrderNoFlagLabel'] = '对应'
+                    } else {
+                        subRecords['withoutOrderNoFlagLabel'] = '不对应'
+                    }
+                }
                 this.tableData = res.data.page.records
                 this.tablePage.current = res.data.page.current
                 this.tablePage.pages = res.data.page.pages
