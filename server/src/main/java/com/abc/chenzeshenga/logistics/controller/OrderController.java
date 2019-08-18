@@ -7,6 +7,7 @@ import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.StringUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
@@ -305,7 +306,7 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/get/{ordNo}") public Json selectByPk(@PathVariable String ordNo) {
+    @GetMapping("/get/{ordNo}") public Json selectByPk(@PathVariable String ordNo) {
         ManualOrder manualOrder = orderMapper.selectById(ordNo);
         List<ManualOrderContent> manualOrderContents = orderMapper.listContent(ordNo);
         if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
@@ -317,49 +318,57 @@ import java.util.concurrent.atomic.AtomicReference;
                 }
             });
         }
+        if (manualOrder == null) {
+            return Json.succ().data(new ManualOrder());
+        }
         manualOrder.setManualOrderContents(manualOrderContents);
-        List<String> selectedAddress = new ArrayList<>();
-        selectedAddress.add(manualOrder.getFromKenId());
-        selectedAddress.add(manualOrder.getFromCityId());
-        selectedAddress.add(manualOrder.getFromTownId());
-        manualOrder.setSelectedAddress(selectedAddress);
-        Map<String, String> address = manualOrder.getAddress();
-        if (address == null || address.isEmpty()) {
-            address = new HashMap<>(3);
+        if (StringUtils.isNotEmpty(manualOrder.getFromKenId()) && StringUtils.isNotEmpty(manualOrder.getToKenId())) {
+            List<String> selectedAddress = new ArrayList<>();
+            selectedAddress.add(manualOrder.getFromKenId());
+            selectedAddress.add(manualOrder.getFromCityId());
+            selectedAddress.add(manualOrder.getFromTownId());
+            manualOrder.setSelectedAddress(selectedAddress);
+            Map<String, String> address = manualOrder.getAddress();
+            if (address == null || address.isEmpty()) {
+                address = new HashMap<>(3);
+            }
+            address.put("ken", manualOrder.getFromKenId());
+            address.put("city", manualOrder.getFromCityId());
+            address.put("town", manualOrder.getFromTownId());
+            JpDetailAddress jpDetailAddress = japanAddressCache
+                .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
+                    Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
+            manualOrder.setFromKenName(jpDetailAddress.getKenName());
+            manualOrder.setFromCityName(jpDetailAddress.getCityName());
+            manualOrder.setFromTownName(jpDetailAddress.getTownName());
+            List<String> selectedToAddress = new ArrayList<>();
+            selectedToAddress.add(manualOrder.getToKenId());
+            selectedToAddress.add(manualOrder.getToCityId());
+            selectedToAddress.add(manualOrder.getToTownId());
+            manualOrder.setSelectedToAddress(selectedToAddress);
+            Map<String, String> toAddress = manualOrder.getToAddress();
+            if (toAddress == null || toAddress.isEmpty()) {
+                toAddress = new HashMap<>(3);
+            }
+            toAddress.put("ken", manualOrder.getToKenId());
+            toAddress.put("city", manualOrder.getToCityId());
+            toAddress.put("town", manualOrder.getToTownId());
+            JpDetailAddress toJpDetailAddress = japanAddressCache
+                .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()),
+                    Integer.valueOf(manualOrder.getToCityId()), Integer.valueOf(manualOrder.getToTownId()));
+            manualOrder.setToKenName(toJpDetailAddress.getKenName());
+            manualOrder.setToCityName(toJpDetailAddress.getCityName());
+            manualOrder.setToTownName(toJpDetailAddress.getTownName());
+        } else {
+            manualOrder.setSelectedAddress(new ArrayList<>());
+            manualOrder.setSelectedToAddress(new ArrayList<>());
         }
-        address.put("ken", manualOrder.getFromKenId());
-        address.put("city", manualOrder.getFromCityId());
-        address.put("town", manualOrder.getFromTownId());
-        //todo fix format issue here
-        JpDetailAddress jpDetailAddress = japanAddressCache
-            .getJpDetailAddress(Integer.valueOf(manualOrder.getFromKenId()),
-                Integer.valueOf(manualOrder.getFromCityId()), Integer.valueOf(manualOrder.getFromTownId()));
-        manualOrder.setFromKenName(jpDetailAddress.getKenName());
-        manualOrder.setFromCityName(jpDetailAddress.getCityName());
-        manualOrder.setFromTownName(jpDetailAddress.getTownName());
-        List<String> selectedToAddress = new ArrayList<>();
-        selectedToAddress.add(manualOrder.getToKenId());
-        selectedToAddress.add(manualOrder.getToCityId());
-        selectedToAddress.add(manualOrder.getToTownId());
-        manualOrder.setSelectedToAddress(selectedToAddress);
-        Map<String, String> toAddress = manualOrder.getToAddress();
-        if (toAddress == null || toAddress.isEmpty()) {
-            toAddress = new HashMap<>(3);
-        }
-        toAddress.put("ken", manualOrder.getToKenId());
-        toAddress.put("city", manualOrder.getToCityId());
-        toAddress.put("town", manualOrder.getToTownId());
-        JpDetailAddress toJpDetailAddress = japanAddressCache
-            .getJpDetailAddress(Integer.valueOf(manualOrder.getToKenId()), Integer.valueOf(manualOrder.getToCityId()),
-                Integer.valueOf(manualOrder.getToTownId()));
-        manualOrder.setToKenName(toJpDetailAddress.getKenName());
-        manualOrder.setToCityName(toJpDetailAddress.getCityName());
-        manualOrder.setToTownName(toJpDetailAddress.getTownName());
+
         return Json.succ().data(manualOrder);
 
     }
 
-    @GetMapping @RequestMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
+    @GetMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
         List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
         if (contentList.isEmpty()) {
             return Json.fail().msg("该订单无法拣货");
@@ -367,8 +376,7 @@ import java.util.concurrent.atomic.AtomicReference;
         return Json.succ().data(contentList);
     }
 
-    @PostMapping @RequestMapping("/pickup")
-    public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
+    @PostMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
         log.info(manualOrderContentList.toString());
         String ordno;
         if (!manualOrderContentList.isEmpty()) {

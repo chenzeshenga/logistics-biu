@@ -496,10 +496,16 @@ export default {
         }
     },
     created() {
-        this.getAddress()
         this.defaultFormData = JSON.parse(JSON.stringify(this.form))
         this.initUserList()
         this.hasAdminRole()
+        this.initPage()
+        this.getAddress()
+    },
+    watch: {
+        $route() {
+            this.initPage()
+        },
     },
     methods: {
         trimInput() {
@@ -555,7 +561,6 @@ export default {
         },
         initPage() {
             const ordno = this.$route.query.ordno
-            this.status = this.$route.query.status
             if (ordno != null && ordno.length > 0) {
                 request({
                     url: 'ord/get/' + ordno,
