@@ -77,7 +77,7 @@
             update_by             = #{updator},
             create_on             = #{createOn,jdbcType=TIMESTAMP},
             update_on             = #{updateOn,jdbcType=TIMESTAMP}
-        where return_no = #{sku}
+        where return_no = #{returnNo}
     </update>
 
     <insert id="insertReturnOrder" parameterType="com.abc.chenzeshenga.logistics.model.Return">
