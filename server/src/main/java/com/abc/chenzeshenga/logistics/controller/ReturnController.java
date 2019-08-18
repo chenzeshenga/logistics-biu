@@ -1,8 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
-import com.abc.chenzeshenga.logistics.model.ManualOrder;
-import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;

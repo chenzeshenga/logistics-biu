@@ -19,32 +19,24 @@ import java.util.List;
 
     private boolean withoutOrderNoFlag;
 
+    private String orderNo;
+
+    private String status;
+
     private String toName;
-
     private String toContact;
-
     private String toZipCode;
-
     private String toDetailAddress;
-
     private String toKenId;
-
     private String toCityId;
-
     private String toTownId;
 
     private String fromName;
-
     private String fromContact;
-
     private String fromZipCode;
-
     private String fromDetailAddress;
-
     private String fromKenId;
-
     private String fromCityId;
-
     private String fromTownId;
 
     private String carrier;
@@ -60,10 +52,6 @@ import java.util.List;
     private Date createOn;
 
     private Date updateOn;
-
-    private String status;
-
-    private String orderNo;
 
     private List<ReturnContent> contentList;
 

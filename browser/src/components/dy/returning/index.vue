@@ -75,10 +75,15 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
-                    <el-table :data="tableData.row.warehousingContentList">
+                    <el-table :data="tableData.row.contentList">
+                        <el-table-column
+                            prop="returnNo"
+                            label="退货单号"
+                            width="250"
+                        ></el-table-column>
                         <el-table-column
                             prop="sku"
-                            label="sku/东岳Sku"
+                            label="sku"
                             width="250"
                         ></el-table-column>
                         <el-table-column
@@ -87,19 +92,14 @@
                             width="250"
                         ></el-table-column>
                         <el-table-column
-                            prop="boxSeq"
-                            label="箱号"
+                            prop="num"
+                            label="数量"
                             width="150"
                         ></el-table-column>
                         <el-table-column
-                            prop="totalNum"
-                            label="数量"
+                            prop="dealWith"
+                            label="处理方式"
                             width="200"
-                        ></el-table-column>
-                        <el-table-column
-                            prop="wrapType"
-                            label="包装方式"
-                            width="250"
                         ></el-table-column>
                     </el-table>
                 </template>
@@ -116,48 +116,63 @@
             ></el-table-column>
             <el-table-column
                 width="200"
-                prop="toName"
+                prop="orderNo"
+                label="订单号"
+            ></el-table-column>
+            <el-table-column
+                width="200"
+                prop="status"
                 label="状态"
             ></el-table-column>
             <el-table-column
                 width="200"
+                prop="toName"
+                label="收件人"
+            ></el-table-column>
+            <el-table-column
+                width="200"
                 prop="toContact"
-                label="头程方式"
+                label="收件人联系方式"
             ></el-table-column>
             <el-table-column
                 width="200"
                 prop="toZipCode"
-                label="承运人"
+                label="收件人邮编"
             ></el-table-column>
             <el-table-column
                 width="200"
                 prop="toDetailAddress"
-                label="追踪单号"
-            ></el-table-column>
-            <el-table-column
-                width="200"
-                prop="toKenId"
-                label="运输方式"
-            ></el-table-column>
-            <el-table-column
-                width="200"
-                prop="toCityId"
-                label="报关类型"
-            ></el-table-column>
-            <el-table-column
-                width="200"
-                prop="toTownId"
-                label="关税类型"
+                label="收件详细地址"
             ></el-table-column>
             <el-table-column
                 width="200"
                 prop="fromName"
-                label="保险服务"
+                label="发件人姓名"
             ></el-table-column>
             <el-table-column
                 width="200"
                 prop="fromContact"
-                label="保险总值(JPY)"
+                label="发件人联系方式"
+            ></el-table-column>
+            <el-table-column
+                width="200"
+                prop="fromZipCode"
+                label="发件人邮编"
+            ></el-table-column>
+            <el-table-column
+                width="200"
+                prop="fromDetailAddress"
+                label="发件人详细地址"
+            ></el-table-column>
+            <el-table-column
+                width="200"
+                prop="carrier"
+                label="承运人"
+            ></el-table-column>
+            <el-table-column
+                width="200"
+                prop="trackNo"
+                label="承认人追踪单号"
             ></el-table-column>
             <el-table-column
                 width="200"
