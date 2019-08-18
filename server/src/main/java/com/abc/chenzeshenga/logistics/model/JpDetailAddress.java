@@ -7,10 +7,7 @@ import java.io.Serializable;
 /**
  * @author chenzeshenga
  * @version 1.0
- * @file JpDetailAddress
- * @email chenzeshenga@163.com
- * @createOn 2018-12-31 10:16
- * @updateOn 2018-12-31 10:16
+ * @since 20190819
  */
 @Data public class JpDetailAddress implements Serializable {
 
@@ -25,5 +22,9 @@ import java.io.Serializable;
     private String townId;
 
     private String townName;
+
+    @Override public String toString() {
+        return kenName + " " + cityName + " " + townName + " ";
+    }
 
 }

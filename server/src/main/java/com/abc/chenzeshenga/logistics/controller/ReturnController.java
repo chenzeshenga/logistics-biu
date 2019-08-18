@@ -1,6 +1,8 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
+import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
@@ -37,9 +39,13 @@ import java.util.UUID;
 
     private CommonController commonController;
 
-    @Autowired public ReturnController(CommonController commonController, ReturnService returnService) {
+    private JapanAddressCache japanAddressCache;
+
+    @Autowired public ReturnController(CommonController commonController, ReturnService returnService,
+        JapanAddressCache japanAddressCache) {
         this.commonController = commonController;
         this.returnService = returnService;
+        this.japanAddressCache = japanAddressCache;
     }
 
     @PostMapping(value = "/img/put") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile,
@@ -175,6 +181,21 @@ import java.util.UUID;
         } else {
             returnPage = returnService.listAll(page, status, fromDate, toDate);
         }
+        List<Return> returnList = returnPage.getRecords();
+        returnList.forEach(returning -> {
+            JpDetailAddress jpDetailAddress = japanAddressCache
+                .getJpDetailAddress(Integer.parseInt(returning.getFromKenId()),
+                    Integer.parseInt(returning.getFromCityId()), Integer.parseInt(returning.getFromTownId()));
+            if (jpDetailAddress != null) {
+                returning.setFromDetailAddress(jpDetailAddress.toString() + returning.getFromDetailAddress());
+            }
+            JpDetailAddress fromJpDetailAddress = japanAddressCache
+                .getJpDetailAddress(Integer.parseInt(returning.getToKenId()), Integer.parseInt(returning.getToCityId()),
+                    Integer.parseInt(returning.getToTownId()));
+            if (jpDetailAddress != null) {
+                returning.setToDetailAddress(fromJpDetailAddress.toString() + returning.getToDetailAddress());
+            }
+        });
         return Json.succ().data("page", returnPage);
     }
 
