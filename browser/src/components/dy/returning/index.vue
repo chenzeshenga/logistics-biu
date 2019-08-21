@@ -187,28 +187,29 @@
             <el-table-column
                 width="150"
                 prop="creator"
-                label="创建人"
+                label="所属用户"
             ></el-table-column>
             <el-table-column
                 width="150"
                 prop="updator"
                 label="修改人"
             ></el-table-column>
-            <el-table-column label="操作" width="400" fixed="right">
+            <el-table-column label="操作" width="200" fixed="right">
                 <template slot-scope="scope">
                     <el-tooltip
-                        content="发往东岳国内前置海外仓"
+                        content="认领"
                         placement="top"
                         v-if="msgData.buttonVisible1"
                     >
                         <el-button
                             @click="statusUpdate(scope.$index, scope.row, 2)"
                             size="mini"
-                            type="info"
-                            icon="el-icon-check"
+                            type="success"
                             circle
                             plain
-                        ></el-button>
+                        >
+                            <svg-icon icon-class="claim"></svg-icon>
+                        </el-button>
                     </el-tooltip>
                     <el-tooltip
                         content="东岳国内前置海外仓已收货，发往头程校验"

@@ -562,9 +562,9 @@ export const asyncRouterMap = [
         },
         children: [
             {
-                path: '/returns-list/mgt/withOrderNo',
-                name: 'returns-list-mgt-withOrderNo',
-                component: _import('returns/withOrderNo/index'),
+                path: '/returns-list/mgt/withoutUser',
+                name: 'returns-list-mgt-withoutUser',
+                component: _import('returns/withoutUser/index'),
                 meta: {
                     perm: 'm:returns1:list',
                     title: '无主退货单',
@@ -573,8 +573,8 @@ export const asyncRouterMap = [
                 children: [
                     {
                         path: 'status1',
-                        component: _import('returns/withOrderNo/list/status1'),
-                        name: 'returns-list-mgt-withOrderNo-status1',
+                        component: _import('returns/withoutUser/list/status1'),
+                        name: 'returns-list-mgt-withoutUser-status1',
                         meta: {
                             perm: 'm:returns1:list:2',
                             title: '待认领退货单',
@@ -588,9 +588,9 @@ export const asyncRouterMap = [
                 ],
             },
             {
-                path: '/returns-list/mgt/withoutOrderNo',
-                name: 'returns-list-mgt-withoutOrderNo',
-                component: _import('returns/withoutOrderNo/index'),
+                path: '/returns-list/mgt/withUser',
+                name: 'returns-list-mgt-withUser',
+                component: _import('returns/withUser/index'),
                 meta: {
                     perm: 'm:returns2:list',
                     title: '有主退货单',
@@ -599,10 +599,8 @@ export const asyncRouterMap = [
                 children: [
                     {
                         path: 'status1',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status1'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status1',
+                        component: _import('returns/withUser/list/status1'),
+                        name: 'returns-list-mgt-withUser-status1',
                         meta: {
                             perm: 'm:returns2:list:1',
                             title: '退货单处理',
@@ -612,10 +610,8 @@ export const asyncRouterMap = [
                     },
                     {
                         path: 'status2',
-                        component: _import(
-                            'returns/withoutOrderNo/list/status2'
-                        ),
-                        name: 'returns-list-mgt-withoutOrderNo-status2',
+                        component: _import('returns/withUser/list/status2'),
+                        name: 'returns-list-mgt-withUser-status2',
                         meta: {
                             perm: 'm:returns2:list:2',
                             title: '历史退货单',
