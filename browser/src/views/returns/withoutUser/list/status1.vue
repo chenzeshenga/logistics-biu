@@ -16,6 +16,7 @@ export default {
         return {
             msg: {
                 status: '1',
+                type: 'withoutUser',
                 buttonVisible1: true,
             },
         }

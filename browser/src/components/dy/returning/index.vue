@@ -24,18 +24,19 @@
                         <el-tooltip content="退货单号" placement="top">
                             <el-input
                                 v-model="search.returnNo"
-                                clearable
-                                placeholder="请输入入库单号"
+                                clearable="clearable"
+                                placeholder="请输入退货单号"
                             ></el-input>
                         </el-tooltip>
                     </el-col>
                     <el-col :span="4">
-                        <el-tooltip content="创建人" placement="top">
+                        <el-tooltip content="所属用户" placement="top">
                             <el-select
                                 filterable
                                 clearable
                                 v-model="search.creator"
-                                placeholder="请选择创建人"
+                                placeholder="请选择所属用户"
+                                value=""
                             >
                                 <el-option
                                     v-for="creator in users"
@@ -296,34 +297,6 @@
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="获取报关单"
-                        placement="top"
-                        v-if="msgData.buttonVisible3"
-                    >
-                        <el-button
-                            @click="handlePrint(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-printer"
-                            circle
-                            plain
-                        ></el-button>
-                    </el-tooltip>
-                    <el-tooltip
-                        content="上传报关单"
-                        placement="top"
-                        v-if="msgData.buttonVisible4"
-                    >
-                        <el-button
-                            @click="handleUploadFile(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-upload"
-                            circle
-                            plain
-                        ></el-button>
-                    </el-tooltip>
-                    <el-tooltip
                         content="编辑"
                         placement="top"
                         v-if="msgData.buttonVisible5"
@@ -392,6 +365,7 @@ export default {
         return {
             msgData: {
                 status: this.msg.status,
+                type: this.msg.type,
                 buttonVisible1: this.msg.buttonVisible1 === true,
                 buttonVisible2: this.msg.buttonVisible2 === true,
                 buttonVisible3: this.msg.buttonVisible3 === true,
@@ -482,7 +456,9 @@ export default {
             this.tableLoading = true
             request({
                 url:
-                    'return/list?type=2&status=新建&from=2000-01-01&to=2099-12-31',
+                    'return/list?type=' +
+                    this.msgData.type +
+                    '&status=新建&from=2000-01-01&to=2099-12-31',
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
