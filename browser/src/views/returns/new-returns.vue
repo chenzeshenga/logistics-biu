@@ -276,7 +276,7 @@
                     <el-col :offset="18">
                         <el-button
                             type="primary"
-                            @click="submitForm('form')"
+                            @click="submitForm()"
                             v-if="onCreate"
                             >立即创建
                         </el-button>
@@ -464,11 +464,7 @@ export default {
         submitUpload() {
             this.$refs.upload.submit()
         },
-        submitForm(formName) {
-            if (this.adminRole && this.form.creator.length <= 0) {
-                this.$message.warning('请选择商品所属人')
-                return
-            }
+        submitForm() {
             const fromAddr = this.form.address
             this.form.fromKenId = fromAddr.ken
             this.form.fromCityId = fromAddr.city

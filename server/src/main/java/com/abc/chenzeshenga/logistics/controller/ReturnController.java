@@ -176,7 +176,7 @@ import java.util.UUID;
         Date fromDate = DateUtil.getDateFromStr(from);
         Date toDate = DateUtil.getDateFromStr(to);
         Page<Return> returnPage;
-        if ("1".equals(type)) {
+        if ("withoutUser".equals(type)) {
             returnPage = returnService.list(page, status, cname, fromDate, toDate);
         } else {
             returnPage = returnService.listAll(page, status, fromDate, toDate);
