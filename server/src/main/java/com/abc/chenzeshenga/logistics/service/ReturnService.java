@@ -15,8 +15,8 @@ import java.util.Date;
  */
 @Service public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
 
-    public Page<Return> list(Page page, String cname, String status, Date from, Date to) {
-        return page.setRecords(baseMapper.list(page, status, cname, from, to));
+    public Page<Return> list(Page page, String status, Date from, Date to) {
+        return page.setRecords(baseMapper.list(page, status, from, to));
     }
 
     public Page<Return> listAll(Page page, String status, Date from, Date to) {

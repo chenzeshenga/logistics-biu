@@ -111,7 +111,7 @@
         from l_returning returning
                  left join l_returning_content content on returning.return_no = content.return_no
         where status = #{status}
-          and create_by = #{creator}
+          and create_by = ''
           and create_on between #{from} and #{to}
     </select>
 

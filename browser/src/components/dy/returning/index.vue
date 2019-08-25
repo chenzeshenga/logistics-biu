@@ -454,11 +454,12 @@ export default {
     methods: {
         fetchData() {
             this.tableLoading = true
+
             request({
                 url:
                     'return/list?type=' +
                     this.msgData.type +
-                    '&status=新建&from=2000-01-01&to=2099-12-31',
+                    '&status=新建',
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {

@@ -169,7 +169,8 @@ import java.util.UUID;
 
     @PostMapping("/list")
     public Json list(@RequestBody String body, @RequestParam String type, @RequestParam String status,
-        @RequestParam String from, @RequestParam String to) throws ParseException {
+        @RequestParam(required = false, defaultValue = "2000-01-01") String from,
+        @RequestParam(required = false, defaultValue = "2099-12-31") String to) throws ParseException {
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         String cname = UserUtils.getUserName();
@@ -177,7 +178,7 @@ import java.util.UUID;
         Date toDate = DateUtil.getDateFromStr(to);
         Page<Return> returnPage;
         if ("withoutUser".equals(type)) {
-            returnPage = returnService.list(page, status, cname, fromDate, toDate);
+            returnPage = returnService.list(page, status, fromDate, toDate);
         } else {
             returnPage = returnService.listAll(page, status, fromDate, toDate);
         }

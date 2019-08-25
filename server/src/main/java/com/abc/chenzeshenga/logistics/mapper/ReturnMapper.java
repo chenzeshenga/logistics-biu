@@ -29,8 +29,8 @@ import java.util.List;
 
     int deleteContent(String returnNo);
 
-    List<Return> list(Pagination pagination, @Param("status") String status, @Param("creator") String creator,
-        @Param("from") Date from, @Param("to") Date to);
+    List<Return> list(Pagination pagination, @Param("status") String status, @Param("from") Date from,
+        @Param("to") Date to);
 
     List<Return> listAll(Pagination pagination, @Param("status") String status, @Param("from") Date from,
         @Param("to") Date to);
