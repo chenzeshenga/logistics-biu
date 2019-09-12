@@ -1,5 +1,12 @@
 <template>
     <div>
+        <el-alert
+                :title="noteTxt"
+                type="info"
+                show-icon
+                center
+                style="margin: 1%"
+        ></el-alert>
         <el-form>
             <el-form-item>
                 <el-row :gutter="20" style="margin-left: 4%">
@@ -51,7 +58,7 @@
                         <el-form-item label="">
                             <el-button
                                 icon="el-icon-search"
-                                @click="searchOrd()"
+                                @click="searchReturning()"
                             ></el-button>
                         </el-form-item>
                     </el-col>
@@ -73,7 +80,7 @@
             stripe
             highlight-current-row
         >
-            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column type="selection" width="55" show-overflow-tooltip></el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
                     <el-table :data="tableData.row.contentList">
@@ -283,20 +290,6 @@
                         ></el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="预申请单号"
-                        placement="top"
-                        v-if="msgData.buttonVisible2"
-                    >
-                        <el-button
-                            @click="applyTrackno(scope.$index, scope.row)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-info"
-                            circle
-                            plain
-                        ></el-button>
-                    </el-tooltip>
-                    <el-tooltip
                         content="编辑"
                         placement="top"
                         v-if="msgData.buttonVisible5"
@@ -393,6 +386,11 @@ export default {
             dialogVisible2: false,
             dialogVisible3: false,
             pickerOptions2: {
+                disabledDate(time) {
+                    const dateBeforeNow=new Date()
+                    dateBeforeNow.setDate((new Date().getDate()-7))
+                    return time.getTime() <dateBeforeNow.getTime()
+                },
                 shortcuts: [
                     {
                         text: '最近一周',
@@ -443,7 +441,7 @@ export default {
             },
             print: {},
             dialogForm3: {},
-            uploadLink: process.env.BASE_API + '/warehousing/userFile',
+            noteTxt:'该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领'
         }
     },
     props: ['msg'],
@@ -452,9 +450,11 @@ export default {
         this.initUserList()
     },
     methods: {
+        searchReturning(){
+
+        },
         fetchData() {
             this.tableLoading = true
-
             request({
                 url:
                     'return/list?type=' +
@@ -511,70 +511,6 @@ export default {
                 path: '/new-returns/new-returns',
             })
         },
-        hold(index, row) {
-            const warehousingNo = row.warehousingNo
-            this.$confirm(
-                '您确定要暂存该入库单？（该订单可在暂存页面查看）',
-                '提示',
-                confirm
-            )
-                .then(() => {
-                    request({
-                        url: 'warehousing/status',
-                        method: 'post',
-                        data: {
-                            to: '8',
-                            warehousingNo: warehousingNo,
-                        },
-                    }).then(() => {
-                        this.fetchData()
-                        this.$message.success('暂存成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        handleDelete(index, row) {
-            this.$confirm(
-                '您确定要删除该入库单？(该订单将无法恢复)',
-                '提示',
-                confirm
-            )
-                .then(() => {
-                    request({
-                        url:
-                            'warehousing/drop?warehousingNo=' +
-                            row.warehousingNo,
-                        method: 'get',
-                    }).then(() => {
-                        this.fetchData()
-                        this.$message.success('删除成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消')
-                })
-        },
-        handlePrint(index, row) {
-            this.profile.trackNo = row.trackNo
-            this.profile.warehousingNo = row.warehousingNo
-            request({
-                url: '/profile/init',
-                method: 'get',
-            }).then(res => {
-                const profile = res.data.data
-                this.profile.chineseName = profile.chineseName
-                this.profile.englishName = profile.englishName
-                this.profile.chineseAddr = profile.chineseAddr
-                this.profile.englishAddr = profile.englishAddr
-                this.profile.zipCode = profile.zipCode
-                this.profile.contactEnglishName = profile.contactEnglishName
-                this.profile.contactChineseName = profile.contactChineseName
-                this.profile.phone = profile.phone
-            })
-            this.dialogVisible2 = true
-        },
         handleSizeChange(val) {
             this.tablePage.size = val
             this.fetchData()
@@ -583,99 +519,8 @@ export default {
             this.tablePage.current = val
             this.fetchData()
         },
-        route2ChannelPage(index, row) {
-            this.$router.push({
-                path: '/system/channel?filter=' + row.channel,
-            })
-        },
-        exportExcel() {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            if (this.search.creator.length > 0) {
-                link.href =
-                    process.env.BASE_API +
-                    '/warehousing/excel/1?method=东岳头程&creator=' +
-                    this.search.creator
-            } else {
-                link.href =
-                    process.env.BASE_API +
-                    '/warehousing/excel/1?method=东岳头程'
-            }
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        applyTrackno(index, row) {
-            this.dialog.warehousingNo = row.warehousingNo
-            this.dialog.carrier = row.carrier
-            this.dialog.trackNo = row.trackNo
-            this.dialogVisible1 = true
-        },
-        fillInTrackNo() {
-            request({
-                url: 'warehousing/trackno',
-                method: 'post',
-                data: this.dialog,
-            }).then(() => {
-                this.dialogVisible1 = false
-                this.fetchData()
-            })
-        },
-        printAndSave() {
-            request({
-                url: '/warehousing/printCustomsDeclaration',
-                method: 'post',
-                data: this.profile,
-            }).then(res => {
-                const uuid = res.data.data
-                const link = document.createElement('a')
-                link.style.display = 'none'
-                link.href = process.env.BASE_API + '/file/' + uuid
-                link.target = '_blank'
-                document.body.appendChild(link)
-                link.click()
-                this.dialogVisible2 = false
-            })
-        },
-        handleUploadFile(index, row) {
-            this.dialogVisible3 = true
-            this.uploadLink =
-                this.uploadLink + '?warehousingNo=' + row.warehousingNo
-        },
-        submitUpload() {
-            this.$refs.upload.submit()
-            this.$message.success('上传成功')
-        },
         handleError(err) {
             this.$message.error(JSON.parse(err.message)['message'])
-        },
-        handleSystemFile(index, row) {
-            if (row.systemFileUuid == null) {
-                this.$message.warning(
-                    '报关单未生成，请点击获取报关单生成报关单'
-                )
-            } else {
-                const link = document.createElement('a')
-                const uuid = row.systemFileUuid
-                link.style.display = 'none'
-                link.href = process.env.BASE_API + '/file/' + uuid
-                link.target = '_blank'
-                document.body.appendChild(link)
-                link.click()
-            }
-        },
-        handleUserWarehousingFile(index, row) {
-            if (row.userWarehousingFileUuid == null) {
-                this.$message.warning('报关单未上传，请点击上传报关单进行上传')
-            } else {
-                const link = document.createElement('a')
-                const uuid = row.userWarehousingFileUuid
-                link.style.display = 'none'
-                link.href = process.env.BASE_API + '/file/' + uuid
-                link.target = '_blank'
-                document.body.appendChild(link)
-                link.click()
-            }
         },
         initUserList() {
             request({
