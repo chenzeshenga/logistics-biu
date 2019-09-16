@@ -30,7 +30,8 @@ import java.util.stream.Collectors;
 
     @Resource private ProductMapper productMapper;
 
-    @Scheduled(fixedDelay = 120000) public void countProduct() {
+    //    @Scheduled(fixedDelay = 120000)
+    public void countProduct() {
         List<ProductStatistics> productStatisticsList = new ArrayList<>();
         List<ManualOrder> manualOrderList = orderMapper.listAll();
         List<Product> productList = productMapper.listByStatus(new Page(0, 999), "1", null, null, null, null);
