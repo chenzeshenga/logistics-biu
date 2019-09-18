@@ -28,8 +28,13 @@ import java.util.Map;
     @Scheduled(cron = "0 0 0 * * ?") @PostConstruct public void init() {
         List<ChannelLabel> channelLabelList = channelMapper.list();
         channelLabelList.forEach(channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
-        this.channelSeq = String.valueOf(
-            Integer.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", "")) + 1);
+        if (channelLabelList.isEmpty()) {
+            this.channelSeq = "0";
+        } else {
+            this.channelSeq = String.valueOf(
+                Integer.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", ""))
+                    + 1);
+        }
     }
 
     public String channelLabel(String channelValue) {
