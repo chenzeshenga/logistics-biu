@@ -32,7 +32,7 @@ import java.util.Map;
             this.channelSeq = "0";
         } else {
             this.channelSeq = String.valueOf(
-                Integer.valueOf(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", ""))
+                Integer.parseInt(channelLabelList.get(channelLabelList.size() - 1).getValue().replace("CHANNEL_", ""))
                     + 1);
         }
     }
