@@ -90,6 +90,30 @@
                 #{fromDetailAddress}, #{fromKenId}, #{fromCityId}, #{fromTownId}, #{carrier}, #{trackNo}, #{imgs},
                 #{status}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP}, #{creator}, #{updator},
                 #{orderNo})
+        on duplicate key update without_order_no_flag=#{withoutOrderNoFlag},
+                                to_name= #{toName},
+                                to_contact=#{toContact},
+                                to_zip_code=#{toZipCode},
+                                to_detail_address= #{toDetailAddress},
+                                to_ken_id=#{toKenId},
+                                to_city_id=#{toCityId},
+                                to_town_id=#{toTownId},
+                                from_name=#{fromName},
+                                from_contact= #{fromContact},
+                                from_zip_code=#{fromZipCode},
+                                from_detail_address=#{fromDetailAddress},
+                                from_ken_id=#{fromKenId},
+                                from_city_id=#{fromCityId},
+                                from_town_id=#{fromTownId},
+                                carrier= #{carrier},
+                                track_no=#{trackNo},
+                                imgs= #{imgs},
+                                status= #{status},
+                                create_on=#{createOn,jdbcType=TIMESTAMP},
+                                update_on=#{updateOn,jdbcType=TIMESTAMP},
+                                create_by= #{creator},
+                                update_by= #{updator},
+                                order_no= #{orderNo}
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">

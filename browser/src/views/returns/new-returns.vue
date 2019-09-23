@@ -271,8 +271,9 @@
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="" />
-                    </el-dialog> </el-form-item
-                ><el-form-item>
+                    </el-dialog>
+                </el-form-item>
+                <el-form-item>
                     <el-col :offset="18">
                         <el-button
                             type="primary"
@@ -351,6 +352,7 @@ export default {
                 name: '',
                 selectedProductMaxNum: 20,
             },
+            contentMap: {},
         }
     },
     created() {
@@ -425,25 +427,29 @@ export default {
             console.log(val)
         },
         add2Cart() {
-            let tmpContent = {}
-            tmpContent = JSON.parse(JSON.stringify(this.content))
-            tmpContent['index'] = this.form.contentList.length
-            let oriContentList = this.form.contentList
-            let productInOriContentListFlag = false
-            for (let i = 0; i < oriContentList.length; i++) {
-                let subContent = oriContentList[i]
-                if (
-                    productInOriContentListFlag &&
-                    subContent['sku'] === this.content.sku
-                ) {
-                    subContent['num'] += this.content.num
-                    productInOriContentListFlag = true
-                    break
+            const sku = this.content.sku
+            let content4CurrSku
+            if (this.contentMap.hasOwnProperty(sku)) {
+                content4CurrSku = this.contentMap[sku]
+                content4CurrSku.num += this.content.num
+                content4CurrSku.returnNo = this.content.returnNo
+                content4CurrSku.name = this.content.name
+            } else {
+                content4CurrSku = this.content
+            }
+            this.contentMap[sku] = content4CurrSku
+            this.form.contentList = []
+            for (let key in this.contentMap) {
+                if (this.contentMap.hasOwnProperty(key)) {
+                    this.form.contentList.push(this.contentMap[key])
                 }
             }
-            if (!productInOriContentListFlag) {
-                this.content.returnNo = this.form.returnNo
-                this.form.contentList.push(this.content)
+            this.content = {
+                returnNo: '',
+                sku: '',
+                num: '',
+                name: '',
+                selectedProductMaxNum: 20,
             }
         },
         handlePictureCardPreview(file) {
@@ -465,11 +471,11 @@ export default {
             this.$refs.upload.submit()
         },
         submitForm() {
-            const fromAddr = this.form.address
+            const toAddr = this.form.address
+            const fromAddr = this.form.toAddress
             this.form.fromKenId = fromAddr.ken
             this.form.fromCityId = fromAddr.city
             this.form.fromTownId = fromAddr.town
-            const toAddr = this.form.toAddress
             this.form.toKenId = toAddr.ken
             this.form.toCityId = toAddr.city
             this.form.toTownId = toAddr.town

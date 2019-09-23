@@ -6,6 +6,7 @@ import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.util.CommonUtil;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
 import com.alibaba.excel.EasyExcelFactory;
@@ -76,10 +77,7 @@ import java.util.*;
     }
 
     @GetMapping("/generate/pk/returning") public Json getReturnNo() {
-        String pk =
-            CommonUtil.generate() + "-" + (Integer.valueOf(returnMapper.getReturnSeq().getReturnNo().split("-")[1])
-                + 1);
-        return Json.succ().data(pk);
+        return Json.succ().data(String.valueOf(SnowflakeIdWorker.generateId()));
     }
 
     @GetMapping("/generate/sku") public Json getDySku() {

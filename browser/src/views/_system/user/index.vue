@@ -337,7 +337,6 @@ export default {
         },
 
         hasAdminRole(row) {
-            debugger
             if (row && row.roleList) {
                 return row.roleList.some(role => role.rval == root.rval)
             }

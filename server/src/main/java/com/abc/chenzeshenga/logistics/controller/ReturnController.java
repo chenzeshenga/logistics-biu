@@ -7,6 +7,7 @@ import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
@@ -58,9 +59,15 @@ import java.util.UUID;
             returnOrder = new Return();
             returnOrder.setReturnNo(returnNo);
         }
-        String uuid = UUID.randomUUID().toString();
+        String uuid = SnowflakeIdWorker.generateStrId();
         commonController.putImg(multipartFile, uuid);
-        returnOrder.setImgs(uuid);
+        String uuid4Imgs = returnOrder.getImgs();
+        if (StringUtils.isBlank(uuid4Imgs)) {
+            uuid4Imgs += uuid;
+        } else {
+            uuid4Imgs += ";" + uuid;
+        }
+        returnOrder.setImgs(uuid4Imgs);
         returnOrder.setUpdateOn(new Date());
         returnOrder.setCreateOn(new Date());
         returnOrder.setUpdator(UserUtils.getUserName());
@@ -190,11 +197,16 @@ import java.util.UUID;
             if (jpDetailAddress != null) {
                 returning.setFromDetailAddress(jpDetailAddress.toString() + returning.getFromDetailAddress());
             }
-            JpDetailAddress fromJpDetailAddress = japanAddressCache
-                .getJpDetailAddress(Integer.parseInt(returning.getToKenId()), Integer.parseInt(returning.getToCityId()),
-                    Integer.parseInt(returning.getToTownId()));
-            if (jpDetailAddress != null) {
-                returning.setToDetailAddress(fromJpDetailAddress.toString() + returning.getToDetailAddress());
+            if (StringUtils.isBlank(returning.getToKenId()) || StringUtils.isBlank(returning.getToCityId())
+                || StringUtils.isBlank(returning.getToTownId())) {
+                returning.setToDetailAddress("日本岡山仓(okayama) 东岳物流");
+            } else {
+                JpDetailAddress fromJpDetailAddress = japanAddressCache
+                    .getJpDetailAddress(Integer.parseInt(returning.getToKenId()),
+                        Integer.parseInt(returning.getToCityId()), Integer.parseInt(returning.getToTownId()));
+                if (jpDetailAddress != null) {
+                    returning.setToDetailAddress(fromJpDetailAddress.toString() + returning.getToDetailAddress());
+                }
             }
         });
         return Json.succ().data("page", returnPage);
