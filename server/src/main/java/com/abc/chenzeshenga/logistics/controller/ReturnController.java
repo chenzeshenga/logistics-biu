@@ -199,7 +199,8 @@ import java.util.UUID;
             }
             if (StringUtils.isBlank(returning.getToKenId()) || StringUtils.isBlank(returning.getToCityId())
                 || StringUtils.isBlank(returning.getToTownId())) {
-                returning.setToDetailAddress("日本岡山仓(okayama) 东岳物流");
+                returning.setToDetailAddress("日本岡山仓(okayama)");
+                returning.setToName("东岳物流");
             } else {
                 JpDetailAddress fromJpDetailAddress = japanAddressCache
                     .getJpDetailAddress(Integer.parseInt(returning.getToKenId()),

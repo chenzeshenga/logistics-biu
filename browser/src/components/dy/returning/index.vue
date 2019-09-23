@@ -1,11 +1,11 @@
 <template>
     <div>
         <el-alert
-                :title="noteTxt"
-                type="info"
-                show-icon
-                center
-                style="margin: 1%"
+            :title="noteTxt"
+            type="info"
+            show-icon
+            center
+            style="margin: 1%"
         ></el-alert>
         <el-form>
             <el-form-item>
@@ -80,7 +80,11 @@
             stripe
             highlight-current-row
         >
-            <el-table-column type="selection" width="55" show-overflow-tooltip></el-table-column>
+            <el-table-column
+                type="selection"
+                width="55"
+                show-overflow-tooltip
+            ></el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="tableData">
                     <el-table :data="tableData.row.contentList">
@@ -182,6 +186,21 @@
                 prop="trackNo"
                 label="承认人追踪单号"
             ></el-table-column>
+            <el-table-column width="200" label="图片">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <el-image
+                            style="width: 100px; height: 100px"
+                            :src="scope.row.imgsLinks[0]"
+                            :preview-src-list="scope.row.imgsLinks"
+                        >
+                        </el-image>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">图片</el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
             <el-table-column
                 width="200"
                 prop="createOn"
@@ -387,9 +406,9 @@ export default {
             dialogVisible3: false,
             pickerOptions2: {
                 disabledDate(time) {
-                    const dateBeforeNow=new Date()
-                    dateBeforeNow.setDate((new Date().getDate()-7))
-                    return time.getTime() <dateBeforeNow.getTime()
+                    const dateBeforeNow = new Date()
+                    dateBeforeNow.setDate(new Date().getDate() - 7)
+                    return time.getTime() < dateBeforeNow.getTime()
                 },
                 shortcuts: [
                     {
@@ -441,7 +460,8 @@ export default {
             },
             print: {},
             dialogForm3: {},
-            noteTxt:'该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领'
+            noteTxt:
+                '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
         }
     },
     props: ['msg'],
@@ -450,16 +470,11 @@ export default {
         this.initUserList()
     },
     methods: {
-        searchReturning(){
-
-        },
+        searchReturning() {},
         fetchData() {
             this.tableLoading = true
             request({
-                url:
-                    'return/list?type=' +
-                    this.msgData.type +
-                    '&status=新建',
+                url: 'return/list?type=' + this.msgData.type + '&status=新建',
                 method: 'post',
                 data: this.tablePage,
             }).then(res => {
@@ -471,6 +486,15 @@ export default {
                     } else {
                         subRecords['withoutOrderNoFlagLabel'] = '不对应'
                     }
+                    let imgs = subRecords['imgs']
+                    let imgsArr = imgs.split(';')
+                    let imgsLinks = []
+                    for (let j = 0; j < imgsArr.length; j++) {
+                        const sublink =
+                            process.env.BASE_API + '/img/' + imgsArr[j]
+                        imgsLinks.push(sublink)
+                    }
+                    subRecords['imgsLinks'] = imgsLinks
                 }
                 this.tableData = res.data.page.records
                 this.tablePage.current = res.data.page.current
