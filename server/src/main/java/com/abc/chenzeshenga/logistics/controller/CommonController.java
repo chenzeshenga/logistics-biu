@@ -53,8 +53,6 @@ import java.util.*;
 
     @Resource private AddressMapper addressMapper;
 
-    @Resource private ReturnMapper returnMapper;
-
     private JapanAddressCache japanAddressCache;
 
     private LabelCache labelCache;
@@ -65,15 +63,11 @@ import java.util.*;
     }
 
     @GetMapping("/generate/pk") public Json getOrderNo() {
-        String pk =
-            CommonUtil.generate() + "-" + (Integer.valueOf(orderMapper.getOrderSeq().getOrderNo().split("-")[1]) + 1);
-        return Json.succ().data(pk);
+        return Json.succ().data(String.valueOf(SnowflakeIdWorker.generateId()));
     }
 
     @GetMapping("/generate/pk/warehousing") public Json getWarehousingNo() {
-        String pk = CommonUtil.generate() + "-" + (
-            Integer.valueOf(warehousingMapper.getWarehousingSeq().getWarehousingNo().split("-")[1]) + 1);
-        return Json.succ().data(pk);
+        return Json.succ().data(String.valueOf(SnowflakeIdWorker.generateId()));
     }
 
     @GetMapping("/generate/pk/returning") public Json getReturnNo() {

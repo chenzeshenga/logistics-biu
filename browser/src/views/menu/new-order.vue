@@ -536,9 +536,15 @@ export default {
             request({
                 url: '/trackno/pk?channelCode=' + this.form.channel,
                 method: 'get',
-            }).then(res => {
-                this.form.trackNo = res.data.data
             })
+                .then(res => {
+                    this.form.trackNo = res.data.data
+                })
+                .catch(() => {
+                    this.$message.error(
+                        '日本追踪单号获取失败或未配置，请手动输入'
+                    )
+                })
         },
         listChannel(val) {
             request({
@@ -629,6 +635,8 @@ export default {
             )
         },
         add2Cart() {
+            const sku = this.content.sku
+
             let tmpContent = {}
             tmpContent = JSON.parse(JSON.stringify(this.content))
             tmpContent['index'] = this.form.contentList.length
