@@ -239,12 +239,8 @@ import java.util.*;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
+    @PostMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
         List<SkuLabel> skuLabelList = productMapper.list(request.get("user"));
-        skuLabelList.forEach(skuLabel -> {
-            skuLabel.setValue(skuLabel.getSku() + "/" + skuLabel.getDySku());
-            skuLabel.setLabel(skuLabel.getName() + "(" + skuLabel.getValue() + ")");
-        });
         return Json.succ().data(skuLabelList);
     }
 

@@ -239,20 +239,6 @@
                         </el-button>
                     </el-tooltip>
                     <el-tooltip
-                        content="东岳国内前置海外仓已收货，发往头程校验"
-                        placement="top"
-                        v-if="msgData.buttonVisible8"
-                    >
-                        <el-button
-                            @click="statusUpdate(scope.$index, scope.row, 3)"
-                            size="mini"
-                            type="info"
-                            icon="el-icon-check"
-                            circle
-                            plain
-                        ></el-button>
-                    </el-tooltip>
-                    <el-tooltip
                         content="头程校验完成，发往日本"
                         placement="top"
                         v-if="msgData.buttonVisible9"
@@ -350,6 +336,19 @@
                             plain
                         ></el-button>
                     </el-tooltip>
+                    <el-tooltip
+                        content="确认收货"
+                        placement="top"
+                        v-if="msgData.buttonVisible8"
+                    >
+                        <el-button
+                            @click="accept(scope.$index, scope.row)"
+                            circle
+                            plain
+                        >
+                            <svg-icon icon-class="receiving"></svg-icon>
+                        </el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -378,6 +377,7 @@ export default {
             msgData: {
                 status: this.msg.status,
                 type: this.msg.type,
+                buttonVisible8: this.msg.buttonVisible8 === true,
                 buttonVisible1: this.msg.buttonVisible1 === true,
                 buttonVisible2: this.msg.buttonVisible2 === true,
                 buttonVisible3: this.msg.buttonVisible3 === true,
@@ -385,7 +385,6 @@ export default {
                 buttonVisible5: this.msg.buttonVisible5 === true,
                 buttonVisible6: this.msg.buttonVisible6 === true,
                 buttonVisible7: this.msg.buttonVisible7 === true,
-                buttonVisible8: this.msg.buttonVisible8 === true,
                 buttonVisible9: this.msg.buttonVisible9 === true,
                 buttonVisibleA: this.msg.buttonVisibleA === true,
                 buttonVisibleB: this.msg.buttonVisibleB === true,
@@ -557,6 +556,9 @@ export default {
             }).then(res => {
                 this.users = res.data.page.records
             })
+        },
+        accept(index, row) {
+            console.log(index, row)
         },
     },
 }
