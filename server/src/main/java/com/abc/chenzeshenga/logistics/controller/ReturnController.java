@@ -6,7 +6,6 @@ import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
-import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
@@ -22,10 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author chenzesheng
@@ -176,18 +173,26 @@ import java.util.UUID;
 
     @PostMapping("/list")
     public Json list(@RequestBody String body, @RequestParam String type, @RequestParam String status,
-        @RequestParam(required = false, defaultValue = "2000-01-01") String from,
-        @RequestParam(required = false, defaultValue = "2099-12-31") String to) throws ParseException {
+        @RequestParam(required = false, defaultValue = "0") long from,
+        @RequestParam(required = false, defaultValue = "0") long to) {
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
-        String cname = UserUtils.getUserName();
-        Date fromDate = DateUtil.getDateFromStr(from);
-        Date toDate = DateUtil.getDateFromStr(to);
+        long curr = System.currentTimeMillis();
+        if (from == 0) {
+            from = curr - 7 * 24 * 60 * 60 * 1000;
+        }
+        if (to == 0) {
+            to = curr + 7 * 24 * 60 * 60 * 1000;
+        }
+        Date fromDate = new Date(from);
+        Date toDate = new Date(to);
         Page<Return> returnPage;
         if ("withoutUser".equals(type)) {
             returnPage = returnService.list(page, status, fromDate, toDate);
-        } else {
+        } else if ("withUser".equals(type)) {
             returnPage = returnService.listAll(page, status, fromDate, toDate);
+        } else {
+            return Json.succ().data("page", new Page<Return>());
         }
         List<Return> returnList = returnPage.getRecords();
         returnList.forEach(returning -> {

@@ -364,6 +364,15 @@
             :total="tablePage.total"
         >
         </el-pagination>
+        <el-dialog title="确认" :visible.sync="dialogVisible" width="30%">
+            <span>需要注意的是内容是默认不居中的</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false"
+                    >确 定</el-button
+                >
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -461,6 +470,7 @@ export default {
             dialogForm3: {},
             noteTxt:
                 '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
+            dialogVisible: false,
         }
     },
     props: ['msg'],
@@ -559,6 +569,7 @@ export default {
         },
         accept(index, row) {
             console.log(index, row)
+            this.dialogVisible = true
         },
     },
 }
