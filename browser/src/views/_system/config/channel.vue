@@ -221,7 +221,7 @@
                                     >
                                         <el-option
                                             label="入库单"
-                                            value="1"
+                                            value="4"
                                         ></el-option>
                                         <el-option
                                             label="单票单请"
@@ -233,7 +233,7 @@
                                         ></el-option>
                                         <el-option
                                             label="海外仓代发"
-                                            value="4"
+                                            value="1"
                                         ></el-option>
                                     </el-select>
                                 </el-form-item>

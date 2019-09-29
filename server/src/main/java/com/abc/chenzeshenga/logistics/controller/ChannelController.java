@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
+import com.abc.chenzeshenga.logistics.constant.AdapterConstant;
 import com.abc.chenzeshenga.logistics.mapper.ChannelMapper;
 import com.abc.chenzeshenga.logistics.model.Channel;
 import com.abc.chenzeshenga.logistics.model.ChannelLabel;
@@ -101,7 +102,7 @@ import java.util.Map;
             channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
             channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
             channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
-            channel.setAdapterDesc(labelCache.getLabel("adapter_" + channel.getAdapter()));
+            channel.setAdapterDesc(AdapterConstant.getAdapter(channel.getAdapter()));
         }
         return Json.succ().data("page", channelPage);
     }

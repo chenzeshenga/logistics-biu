@@ -496,6 +496,10 @@ export default {
                         subRecords['withoutOrderNoFlagLabel'] = '不对应'
                     }
                     let imgs = subRecords['imgs']
+                    if (imgs == null) {
+                        subRecords['imgsLinks'] = []
+                        continue
+                    }
                     let imgsArr = imgs.split(';')
                     let imgsLinks = []
                     for (let j = 0; j < imgsArr.length; j++) {
