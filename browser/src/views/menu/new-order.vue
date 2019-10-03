@@ -1,5 +1,9 @@
 <template>
     <div class="login-container">
+        <loading :active.sync="isLoading"
+                 :can-cancel="true"
+                 :is-full-page="fullPage"></loading>
+<!--                 :on-cancel="onCancel"-->
         <div class="app-container">
             <el-form ref="form" :model="form" label-width="120px">
                 <el-form-item label="订单所属用户" v-if="adminRole">
@@ -12,7 +16,7 @@
                                         v-model="form.creator"
                                         placeholder="请选择所属用户"
                                         @change="filterProduct"
-                                >
+                                 value="">
                                     <el-option
                                             v-for="creator in users"
                                             :key="creator.uname"
@@ -50,7 +54,7 @@
                                     v-model="form.category"
                                     placeholder="请选择订单类型"
                                     @change="changeByCategory"
-                            >
+                             value="">
                                 <el-option label="海外仓代发订单" value="1"/>
                                 <el-option label="特色小包" value="2"/>
                                 <el-option label="虚拟海外仓" value="3"/>
@@ -408,7 +412,7 @@
                                 v-model="standFor"
                                 placeholder="请选择您所代表的用户"
                                 :on-change="changeUpdateLink"
-                        >
+                         value="">
                             <el-option
                                     v-for="creator in users"
                                     :key="creator.uname"
@@ -440,12 +444,17 @@
 </template>
 
 <script>
-import request from '@/utils/service';
+import request from '../../utils/service';
+import loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: 'Menu1',
+  components: {loading},
   data() {
     return {
+      isLoading: false,
+      fullPage: true,
       actionLink: process.env.BASE_API + '/ord/excel',
       onUpdate: false,
       onCreate: true,
@@ -521,15 +530,6 @@ export default {
     trimInput() {
       this.form.orderNo = this.form.orderNo.trim();
     },
-    onSubmit() {
-      this.$message('submit!');
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning',
-      });
-    },
     getOrdNo() {
       request({
         url: '/generate/pk',
@@ -568,8 +568,7 @@ export default {
           );
           return;
         }
-        for (const index in this.channels) {
-          const channel = this.channels[index];
+        for (const channel of this.channels) {
           this.channelMap[channel['value']] = channel;
         }
       });
@@ -590,6 +589,7 @@ export default {
       }
     },
     getAddress() {
+      this.isLoading=true;
       const addressInLocalStorage = JSON.parse(localStorage.getItem('address'));
       if (addressInLocalStorage != null && addressInLocalStorage.length >= 10) {
         this.address = addressInLocalStorage;
@@ -602,6 +602,9 @@ export default {
           localStorage.setItem('address', JSON.stringify(this.address));
         });
       }
+      setTimeout(()=>{
+        this.isLoading=false;
+      }, 3000);
     },
     getMyProducts() {
       request({
@@ -609,8 +612,8 @@ export default {
         method: 'get',
       }).then((res) => {
         this.myProducts = res.data.data;
-        for (const index in this.myProducts) {
-          const subProduct = this.myProducts[index];
+        for (const myProduct of this.myProducts) {
+          const subProduct = myProduct;
           this.productMap[
               subProduct['value'].split('/')[0]
           ] = subProduct;
@@ -651,8 +654,6 @@ export default {
       );
     },
     add2Cart() {
-      const sku = this.content.sku;
-
       let tmpContent = {};
       tmpContent = JSON.parse(JSON.stringify(this.content));
       tmpContent['index'] = this.form.contentList.length;
@@ -777,8 +778,8 @@ export default {
         },
       }).then((res) => {
         this.myProducts = res.data.data;
-        for (const index in this.myProducts) {
-          const subProduct = this.myProducts[index];
+        for (const myProduct of this.myProducts) {
+          const subProduct = myProduct;
           this.productMap[
               subProduct['value'].split('/')[0]
           ] = subProduct;

@@ -4,6 +4,8 @@ import 'normalize.css/normalize.css'; // A modern alternative to CSS resets
 
 import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 import '@/styles/index.scss'; // global css
 
@@ -26,6 +28,7 @@ Vue.directive('perm', perm);
 Vue.use(Element, {
   size: 'medium', // set element-ui default size
 });
+Vue.use(Loading);
 
 // register global utility filters.
 Object.keys(filters).forEach((key) => {
