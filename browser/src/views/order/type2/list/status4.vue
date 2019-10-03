@@ -130,117 +130,117 @@
 
 
 <script>
-  import request from '@/utils/service';
+import request from '@/utils/service';
 
-  export default {
-    name: 'order-list-mgt-type2-status4',
-    data() {
-      return {
-        tablePage: {
-          current: null,
-          pages: null,
-          size: null,
-          total: null,
+export default {
+  name: 'order-list-mgt-type2-status4',
+  data() {
+    return {
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            },
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            },
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            },
+          }],
+      },
+      search: {
+        ordno: '',
+        creator: '',
+        channelCode: '',
+      },
+      users: [],
+      channels: [],
+    };
+  },
+  created() {
+    // this.$router.push({path: '/order-list/mgt/type1/status2'})
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'ord/list/2/4',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        tableLoading: false,
-        tableData: [],
-        daterange: null,
-        pickerOptions2: {
-          shortcuts: [
-            {
-              text: '最近一周',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-              },
-            }, {
-              text: '最近一个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', [start, end]);
-              },
-            }, {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                picker.$emit('pick', [start, end]);
-              },
-            }],
-        },
-        search: {
-          ordno: '',
-          creator: '',
-          channelCode: '',
-        },
-        users: [],
-        channels: [],
-      };
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-    created() {
-      // this.$router.push({path: '/order-list/mgt/type1/status2'})
+    handleSizeChange(val) {
+      this.tablePage.size = val;
       this.fetchData();
     },
-    methods: {
-      fetchData() {
-        this.tableLoading = true;
-        request({
-          url: 'ord/list/2/4',
-          method: 'post',
-          data: {
-            current: this.tablePage.current,
-            size: this.tablePage.size,
-          },
-        }).then(res => {
-          this.tableData = res.data.page.records;
-          this.tableLoading = false;
-        });
-      },
-      handleSizeChange(val) {
-        this.tablePage.size = val;
-        this.fetchData();
-      },
-      handleCurrentChange(val) {
-        this.tablePage.current = val;
-        this.fetchData();
-      },
-      handleUpdate(index, row) {
-        this.$router.push({path: '/new-order/index?ordno=' + row.orderNo});
-      },
-      handleDelete(index, row) {
-        this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
-          request({
-            url: 'ord/delete/' + row.orderNo,
-            method: 'get',
-          }).then(res => {
-            this.fetchData();
-            this.$message.success('删除成功');
-          });
-        }).catch(() => {
-          this.$message.info('已取消删除');
-        });
-      },
-      statusUpdate(index, row) {
-        this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
-          console.log(row);
-          console.log(index);
-          request({
-            url: 'ord/update/3/' + row.orderNo + '/8',
-            method: 'get',
-          }).then(res => {
-            this.fetchData();
-            this.$message.success('提交发货成功');
-          });
-        }).catch(() => {
-          this.$message.info('已取消提交');
-        });
-      },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
     },
-  };
+    handleUpdate(index, row) {
+      this.$router.push({path: '/new-order/index?ordno=' + row.orderNo});
+    },
+    handleDelete(index, row) {
+      this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
+        request({
+          url: 'ord/delete/' + row.orderNo,
+          method: 'get',
+        }).then((res) => {
+          this.fetchData();
+          this.$message.success('删除成功');
+        });
+      }).catch(() => {
+        this.$message.info('已取消删除');
+      });
+    },
+    statusUpdate(index, row) {
+      this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
+        console.log(row);
+        console.log(index);
+        request({
+          url: 'ord/update/3/' + row.orderNo + '/8',
+          method: 'get',
+        }).then((res) => {
+          this.fetchData();
+          this.$message.success('提交发货成功');
+        });
+      }).catch(() => {
+        this.$message.info('已取消提交');
+      });
+    },
+  },
+};
 
 </script>

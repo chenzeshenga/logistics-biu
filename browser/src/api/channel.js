@@ -1,12 +1,12 @@
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
 
   queryChannel() {
     return request({
-      url: "/channel/list",
-      method: 'get'
-    })
-  }
+      url: '/channel/list',
+      method: 'get',
+    });
+  },
 
-}
+};

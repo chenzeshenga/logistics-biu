@@ -89,116 +89,116 @@
 </template>
 
 <script>
-import OrderType2 from '../../../../components/dy/orderTable/Type2/index'
+import OrderType2 from '../../../../components/dy/orderTable/Type2/index';
 
 export default {
-    name: 'order-list-mgt-type2-status2',
-    components: { OrderType2 },
-    data() {
-        return {
-            msg: {
-                category: '2',
-                status: '1',
-                statusTo: '2',
-                statusAbandon: '5',
-                buttonVisible1: true,
-                buttonVisible2: true,
-                buttonVisible3: true,
-                buttonVisible4: true,
-                buttonVisible5: true,
-            },
-        }
+  name: 'order-list-mgt-type2-status2',
+  components: {OrderType2},
+  data() {
+    return {
+      msg: {
+        category: '2',
+        status: '1',
+        statusTo: '2',
+        statusAbandon: '5',
+        buttonVisible1: true,
+        buttonVisible2: true,
+        buttonVisible3: true,
+        buttonVisible4: true,
+        buttonVisible5: true,
+      },
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'ord/list/2/2',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-    created() {
-        this.fetchData()
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
     },
-    methods: {
-        fetchData() {
-            this.tableLoading = true
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-order/index?ordno=' + row.orderNo,
+      });
+    },
+    handleDelete(index, row) {
+      this.$confirm('您确定要永久删除该记录？', '提示', confirm)
+          .then(() => {
             request({
-                url: 'ord/list/2/2',
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tableLoading = false
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-order/index?ordno=' + row.orderNo,
-            })
-        },
-        handleDelete(index, row) {
-            this.$confirm('您确定要永久删除该记录？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: 'ord/delete/' + row.orderNo,
-                        method: 'get',
-                    }).then(res => {
-                        this.fetchData()
-                        this.$message.success('删除成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消删除')
-                })
-        },
-        statusUpdate(index, row) {
-            this.form.orderNo = row.orderNo
-            this.dialogVisible = true
-        },
-        tableRowClassName({ row, rowIndex }) {
-            if (Number(row.picked) === Number(row.num)) {
-                row.satisfied = true
-                return 'success-row'
-            } else {
-                row.satisfied = false
-                return 'danger-row'
-            }
-        },
-        updateVolumeAndWeight() {
-            this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(
-                () => {
-                    request({
-                        url: 'ord/update/' + this.form.orderNo,
-                        method: 'post',
-                        data: {
-                            totalVolume: this.form.totalVolume,
-                            totalWeight: this.form.totalWeight,
-                            ordFee: this.form.ordFee,
-                        },
-                    }).then(res => {
-                        request({
-                            url: 'ord/update/2/' + this.form.orderNo + '/3',
-                            method: 'get',
-                        }).then(res => {
-                            this.fetchData()
-                            this.$message.success('提交成功')
-                        })
-                    })
-                }
-            )
-        },
-        calculateIndex() {
-            this.form.totalVolumeFrontEnd =
-                this.form.length * this.form.height * this.form.width
-            this.form.sum =
-                this.form.length + this.form.height + this.form.width
-            this.form.totalVolumeWithWeight =
-                (this.form.length * this.form.height * this.form.width) / 6000
-        },
+              url: 'ord/delete/' + row.orderNo,
+              method: 'get',
+            }).then((res) => {
+              this.fetchData();
+              this.$message.success('删除成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
+          });
     },
-}
+    statusUpdate(index, row) {
+      this.form.orderNo = row.orderNo;
+      this.dialogVisible = true;
+    },
+    tableRowClassName({row, rowIndex}) {
+      if (Number(row.picked) === Number(row.num)) {
+        row.satisfied = true;
+        return 'success-row';
+      } else {
+        row.satisfied = false;
+        return 'danger-row';
+      }
+    },
+    updateVolumeAndWeight() {
+      this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(
+          () => {
+            request({
+              url: 'ord/update/' + this.form.orderNo,
+              method: 'post',
+              data: {
+                totalVolume: this.form.totalVolume,
+                totalWeight: this.form.totalWeight,
+                ordFee: this.form.ordFee,
+              },
+            }).then((res) => {
+              request({
+                url: 'ord/update/2/' + this.form.orderNo + '/3',
+                method: 'get',
+              }).then((res) => {
+                this.fetchData();
+                this.$message.success('提交成功');
+              });
+            });
+          }
+      );
+    },
+    calculateIndex() {
+      this.form.totalVolumeFrontEnd =
+                this.form.length * this.form.height * this.form.width;
+      this.form.sum =
+                this.form.length + this.form.height + this.form.width;
+      this.form.totalVolumeWithWeight =
+                (this.form.length * this.form.height * this.form.width) / 6000;
+    },
+  },
+};
 </script>

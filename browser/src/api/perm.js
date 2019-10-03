@@ -1,9 +1,9 @@
 /**
  * “权限管理”相关接口
  */
-import request from '@/utils/service'
+import request from '@/utils/service';
 
-export default{
+export default {
   /**
    * 添加权限
    * @param data
@@ -12,8 +12,8 @@ export default{
     return request({
       url: '/sys_perm',
       method: 'post',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -24,8 +24,8 @@ export default{
     return request({
       url: '/sys_perm/sync/menu',
       method: 'post',
-      data: permArr
-    })
+      data: permArr,
+    });
   },
   /**
    * 同步接口权限数据
@@ -35,8 +35,8 @@ export default{
     return request({
       url: '/sys_perm/sync/api',
       method: 'post',
-      data: permArr
-    })
+      data: permArr,
+    });
   },
 
   /**
@@ -47,8 +47,8 @@ export default{
     return request({
       url: '/sys_perm',
       method: 'delete',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -59,8 +59,8 @@ export default{
     return request({
       url: '/sys_perm/info',
       method: 'patch',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -70,8 +70,8 @@ export default{
   listApiPermMetadata() {
     return request({
       url: '/sys_perm/meta/api',
-      method: 'get'
-    })
+      method: 'get',
+    });
   },
 
   /**
@@ -81,8 +81,8 @@ export default{
   listAllPermissions() {
     return request({
       url: '/sys_perm/list/all',
-      method: 'get'
-    })
+      method: 'get',
+    });
   },
 
   /**
@@ -92,11 +92,11 @@ export default{
   listBtnPermGroupByParent() {
     return request({
       url: '/sys_perm/list/btn_perm_map',
-      method: 'get'
-    })
+      method: 'get',
+    });
   },
 
 
-}
+};
 
 

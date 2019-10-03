@@ -8,12 +8,12 @@
 
 
 <script>
-    export default {
-        name: 'order-list-mgt-type2',
-        computed: {
-            cachedViews() {
-                return this.$store.state.tagsView.cachedViews
-            }
-        }
-    }
+export default {
+  name: 'order-list-mgt-type2',
+  computed: {
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews;
+    },
+  },
+};
 </script>

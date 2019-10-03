@@ -447,265 +447,265 @@
 </template>
 
 <script>
-import request from '../../../../../utils/service'
+import request from '../../../../../utils/service';
 
 export default {
-    name: 'warehousing-mgt-other-list-status8',
-    data() {
-        return {
-            // page data
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
+  name: 'warehousing-mgt-other-list-status8',
+  data() {
+    return {
+      // page data
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      dialogVisible1: false,
+      dialogVisible2: false,
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 7
+              );
+              picker.$emit('pick', [start, end]);
             },
-            tableLoading: false,
-            tableData: [],
-            daterange: null,
-            dialogVisible1: false,
-            dialogVisible2: false,
-            pickerOptions2: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 7
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 30
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 90
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                ],
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 30
+              );
+              picker.$emit('pick', [start, end]);
             },
-            users: [],
-            channels: [],
-            search: {
-                warehousingNo: '',
-                creator: '',
-                channelCode: '',
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 90
+              );
+              picker.$emit('pick', [start, end]);
             },
-            dialog: {
-                carrier: '',
-                trackNo: '',
-                warehousingNo: '',
-            },
-            print: {},
-            profile: {
-                chineseName: '',
-                englishName: '',
-                chineseAddr: '',
-                englishAddr: '',
-                zipCode: '',
-                contactEnglishName: '',
-                contactChineseName: '',
-                phone: '',
-                deliverDate: '',
-                trackNo: '',
-                warehousingNo: '',
-            },
-        }
+          },
+        ],
+      },
+      users: [],
+      channels: [],
+      search: {
+        warehousingNo: '',
+        creator: '',
+        channelCode: '',
+      },
+      dialog: {
+        carrier: '',
+        trackNo: '',
+        warehousingNo: '',
+      },
+      print: {},
+      profile: {
+        chineseName: '',
+        englishName: '',
+        chineseAddr: '',
+        englishAddr: '',
+        zipCode: '',
+        contactEnglishName: '',
+        contactChineseName: '',
+        phone: '',
+        deliverDate: '',
+        trackNo: '',
+        warehousingNo: '',
+      },
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'warehousing/list/2/8',
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    created() {
-        this.fetchData()
-    },
-    methods: {
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url: 'warehousing/list/2/8',
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path:
+    handleUpdate(index, row) {
+      this.$router.push({
+        path:
                     '/new-warehousing/new-warehousing?warehousingNo=' +
                     row.warehousingNo,
-            })
-        },
-        statusUpdate(index, row) {
-            this.$confirm('您确定要提交该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: 'warehousing/status',
-                        method: 'post',
-                        data: {
-                            to: '2',
-                            warehousingNo: row.warehousingNo,
-                        },
-                    }).then(() => {
-                        this.fetchData()
-                        this.$message.success('提交成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        route2NewWarehousing() {
-            this.$router.push({
-                path: '/new-warehousing/new-warehousing',
-            })
-        },
-        hold(index, row) {
-            const warehousingNo = row.warehousingNo
-            this.$confirm(
-                '您确定要暂存该入库单？（该订单可在暂存页面查看）',
-                '提示',
-                confirm
-            )
-                .then(() => {
-                    request({
-                        url: 'warehousing/status',
-                        method: 'post',
-                        data: {
-                            to: '8',
-                            warehousingNo: warehousingNo,
-                        },
-                    }).then(() => {
-                        this.fetchData()
-                        this.$message.success('暂存成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        handleDelete(index, row) {
-            this.$confirm(
-                '您确定要删除该入库单？(该订单将无法恢复)',
-                '提示',
-                confirm
-            )
-                .then(() => {
-                    request({
-                        url:
+      });
+    },
+    statusUpdate(index, row) {
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: '2',
+                warehousingNo: row.warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    route2NewWarehousing() {
+      this.$router.push({
+        path: '/new-warehousing/new-warehousing',
+      });
+    },
+    hold(index, row) {
+      const warehousingNo = row.warehousingNo;
+      this.$confirm(
+          '您确定要暂存该入库单？（该订单可在暂存页面查看）',
+          '提示',
+          confirm
+      )
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: '8',
+                warehousingNo: warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('暂存成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    handleDelete(index, row) {
+      this.$confirm(
+          '您确定要删除该入库单？(该订单将无法恢复)',
+          '提示',
+          confirm
+      )
+          .then(() => {
+            request({
+              url:
                             'warehousing/drop?warehousingNo=' +
                             row.warehousingNo,
-                        method: 'get',
-                    }).then(res => {
-                        this.fetchData()
-                        this.$message.success('删除成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消')
-                })
-        },
-        handlePrint(index, row) {
-            this.profile.trackNo = row.trackNo
-            this.profile.warehousingNo = row.warehousingNo
-            request({
-                url: '/profile/init',
-                method: 'get',
-            }).then(res => {
-                const profile = res.data.data
-                this.profile.chineseName = profile.chineseName
-                this.profile.englishName = profile.englishName
-                this.profile.chineseAddr = profile.chineseAddr
-                this.profile.englishAddr = profile.englishAddr
-                this.profile.zipCode = profile.zipCode
-                this.profile.contactEnglishName = profile.contactEnglishName
-                this.profile.contactChineseName = profile.contactChineseName
-                this.profile.phone = profile.phone
-            })
-            this.dialogVisible2 = true
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        channelLink(index, row) {
-            this.$router.push({
-                path: '/system/channel?filter=' + row.channel,
-            })
-        },
-        exportExcel() {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            if (this.search.creator.length > 0) {
-                link.href =
+              method: 'get',
+            }).then((res) => {
+              this.fetchData();
+              this.$message.success('删除成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消');
+          });
+    },
+    handlePrint(index, row) {
+      this.profile.trackNo = row.trackNo;
+      this.profile.warehousingNo = row.warehousingNo;
+      request({
+        url: '/profile/init',
+        method: 'get',
+      }).then((res) => {
+        const profile = res.data.data;
+        this.profile.chineseName = profile.chineseName;
+        this.profile.englishName = profile.englishName;
+        this.profile.chineseAddr = profile.chineseAddr;
+        this.profile.englishAddr = profile.englishAddr;
+        this.profile.zipCode = profile.zipCode;
+        this.profile.contactEnglishName = profile.contactEnglishName;
+        this.profile.contactChineseName = profile.contactChineseName;
+        this.profile.phone = profile.phone;
+      });
+      this.dialogVisible2 = true;
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    channelLink(index, row) {
+      this.$router.push({
+        path: '/system/channel?filter=' + row.channel,
+      });
+    },
+    exportExcel() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      if (this.search.creator.length > 0) {
+        link.href =
                     process.env.BASE_API +
                     '/warehousing/excel/8?method=其他头程&creator=' +
-                    this.search.creator
-            } else {
-                link.href =
+                    this.search.creator;
+      } else {
+        link.href =
                     process.env.BASE_API +
-                    '/warehousing/excel/8?method=其他头程'
-            }
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        applyTrackno(index, row) {
-            this.dialog.warehousingNo = row.warehousingNo
-            this.dialog.carrier = row.carrier
-            this.dialog.trackNo = row.trackNo
-            this.dialogVisible1 = true
-        },
-        fillInTrackNo() {
-            request({
-                url: 'warehousing/trackno',
-                method: 'post',
-                data: this.dialog,
-            }).then(() => {
-                this.dialogVisible1 = false
-                this.fetchData()
-            })
-        },
-        printAndSave() {
-            request({
-                url: '/warehousing/printCustomsDeclaration',
-                method: 'post',
-                data: this.profile,
-            }).then(res => {
-                const uuid = res.data.data
-                const link = document.createElement('a')
-                link.style.display = 'none'
-                link.href = process.env.BASE_API + '/file/' + uuid
-                link.target = '_blank'
-                document.body.appendChild(link)
-                link.click()
-                this.dialogVisible2 = false
-            })
-        },
+                    '/warehousing/excel/8?method=其他头程';
+      }
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
-}
+    applyTrackno(index, row) {
+      this.dialog.warehousingNo = row.warehousingNo;
+      this.dialog.carrier = row.carrier;
+      this.dialog.trackNo = row.trackNo;
+      this.dialogVisible1 = true;
+    },
+    fillInTrackNo() {
+      request({
+        url: 'warehousing/trackno',
+        method: 'post',
+        data: this.dialog,
+      }).then(() => {
+        this.dialogVisible1 = false;
+        this.fetchData();
+      });
+    },
+    printAndSave() {
+      request({
+        url: '/warehousing/printCustomsDeclaration',
+        method: 'post',
+        data: this.profile,
+      }).then((res) => {
+        const uuid = res.data.data;
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        this.dialogVisible2 = false;
+      });
+    },
+  },
+};
 </script>

@@ -161,166 +161,166 @@
 
 
 <script>
-  import request from '@/utils/service';
+import request from '@/utils/service';
 
-  export default {
-    name: 'order-list-mgt-type3-status2',
-    data() {
-      return {
-        tablePage: {
-          current: null,
-          pages: null,
-          size: null,
-          total: null,
+export default {
+  name: 'order-list-mgt-type3-status2',
+  data() {
+    return {
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            },
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            },
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            },
+          }],
+      },
+      dialogVisible: false,
+      form: {
+        ordno: '',
+        totalVolume: 0,
+        totalWeight: 0,
+        ordFee: 0,
+      },
+      dialogForm: {
+        orderNo: '',
+        carrierNo: '',
+        trackNo: '',
+      },
+      dialogVisible2: false,
+      search: {
+        ordno: '',
+        creator: '',
+        channelCode: '',
+      },
+      users: [],
+      channels: [],
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'ord/list/3/2',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        tableLoading: false,
-        tableData: [],
-        daterange: null,
-        pickerOptions2: {
-          shortcuts: [
-            {
-              text: '最近一周',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-              },
-            }, {
-              text: '最近一个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', [start, end]);
-              },
-            }, {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                picker.$emit('pick', [start, end]);
-              },
-            }],
-        },
-        dialogVisible: false,
-        form: {
-          ordno: '',
-          totalVolume: 0,
-          totalWeight: 0,
-          ordFee: 0,
-        },
-        dialogForm: {
-          orderNo: '',
-          carrierNo: '',
-          trackNo: '',
-        },
-        dialogVisible2: false,
-        search: {
-          ordno: '',
-          creator: '',
-          channelCode: '',
-        },
-        users: [],
-        channels: [],
-      };
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-    created() {
+    handleSizeChange(val) {
+      this.tablePage.size = val;
       this.fetchData();
     },
-    methods: {
-      fetchData() {
-        this.tableLoading = true;
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-order/index?ordno=' + row.orderNo,
+      });
+    },
+    handleDelete(index, row) {
+      this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
         request({
-          url: 'ord/list/3/2',
+          url: 'ord/delete/' + row.orderNo,
+          method: 'get',
+        }).then((res) => {
+          this.fetchData();
+          this.$message.success('删除成功');
+        });
+      }).catch(() => {
+        this.$message.info('已取消删除');
+      });
+    },
+    statusUpdate(index, row) {
+      this.form.orderNo = row.orderNo;
+      this.dialogVisible = true;
+    },
+    tableRowClassName({row, rowIndex}) {
+      if (Number(row.picked) === Number(row.num)) {
+        row.satisfied = true;
+        return 'success-row';
+      } else {
+        row.satisfied = false;
+        return 'danger-row';
+      }
+    },
+    updateVolumeAndWeight() {
+      this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
+        request({
+          url: 'ord/update/' + this.form.orderNo,
           method: 'post',
           data: {
-            current: this.tablePage.current,
-            size: this.tablePage.size,
+            'totalVolume': this.form.totalVolume,
+            'totalWeight': this.form.totalWeight,
+            'ordFee': this.form.ordFee,
           },
-        }).then(res => {
-          this.tableData = res.data.page.records;
-          this.tableLoading = false;
-        });
-      },
-      handleSizeChange(val) {
-        this.tablePage.size = val;
-        this.fetchData();
-      },
-      handleCurrentChange(val) {
-        this.tablePage.current = val;
-        this.fetchData();
-      },
-      handleUpdate(index, row) {
-        this.$router.push({
-          path: '/new-order/index?ordno=' + row.orderNo,
-        });
-      },
-      handleDelete(index, row) {
-        this.$confirm('您确定要永久删除该记录？', '提示', confirm).then(() => {
+        }).then((res) => {
           request({
-            url: 'ord/delete/' + row.orderNo,
+            url: 'ord/update/3/' + this.form.orderNo + '/3',
             method: 'get',
-          }).then(res => {
+          }).then((res) => {
             this.fetchData();
-            this.$message.success('删除成功');
-          });
-        }).catch(() => {
-          this.$message.info('已取消删除');
-        });
-      },
-      statusUpdate(index, row) {
-        this.form.orderNo = row.orderNo;
-        this.dialogVisible = true;
-      },
-      tableRowClassName({row, rowIndex}) {
-        if (Number(row.picked) === Number(row.num)) {
-          row.satisfied = true;
-          return 'success-row';
-        } else {
-          row.satisfied = false;
-          return 'danger-row';
-        }
-      },
-      updateVolumeAndWeight() {
-        this.$confirm('您确定要提交发货该订单？', '提示', confirm).then(() => {
-          request({
-            url: 'ord/update/' + this.form.orderNo,
-            method: 'post',
-            data: {
-              'totalVolume': this.form.totalVolume,
-              'totalWeight': this.form.totalWeight,
-              'ordFee': this.form.ordFee,
-            },
-          }).then(res => {
-            request({
-              url: 'ord/update/3/' + this.form.orderNo + '/3',
-              method: 'get',
-            }).then(res => {
-              this.fetchData();
-              this.$message.success('提交成功');
-              this.dialogVisible = false;
-            });
+            this.$message.success('提交成功');
+            this.dialogVisible = false;
           });
         });
-      },
-      handleInput(index, row) {
-        this.dialogVisible2 = true;
-        this.dialogForm.orderNo = row.orderNo;
-      },
-      transformNo() {
-        request({
-          url: 'ord/update',
-          method: 'post',
-          data: this.dialogForm
-        }).then(() => {
-          this.$message.success('追踪单号更新成功');
-          this.dialogVisible2 = false;
-        })
-      },
+      });
     },
-  };
+    handleInput(index, row) {
+      this.dialogVisible2 = true;
+      this.dialogForm.orderNo = row.orderNo;
+    },
+    transformNo() {
+      request({
+        url: 'ord/update',
+        method: 'post',
+        data: this.dialogForm,
+      }).then(() => {
+        this.$message.success('追踪单号更新成功');
+        this.dialogVisible2 = false;
+      });
+    },
+  },
+};
 
 </script>
 

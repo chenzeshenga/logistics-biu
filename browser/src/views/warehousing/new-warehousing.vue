@@ -323,280 +323,280 @@
 </template>
 
 <script>
-import request from '../../utils/service'
+import request from '../../utils/service';
 
 export default {
-    name: 'new-warehousing',
-    data() {
-        return {
-            adminRole: false,
-            onUpdate: false,
-            onCreate: true,
-            dialogImageUrl: '',
-            dialogVisible: false,
-            form: {
-                target: '岡山县岡山市中区新京橋3丁目4-26',
-                warehousingNo: '',
-                method: '东岳头程',
-                creator: '',
-                carrier: '',
-                trackNo: '',
-                deliverMethod: '',
-                clearanceType: '',
-                taxType: '',
-                insurance: false,
-                insuranceNum: 0,
-                channel: '',
-                estimatedDate: new Date(),
-                warehousingContentList: [],
+  name: 'new-warehousing',
+  data() {
+    return {
+      adminRole: false,
+      onUpdate: false,
+      onCreate: true,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      form: {
+        target: '岡山县岡山市中区新京橋3丁目4-26',
+        warehousingNo: '',
+        method: '东岳头程',
+        creator: '',
+        carrier: '',
+        trackNo: '',
+        deliverMethod: '',
+        clearanceType: '',
+        taxType: '',
+        insurance: false,
+        insuranceNum: 0,
+        channel: '',
+        estimatedDate: new Date(),
+        warehousingContentList: [],
+      },
+      currContent: {
+        warehousingNo: '',
+        sku: '',
+        name: '',
+        boxSeq: '',
+        totalNum: '',
+        wrapType: '',
+      },
+      contentMap: {},
+      checkRules: {},
+      channels: [],
+      products: [],
+      productMap: {},
+      selectedProductMap: {},
+      tableLoading: false,
+      arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      wrapTypeArr: ['自带包装', '非自带包装'],
+      users: [],
+      pickerOptions1: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+        shortcuts: [
+          {
+            text: '明天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24);
+              picker.$emit('pick', date);
             },
-            currContent: {
-                warehousingNo: '',
-                sku: '',
-                name: '',
-                boxSeq: '',
-                totalNum: '',
-                wrapType: '',
+          },
+          {
+            text: '一周后',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
             },
-            contentMap: {},
-            checkRules: {},
-            channels: [],
-            products: [],
-            productMap: {},
-            selectedProductMap: {},
-            tableLoading: false,
-            arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            wrapTypeArr: ['自带包装', '非自带包装'],
-            users: [],
-            pickerOptions1: {
-                disabledDate(time) {
-                    return time.getTime() < Date.now()
-                },
-                shortcuts: [
-                    {
-                        text: '明天',
-                        onClick(picker) {
-                            const date = new Date()
-                            date.setTime(date.getTime() + 3600 * 1000 * 24)
-                            picker.$emit('pick', date)
-                        },
-                    },
-                    {
-                        text: '一周后',
-                        onClick(picker) {
-                            const date = new Date()
-                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
-                            picker.$emit('pick', date)
-                        },
-                    },
-                    {
-                        text: '两周后',
-                        onClick(picker) {
-                            const date = new Date()
-                            date.setTime(
-                                date.getTime() + 3600 * 1000 * 24 * 7 * 2
-                            )
-                            picker.$emit('pick', date)
-                        },
-                    },
-                ],
+          },
+          {
+            text: '两周后',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(
+                  date.getTime() + 3600 * 1000 * 24 * 7 * 2
+              );
+              picker.$emit('pick', date);
             },
+          },
+        ],
+      },
+    };
+  },
+  created() {
+    this.initPage();
+    this.initUserList();
+    this.hasAdminRole();
+  },
+  inject: ['reload'],
+  watch: {
+    $route() {
+      this.initPage();
+    },
+  },
+  methods: {
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
+    },
+    hasAdminRole() {
+      request({
+        url: '/sys_user//info',
+        method: 'get',
+      }).then((res) => {
+        const roles = res.data.userInfo.roles;
+        for (let i = 0; i < roles.length; i++) {
+          const role = roles[i];
+          const val = role['val'];
+          if (val === 'root' || val === 'operator') {
+            this.adminRole = true;
+          }
         }
+      });
     },
-    created() {
-        this.initPage()
-        this.initUserList()
-        this.hasAdminRole()
+    filterProduct(val) {
+      request({
+        url: '/product/listByUser',
+        method: 'post',
+        data: {
+          user: val,
+        },
+      }).then((res) => {
+        this.products = res.data.data;
+        this.products.forEach((product) => {
+          this.productMap[product['value']] = product;
+        });
+      });
     },
-    inject: ['reload'],
-    watch: {
-        $route() {
-            this.initPage()
-        },
+    initPage() {
+      request({
+        url: '/channel/list/1',
+        method: 'get',
+      }).then((res) => {
+        this.channels = res.data.data;
+      });
+      const warehousingNo = this.$route.query.warehousingNo;
+      if (warehousingNo !== undefined && warehousingNo.length > 0) {
+        this.onUpdate = true;
+        this.onCreate = false;
+        request({
+          url: '/warehousing/info?warehousingNo=' + warehousingNo,
+          method: 'get',
+        }).then((res) => {
+          const warehousing = res.data.data;
+          this.form.warehousingNo = warehousing.warehousingNo;
+          this.form.method = warehousing.method;
+          this.form.carrier = warehousing.carrier;
+          this.form.trackNo = warehousing.trackNo;
+          this.form.deliverMethod = warehousing.deliverMethod;
+          this.form.clearanceType = warehousing.clearanceType;
+          this.form.taxType = warehousing.taxType;
+          if (this.form.insurance === 'Y') {
+            this.form.insurance = true;
+            this.form.insuranceNum = warehousing.insuranceNum;
+          }
+          this.form.channel = warehousing.channel;
+          this.form.estimatedDate = warehousing.estimatedDate;
+          this.form.warehousingContentList =
+                        warehousing.warehousingContentList;
+        });
+      }
     },
-    methods: {
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        hasAdminRole() {
-            request({
-                url: '/sys_user//info',
-                method: 'get',
-            }).then(res => {
-                const roles = res.data.userInfo.roles
-                for (let i = 0; i < roles.length; i++) {
-                    const role = roles[i]
-                    const val = role['val']
-                    if (val === 'root' || val === 'operator') {
-                        this.adminRole = true
-                    }
-                }
-            })
-        },
-        filterProduct(val) {
-            request({
-                url: '/product/listByUser',
-                method: 'post',
-                data: {
-                    user: val,
-                },
-            }).then(res => {
-                this.products = res.data.data
-                this.products.forEach(product => {
-                    this.productMap[product['value']] = product
-                })
-            })
-        },
-        initPage() {
-            request({
-                url: '/channel/list/1',
-                method: 'get',
-            }).then(res => {
-                this.channels = res.data.data
-            })
-            const warehousingNo = this.$route.query.warehousingNo
-            if (warehousingNo !== undefined && warehousingNo.length > 0) {
-                this.onUpdate = true
-                this.onCreate = false
-                request({
-                    url: '/warehousing/info?warehousingNo=' + warehousingNo,
-                    method: 'get',
-                }).then(res => {
-                    const warehousing = res.data.data
-                    this.form.warehousingNo = warehousing.warehousingNo
-                    this.form.method = warehousing.method
-                    this.form.carrier = warehousing.carrier
-                    this.form.trackNo = warehousing.trackNo
-                    this.form.deliverMethod = warehousing.deliverMethod
-                    this.form.clearanceType = warehousing.clearanceType
-                    this.form.taxType = warehousing.taxType
-                    if (this.form.insurance === 'Y') {
-                        this.form.insurance = true
-                        this.form.insuranceNum = warehousing.insuranceNum
-                    }
-                    this.form.channel = warehousing.channel
-                    this.form.estimatedDate = warehousing.estimatedDate
-                    this.form.warehousingContentList =
-                        warehousing.warehousingContentList
-                })
-            }
-        },
-        initChannel() {
-            request({
-                url: '/channel/list/1',
-                method: 'get',
-            }).then(res => {
-                this.channels = res.data.data
-            })
-        },
-        getOrdNo() {
-            request({
-                url: '/generate/pk/warehousing',
-                method: 'get',
-            }).then(res => {
-                this.form.warehousingNo = res.data.data
-                this.currContent.warehousingNo = res.data.data
-            })
-        },
-        add2Cart() {
-            const sku = this.currContent.sku
-            const boxSeq = this.currContent.boxSeq
-            const boxContentMap = this.selectedProductMap[boxSeq]
-            if (boxContentMap === undefined || boxContentMap.length <= 0) {
-                this.selectedProductMap[boxSeq] = {}
-                this.selectedProductMap[boxSeq][sku] = this.currContent
-                this.pushData2Table()
-            } else {
-                if (boxContentMap.hasOwnProperty(sku)) {
-                    this.$confirm(
-                        '相同箱号中的相同sku产品将合并',
-                        '提示',
-                        confirm
-                    )
-                        .then(() => {
-                            const oriContent = boxContentMap[sku]
-                            oriContent.totalNum += this.currContent.totalNum
-                            this.pushData2Table()
-                        })
-                        .catch(() => {
-                            this.$message.info('请重新选择箱号')
-                        })
-                } else {
-                    this.selectedProductMap[boxSeq][sku] = this.currContent
-                    this.pushData2Table()
-                }
-            }
-        },
-        pushData2Table() {
-            this.form.warehousingContentList = []
-            for (const boxSeq in this.selectedProductMap) {
-                const boxContainer = this.selectedProductMap[boxSeq]
-                for (const key in boxContainer) {
-                    const product = boxContainer[key]
-                    this.form.warehousingContentList.push(product)
-                }
-            }
-            this.currContent = {
-                warehousingNo: '',
-                sku: '',
-                name: '',
-                boxSeq: '',
-                totalNum: '',
-                wrapType: '',
-            }
-        },
-        handleValueChange(value) {
-            this.currContent.name = this.productMap[value]['name']
-        },
-        handleDelete(index, row) {
-            this.form.warehousingContentList.splice(index, 1)
-            delete this.selectedProductMap[row.boxSeq][row.sku]
-        },
-        submitForm() {
-            if (this.adminRole && this.form.creator.length <= 0) {
-                this.$message.warning('请选择入库单所属人')
-                return
-            }
-            if (this.form.insurance) {
-                this.form.insurance = 'Y'
-            } else {
-                this.form.insurance = 'N'
-            }
-            request({
-                url: '/warehousing/add',
-                method: 'post',
-                data: this.form,
-            }).then(res => {
-                this.$message.success('成功新建订单')
-                this.reload()
-            })
-        },
-        updateForm() {
-            if (this.form.insurance) {
-                this.form.insurance = 'Y'
-            } else {
-                this.form.insurance = 'N'
-            }
-            request({
-                url: '/warehousing/update',
-                method: 'post',
-                data: this.form,
-            }).then(() => {
-                this.$message.success('更新订单')
-                this.$router.push({ path: '/new-warehousing/new-warehousing' })
-                this.initPage()
-                this.reload()
-            })
-        },
+    initChannel() {
+      request({
+        url: '/channel/list/1',
+        method: 'get',
+      }).then((res) => {
+        this.channels = res.data.data;
+      });
     },
-}
+    getOrdNo() {
+      request({
+        url: '/generate/pk/warehousing',
+        method: 'get',
+      }).then((res) => {
+        this.form.warehousingNo = res.data.data;
+        this.currContent.warehousingNo = res.data.data;
+      });
+    },
+    add2Cart() {
+      const sku = this.currContent.sku;
+      const boxSeq = this.currContent.boxSeq;
+      const boxContentMap = this.selectedProductMap[boxSeq];
+      if (boxContentMap === undefined || boxContentMap.length <= 0) {
+        this.selectedProductMap[boxSeq] = {};
+        this.selectedProductMap[boxSeq][sku] = this.currContent;
+        this.pushData2Table();
+      } else {
+        if (boxContentMap.hasOwnProperty(sku)) {
+          this.$confirm(
+              '相同箱号中的相同sku产品将合并',
+              '提示',
+              confirm
+          )
+              .then(() => {
+                const oriContent = boxContentMap[sku];
+                oriContent.totalNum += this.currContent.totalNum;
+                this.pushData2Table();
+              })
+              .catch(() => {
+                this.$message.info('请重新选择箱号');
+              });
+        } else {
+          this.selectedProductMap[boxSeq][sku] = this.currContent;
+          this.pushData2Table();
+        }
+      }
+    },
+    pushData2Table() {
+      this.form.warehousingContentList = [];
+      for (const boxSeq in this.selectedProductMap) {
+        const boxContainer = this.selectedProductMap[boxSeq];
+        for (const key in boxContainer) {
+          const product = boxContainer[key];
+          this.form.warehousingContentList.push(product);
+        }
+      }
+      this.currContent = {
+        warehousingNo: '',
+        sku: '',
+        name: '',
+        boxSeq: '',
+        totalNum: '',
+        wrapType: '',
+      };
+    },
+    handleValueChange(value) {
+      this.currContent.name = this.productMap[value]['name'];
+    },
+    handleDelete(index, row) {
+      this.form.warehousingContentList.splice(index, 1);
+      delete this.selectedProductMap[row.boxSeq][row.sku];
+    },
+    submitForm() {
+      if (this.adminRole && this.form.creator.length <= 0) {
+        this.$message.warning('请选择入库单所属人');
+        return;
+      }
+      if (this.form.insurance) {
+        this.form.insurance = 'Y';
+      } else {
+        this.form.insurance = 'N';
+      }
+      request({
+        url: '/warehousing/add',
+        method: 'post',
+        data: this.form,
+      }).then((res) => {
+        this.$message.success('成功新建订单');
+        this.reload();
+      });
+    },
+    updateForm() {
+      if (this.form.insurance) {
+        this.form.insurance = 'Y';
+      } else {
+        this.form.insurance = 'N';
+      }
+      request({
+        url: '/warehousing/update',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.$message.success('更新订单');
+        this.$router.push({path: '/new-warehousing/new-warehousing'});
+        this.initPage();
+        this.reload();
+      });
+    },
+  },
+};
 </script>

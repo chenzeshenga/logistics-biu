@@ -11,15 +11,15 @@ NProgress.configure({showSpinner: false});// NProgress Configuration
  * 匹配权限
  * @param userPerms 用户拥有的权限集合，后台返回来，存在vuex，数据类型是数组
  * @param routerPerm 定义的src/router/index.js的路由表asyncRouterMap中
- * @returns {*}
+ * @return {*}
  */
 function hasPermission(userPerms, routerPerm) {
-  //特殊值，*代表所有资源权限
-  if (userPerms.some(p => p.val == '*')) return true;
-  //如果菜单路由上没有声明perm属性，默认显示该菜单，代表所有人可以访问
+  // 特殊值，*代表所有资源权限
+  if (userPerms.some((p) => p.val == '*')) return true;
+  // 如果菜单路由上没有声明perm属性，默认显示该菜单，代表所有人可以访问
   if (!routerPerm) return true;
-  //判断用户的资源权限集合中是否包含该菜单路由声明的资源权限
-  return userPerms.some(p => p.val == routerPerm);
+  // 判断用户的资源权限集合中是否包含该菜单路由声明的资源权限
+  return userPerms.some((p) => p.val == routerPerm);
 }
 
 const loginRoute = '/login';
@@ -28,10 +28,9 @@ const whiteList = new Set([loginRoute, orderInfoRoute, '/authredirect']);// no
 // redirect whitelist
 
 router.beforeEach((to, from, next) => {
-
   NProgress.start();
-  let token = getToken();
-  let hasToken = token != 'undefined' && token != undefined && token != null &&
+  const token = getToken();
+  const hasToken = token != 'undefined' && token != undefined && token != null &&
     token != '';
 
   if (hasToken) {
@@ -49,7 +48,7 @@ router.beforeEach((to, from, next) => {
       } else if (!store.getters.perms || store.getters.perms.length === 0) {
         // 1.2.2 检查发现不是游客且未加载用户权限信息，应该调用接口加载用户权限信息
         // 用户刷新页面会导致vuex状态清空，或者用户首次登录，vuex中还没有权限信息。都要调用后台接口获得用户信息
-        store.dispatch('GetUserInfo').then(res => {
+        store.dispatch('GetUserInfo').then((res) => {
           const perms = res.data.perms; // note: roles must be a array! such as: [{name:'菜单1',val:'menu:1'}]
           store.dispatch('GenerateRoutes', {perms}).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表

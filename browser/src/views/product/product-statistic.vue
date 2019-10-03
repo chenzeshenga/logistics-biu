@@ -132,123 +132,123 @@
 </template>
 
 <script>
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
-    name: 'product-statistic',
-    data() {
-        return {
-            search: {
-                sku: '',
-                name: '',
-                owner: '',
-            },
-            options: {
-                owners: [],
-            },
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            tableLoading: false,
-            tableData: [],
-        }
+  name: 'product-statistic',
+  data() {
+    return {
+      search: {
+        sku: '',
+        name: '',
+        owner: '',
+      },
+      options: {
+        owners: [],
+      },
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+    };
+  },
+  created() {
+    this.fetchData();
+    this.initUserList();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: '/statistics/list',
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    created() {
-        this.fetchData()
-        this.initUserList()
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.options.owners = res.data.page.records;
+      });
     },
-    methods: {
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url: '/statistics/list',
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.options.owners = res.data.page.records
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        statusUpdate(index, row) {
-            this.$confirm('您确定审核通过该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/statistics/list',
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success('审核成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消审核')
-                })
-        },
-        handleDelete(index, row) {
-            this.$confirm('您确定删除该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/delete/' + row.sku,
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success(row.sku + '删除成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消删除')
-                })
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-product/new-product?sku=' + row.sku,
-            })
-        },
-        searchProductStatistics() {
-            let postData = this.tablePage
-            postData['sku'] = this.search.sku
-            postData['name'] = this.search.name
-            postData['owner'] = this.search.owner
-            request({
-                url: '/statistics/listBySearch',
-                method: 'post',
-                data: postData,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
     },
-}
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    statusUpdate(index, row) {
+      this.$confirm('您确定审核通过该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/statistics/list',
+              method: 'get',
+            }).then(() => {
+              this.$message.success('审核成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消审核');
+          });
+    },
+    handleDelete(index, row) {
+      this.$confirm('您确定删除该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/delete/' + row.sku,
+              method: 'get',
+            }).then(() => {
+              this.$message.success(row.sku + '删除成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
+          });
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-product/new-product?sku=' + row.sku,
+      });
+    },
+    searchProductStatistics() {
+      const postData = this.tablePage;
+      postData['sku'] = this.search.sku;
+      postData['name'] = this.search.name;
+      postData['owner'] = this.search.owner;
+      request({
+        url: '/statistics/listBySearch',
+        method: 'post',
+        data: postData,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
+    },
+  },
+};
 </script>

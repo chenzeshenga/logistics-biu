@@ -1,36 +1,36 @@
 /**
  * 登录相关接口
  */
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
 
   loginByUsername(username, password) {
     const data = {
       uname: username,
-      pwd: password
-    }
+      pwd: password,
+    };
     return request({
       url: '/auth/login',
       method: 'post',
-      data
-    })
+      data,
+    });
   },
 
   logout() {
     return request({
       url: '/auth/logout',
-      method: 'post'
-    })
+      method: 'post',
+    });
   },
 
   getUserInfo(token) {
     return request({
       url: '/auth/info',
       method: 'get',
-      params: { token }
-    })
+      params: {token},
+    });
   },
 
-}
+};
 

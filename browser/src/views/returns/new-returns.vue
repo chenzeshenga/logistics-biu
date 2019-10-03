@@ -300,195 +300,195 @@
 </template>
 
 <script>
-import request from '../../utils/service'
+import request from '../../utils/service';
 
 export default {
-    name: 'new-returns',
-    data() {
-        return {
-            actionLink1: process.env.BASE_API + '/return/img/put',
-            fileList: [],
-            onCreate: true,
-            dialogImageUrl: '',
-            dialogVisible: false,
-            onUpdate: false,
-            adminRole: false,
-            showFlag: false,
-            users: [],
-            orders: {},
-            ordersOption: [],
-            address: [],
-            form: {
-                returnNo: '',
-                creator: '',
-                withoutOrderNoFlag: false,
-                toName: '',
-                toContact: '',
-                toZipCode: '',
-                toDetailAddress: '',
-                fromName: '',
-                fromContact: '',
-                chinaCarrier: '',
-                fromZipCode: '',
-                fromDetailAddress: '',
-                address: {},
-                toAddress: {},
-                selectedAddress: [],
-                selectedtoAddress: [],
-                carrier: '',
-                trackNo: '',
-                contentList: [],
-                fromKenId: '',
-                fromCityId: '',
-                fromTownId: '',
-                toKenId: '',
-                toCityId: '',
-                toTownId: '',
-            },
-            content: {
-                returnNo: '',
-                sku: '',
-                num: '',
-                name: '',
-                selectedProductMaxNum: 20,
-            },
-            contentMap: {},
+  name: 'new-returns',
+  data() {
+    return {
+      actionLink1: process.env.BASE_API + '/return/img/put',
+      fileList: [],
+      onCreate: true,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      onUpdate: false,
+      adminRole: false,
+      showFlag: false,
+      users: [],
+      orders: {},
+      ordersOption: [],
+      address: [],
+      form: {
+        returnNo: '',
+        creator: '',
+        withoutOrderNoFlag: false,
+        toName: '',
+        toContact: '',
+        toZipCode: '',
+        toDetailAddress: '',
+        fromName: '',
+        fromContact: '',
+        chinaCarrier: '',
+        fromZipCode: '',
+        fromDetailAddress: '',
+        address: {},
+        toAddress: {},
+        selectedAddress: [],
+        selectedtoAddress: [],
+        carrier: '',
+        trackNo: '',
+        contentList: [],
+        fromKenId: '',
+        fromCityId: '',
+        fromTownId: '',
+        toKenId: '',
+        toCityId: '',
+        toTownId: '',
+      },
+      content: {
+        returnNo: '',
+        sku: '',
+        num: '',
+        name: '',
+        selectedProductMaxNum: 20,
+      },
+      contentMap: {},
+    };
+  },
+  created() {
+    this.hasAdminRole();
+    this.initUserList();
+    this.getAddress();
+  },
+  inject: ['reload'],
+  // watch: {
+  //     $route() {
+  //         this.initPage()
+  //     },
+  // },
+  methods: {
+    getOrdNo() {
+      request({
+        url: '/generate/pk/returning',
+        method: 'get',
+      }).then((res) => {
+        this.form.returnNo = res.data.data;
+      });
+    },
+    trimInput() {
+      this.form.orderNo = this.form.orderNo.trim();
+    },
+    getAddress() {
+      request({
+        url: '/address/getKen',
+        method: 'get',
+      }).then((res) => {
+        this.address = res.data.data;
+      });
+    },
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
+    },
+    hasAdminRole() {
+      request({
+        url: '/sys_user/info',
+        method: 'get',
+      }).then((res) => {
+        const roles = res.data.userInfo.roles;
+        for (let i = 0; i < roles.length; i++) {
+          const role = roles[i];
+          const val = role['val'];
+          if (val === 'root' || val === 'operator') {
+            this.adminRole = true;
+          }
         }
+      });
     },
-    created() {
-        this.hasAdminRole()
-        this.initUserList()
-        this.getAddress()
+    handleAddressChange(value) {
+      this.form.address.ken = value[0];
+      this.form.address.city = value[1];
+      this.form.address.town = value[2];
     },
-    inject: ['reload'],
-    // watch: {
-    //     $route() {
-    //         this.initPage()
-    //     },
-    // },
-    methods: {
-        getOrdNo() {
-            request({
-                url: '/generate/pk/returning',
-                method: 'get',
-            }).then(res => {
-                this.form.returnNo = res.data.data
-            })
-        },
-        trimInput() {
-            this.form.orderNo = this.form.orderNo.trim()
-        },
-        getAddress() {
-            request({
-                url: '/address/getKen',
-                method: 'get',
-            }).then(res => {
-                this.address = res.data.data
-            })
-        },
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        hasAdminRole() {
-            request({
-                url: '/sys_user/info',
-                method: 'get',
-            }).then(res => {
-                const roles = res.data.userInfo.roles
-                for (let i = 0; i < roles.length; i++) {
-                    const role = roles[i]
-                    const val = role['val']
-                    if (val === 'root' || val === 'operator') {
-                        this.adminRole = true
-                    }
-                }
-            })
-        },
-        handleAddressChange(value) {
-            this.form.address.ken = value[0]
-            this.form.address.city = value[1]
-            this.form.address.town = value[2]
-        },
-        handleAddressChange2(value) {
-            this.form.toAddress.ken = value[0]
-            this.form.toAddress.city = value[1]
-            this.form.toAddress.town = value[2]
-        },
-        initOrderContent(val) {
-            console.log(val)
-        },
-        add2Cart() {
-            const sku = this.content.sku
-            let content4CurrSku
-            if (this.contentMap.hasOwnProperty(sku)) {
-                content4CurrSku = this.contentMap[sku]
-                content4CurrSku.num += this.content.num
-                content4CurrSku.returnNo = this.content.returnNo
-                content4CurrSku.name = this.content.name
-            } else {
-                content4CurrSku = this.content
-            }
-            this.contentMap[sku] = content4CurrSku
-            this.form.contentList = []
-            for (let key in this.contentMap) {
-                if (this.contentMap.hasOwnProperty(key)) {
-                    this.form.contentList.push(this.contentMap[key])
-                }
-            }
-            this.content = {
-                returnNo: '',
-                sku: '',
-                num: '',
-                name: '',
-                selectedProductMaxNum: 20,
-            }
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = true
-        },
-        handleRemove(file) {
-            request({
-                url: '/return/img/drop?returnNo=' + this.form.returnNo,
-                method: 'get',
-            }).then(() => {
-                this.$message.success('成功删除关联图片')
-            })
-        },
-        handleError(err) {
-            this.$message.error(JSON.parse(err.message)['message'])
-        },
-        submitUpload() {
-            this.$refs.upload.submit()
-        },
-        submitForm() {
-            const toAddr = this.form.address
-            const fromAddr = this.form.toAddress
-            this.form.fromKenId = fromAddr.ken
-            this.form.fromCityId = fromAddr.city
-            this.form.fromTownId = fromAddr.town
-            this.form.toKenId = toAddr.ken
-            this.form.toCityId = toAddr.city
-            this.form.toTownId = toAddr.town
+    handleAddressChange2(value) {
+      this.form.toAddress.ken = value[0];
+      this.form.toAddress.city = value[1];
+      this.form.toAddress.town = value[2];
+    },
+    initOrderContent(val) {
+      console.log(val);
+    },
+    add2Cart() {
+      const sku = this.content.sku;
+      let content4CurrSku;
+      if (this.contentMap.hasOwnProperty(sku)) {
+        content4CurrSku = this.contentMap[sku];
+        content4CurrSku.num += this.content.num;
+        content4CurrSku.returnNo = this.content.returnNo;
+        content4CurrSku.name = this.content.name;
+      } else {
+        content4CurrSku = this.content;
+      }
+      this.contentMap[sku] = content4CurrSku;
+      this.form.contentList = [];
+      for (const key in this.contentMap) {
+        if (this.contentMap.hasOwnProperty(key)) {
+          this.form.contentList.push(this.contentMap[key]);
+        }
+      }
+      this.content = {
+        returnNo: '',
+        sku: '',
+        num: '',
+        name: '',
+        selectedProductMaxNum: 20,
+      };
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleRemove(file) {
+      request({
+        url: '/return/img/drop?returnNo=' + this.form.returnNo,
+        method: 'get',
+      }).then(() => {
+        this.$message.success('成功删除关联图片');
+      });
+    },
+    handleError(err) {
+      this.$message.error(JSON.parse(err.message)['message']);
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    submitForm() {
+      const toAddr = this.form.address;
+      const fromAddr = this.form.toAddress;
+      this.form.fromKenId = fromAddr.ken;
+      this.form.fromCityId = fromAddr.city;
+      this.form.fromTownId = fromAddr.town;
+      this.form.toKenId = toAddr.ken;
+      this.form.toCityId = toAddr.city;
+      this.form.toTownId = toAddr.town;
 
-            request({
-                url: '/return/add',
-                method: 'post',
-                data: this.form,
-            }).then(() => {
-                this.$message.success('退货创建成功')
-                this.reload()
-            })
-        },
+      request({
+        url: '/return/add',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.$message.success('退货创建成功');
+        this.reload();
+      });
     },
-}
+  },
+};
 </script>

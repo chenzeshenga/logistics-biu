@@ -190,168 +190,168 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import userApi from '@/api/user'
-import request from '@/utils/service'
+import {mapGetters} from 'vuex';
+import Breadcrumb from '@/components/Breadcrumb';
+import Hamburger from '@/components/Hamburger';
+import ErrorLog from '@/components/ErrorLog';
+import userApi from '@/api/user';
+import request from '@/utils/service';
 
 export default {
-    data() {
-        const validatePass = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入密码'))
-            } else {
-                if (this.temp.pwd2 !== '') {
-                    this.$refs.dataForm.validateField('pwd2')
-                }
-                callback()
-            }
+  data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.temp.pwd2 !== '') {
+          this.$refs.dataForm.validateField('pwd2');
         }
+        callback();
+      }
+    };
 
-        const validatePass2 = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请再次输入密码'))
-            } else if (value !== this.temp.pwd) {
-                callback(new Error('两次输入密码不一致!'))
-            } else {
-                callback()
-            }
-        }
-        return {
-            dialogVisible: false,
-            dialogVisible2: false,
-            dialogVisible3: false,
-            version: '20190830',
-            temp: {
-                pwd: null,
-                pwd2: null,
-            },
-            rules: {
-                pwd: [
-                    {
-                        validator: validatePass,
-                        trigger: 'blur',
-                    },
-                ],
-                pwd2: [
-                    {
-                        validator: validatePass2,
-                        trigger: 'change',
-                    },
-                ],
-            },
-            search: null,
-            profile: {
-                chineseName: '',
-                englishName: '',
-                chineseAddr: '',
-                englishAddr: '',
-                zipCode: '',
-                contactEnglishName: '',
-                contactChineseName: '',
-                phone: '',
-            },
-        }
+    const validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.temp.pwd) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+    return {
+      dialogVisible: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
+      version: '20190830',
+      temp: {
+        pwd: null,
+        pwd2: null,
+      },
+      rules: {
+        pwd: [
+          {
+            validator: validatePass,
+            trigger: 'blur',
+          },
+        ],
+        pwd2: [
+          {
+            validator: validatePass2,
+            trigger: 'change',
+          },
+        ],
+      },
+      search: null,
+      profile: {
+        chineseName: '',
+        englishName: '',
+        chineseAddr: '',
+        englishAddr: '',
+        zipCode: '',
+        contactEnglishName: '',
+        contactChineseName: '',
+        phone: '',
+      },
+    };
+  },
+  components: {
+    Breadcrumb,
+    Hamburger,
+    ErrorLog,
+  },
+  computed: {
+    ...mapGetters(['sidebar', 'name', 'avatar', 'roles']),
+  },
+  methods: {
+    toggleSideBar() {
+      this.$store.dispatch('toggleSideBar');
     },
-    components: {
-        Breadcrumb,
-        Hamburger,
-        ErrorLog,
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload(); // In order to re-instantiate the vue-router object to avoid bugs
+      });
     },
-    computed: {
-        ...mapGetters(['sidebar', 'name', 'avatar', 'roles']),
+    handleUpdatePwd() {
+      this.dialogVisible = true;
+      this.$nextTick(() => this.$refs['dataForm'].clearValidate());
     },
-    methods: {
-        toggleSideBar() {
-            this.$store.dispatch('toggleSideBar')
-        },
-        logout() {
-            this.$store.dispatch('LogOut').then(() => {
-                location.reload() // In order to re-instantiate the vue-router object to avoid bugs
-            })
-        },
-        handleUpdatePwd() {
-            this.dialogVisible = true
-            this.$nextTick(() => this.$refs['dataForm'].clearValidate())
-        },
-        updatePwd() {
-            this.$refs['dataForm'].validate(valid => {
-                if (!valid) return
-                // copy obj
-                const tempData = Object.assign({}, this.temp)
-                userApi.updatePwd(tempData).then(() => {
-                    this.dialogVisible = false
-                    this.$message.success('更新密码成功')
-                })
-            })
-        },
-        quickSearch() {
-            this.search = this.search
-                .replace('http://www.jpdyu.com/#/order-info?ord=', '')
-                .replace('http://localhost:9527/#/order-info?ord=', '')
-            if (this.search.length > 3) {
-                request({
-                    url: '/ord/quickSearch/' + this.search,
-                    method: 'get',
-                }).then(res => {
-                    if (res.data.hasOwnProperty('data')) {
-                        this.$confirm('是否查看该订单？', '提示', confirm)
-                            .then(() => {
-                                const ord = res.data.data
-                                const type = ord.category
-                                const orderNo = ord.orderNo
-                                const status = ord.status
-                                this.$router.push({
-                                    path:
+    updatePwd() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (!valid) return;
+        // copy obj
+        const tempData = Object.assign({}, this.temp);
+        userApi.updatePwd(tempData).then(() => {
+          this.dialogVisible = false;
+          this.$message.success('更新密码成功');
+        });
+      });
+    },
+    quickSearch() {
+      this.search = this.search
+          .replace('http://www.jpdyu.com/#/order-info?ord=', '')
+          .replace('http://localhost:9527/#/order-info?ord=', '');
+      if (this.search.length > 3) {
+        request({
+          url: '/ord/quickSearch/' + this.search,
+          method: 'get',
+        }).then((res) => {
+          if (res.data.hasOwnProperty('data')) {
+            this.$confirm('是否查看该订单？', '提示', confirm)
+                .then(() => {
+                  const ord = res.data.data;
+                  const type = ord.category;
+                  const orderNo = ord.orderNo;
+                  const status = ord.status;
+                  this.$router.push({
+                    path:
                                         '/order-list/mgt/type' +
                                         type +
                                         '/status' +
                                         status +
                                         '?ordno=' +
                                         orderNo,
-                                })
-                            })
-                            .catch(() => {
-                                this.$message.info('已取消')
-                                this.search = null
-                            })
-                    }
+                  });
                 })
-            } else {
-                console.log(this.search)
-            }
-        },
-        currentVersion() {
-            this.dialogVisible2 = true
-        },
-        handlePersonalProfile() {
-            this.dialogVisible3 = true
-            request({
-                url: '/profile/init',
-                method: 'get',
-            }).then(res => {
-                const profile = res.data.data
-                if (profile == null) {
-                    console.log(profile)
-                } else {
-                    this.profile = profile
-                }
-            })
-        },
-        updateProfile() {
-            request({
-                url: '/profile/update',
-                method: 'post',
-                data: this.profile,
-            }).then(() => {
-                this.$message.success('更新成功')
-                this.dialogVisible3 = false
-            })
-        },
+                .catch(() => {
+                  this.$message.info('已取消');
+                  this.search = null;
+                });
+          }
+        });
+      } else {
+        console.log(this.search);
+      }
     },
-}
+    currentVersion() {
+      this.dialogVisible2 = true;
+    },
+    handlePersonalProfile() {
+      this.dialogVisible3 = true;
+      request({
+        url: '/profile/init',
+        method: 'get',
+      }).then((res) => {
+        const profile = res.data.data;
+        if (profile == null) {
+          console.log(profile);
+        } else {
+          this.profile = profile;
+        }
+      });
+    },
+    updateProfile() {
+      request({
+        url: '/profile/update',
+        method: 'post',
+        data: this.profile,
+      }).then(() => {
+        this.$message.success('更新成功');
+        this.dialogVisible3 = false;
+      });
+    },
+  },
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

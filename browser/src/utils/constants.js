@@ -21,7 +21,7 @@ export const permType = {
   MENU: 1,
   BUTTON: 2,
   API: 3,
-}
+};
 
 /**
  * 下拉选择框数据：权限类型
@@ -29,14 +29,14 @@ export const permType = {
  */
 export const permTypeOptions = [
   {
-    value: permType.MENU, label: '菜单'
+    value: permType.MENU, label: '菜单',
   },
   {
-    value: permType.BUTTON, label: '按钮'
+    value: permType.BUTTON, label: '按钮',
   },
   {
-    value: permType.API, label: '接口'
-  }
+    value: permType.API, label: '接口',
+  },
 ];
 
 /**
@@ -46,14 +46,14 @@ export const permTypeOptions = [
 export const permTypeMap = new Map([
   [permType.MENU, '菜单'],
   [permType.BUTTON, '按钮'],
-  [permType.API, '测试']
+  [permType.API, '测试'],
 ]);
 
 export const confirm = {
-  confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
+  confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning',
 };
 
 export const root = {
   rval: 'root',
-  pval: '*'
-}
+  pval: '*',
+};

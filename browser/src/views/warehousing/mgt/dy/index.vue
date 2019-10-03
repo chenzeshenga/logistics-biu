@@ -8,12 +8,12 @@
 
 
 <script>
-  export default {
-    name: 'warehousing-list-mgt-dy',
-    computed: {
-      cachedViews() {
-        return this.$store.state.tagsView.cachedViews;
-      },
+export default {
+  name: 'warehousing-list-mgt-dy',
+  computed: {
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews;
     },
-  };
+  },
+};
 </script>

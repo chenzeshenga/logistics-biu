@@ -104,72 +104,72 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import PanThumb from '@/components/PanThumb'
+import {mapGetters} from 'vuex';
+import PanThumb from '@/components/PanThumb';
 
 export default {
-    name: 'dashboard',
-    components: { PanThumb },
-    data() {
-        return {
-            tableData: [
-                {
-                    col1: '账户持有人',
-                    col2: 'チョウ ガ',
-                    col3: 'ZHANG HE',
-                },
-                {
-                    col1: '店番号/口座番号',
-                    col2: '651 /7068647',
-                    col3: '651 /7068647',
-                },
-                {
-                    col1: '支店名称',
-                    col2: '岡山支店',
-                    col3: 'OKAYAMA',
-                },
-                {
-                    col1: 'SWIFT代码',
-                    col2: 'SMBCJPJTXXX',
-                    col3: 'SMBCJPJTXXX',
-                },
-                {
-                    col1: '收款银行全称',
-                    col2: '三井住友銀行株式会社',
-                    col3: 'SUMITOMO MITSUI BANKING CORPORATI',
-                },
-                {
-                    col1: '详细地址',
-                    col2:
+  name: 'dashboard',
+  components: {PanThumb},
+  data() {
+    return {
+      tableData: [
+        {
+          col1: '账户持有人',
+          col2: 'チョウ ガ',
+          col3: 'ZHANG HE',
+        },
+        {
+          col1: '店番号/口座番号',
+          col2: '651 /7068647',
+          col3: '651 /7068647',
+        },
+        {
+          col1: '支店名称',
+          col2: '岡山支店',
+          col3: 'OKAYAMA',
+        },
+        {
+          col1: 'SWIFT代码',
+          col2: 'SMBCJPJTXXX',
+          col3: 'SMBCJPJTXXX',
+        },
+        {
+          col1: '收款银行全称',
+          col2: '三井住友銀行株式会社',
+          col3: 'SUMITOMO MITSUI BANKING CORPORATI',
+        },
+        {
+          col1: '详细地址',
+          col2:
                         '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
-                    col3:
+          col3:
                         '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
-                },
-            ],
-            tableData2: [
-                {
-                    col1: '户名',
-                    col2: '周园园',
-                    col3: '周园园',
-                    col4: '東岳商事（周园园）',
-                },
-                {
-                    col1: '账号',
-                    col2: '6013826109007228222',
-                    col3: '18052128972',
-                    col4: 'zhouyy19930814',
-                },
-                {
-                    col1: '开户支行',
-                    col2: '中国银行徐州分行',
-                },
-            ],
-        }
-    },
-    computed: {
-        ...mapGetters(['name', 'nick', 'avatar', 'roles', 'perms']),
-    },
-}
+        },
+      ],
+      tableData2: [
+        {
+          col1: '户名',
+          col2: '周园园',
+          col3: '周园园',
+          col4: '東岳商事（周园园）',
+        },
+        {
+          col1: '账号',
+          col2: '6013826109007228222',
+          col3: '18052128972',
+          col4: 'zhouyy19930814',
+        },
+        {
+          col1: '开户支行',
+          col2: '中国银行徐州分行',
+        },
+      ],
+    };
+  },
+  computed: {
+    ...mapGetters(['name', 'nick', 'avatar', 'roles', 'perms']),
+  },
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

@@ -285,284 +285,284 @@
 </template>
 
 <script>
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
-    name: 'new-product',
-    data() {
-        return {
-            actionLink: process.env.BASE_API + '/product/excel',
-            actionLink1: process.env.BASE_API + '/product/img/put',
-            onUpdate: false,
-            onCreate: true,
-            dialogImageUrl: '',
-            dialogVisible: false,
-            adminRole: false,
-            standFor: '',
-            users: [],
-            form: {
-                sku: '',
-                productName: '',
-                category: '8',
-                color: '',
-                price: 0,
-                size: '',
-                length: 0,
-                width: 0,
-                height: 0,
-                weight: 0,
-                creator: '',
-            },
-            checkRules: {
-                sku: [
-                    {
-                        required: true,
-                        message: '请输入sku',
-                        trigger: 'blur',
-                    },
-                    {
-                        min: 3,
-                        max: 20,
-                        message: 'sku长度在3-20之间',
-                        trigger: 'blur',
-                    },
-                ],
-                productName: [
-                    {
-                        required: true,
-                        message: '请输入商品名称',
-                        trigger: 'change',
-                    },
-                ],
-                category: [
-                    {
-                        required: true,
-                        message: '请选择商品类型',
-                        trigger: 'change',
-                    },
-                ],
-                price: [
-                    {
-                        required: true,
-                        message: '请输入商品价格JPY',
-                        trigger: 'change',
-                    },
-                ],
-            },
-            fileList: [],
-            dialogVisible4Excel: false,
-            dialogVisible4StandFor: false,
+  name: 'new-product',
+  data() {
+    return {
+      actionLink: process.env.BASE_API + '/product/excel',
+      actionLink1: process.env.BASE_API + '/product/img/put',
+      onUpdate: false,
+      onCreate: true,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      adminRole: false,
+      standFor: '',
+      users: [],
+      form: {
+        sku: '',
+        productName: '',
+        category: '8',
+        color: '',
+        price: 0,
+        size: '',
+        length: 0,
+        width: 0,
+        height: 0,
+        weight: 0,
+        creator: '',
+      },
+      checkRules: {
+        sku: [
+          {
+            required: true,
+            message: '请输入sku',
+            trigger: 'blur',
+          },
+          {
+            min: 3,
+            max: 20,
+            message: 'sku长度在3-20之间',
+            trigger: 'blur',
+          },
+        ],
+        productName: [
+          {
+            required: true,
+            message: '请输入商品名称',
+            trigger: 'change',
+          },
+        ],
+        category: [
+          {
+            required: true,
+            message: '请选择商品类型',
+            trigger: 'change',
+          },
+        ],
+        price: [
+          {
+            required: true,
+            message: '请输入商品价格JPY',
+            trigger: 'change',
+          },
+        ],
+      },
+      fileList: [],
+      dialogVisible4Excel: false,
+      dialogVisible4StandFor: false,
+    };
+  },
+  created() {
+    this.initPage();
+    this.hasAdminRole();
+    this.initUserList();
+  },
+  inject: ['reload'],
+  watch: {
+    $route() {
+      this.initPage();
+    },
+  },
+  methods: {
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
+    },
+    hasAdminRole() {
+      request({
+        url: '/sys_user/info',
+        method: 'get',
+      }).then((res) => {
+        const roles = res.data.userInfo.roles;
+        for (let i = 0; i < roles.length; i++) {
+          const role = roles[i];
+          const val = role['val'];
+          if (val === 'root' || val === 'operator') {
+            this.adminRole = true;
+          }
         }
+      });
     },
-    created() {
-        this.initPage()
-        this.hasAdminRole()
-        this.initUserList()
-    },
-    inject: ['reload'],
-    watch: {
-        $route() {
-            this.initPage()
-        },
-    },
-    methods: {
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        hasAdminRole() {
-            request({
-                url: '/sys_user/info',
-                method: 'get',
-            }).then(res => {
-                const roles = res.data.userInfo.roles
-                for (let i = 0; i < roles.length; i++) {
-                    const role = roles[i]
-                    const val = role['val']
-                    if (val === 'root' || val === 'operator') {
-                        this.adminRole = true
-                    }
-                }
-            })
-        },
-        initPage() {
-            const sku = this.$route.query.sku
-            if (sku !== undefined && sku.length > 0) {
-                request({
-                    url: '/product/get/' + sku,
-                    method: 'get',
-                }).then(res => {
-                    this.form = res.data.data
-                    this.onCreate = false
-                    this.onUpdate = true
-                    this.fileList = []
-                    if (
-                        res.data.data.img1 !== null &&
+    initPage() {
+      const sku = this.$route.query.sku;
+      if (sku !== undefined && sku.length > 0) {
+        request({
+          url: '/product/get/' + sku,
+          method: 'get',
+        }).then((res) => {
+          this.form = res.data.data;
+          this.onCreate = false;
+          this.onUpdate = true;
+          this.fileList = [];
+          if (
+            res.data.data.img1 !== null &&
                         res.data.data.img1.length > 0
-                    ) {
-                        const tmp = {
-                            name: 'img1',
-                            index: '1',
-                            url:
+          ) {
+            const tmp = {
+              name: 'img1',
+              index: '1',
+              url:
                                 process.env.BASE_API +
                                 '/img/' +
                                 res.data.data.img1,
-                            uid: res.data.data.img1,
-                        }
-                        this.fileList.push(tmp)
-                    }
-                    if (
-                        res.data.data.img2 !== null &&
+              uid: res.data.data.img1,
+            };
+            this.fileList.push(tmp);
+          }
+          if (
+            res.data.data.img2 !== null &&
                         res.data.data.img2.length > 0
-                    ) {
-                        const tmp = {
-                            name: 'img2',
-                            index: '2',
-                            url:
+          ) {
+            const tmp = {
+              name: 'img2',
+              index: '2',
+              url:
                                 process.env.BASE_API +
                                 '/img/' +
                                 res.data.data.img2,
-                            uid: res.data.data.img2,
-                        }
-                        this.fileList.push(tmp)
-                    }
-                    if (
-                        res.data.data.img3 !== null &&
+              uid: res.data.data.img2,
+            };
+            this.fileList.push(tmp);
+          }
+          if (
+            res.data.data.img3 !== null &&
                         res.data.data.img3.length > 0
-                    ) {
-                        const tmp = {
-                            name: 'img3',
-                            index: '3',
-                            url:
+          ) {
+            const tmp = {
+              name: 'img3',
+              index: '3',
+              url:
                                 process.env.BASE_API +
                                 '/img/' +
                                 res.data.data.img3,
-                            uid: res.data.data.img3,
-                        }
-                        this.fileList.push(tmp)
-                    }
-                })
-            }
-            this.initOption()
-        },
-        initOption() {
-            request({
-                url: '/option/carrier',
-                method: 'get',
-            }).then(res => {
-                console.log(res)
-                //todo here
-            })
-        },
-        handleRemove(file, fileList) {
-            request({
-                url:
+              uid: res.data.data.img3,
+            };
+            this.fileList.push(tmp);
+          }
+        });
+      }
+      this.initOption();
+    },
+    initOption() {
+      request({
+        url: '/option/carrier',
+        method: 'get',
+      }).then((res) => {
+        console.log(res);
+        // todo here
+      });
+    },
+    handleRemove(file, fileList) {
+      request({
+        url:
                     '/product/img/drop/' +
                     file.uid +
                     '/' +
                     this.form.sku +
                     '/' +
                     file.index,
-                method: 'get',
-            }).then(() => {
-                this.$message.success('成功删除关联图片')
-            })
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url
-            this.dialogVisible = true
-        },
-        getDySku() {
-            request({
-                url: '/generate/sku',
-                method: 'get',
-            }).then(res => {
-                this.form.sku = res.data.data
-            })
-        },
-        submitForm(formName) {
-            if (this.adminRole && this.form.creator.length <= 0) {
-                this.$message.warning('请选择商品所属人')
-                return
-            }
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    request({
-                        url: '/product/add',
-                        method: 'post',
-                        data: this.form,
-                    }).then(() => {
-                        this.$message.success('商品创建成功')
-                        this.reload()
-                    })
-                } else {
-                    console.log('error submit!!')
-                    return false
-                }
-            })
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields()
-        },
-        submitUpload() {
-            this.$refs.upload.submit()
-        },
-        submitUpload4Excel() {
-            this.$refs.upload.submit()
-        },
-        handleError(err) {
-            this.$message.error(JSON.parse(err.message)['message'])
-        },
-        updateForm() {
-            if (this.adminRole && this.form.creator.length <= 0) {
-                this.$message.warning('请选择商品所属人')
-                return
-            }
-            request({
-                url: '/product/update',
-                method: 'post',
-                data: this.form,
-            }).then(() => {
-                this.$message.success('更新成功')
-                this.$router.push({
-                    path: '/product/status0',
-                })
-            })
-        },
-        handleFileChange(file, fileList) {
-            file.index = fileList.length
-        },
-        createByFile() {
-            if (this.adminRole) {
-                this.dialogVisible4StandFor = true
-            } else {
-                this.dialogVisible4Excel = true
-            }
-        },
-        downloadTemplate() {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/template/file/PRODUCT_TEMPLATE'
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        triggerUploadDialog() {
-            if (this.standFor.length > 0) {
-                this.dialogVisible4StandFor = false
-                this.dialogVisible4Excel = true
-            } else {
-                this.$message.warning('请选择所属用户')
-            }
-        },
+        method: 'get',
+      }).then(() => {
+        this.$message.success('成功删除关联图片');
+      });
     },
-}
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    getDySku() {
+      request({
+        url: '/generate/sku',
+        method: 'get',
+      }).then((res) => {
+        this.form.sku = res.data.data;
+      });
+    },
+    submitForm(formName) {
+      if (this.adminRole && this.form.creator.length <= 0) {
+        this.$message.warning('请选择商品所属人');
+        return;
+      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          request({
+            url: '/product/add',
+            method: 'post',
+            data: this.form,
+          }).then(() => {
+            this.$message.success('商品创建成功');
+            this.reload();
+          });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    submitUpload4Excel() {
+      this.$refs.upload.submit();
+    },
+    handleError(err) {
+      this.$message.error(JSON.parse(err.message)['message']);
+    },
+    updateForm() {
+      if (this.adminRole && this.form.creator.length <= 0) {
+        this.$message.warning('请选择商品所属人');
+        return;
+      }
+      request({
+        url: '/product/update',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.$message.success('更新成功');
+        this.$router.push({
+          path: '/product/status0',
+        });
+      });
+    },
+    handleFileChange(file, fileList) {
+      file.index = fileList.length;
+    },
+    createByFile() {
+      if (this.adminRole) {
+        this.dialogVisible4StandFor = true;
+      } else {
+        this.dialogVisible4Excel = true;
+      }
+    },
+    downloadTemplate() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/template/file/PRODUCT_TEMPLATE';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    triggerUploadDialog() {
+      if (this.standFor.length > 0) {
+        this.dialogVisible4StandFor = false;
+        this.dialogVisible4Excel = true;
+      } else {
+        this.$message.warning('请选择所属用户');
+      }
+    },
+  },
+};
 </script>

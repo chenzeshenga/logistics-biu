@@ -618,240 +618,240 @@
 </template>
 
 <script>
-import request from '../../../../utils/service'
+import request from '../../../../utils/service';
 
 export default {
-    name: 'orderType1',
-    data() {
-        return {
-            msgData: {
-                category: this.msg.category,
-                status: this.msg.status,
-                statusTo: this.msg.statusTo,
-                statusAbandon: this.msg.statusAbandon,
-                buttonVisible1: this.msg.buttonVisible1,
-                buttonVisible2: this.msg.buttonVisible2,
-                buttonVisible3: this.msg.buttonVisible3,
-                buttonVisible4: this.msg.buttonVisible4,
-                buttonVisible5: this.msg.buttonVisible5,
-                buttonVisible6: this.msg.buttonVisible6,
-                buttonVisible7: this.msg.buttonVisible7,
-                buttonVisible8: this.msg.buttonVisible8,
-                buttonVisible9: this.msg.buttonVisible9,
-                buttonVisible10: this.msg.buttonVisible10,
+  name: 'orderType1',
+  data() {
+    return {
+      msgData: {
+        category: this.msg.category,
+        status: this.msg.status,
+        statusTo: this.msg.statusTo,
+        statusAbandon: this.msg.statusAbandon,
+        buttonVisible1: this.msg.buttonVisible1,
+        buttonVisible2: this.msg.buttonVisible2,
+        buttonVisible3: this.msg.buttonVisible3,
+        buttonVisible4: this.msg.buttonVisible4,
+        buttonVisible5: this.msg.buttonVisible5,
+        buttonVisible6: this.msg.buttonVisible6,
+        buttonVisible7: this.msg.buttonVisible7,
+        buttonVisible8: this.msg.buttonVisible8,
+        buttonVisible9: this.msg.buttonVisible9,
+        buttonVisible10: this.msg.buttonVisible10,
+      },
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 7
+              );
+              picker.$emit('pick', [start, end]);
             },
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 30
+              );
+              picker.$emit('pick', [start, end]);
             },
-            tableLoading: false,
-            tableData: [],
-            daterange: null,
-            pickerOptions2: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 7
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 30
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 90
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                ],
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 90
+              );
+              picker.$emit('pick', [start, end]);
             },
-            dialogVisible: false,
-            dialogVisible2: false,
-            carrier: [],
-            form: {
-                orderNo: '',
-                status: '',
-                selectedCarrier: [],
-                carrierNo: '',
-                trackNo: '',
-                length: 0,
-                width: 0,
-                height: 0,
-                totalVolumeFrontEnd: 0,
-                sum: 0,
-                totalVolumeWithWeight: 0,
-                totalWeight: 0,
-            },
-            ord4TrackNo: [],
-            dialogVisibleList: false,
-            multiSelection: false,
-            search: {
-                ordno: '',
-                creator: '',
-                channelCode: '',
-            },
-            users: [],
-            channels: [],
-        }
+          },
+        ],
+      },
+      dialogVisible: false,
+      dialogVisible2: false,
+      carrier: [],
+      form: {
+        orderNo: '',
+        status: '',
+        selectedCarrier: [],
+        carrierNo: '',
+        trackNo: '',
+        length: 0,
+        width: 0,
+        height: 0,
+        totalVolumeFrontEnd: 0,
+        sum: 0,
+        totalVolumeWithWeight: 0,
+        totalWeight: 0,
+      },
+      ord4TrackNo: [],
+      dialogVisibleList: false,
+      multiSelection: false,
+      search: {
+        ordno: '',
+        creator: '',
+        channelCode: '',
+      },
+      users: [],
+      channels: [],
+    };
+  },
+  props: ['msg'],
+  created() {
+    this.fetchData();
+    this.initTrackno();
+    this.initUserList();
+    this.initChannel();
+  },
+  watch: {
+    $route() {
+      this.onQuickSearch();
     },
-    props: ['msg'],
-    created() {
-        this.fetchData()
-        this.initTrackno()
-        this.initUserList()
-        this.initChannel()
+  },
+  methods: {
+    reRouter() {
+      this.$router.push({
+        path: '/order-list/mgt/type1/status1',
+      });
     },
-    watch: {
-        $route() {
-            this.onQuickSearch()
-        },
+    onQuickSearch() {
+      const ordno = this.$route.query.ordno;
+      if (ordno !== undefined && ordno.length > 0) {
+        this.search.ordno = ordno;
+        this.searchOrd();
+        this.reRouter();
+      }
     },
-    methods: {
-        reRouter() {
-            this.$router.push({
-                path: '/order-list/mgt/type1/status1',
-            })
-        },
-        onQuickSearch() {
-            const ordno = this.$route.query.ordno
-            if (ordno !== undefined && ordno.length > 0) {
-                this.search.ordno = ordno
-                this.searchOrd()
-                this.reRouter()
-            }
-        },
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url:
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url:
                     'ord/list/' +
                     this.msgData.category +
                     '/' +
                     this.msgData.status,
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-                this.onQuickSearch()
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-order/index?ordno=' + row.orderNo,
-            })
-        },
-        statusUpdate(index, row) {
-            this.$confirm('您确定要提交该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url:
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+        this.onQuickSearch();
+      });
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-order/index?ordno=' + row.orderNo,
+      });
+    },
+    statusUpdate(index, row) {
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
                             'ord/update/' +
                             this.msgData.category +
                             '/' +
                             row.orderNo +
                             '/' +
                             this.msgData.statusTo,
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
-                        this.fetchData()
-                        this.$message.success('提交成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        batchStatusUpdate() {
-            if (this.ord4TrackNo.length <= 0) {
-                this.$message.warning('请勾选每一行前的勾选框')
-                return
-            }
-            this.$confirm('您确定要提交这些订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url:
+              method: 'get',
+            }).then((res) => {
+              console.log(res);
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    batchStatusUpdate() {
+      if (this.ord4TrackNo.length <= 0) {
+        this.$message.warning('请勾选每一行前的勾选框');
+        return;
+      }
+      this.$confirm('您确定要提交这些订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
                             'ord/update/' +
                             this.msgData.category +
                             '/' +
                             this.msgData.statusTo,
-                        method: 'post',
-                        data: this.ord4TrackNo,
-                    }).then(res => {
-                        console.log(res)
-                        this.fetchData()
-                        this.$message.success('提交成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        abandon(index, row) {
-            this.$confirm('您确定要废弃该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url:
+              method: 'post',
+              data: this.ord4TrackNo,
+            }).then((res) => {
+              console.log(res);
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    abandon(index, row) {
+      this.$confirm('您确定要废弃该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
                             'ord/update/' +
                             this.msgData.category +
                             '/' +
                             row.orderNo +
                             '/' +
                             this.msgData.statusAbandon,
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
-                        this.fetchData()
-                        this.$message.success('废弃成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消废弃')
-                })
-        },
-        searchOrd() {
-            let url = ''
-            if (
-                this.daterange == null ||
+              method: 'get',
+            }).then((res) => {
+              console.log(res);
+              this.fetchData();
+              this.$message.success('废弃成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消废弃');
+          });
+    },
+    searchOrd() {
+      let url = '';
+      if (
+        this.daterange == null ||
                 this.daterange[0] === 0 ||
                 this.daterange[1] === 0
-            ) {
-                this.$message.warning('请选择您想要查询的日期范围')
-                url =
+      ) {
+        this.$message.warning('请选择您想要查询的日期范围');
+        url =
                     'ord/list/' +
                     this.msgData.category +
                     '/' +
@@ -861,9 +861,9 @@ export default {
                     '&creator=' +
                     this.search.creator +
                     '&channelCode=' +
-                    this.search.channelCode
-            } else {
-                url =
+                    this.search.channelCode;
+      } else {
+        url =
                     'ord/list/' +
                     this.msgData.category +
                     '/' +
@@ -876,212 +876,212 @@ export default {
                     '&creator=' +
                     this.search.creator +
                     '&channelCode=' +
-                    this.search.channelCode
-            }
-            this.tableLoading = true
-            request({
-                url: url,
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tableLoading = false
-            })
+                    this.search.channelCode;
+      }
+      this.tableLoading = true;
+      request({
+        url: url,
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        route2NewOrd() {
-            this.$router.push({
-                path: '/new-order/index',
-            })
-        },
-        initTrackno() {
-            request({
-                url: 'ord/carrier/distinct',
-                method: 'get',
-            }).then(res => {
-                this.carrier = res.data.data
-            })
-        },
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        initChannel() {
-            request({
-                url: '/channel/list',
-                method: 'get',
-            }).then(res => {
-                this.channels = res.data.data
-            })
-        },
-        applyTrackno(index, row) {
-            this.form.orderNo = row.orderNo
-            this.form.carrierNo = row.carrierNo
-            this.form.trackNo = row.trackNo
-            const tmpNo = []
-            tmpNo.push('carrier_' + row.carrierNo)
-            this.form.selectedCarrier = tmpNo
-            this.dialogVisible = true
-        },
-        handleCarrierChange(value) {
-            this.form.carrierNo = value[0]
-        },
-        getOrdNo2() {
-            request({
-                url: '/trackno/pk/' + this.form.carrierNo,
-                method: 'get',
-            }).then(res => {
-                this.form.trackNo = res.data.data
-                this.$message.success('获取订单号成功')
-            })
-        },
-        fillInTrackNo() {
-            request({
-                url: 'ord/trackno',
-                method: 'post',
-                data: this.form,
-            })
-                .then(() => {
-                    this.$message.success('追踪单号申请成功')
-                    this.dialogVisible = false
-                    this.fetchData()
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-        getSummary(param) {
-            const { columns, data } = param
-            const sums = []
-            columns.forEach((column, index) => {
-                if (index === 0) {
-                    sums[index] = '总价'
-                } else {
-                    sums[index] = ''
-                }
-            })
-            sums[3] = data[0].totalPrice
-            return sums
-        },
-        print(index, row) {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/pdf/ord/' + row.orderNo
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        handleSelectionChange(val) {
-            this.multiSelection = val.length > 0
-            this.ord4TrackNo = []
-            val.forEach(ord => {
-                this.ord4TrackNo.push(ord.orderNo)
-            })
-        },
-        applyTrackNo() {
-            if (this.ord4TrackNo.length <= 0) {
-                this.$message.warning('请勾选每一行前的勾选框')
-                return
-            }
-            this.dialogVisibleList = true
-        },
-        fillInTrackNoList() {
-            request({
-                url: 'ord/trackno/list',
-                method: 'post',
-                data: {
-                    ords: this.ord4TrackNo,
-                    carrierNo: this.form.carrierNo,
-                },
-            })
-                .then(res => {
-                    console.log(res)
-                    this.$message.success('追踪单号申请成功')
-                    this.dialogVisibleList = false
-                    this.fetchData()
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-        exportExcel() {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/ord/excel/1'
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        route2ChannelPage(index, row) {
-            this.$router.push({
-                path: '/system/channel?filter=' + row.channel,
-            })
-        },
-        findWhere() {
-            this.$message.info('物流查询，功能待开发')
-        },
-        triggerVolumeAndWeight(index, row) {
-            this.dialogVisible2 = true
-            this.form.orderNo = row.orderNo
-            this.form.length = row.length
-            this.form.width = row.width
-            this.form.height = row.height
-            this.form.sum = row.sum
-            this.form.totalWeight = row.totalWeight
-            this.form.totalVolumeFrontEnd = row.totalVolume
-            this.form.totalVolumeWithWeight = row.totalVolumeWithWeight
-
-            this.form.status = this.msgData.statusTo
-        },
-        triggerVolumeAndWeightWithOutStatus(index, row) {
-            this.dialogVisible2 = true
-            this.form.orderNo = row.orderNo
-            this.form.length = row.length
-            this.form.width = row.width
-            this.form.height = row.height
-            this.form.sum = row.sum
-            this.form.totalWeight = row.totalWeight
-            this.form.totalVolumeFrontEnd = row.totalVolume
-            this.form.totalVolumeWithWeight = row.totalVolumeWithWeight
-        },
-        calculateIndex() {
-            this.form.totalVolumeFrontEnd =
-                this.form.length * this.form.height * this.form.width
-            this.form.totalVolumeFrontEnd = this.form.totalVolumeFrontEnd.toFixed(
-                3
-            )
-            this.form.sum =
-                this.form.length + this.form.height + this.form.width
-            this.form.sum = this.form.sum.toFixed(3)
-            this.form.totalVolumeWithWeight =
-                (this.form.length * this.form.height * this.form.width) / 6000
-            this.form.totalVolumeWithWeight = this.form.totalVolumeWithWeight.toFixed(
-                3
-            )
-        },
-        updateOrd() {
-            request({
-                url: '/ord/update',
-                method: 'post',
-                data: this.form,
-            }).then(() => {
-                this.$message.success('当前订单已更新')
-                this.dialogVisible2 = false
-                this.fetchData()
-            })
-        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-}
+    route2NewOrd() {
+      this.$router.push({
+        path: '/new-order/index',
+      });
+    },
+    initTrackno() {
+      request({
+        url: 'ord/carrier/distinct',
+        method: 'get',
+      }).then((res) => {
+        this.carrier = res.data.data;
+      });
+    },
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
+    },
+    initChannel() {
+      request({
+        url: '/channel/list',
+        method: 'get',
+      }).then((res) => {
+        this.channels = res.data.data;
+      });
+    },
+    applyTrackno(index, row) {
+      this.form.orderNo = row.orderNo;
+      this.form.carrierNo = row.carrierNo;
+      this.form.trackNo = row.trackNo;
+      const tmpNo = [];
+      tmpNo.push('carrier_' + row.carrierNo);
+      this.form.selectedCarrier = tmpNo;
+      this.dialogVisible = true;
+    },
+    handleCarrierChange(value) {
+      this.form.carrierNo = value[0];
+    },
+    getOrdNo2() {
+      request({
+        url: '/trackno/pk/' + this.form.carrierNo,
+        method: 'get',
+      }).then((res) => {
+        this.form.trackNo = res.data.data;
+        this.$message.success('获取订单号成功');
+      });
+    },
+    fillInTrackNo() {
+      request({
+        url: 'ord/trackno',
+        method: 'post',
+        data: this.form,
+      })
+          .then(() => {
+            this.$message.success('追踪单号申请成功');
+            this.dialogVisible = false;
+            this.fetchData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    },
+    getSummary(param) {
+      const {columns, data} = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总价';
+        } else {
+          sums[index] = '';
+        }
+      });
+      sums[3] = data[0].totalPrice;
+      return sums;
+    },
+    print(index, row) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/pdf/ord/' + row.orderNo;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    handleSelectionChange(val) {
+      this.multiSelection = val.length > 0;
+      this.ord4TrackNo = [];
+      val.forEach((ord) => {
+        this.ord4TrackNo.push(ord.orderNo);
+      });
+    },
+    applyTrackNo() {
+      if (this.ord4TrackNo.length <= 0) {
+        this.$message.warning('请勾选每一行前的勾选框');
+        return;
+      }
+      this.dialogVisibleList = true;
+    },
+    fillInTrackNoList() {
+      request({
+        url: 'ord/trackno/list',
+        method: 'post',
+        data: {
+          ords: this.ord4TrackNo,
+          carrierNo: this.form.carrierNo,
+        },
+      })
+          .then((res) => {
+            console.log(res);
+            this.$message.success('追踪单号申请成功');
+            this.dialogVisibleList = false;
+            this.fetchData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    },
+    exportExcel() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/ord/excel/1';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    route2ChannelPage(index, row) {
+      this.$router.push({
+        path: '/system/channel?filter=' + row.channel,
+      });
+    },
+    findWhere() {
+      this.$message.info('物流查询，功能待开发');
+    },
+    triggerVolumeAndWeight(index, row) {
+      this.dialogVisible2 = true;
+      this.form.orderNo = row.orderNo;
+      this.form.length = row.length;
+      this.form.width = row.width;
+      this.form.height = row.height;
+      this.form.sum = row.sum;
+      this.form.totalWeight = row.totalWeight;
+      this.form.totalVolumeFrontEnd = row.totalVolume;
+      this.form.totalVolumeWithWeight = row.totalVolumeWithWeight;
+
+      this.form.status = this.msgData.statusTo;
+    },
+    triggerVolumeAndWeightWithOutStatus(index, row) {
+      this.dialogVisible2 = true;
+      this.form.orderNo = row.orderNo;
+      this.form.length = row.length;
+      this.form.width = row.width;
+      this.form.height = row.height;
+      this.form.sum = row.sum;
+      this.form.totalWeight = row.totalWeight;
+      this.form.totalVolumeFrontEnd = row.totalVolume;
+      this.form.totalVolumeWithWeight = row.totalVolumeWithWeight;
+    },
+    calculateIndex() {
+      this.form.totalVolumeFrontEnd =
+                this.form.length * this.form.height * this.form.width;
+      this.form.totalVolumeFrontEnd = this.form.totalVolumeFrontEnd.toFixed(
+          3
+      );
+      this.form.sum =
+                this.form.length + this.form.height + this.form.width;
+      this.form.sum = this.form.sum.toFixed(3);
+      this.form.totalVolumeWithWeight =
+                (this.form.length * this.form.height * this.form.width) / 6000;
+      this.form.totalVolumeWithWeight = this.form.totalVolumeWithWeight.toFixed(
+          3
+      );
+    },
+    updateOrd() {
+      request({
+        url: '/ord/update',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.$message.success('当前订单已更新');
+        this.dialogVisible2 = false;
+        this.fetchData();
+      });
+    },
+  },
+};
 </script>
 
 <style>

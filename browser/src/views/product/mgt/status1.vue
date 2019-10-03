@@ -237,141 +237,141 @@
 </template>
 
 <script>
-import request from '../../../utils/service'
+import request from '../../../utils/service';
 
 export default {
-    name: 'status1',
-    data() {
-        return {
-            tablePage: {
-                current: null,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            tableLoading: false,
-            tableData: [],
-            search: {
-                sku: '',
-                dySku: '',
-                name: '',
-                creator: '',
-            },
-            users: [],
-        }
+  name: 'status1',
+  data() {
+    return {
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      search: {
+        sku: '',
+        dySku: '',
+        name: '',
+        creator: '',
+      },
+      users: [],
+    };
+  },
+  created() {
+    this.fetchData();
+    this.initUserList();
+  },
+  methods: {
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
     },
-    created() {
-        this.fetchData()
-        this.initUserList()
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'product/list/1',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    methods: {
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url: 'product/list/1',
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        statusUpdate(index, row) {
-            console.log(row)
-            this.$confirm('您确定审核通过该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/status/' + row.sku + '/1',
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success('审核成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消审核')
-                })
-        },
-        handleDelete(index, row) {
-            console.log(row)
-            this.$confirm('您确定删除该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/delete/' + row.sku,
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success(row.sku + '删除成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消删除')
-                })
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-product/new-product?sku=' + row.sku,
-            })
-        },
-        handlePrint(index, row) {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/pdf/sku/' + row.dySku
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        searchProduct() {
-            this.tableLoading = true
-            request({
-                url: 'product/list/1',
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                    sku: this.search.sku,
-                    dySku: this.search.dySku,
-                    creator: this.search.creator,
-                    name: this.search.name,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
     },
-}
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    statusUpdate(index, row) {
+      console.log(row);
+      this.$confirm('您确定审核通过该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/status/' + row.sku + '/1',
+              method: 'get',
+            }).then(() => {
+              this.$message.success('审核成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消审核');
+          });
+    },
+    handleDelete(index, row) {
+      console.log(row);
+      this.$confirm('您确定删除该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/delete/' + row.sku,
+              method: 'get',
+            }).then(() => {
+              this.$message.success(row.sku + '删除成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
+          });
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-product/new-product?sku=' + row.sku,
+      });
+    },
+    handlePrint(index, row) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/pdf/sku/' + row.dySku;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    searchProduct() {
+      this.tableLoading = true;
+      request({
+        url: 'product/list/1',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+          sku: this.search.sku,
+          dySku: this.search.dySku,
+          creator: this.search.creator,
+          name: this.search.name,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
+    },
+  },
+};
 </script>
 
 <style scoped></style>

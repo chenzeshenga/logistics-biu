@@ -103,7 +103,7 @@
 </template>
 
 <script>
- /* eslint-disable */
+/* eslint-disable */
 'use strict'
 import request from '@/utils/service'
 import language from './utils/language.js'

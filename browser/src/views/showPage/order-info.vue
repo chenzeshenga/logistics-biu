@@ -28,43 +28,43 @@
 </template>
 
 <script>
-  import request from '../../utils/service';
+import request from '../../utils/service';
 
-  export default {
-    name: 'order-info',
-    data() {
-      return {
-        alert: {
-          title: '订单号 ',
-          description: '发往 ',
-        },
-        orders: [1, 2, 2],
-        tableData: []
-      };
-    },
-    watch: {
-      $route() {
-        this.init();
+export default {
+  name: 'order-info',
+  data() {
+    return {
+      alert: {
+        title: '订单号 ',
+        description: '发往 ',
       },
-    },
-    created() {
+      orders: [1, 2, 2],
+      tableData: [],
+    };
+  },
+  watch: {
+    $route() {
       this.init();
     },
-    methods: {
-      init() {
-        const ordno = this.$route.query.ord;
-        request({
-          url: '/ord/get/' + ordno,
-          method: 'get'
-        }).then(res => {
-          const data = res.data.data;
-          this.alert.title = this.alert.title + ordno;
-          this.alert.description = this.alert.description + data.fromKenName + data.fromCityName + data.fromTownName + data.fromDetailAddress + ' 收件人: ' + data.toName;
-          this.tableData = data.contentList
-        })
-      },
+  },
+  created() {
+    this.init();
+  },
+  methods: {
+    init() {
+      const ordno = this.$route.query.ord;
+      request({
+        url: '/ord/get/' + ordno,
+        method: 'get',
+      }).then((res) => {
+        const data = res.data.data;
+        this.alert.title = this.alert.title + ordno;
+        this.alert.description = this.alert.description + data.fromKenName + data.fromCityName + data.fromTownName + data.fromDetailAddress + ' 收件人: ' + data.toName;
+        this.tableData = data.contentList;
+      });
     },
-  };
+  },
+};
 </script>
 
 <style scoped>

@@ -504,183 +504,183 @@
 </template>
 
 <script>
-import request from '../../../../utils/service'
+import request from '../../../../utils/service';
 
 export default {
-    name: 'index',
-    data() {
-        return {
-            msgData: {
-                category: this.msg.category,
-                status: this.msg.status,
-                statusTo: this.msg.statusTo,
-                statusAbandon: this.msg.statusAbandon,
-                buttonVisible1: this.msg.buttonVisible1,
-                buttonVisible2: this.msg.buttonVisible2,
-                buttonVisible3: this.msg.buttonVisible3,
-                buttonVisible4: this.msg.buttonVisible4,
-                buttonVisible5: this.msg.buttonVisible5,
+  name: 'index',
+  data() {
+    return {
+      msgData: {
+        category: this.msg.category,
+        status: this.msg.status,
+        statusTo: this.msg.statusTo,
+        statusAbandon: this.msg.statusAbandon,
+        buttonVisible1: this.msg.buttonVisible1,
+        buttonVisible2: this.msg.buttonVisible2,
+        buttonVisible3: this.msg.buttonVisible3,
+        buttonVisible4: this.msg.buttonVisible4,
+        buttonVisible5: this.msg.buttonVisible5,
 
+      },
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 7
+              );
+              picker.$emit('pick', [start, end]);
             },
-            tablePage: {
-                current: null,
-                pages: null,
-                size: null,
-                total: null,
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 30
+              );
+              picker.$emit('pick', [start, end]);
             },
-            tableLoading: false,
-            tableData: [],
-            daterange: null,
-            pickerOptions2: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 7
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 30
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 90
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                ],
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 90
+              );
+              picker.$emit('pick', [start, end]);
             },
-            dialogVisible: false,
-            dialogVisible2: false,
-            carrier: [],
-            form: {
-                orderNo: '',
-                selectedCarrier: [],
-                carrierNo: '',
-                trackNo: '',
-            },
-            ord4TrackNo: [],
-            dialogVisibleList: false,
-            search: {
-                ordno: '',
-                creator: '',
-                channelCode: '',
-            },
-            users: [],
-            channels: [],
-        }
-    },
-    props: ['msg'],
-    created() {
-        this.fetchData()
-        this.initTrackno()
-    },
-    methods: {
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url:
+          },
+        ],
+      },
+      dialogVisible: false,
+      dialogVisible2: false,
+      carrier: [],
+      form: {
+        orderNo: '',
+        selectedCarrier: [],
+        carrierNo: '',
+        trackNo: '',
+      },
+      ord4TrackNo: [],
+      dialogVisibleList: false,
+      search: {
+        ordno: '',
+        creator: '',
+        channelCode: '',
+      },
+      users: [],
+      channels: [],
+    };
+  },
+  props: ['msg'],
+  created() {
+    this.fetchData();
+    this.initTrackno();
+  },
+  methods: {
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url:
                     'ord/list/' +
                     this.msgData.category +
                     '/' +
                     this.msgData.status,
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tableLoading = false
-            })
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-order/index?ordno=' + row.orderNo,
-            })
-        },
-        statusUpdate(index, row) {
-            this.$confirm('您确定要提交该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url:
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-order/index?ordno=' + row.orderNo,
+      });
+    },
+    statusUpdate(index, row) {
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
                             'ord/update/' +
                             this.msgData.category +
                             '/' +
                             row.orderNo +
                             '/' +
                             this.msgData.statusTo,
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
-                        this.fetchData()
-                        this.$message.success('提交成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        abandon(index, row) {
-            this.$confirm('您确定要废弃该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url:
+              method: 'get',
+            }).then((res) => {
+              console.log(res);
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    abandon(index, row) {
+      this.$confirm('您确定要废弃该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
                             'ord/update/' +
                             this.msgData.category +
                             '/' +
                             row.orderNo +
                             '/' +
                             this.msgData.statusAbandon,
-                        method: 'get',
-                    }).then(res => {
-                        console.log(res)
-                        this.fetchData()
-                        this.$message.success('废弃成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消废弃')
-                })
-        },
-        searchOrd() {
-            if (
-                this.daterange == null ||
+              method: 'get',
+            }).then((res) => {
+              console.log(res);
+              this.fetchData();
+              this.$message.success('废弃成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消废弃');
+          });
+    },
+    searchOrd() {
+      if (
+        this.daterange == null ||
                 this.daterange[0] === 0 ||
                 this.daterange[1] === 0
-            ) {
-                this.$message.warning('请选择您想要查询的日期范围')
-                return
-            }
-            this.tableLoading = true
-            request({
-                url:
+      ) {
+        this.$message.warning('请选择您想要查询的日期范围');
+        return;
+      }
+      this.tableLoading = true;
+      request({
+        url:
                     'ord/list/' +
                     this.msgData.category +
                     '/' +
@@ -689,124 +689,124 @@ export default {
                     this.daterange[0] +
                     '/' +
                     this.daterange[1],
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tableLoading = false
-            })
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        route2NewOrd() {
-            this.$router.push({ path: '/new-order/index' })
-        },
-        initTrackno() {
-            request({
-                url: 'ord/carrier/distinct',
-                method: 'get',
-            }).then(res => {
-                this.carrier = res.data.data
-            })
-        },
-        applyTrackno(index, row) {
-            this.form.orderNo = row.orderNo
-            this.form.carrierNo = row.carrierNo
-            this.form.trackNo = row.trackNo
-            let tmpNo = []
-            tmpNo.push('carrier_' + row.carrierNo)
-            this.form.selectedCarrier = tmpNo
-            this.dialogVisible = true
-        },
-        handleCarrierChange(value) {
-            console.log(value)
-            this.form.carrierNo = value[0]
-        },
-        getOrdNo2() {
-            request({
-                url: '/trackno/pk/' + this.form.carrierNo,
-                method: 'get',
-            }).then(res => {
-                this.form.trackNo = res.data.data
-            })
-        },
-        fillInTrackNo() {
-            request({
-                url: 'ord/trackno',
-                method: 'post',
-                data: this.form,
-            })
-                .then(res => {
-                    console.log(res)
-                    this.$message.success('追踪单号申请成功')
-                    this.dialogVisible = false
-                    this.fetchData()
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-        getSummary(param) {
-            const { columns, data } = param
-            const sums = []
-            columns.forEach((column, index) => {
-                if (index === 0) {
-                    sums[index] = '总价'
-                } else {
-                    sums[index] = ''
-                }
-            })
-            if(data[0].hasOwnProperty("totalPrice")){
-                sums[3] = data[0].totalPrice
-            }else {
-                sums[3] = 0
-            }
-            return sums
-        },
-        print(index, row) {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/pdf/ord/' + row.orderNo
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        handleSelectionChange(val) {
-            this.ord4TrackNo = []
-            val.forEach(ord => {
-                this.ord4TrackNo.push(ord.orderNo)
-            })
-            console.log(this.ord4TrackNo)
-        },
-        applyTrackNo() {
-            if (this.ord4TrackNo.length <= 0) {
-                this.$message.warning('请勾选每一行前的勾选框')
-                return
-            }
-            this.dialogVisibleList = true
-        },
-        fillInTrackNoList() {
-            request({
-                url: 'ord/trackno/list',
-                method: 'post',
-                data: {
-                    ords: this.ord4TrackNo,
-                    carrierNo: this.form.carrierNo,
-                },
-            })
-                .then(res => {
-                    console.log(res)
-                    this.$message.success('追踪单号申请成功')
-                    this.dialogVisibleList = false
-                    this.fetchData()
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-}
+    route2NewOrd() {
+      this.$router.push({path: '/new-order/index'});
+    },
+    initTrackno() {
+      request({
+        url: 'ord/carrier/distinct',
+        method: 'get',
+      }).then((res) => {
+        this.carrier = res.data.data;
+      });
+    },
+    applyTrackno(index, row) {
+      this.form.orderNo = row.orderNo;
+      this.form.carrierNo = row.carrierNo;
+      this.form.trackNo = row.trackNo;
+      const tmpNo = [];
+      tmpNo.push('carrier_' + row.carrierNo);
+      this.form.selectedCarrier = tmpNo;
+      this.dialogVisible = true;
+    },
+    handleCarrierChange(value) {
+      console.log(value);
+      this.form.carrierNo = value[0];
+    },
+    getOrdNo2() {
+      request({
+        url: '/trackno/pk/' + this.form.carrierNo,
+        method: 'get',
+      }).then((res) => {
+        this.form.trackNo = res.data.data;
+      });
+    },
+    fillInTrackNo() {
+      request({
+        url: 'ord/trackno',
+        method: 'post',
+        data: this.form,
+      })
+          .then((res) => {
+            console.log(res);
+            this.$message.success('追踪单号申请成功');
+            this.dialogVisible = false;
+            this.fetchData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    },
+    getSummary(param) {
+      const {columns, data} = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总价';
+        } else {
+          sums[index] = '';
+        }
+      });
+      if (data[0].hasOwnProperty('totalPrice')) {
+        sums[3] = data[0].totalPrice;
+      } else {
+        sums[3] = 0;
+      }
+      return sums;
+    },
+    print(index, row) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/pdf/ord/' + row.orderNo;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    handleSelectionChange(val) {
+      this.ord4TrackNo = [];
+      val.forEach((ord) => {
+        this.ord4TrackNo.push(ord.orderNo);
+      });
+      console.log(this.ord4TrackNo);
+    },
+    applyTrackNo() {
+      if (this.ord4TrackNo.length <= 0) {
+        this.$message.warning('请勾选每一行前的勾选框');
+        return;
+      }
+      this.dialogVisibleList = true;
+    },
+    fillInTrackNoList() {
+      request({
+        url: 'ord/trackno/list',
+        method: 'post',
+        data: {
+          ords: this.ord4TrackNo,
+          carrierNo: this.form.carrierNo,
+        },
+      })
+          .then((res) => {
+            console.log(res);
+            this.$message.success('追踪单号申请成功');
+            this.dialogVisibleList = false;
+            this.fetchData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    },
+  },
+};
 </script>
 
 <style>

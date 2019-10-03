@@ -74,164 +74,164 @@
 </template>
 
 <script>
-  import request from '@/utils/service'
+import request from '@/utils/service';
 
-  export default {
-    name: 'trackno',
-    data() {
-      return {
-        onCreate: true,
-        onUpdate: false,
-        tablePage: {
-          current: null,
-          pages: null,
-          size: null,
-          total: null
-        },
-        tableData: [],
-        tableLoading: false,
-        carrier: [],
-        form: {
-          carrier: null,
-          selectedCarrier: null,
-          min: null,
-          max: null,
-          selectedNewCarrier: [],
-          channel: null
-        },
-        dialogVisible: false,
-        channels: []
-      }
+export default {
+  name: 'trackno',
+  data() {
+    return {
+      onCreate: true,
+      onUpdate: false,
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableData: [],
+      tableLoading: false,
+      carrier: [],
+      form: {
+        carrier: null,
+        selectedCarrier: null,
+        min: null,
+        max: null,
+        selectedNewCarrier: [],
+        channel: null,
+      },
+      dialogVisible: false,
+      channels: [],
+    };
+  },
+  created() {
+    this.initTrackno();
+    this.initTableData();
+  },
+  methods: {
+    initTrackno() {
+      request({
+        url: 'ord/carrier/distinct',
+        method: 'get',
+      }).then((res) => {
+        this.carrier = res.data.data;
+      });
+      request({
+        url: '/channel/list',
+        method: 'get',
+      }).then((res) => {
+        this.channels = res.data.data;
+      });
     },
-    created() {
-      this.initTrackno()
-      this.initTableData()
+    handleCarrierChange(value) {
+      this.form.carrierNo = value[0];
+      this.tableLoading = true;
+      request({
+        url: 'trackno/list/' + this.form.carrierNo,
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
     },
-    methods: {
-      initTrackno() {
+    initTableData() {
+      request({
+        url: 'trackno/list',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+      });
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.initTableData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.initTableData();
+    },
+    newTrackno() {
+      this.dialogVisible = true;
+      this.form = {
+        carrier: null,
+        min: null,
+        max: null,
+        channel: null,
+      };
+    },
+    newTracknoSubmit() {
+      request({
+        url: '/trackno/add',
+        method: 'post',
+        data: {
+          carrier: this.form.carrier,
+          min: this.form.min,
+          max: this.form.max,
+          channelCode: this.form.channelCode,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.$message.success('追踪单号新建成功');
+        this.dialogVisible = false;
+        this.initTableData();
+      });
+    },
+    handleDialogCarrierChange(value) {
+      this.form.carrierNo2 = value[0];
+    },
+    dropRecord(index, row) {
+      this.$confirm('您确定要永久删除该追踪单号？', '提示', confirm).then(() => {
         request({
-          url: 'ord/carrier/distinct',
-          method: 'get'
-        }).then(res => {
-          this.carrier = res.data.data
-        })
-        request({
-          url: "/channel/list",
-          method: "get"
-        }).then(res => {
-          this.channels = res.data.data;
-        })
-      },
-      handleCarrierChange(value) {
-        this.form.carrierNo = value[0]
-        this.tableLoading = true
-        request({
-          url: 'trackno/list/' + this.form.carrierNo,
-          method: 'post',
-          data: {
-            current: this.tablePage.current,
-            size: this.tablePage.size
-          }
-        }).then(res => {
-          this.tableData = res.data.page.records
-          this.tableLoading = false
-        })
-      },
-      initTableData() {
-        request({
-          url: 'trackno/list',
-          method: 'post',
-          data: {
-            current: this.tablePage.current,
-            size: this.tablePage.size
-          }
-        }).then(res => {
-          this.tableData = res.data.page.records
-          this.tableLoading = false
-        })
-      },
-      handleSizeChange(val) {
-        this.tablePage.size = val
-        this.initTableData()
-      },
-      handleCurrentChange(val) {
-        this.tablePage.current = val
-        this.initTableData()
-      },
-      newTrackno() {
-        this.dialogVisible = true
-        this.form = {
-          carrier: null,
-          min: null,
-          max: null,
-          channel: null,
-        };
-      },
-      newTracknoSubmit() {
-        request({
-          url: '/trackno/add',
-          method: 'post',
-          data: {
-            carrier: this.form.carrier,
-            min: this.form.min,
-            max: this.form.max,
-            channelCode: this.form.channelCode,
-          }
-        }).then(res => {
-          console.log(res)
-          this.$message.success('追踪单号新建成功')
-          this.dialogVisible = false
-          this.initTableData()
-        })
-      },
-      handleDialogCarrierChange(value) {
-        this.form.carrierNo2 = value[0]
-      },
-      dropRecord(index, row) {
-        this.$confirm('您确定要永久删除该追踪单号？', '提示', confirm).then(() => {
-          request({
-            url: '/trackno/del/' + row.id,
-            method: 'get'
-          }).then(res => {
-            console.log(res)
-            this.$message.success('追踪单号删除成功')
-            this.initTableData()
-          })
-        }).catch(() => {
-          this.$message.info('取消删除')
-        })
-      },
-      handleUpdate(index, row) {
-        console.log(row);
-        this.onUpdate = true
-        this.onCreate = false
-        this.dialogVisible = true
-        this.form.selectedNewCarrier = 'carrier_' + row.carrier
-        this.form.min = row.min
-        this.form.max = row.max
-        this.form.id = row.id
-        this.form.channelCode = row.channelCode;
-        this.form.carrier = 'carrier_' + row.carrier;
-      },
-      updateOnSubmit() {
-        request({
-          url: '/trackno/update',
-          method: 'post',
-          data: {
-            id: this.form.id,
-            carrier: this.form.carrier,
-            min: this.form.min,
-            max: this.form.max,
-            channelCode: this.form.channelCode,
-          }
-        }).then(res => {
-          console.log(res)
-          this.$message.success('追踪单号更新成功')
-          this.dialogVisible = false
-          this.initTableData()
-        })
-      }
-    }
-  }
+          url: '/trackno/del/' + row.id,
+          method: 'get',
+        }).then((res) => {
+          console.log(res);
+          this.$message.success('追踪单号删除成功');
+          this.initTableData();
+        });
+      }).catch(() => {
+        this.$message.info('取消删除');
+      });
+    },
+    handleUpdate(index, row) {
+      console.log(row);
+      this.onUpdate = true;
+      this.onCreate = false;
+      this.dialogVisible = true;
+      this.form.selectedNewCarrier = 'carrier_' + row.carrier;
+      this.form.min = row.min;
+      this.form.max = row.max;
+      this.form.id = row.id;
+      this.form.channelCode = row.channelCode;
+      this.form.carrier = 'carrier_' + row.carrier;
+    },
+    updateOnSubmit() {
+      request({
+        url: '/trackno/update',
+        method: 'post',
+        data: {
+          id: this.form.id,
+          carrier: this.form.carrier,
+          min: this.form.min,
+          max: this.form.max,
+          channelCode: this.form.channelCode,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.$message.success('追踪单号更新成功');
+        this.dialogVisible = false;
+        this.initTableData();
+      });
+    },
+  },
+};
 </script>
 

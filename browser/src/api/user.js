@@ -1,52 +1,52 @@
 /**
  * “用户管理”相关接口
  */
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
 
-  queryUser(queryParam,pageParam) {
+  queryUser(queryParam, pageParam) {
     return request({
       url: '/sys_user/query',
       method: 'post',
       data: {
         ...queryParam,
         current: pageParam.current,
-        size: pageParam.size
-      }
-    })
+        size: pageParam.size,
+      },
+    });
   },
 
   updateUser(data) {
     return request({
       url: '/sys_user/info',
       method: 'patch',
-      data
-    })
+      data,
+    });
   },
 
   updatePwd(data) {
     return request({
       url: '/sys_user/pwd',
       method: 'patch',
-      data
-    })
+      data,
+    });
   },
 
   addUser(data) {
     return request({
       url: '/sys_user',
       method: 'post',
-      data
-    })
+      data,
+    });
   },
 
   deleteUser(data) {
     return request({
       url: '/sys_user',
       method: 'delete',
-      data
-    })
+      data,
+    });
   },
 
   /**
@@ -57,9 +57,9 @@ export default {
     return request({
       url: '/sys_user/role',
       method: 'patch',
-      data
-    })
-  }
+      data,
+    });
+  },
 
-}
+};
 

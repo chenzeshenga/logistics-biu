@@ -370,264 +370,264 @@
 
 <script>
 const rules = [
-    {
-        label: '是否支持多包裹',
-        value: 'whetherMultiPackage',
-    },
-    {
-        label: '是否需要体积',
-        value: 'whetherVolume',
-    },
-    {
-        label: '是否支持保险',
-        value: 'whetherInsurance',
-    },
-    {
-        label: '是否支持代收费用',
-        value: 'whetherChargeForThem',
-    },
-    {
-        label: '是否立即扣费',
-        value: 'whetherChargeAtFirst',
-    },
-]
+  {
+    label: '是否支持多包裹',
+    value: 'whetherMultiPackage',
+  },
+  {
+    label: '是否需要体积',
+    value: 'whetherVolume',
+  },
+  {
+    label: '是否支持保险',
+    value: 'whetherInsurance',
+  },
+  {
+    label: '是否支持代收费用',
+    value: 'whetherChargeForThem',
+  },
+  {
+    label: '是否立即扣费',
+    value: 'whetherChargeAtFirst',
+  },
+];
 
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
-    name: 'channel',
-    data() {
-        return {
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            tableLoading: false,
-            multiSelected: false,
-            tableData: [],
-            onCreate: true,
-            onUpdate: false,
-            form: {
-                channelName: '',
-                adapter: '',
-                partner: '',
-                min: '',
-                max: '',
-                checkedRules2: [],
-                active: false,
-                rule: '',
-                comments: '',
-            },
-            rules: rules,
-            checkRules: {},
-            isIndeterminate: true,
-            checkAll: false,
-            dialogVisible: false,
-            channelCodeList: [],
-            regTxt: '',
+  name: 'channel',
+  data() {
+    return {
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      multiSelected: false,
+      tableData: [],
+      onCreate: true,
+      onUpdate: false,
+      form: {
+        channelName: '',
+        adapter: '',
+        partner: '',
+        min: '',
+        max: '',
+        checkedRules2: [],
+        active: false,
+        rule: '',
+        comments: '',
+      },
+      rules: rules,
+      checkRules: {},
+      isIndeterminate: true,
+      checkAll: false,
+      dialogVisible: false,
+      channelCodeList: [],
+      regTxt: '',
+    };
+  },
+  created() {
+    this.fetch();
+  },
+  watch: {
+    $route() {
+      this.fetch();
+    },
+  },
+  methods: {
+    fetch() {
+      const filter = this.$route.query.filter;
+      if (filter !== undefined && filter.length > 0) {
+        this.regTxt = filter;
+        this.tableLoading = true;
+        request({
+          url: '/channel/pageReg?reg=' + this.regTxt,
+          method: 'post',
+          data: this.tablePage,
+        }).then((res) => {
+          this.tableData = res.data.page.records;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.pages = res.data.page.pages;
+          this.tablePage.size = res.data.page.size;
+          this.tablePage.total = res.data.page.total;
+          this.tableLoading = false;
+        });
+      } else {
+        this.tableLoading = true;
+        request({
+          url: '/channel/page',
+          method: 'post',
+          data: this.tablePage,
+        }).then((res) => {
+          this.tableData = res.data.page.records;
+          this.tablePage.current = res.data.page.current;
+          this.tablePage.pages = res.data.page.pages;
+          this.tablePage.size = res.data.page.size;
+          this.tablePage.total = res.data.page.total;
+          this.tableLoading = false;
+        });
+      }
+    },
+    handleCheckAllChange(val) {
+      if (val) {
+        const tmp = [];
+        for (const key in rules) {
+          tmp.push(rules[key]['value']);
         }
+        this.form.checkedRules2 = tmp;
+        this.isIndeterminate = false;
+      } else {
+        this.form.checkedRules2 = [];
+        this.isIndeterminate = true;
+      }
     },
-    created() {
-        this.fetch()
+    handleCheckedChange(value) {
+      const checkedCount = value.length;
+      this.checkAll = checkedCount === this.rules.length;
+      this.isIndeterminate =
+                checkedCount > 0 && checkedCount < this.rules.length;
     },
-    watch: {
-        $route() {
-            this.fetch()
-        },
+    submitForm() {
+      if (this.form.active) {
+        this.form.active = 'Y';
+      } else {
+        this.form.active = 'N';
+      }
+      request({
+        url: '/channel/add',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.dialogVisible = false;
+        this.$message.success('成功');
+        this.fetch();
+      });
     },
-    methods: {
-        fetch() {
-            const filter = this.$route.query.filter
-            if (filter !== undefined && filter.length > 0) {
-                this.regTxt = filter
-                this.tableLoading = true
-                request({
-                    url: '/channel/pageReg?reg=' + this.regTxt,
-                    method: 'post',
-                    data: this.tablePage,
-                }).then(res => {
-                    this.tableData = res.data.page.records
-                    this.tablePage.current = res.data.page.current
-                    this.tablePage.pages = res.data.page.pages
-                    this.tablePage.size = res.data.page.size
-                    this.tablePage.total = res.data.page.total
-                    this.tableLoading = false
-                })
-            } else {
-                this.tableLoading = true
-                request({
-                    url: '/channel/page',
-                    method: 'post',
-                    data: this.tablePage,
-                }).then(res => {
-                    this.tableData = res.data.page.records
-                    this.tablePage.current = res.data.page.current
-                    this.tablePage.pages = res.data.page.pages
-                    this.tablePage.size = res.data.page.size
-                    this.tablePage.total = res.data.page.total
-                    this.tableLoading = false
-                })
-            }
-        },
-        handleCheckAllChange(val) {
-            if (val) {
-                const tmp = []
-                for (const key in rules) {
-                    tmp.push(rules[key]['value'])
-                }
-                this.form.checkedRules2 = tmp
-                this.isIndeterminate = false
-            } else {
-                this.form.checkedRules2 = []
-                this.isIndeterminate = true
-            }
-        },
-        handleCheckedChange(value) {
-            const checkedCount = value.length
-            this.checkAll = checkedCount === this.rules.length
-            this.isIndeterminate =
-                checkedCount > 0 && checkedCount < this.rules.length
-        },
-        submitForm() {
-            if (this.form.active) {
-                this.form.active = 'Y'
-            } else {
-                this.form.active = 'N'
-            }
-            request({
-                url: '/channel/add',
-                method: 'post',
-                data: this.form,
-            }).then(() => {
-                this.dialogVisible = false
-                this.$message.success('成功')
-                this.fetch()
-            })
-        },
-        updateForm() {
-            if (this.form.active) {
-                this.form.active = 'Y'
-            } else {
-                this.form.active = 'N'
-            }
-            request({
-                url: '/channel/update',
-                method: 'post',
-                data: this.form,
-            }).then(res => {
-                this.dialogVisible = false
-                this.$message.success('成功')
-                this.fetch()
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetch()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetch()
-        },
-        update(index, row) {
-            this.dialogVisible = true
-            this.onUpdate = true
-            this.onCreate = false
-            this.form = this.tableData[index]
-            this.form.checkedRules2 = this.tableData[index].checkedRules.split(
-                ','
-            )
-            this.form.active = this.tableData[index].active === 'Y'
-        },
-        triggerDialog() {
-            this.dialogVisible = true
-        },
-        handleSelectionChange(val) {
-            this.multiSelected = val.length > 1
-            if (this.multiSelected) {
-                this.channelCodeList = []
-                for (var index in val) {
-                    this.channelCodeList.push(val[index]['channelCode'])
-                }
-            }
-        },
-        handleDelete(index, row) {
-            this.$confirm('您确定要永久删除该记录？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/channel/delete/' + row.channelCode,
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success('删除成功')
-                        this.fetch()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('取消删除')
-                })
-        },
-        handleEnable(index, row) {
-            request({
-                url: '/channel/enable',
-                method: 'post',
-                data: {
-                    channelCode: row.channelCode,
-                },
-            }).then(() => {
-                this.$message.success('启用成功')
-                this.fetch()
-            })
-        },
-        handleDisable(index, row) {
-            request({
-                url: '/channel/disable',
-                method: 'post',
-                data: {
-                    channelCode: row.channelCode,
-                },
-            }).then(() => {
-                this.$message.success('禁用成功')
-                this.fetch()
-            })
-        },
-        batchEnable() {
-            request({
-                url: '/channel/enable/list',
-                method: 'post',
-                data: this.channelCodeList,
-            }).then(() => {
-                this.$message.success('启用成功')
-                this.fetch()
-            })
-        },
-        batchDisable() {
-            request({
-                url: '/channel/disable/list',
-                method: 'post',
-                data: this.channelCodeList,
-            }).then(() => {
-                this.$message.success('禁用成功')
-                this.fetch()
-            })
-        },
-        searchByReg() {
-            this.tableLoading = true
-            request({
-                url: '/channel/pageReg?reg=' + this.regTxt,
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
+    updateForm() {
+      if (this.form.active) {
+        this.form.active = 'Y';
+      } else {
+        this.form.active = 'N';
+      }
+      request({
+        url: '/channel/update',
+        method: 'post',
+        data: this.form,
+      }).then((res) => {
+        this.dialogVisible = false;
+        this.$message.success('成功');
+        this.fetch();
+      });
     },
-}
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetch();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetch();
+    },
+    update(index, row) {
+      this.dialogVisible = true;
+      this.onUpdate = true;
+      this.onCreate = false;
+      this.form = this.tableData[index];
+      this.form.checkedRules2 = this.tableData[index].checkedRules.split(
+          ','
+      );
+      this.form.active = this.tableData[index].active === 'Y';
+    },
+    triggerDialog() {
+      this.dialogVisible = true;
+    },
+    handleSelectionChange(val) {
+      this.multiSelected = val.length > 1;
+      if (this.multiSelected) {
+        this.channelCodeList = [];
+        for (const index in val) {
+          this.channelCodeList.push(val[index]['channelCode']);
+        }
+      }
+    },
+    handleDelete(index, row) {
+      this.$confirm('您确定要永久删除该记录？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/channel/delete/' + row.channelCode,
+              method: 'get',
+            }).then(() => {
+              this.$message.success('删除成功');
+              this.fetch();
+            });
+          })
+          .catch(() => {
+            this.$message.info('取消删除');
+          });
+    },
+    handleEnable(index, row) {
+      request({
+        url: '/channel/enable',
+        method: 'post',
+        data: {
+          channelCode: row.channelCode,
+        },
+      }).then(() => {
+        this.$message.success('启用成功');
+        this.fetch();
+      });
+    },
+    handleDisable(index, row) {
+      request({
+        url: '/channel/disable',
+        method: 'post',
+        data: {
+          channelCode: row.channelCode,
+        },
+      }).then(() => {
+        this.$message.success('禁用成功');
+        this.fetch();
+      });
+    },
+    batchEnable() {
+      request({
+        url: '/channel/enable/list',
+        method: 'post',
+        data: this.channelCodeList,
+      }).then(() => {
+        this.$message.success('启用成功');
+        this.fetch();
+      });
+    },
+    batchDisable() {
+      request({
+        url: '/channel/disable/list',
+        method: 'post',
+        data: this.channelCodeList,
+      }).then(() => {
+        this.$message.success('禁用成功');
+        this.fetch();
+      });
+    },
+    searchByReg() {
+      this.tableLoading = true;
+      request({
+        url: '/channel/pageReg?reg=' + this.regTxt,
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
+    },
+  },
+};
 </script>
 
 <style scoped></style>

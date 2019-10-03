@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import ReturningTable from '../../../../components/dy/returning/index'
+import ReturningTable from '../../../../components/dy/returning/index';
 
 export default {
-    name: 'order-list-mgt-type1-status1',
-    components: { ReturningTable },
-    data() {
-        return {
-            msg: {
-                status: '1',
-                type: 'withoutUser',
-                buttonVisible1: true,
-            },
-        }
-    },
-}
+  name: 'order-list-mgt-type1-status1',
+  components: {ReturningTable},
+  data() {
+    return {
+      msg: {
+        status: '1',
+        type: 'withoutUser',
+        buttonVisible1: true,
+      },
+    };
+  },
+};
 </script>

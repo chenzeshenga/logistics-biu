@@ -7,29 +7,29 @@
 </template>
 
 <script>
-import WarehousingTable from '../../../../../components/dy/WarehousingTable/index'
+import WarehousingTable from '../../../../../components/dy/WarehousingTable/index';
 
 export default {
-    name: 'warehousing-mgt-dy-list-status1',
-    components: { WarehousingTable },
-    data() {
-        return {
-            msg: {
-                status: '1',
-                buttonVisible1: true,
-                buttonVisible2: true,
-                buttonVisible3: true,
-                buttonVisible4: true,
-                buttonVisible5: true,
-                buttonVisible6: true,
-                buttonVisible7: true,
-                buttonVisible8: false,
-                buttonVisible9: false,
-                buttonVisibleA: false,
-                buttonVisibleB: false,
-                buttonVisibleC: false,
-            },
-        }
-    },
-}
+  name: 'warehousing-mgt-dy-list-status1',
+  components: {WarehousingTable},
+  data() {
+    return {
+      msg: {
+        status: '1',
+        buttonVisible1: true,
+        buttonVisible2: true,
+        buttonVisible3: true,
+        buttonVisible4: true,
+        buttonVisible5: true,
+        buttonVisible6: true,
+        buttonVisible7: true,
+        buttonVisible8: false,
+        buttonVisible9: false,
+        buttonVisibleA: false,
+        buttonVisibleB: false,
+        buttonVisibleC: false,
+      },
+    };
+  },
+};
 </script>

@@ -65,64 +65,64 @@
 </template>
 
 <script>
-import request from '../../../utils/service'
+import request from '../../../utils/service';
 
 export default {
-    name: 'fileTemplate',
-    data() {
-        return {
-            tableLoading: false,
-            tableData: [],
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            regTxt: null,
-        }
+  name: 'fileTemplate',
+  data() {
+    return {
+      tableLoading: false,
+      tableData: [],
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      regTxt: null,
+    };
+  },
+  created() {
+    this.fetch();
+  },
+  methods: {
+    fetch() {
+      this.tableLoading = true;
+      request({
+        url: '/template/list?reg=' + this.regTxt,
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    created() {
-        this.fetch()
+    downloadFile(index, row) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/template/file/' + row.uuid;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
-    methods: {
-        fetch() {
-            this.tableLoading = true
-            request({
-                url: '/template/list?reg=' + this.regTxt,
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
-        downloadFile(index, row) {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/template/file/' + row.uuid
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
-        searchByReg() {
-            this.fetch()
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetch()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetch()
-        },
+    searchByReg() {
+      this.fetch();
     },
-}
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetch();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetch();
+    },
+  },
+};
 </script>

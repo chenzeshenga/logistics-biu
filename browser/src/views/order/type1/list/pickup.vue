@@ -64,115 +64,115 @@
 </template>
 
 <script>
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
-    name: 'order-list-mgt-type1-pickup',
-    data() {
-        return {
-            search: '',
-            content: [],
-            abnormalReason: '',
-            dialogVisible: false,
-        }
+  name: 'order-list-mgt-type1-pickup',
+  data() {
+    return {
+      search: '',
+      content: [],
+      abnormalReason: '',
+      dialogVisible: false,
+    };
+  },
+  methods: {
+    searchOrdContent() {
+      if (this.search.length <= 0) {
+        this.$message.warning('请填写订单号');
+        return;
+      }
+      request({
+        url: 'ord/pickup/' + this.search,
+        type: 'get',
+      }).then((res) => {
+        console.log(res);
+        this.content = res.data.data;
+      });
     },
-    methods: {
-        searchOrdContent() {
-            if (this.search.length <= 0) {
-                this.$message.warning('请填写订单号')
-                return
-            }
-            request({
-                url: 'ord/pickup/' + this.search,
-                type: 'get',
-            }).then(res => {
-                console.log(res)
-                this.content = res.data.data
-            })
-        },
-        handleCurrentChange(row, event, column) {
-            // console.log(row, event, column, event.currentTarget)
-        },
-        handleEdit(index, row) {
-            // console.log(index, row);
-        },
-        handleDelete(index, row) {
-            // console.log(index, row);
-        },
-        tableRowClassName({ row, rowIndex }) {
-            if (Number(row.picked) === Number(row.num)) {
-                row.satisfied = true
-                return 'success-row'
-            } else {
-                row.satisfied = false
-                return 'danger-row'
-            }
-        },
-        pickupSubmit() {
-            if (this.search.length <= 0) {
-                this.$message.warning('请输入订单号')
-                return
-            }
-            let flag = false
-            for (let index in this.content) {
-                let subContent = this.content[index]
-                console.log(subContent)
-                flag = subContent.satisfied
-            }
-            if (flag) {
-                request({
-                    url: 'ord/pickup',
-                    method: 'post',
-                    data: this.content,
-                }).then(res => {
-                    console.log(res)
-                    this.$message.success('拣货完成')
-                    this.search = ''
-                    this.content = []
-                })
-            } else {
-                this.$confirm(
-                    '当前订单有商品未完全拣货，是否提交',
-                    '提示',
-                    confirm
-                )
-                    .then(() => {
-                        request({
-                            url: 'ord/pickup',
-                            method: 'post',
-                            data: this.content,
-                        }).then(res => {
-                            console.log(res)
-                            this.$message.success('拣货完成')
-                            this.abnormalReasonFun()
-                        })
-                    })
-                    .catch(() => {
-                        this.abnormalReasonFun()
-                    })
-            }
-        },
-        abnormalReasonFun() {
-            this.$confirm('订单发货是否标记异常', '提示', confirm).then(() => {
-                this.dialogVisible = true
-            })
-        },
-        abnormalUpdate() {
-            request({
-                url: 'ord/abnormal',
+    handleCurrentChange(row, event, column) {
+      // console.log(row, event, column, event.currentTarget)
+    },
+    handleEdit(index, row) {
+      // console.log(index, row);
+    },
+    handleDelete(index, row) {
+      // console.log(index, row);
+    },
+    tableRowClassName({row, rowIndex}) {
+      if (Number(row.picked) === Number(row.num)) {
+        row.satisfied = true;
+        return 'success-row';
+      } else {
+        row.satisfied = false;
+        return 'danger-row';
+      }
+    },
+    pickupSubmit() {
+      if (this.search.length <= 0) {
+        this.$message.warning('请输入订单号');
+        return;
+      }
+      let flag = false;
+      for (const index in this.content) {
+        const subContent = this.content[index];
+        console.log(subContent);
+        flag = subContent.satisfied;
+      }
+      if (flag) {
+        request({
+          url: 'ord/pickup',
+          method: 'post',
+          data: this.content,
+        }).then((res) => {
+          console.log(res);
+          this.$message.success('拣货完成');
+          this.search = '';
+          this.content = [];
+        });
+      } else {
+        this.$confirm(
+            '当前订单有商品未完全拣货，是否提交',
+            '提示',
+            confirm
+        )
+            .then(() => {
+              request({
+                url: 'ord/pickup',
                 method: 'post',
-                data: {
-                    orderNo: this.search,
-                    abnormalReason: this.abnormalReason,
-                },
-            }).then(res => {
-                console.log(res)
-                this.$message.success('异常标记成功')
-                this.dialogVisible = false
+                data: this.content,
+              }).then((res) => {
+                console.log(res);
+                this.$message.success('拣货完成');
+                this.abnormalReasonFun();
+              });
             })
-        },
+            .catch(() => {
+              this.abnormalReasonFun();
+            });
+      }
     },
-}
+    abnormalReasonFun() {
+      this.$confirm('订单发货是否标记异常', '提示', confirm).then(() => {
+        this.dialogVisible = true;
+      });
+    },
+    abnormalUpdate() {
+      request({
+        url: 'ord/abnormal',
+        method: 'post',
+        data: {
+          orderNo: this.search,
+          abnormalReason: this.abnormalReason,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.$message.success('异常标记成功');
+        this.dialogVisible = false;
+      });
+    },
+  },
+};
 </script>
 
 <style>

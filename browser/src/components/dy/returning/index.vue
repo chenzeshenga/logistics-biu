@@ -377,206 +377,206 @@
 </template>
 
 <script>
-import request from '../../../utils/service'
+import request from '../../../utils/service';
 
 export default {
-    name: 'returningTable',
-    data() {
-        return {
-            msgData: {
-                status: this.msg.status,
-                type: this.msg.type,
-                buttonVisible8: this.msg.buttonVisible8 === true,
-                buttonVisible1: this.msg.buttonVisible1 === true,
-                buttonVisible2: this.msg.buttonVisible2 === true,
-                buttonVisible3: this.msg.buttonVisible3 === true,
-                buttonVisible4: this.msg.buttonVisible4 === true,
-                buttonVisible5: this.msg.buttonVisible5 === true,
-                buttonVisible6: this.msg.buttonVisible6 === true,
-                buttonVisible7: this.msg.buttonVisible7 === true,
-                buttonVisible9: this.msg.buttonVisible9 === true,
-                buttonVisibleA: this.msg.buttonVisibleA === true,
-                buttonVisibleB: this.msg.buttonVisibleB === true,
-                buttonVisibleC: this.msg.buttonVisibleC === true,
-            },
-            // page data
-            tablePage: {
-                current: 1,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            tableLoading: false,
-            tableData: [],
-            daterange: null,
-            dialogVisible1: false,
-            dialogVisible2: false,
-            dialogVisible3: false,
-            pickerOptions2: {
-                disabledDate(time) {
-                    const dateBeforeNow = new Date()
-                    dateBeforeNow.setDate(new Date().getDate() - 7)
-                    return time.getTime() < dateBeforeNow.getTime()
-                },
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 7
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 30
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date()
-                            const start = new Date()
-                            start.setTime(
-                                start.getTime() - 3600 * 1000 * 24 * 90
-                            )
-                            picker.$emit('pick', [start, end])
-                        },
-                    },
-                ],
-            },
-            users: [],
-            channels: [],
-            search: {
-                warehousingNo: '',
-                creator: '',
-                channelCode: '',
-            },
-            dialog: {
-                carrier: '',
-                trackNo: '',
-                warehousingNo: '',
-            },
-            print: {},
-            dialogForm3: {},
-            noteTxt:
-                '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
-            dialogVisible: false,
-        }
-    },
-    props: ['msg'],
-    created() {
-        this.fetchData()
-        this.initUserList()
-    },
-    methods: {
-        searchReturning() {},
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url: 'return/list?type=' + this.msgData.type + '&status=新建',
-                method: 'post',
-                data: this.tablePage,
-            }).then(res => {
-                let records = res.data.page.records
-                for (let i = 0; i < records.length; i++) {
-                    let subRecords = records[i]
-                    if (subRecords['withoutOrderNoFlag']) {
-                        subRecords['withoutOrderNoFlagLabel'] = '对应'
-                    } else {
-                        subRecords['withoutOrderNoFlagLabel'] = '不对应'
-                    }
-                    let imgs = subRecords['imgs']
-                    if (imgs == null) {
-                        subRecords['imgsLinks'] = []
-                        continue
-                    }
-                    let imgsArr = imgs.split(';')
-                    let imgsLinks = []
-                    for (let j = 0; j < imgsArr.length; j++) {
-                        const sublink =
-                            process.env.BASE_API + '/img/' + imgsArr[j]
-                        imgsLinks.push(sublink)
-                    }
-                    subRecords['imgsLinks'] = imgsLinks
-                }
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
+  name: 'returningTable',
+  data() {
+    return {
+      msgData: {
+        status: this.msg.status,
+        type: this.msg.type,
+        buttonVisible8: this.msg.buttonVisible8 === true,
+        buttonVisible1: this.msg.buttonVisible1 === true,
+        buttonVisible2: this.msg.buttonVisible2 === true,
+        buttonVisible3: this.msg.buttonVisible3 === true,
+        buttonVisible4: this.msg.buttonVisible4 === true,
+        buttonVisible5: this.msg.buttonVisible5 === true,
+        buttonVisible6: this.msg.buttonVisible6 === true,
+        buttonVisible7: this.msg.buttonVisible7 === true,
+        buttonVisible9: this.msg.buttonVisible9 === true,
+        buttonVisibleA: this.msg.buttonVisibleA === true,
+        buttonVisibleB: this.msg.buttonVisibleB === true,
+        buttonVisibleC: this.msg.buttonVisibleC === true,
+      },
+      // page data
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      daterange: null,
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
+      pickerOptions2: {
+        disabledDate(time) {
+          const dateBeforeNow = new Date();
+          dateBeforeNow.setDate(new Date().getDate() - 7);
+          return time.getTime() < dateBeforeNow.getTime();
         },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path:
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 7
+              );
+              picker.$emit('pick', [start, end]);
+            },
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 30
+              );
+              picker.$emit('pick', [start, end]);
+            },
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(
+                  start.getTime() - 3600 * 1000 * 24 * 90
+              );
+              picker.$emit('pick', [start, end]);
+            },
+          },
+        ],
+      },
+      users: [],
+      channels: [],
+      search: {
+        warehousingNo: '',
+        creator: '',
+        channelCode: '',
+      },
+      dialog: {
+        carrier: '',
+        trackNo: '',
+        warehousingNo: '',
+      },
+      print: {},
+      dialogForm3: {},
+      noteTxt:
+                '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
+      dialogVisible: false,
+    };
+  },
+  props: ['msg'],
+  created() {
+    this.fetchData();
+    this.initUserList();
+  },
+  methods: {
+    searchReturning() {},
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: 'return/list?type=' + this.msgData.type + '&status=新建',
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        const records = res.data.page.records;
+        for (let i = 0; i < records.length; i++) {
+          const subRecords = records[i];
+          if (subRecords['withoutOrderNoFlag']) {
+            subRecords['withoutOrderNoFlagLabel'] = '对应';
+          } else {
+            subRecords['withoutOrderNoFlagLabel'] = '不对应';
+          }
+          const imgs = subRecords['imgs'];
+          if (imgs == null) {
+            subRecords['imgsLinks'] = [];
+            continue;
+          }
+          const imgsArr = imgs.split(';');
+          const imgsLinks = [];
+          for (let j = 0; j < imgsArr.length; j++) {
+            const sublink =
+                            process.env.BASE_API + '/img/' + imgsArr[j];
+            imgsLinks.push(sublink);
+          }
+          subRecords['imgsLinks'] = imgsLinks;
+        }
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path:
                     '/new-warehousing/new-warehousing?warehousingNo=' +
                     row.warehousingNo,
-            })
-        },
-        statusUpdate(index, row, statusUpdateTo) {
-            this.$confirm('您确定要提交该订单？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: 'warehousing/status',
-                        method: 'post',
-                        data: {
-                            to: statusUpdateTo,
-                            warehousingNo: row.warehousingNo,
-                        },
-                    }).then(() => {
-                        this.fetchData()
-                        this.$message.success('提交成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消提交')
-                })
-        },
-        route2NewReturning() {
-            this.$router.push({
-                path: '/new-returns/new-returns',
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        handleError(err) {
-            this.$message.error(JSON.parse(err.message)['message'])
-        },
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
-        },
-        accept(index, row) {
-            console.log(index, row)
-            this.dialogVisible = true
-        },
+      });
     },
-}
+    statusUpdate(index, row, statusUpdateTo) {
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: statusUpdateTo,
+                warehousingNo: row.warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    route2NewReturning() {
+      this.$router.push({
+        path: '/new-returns/new-returns',
+      });
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    handleError(err) {
+      this.$message.error(JSON.parse(err.message)['message']);
+    },
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
+    },
+    accept(index, row) {
+      console.log(index, row);
+      this.dialogVisible = true;
+    },
+  },
+};
 </script>
 
 <style scoped></style>

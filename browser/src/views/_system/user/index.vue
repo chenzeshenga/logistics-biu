@@ -222,269 +222,269 @@
 </template>
 
 <script>
-import optionApi from '@/api/option'
-import userApi from '@/api/user'
-import { parseTime, resetTemp } from '@/utils'
-import { root, confirm, pageParamNames } from '@/utils/constants'
-import debounce from 'lodash/debounce'
+import optionApi from '@/api/option';
+import userApi from '@/api/user';
+import {parseTime, resetTemp} from '@/utils';
+import {root, confirm, pageParamNames} from '@/utils/constants';
+import debounce from 'lodash/debounce';
 
 export default {
-    name: 'UserManage',
+  name: 'UserManage',
 
-    data() {
-        let validateName = (rule, value, callback) => {
-            if (this.dialogStatus === 'create' && value === '') {
-                callback(new Error('必填'))
-            } else {
-                callback()
-            }
-        }
+  data() {
+    const validateName = (rule, value, callback) => {
+      if (this.dialogStatus === 'create' && value === '') {
+        callback(new Error('必填'));
+      } else {
+        callback();
+      }
+    };
 
-        let validatePass = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入密码'))
-            } else {
-                if (this.temp.pwd2 !== '') {
-                    this.$refs.dataForm.validateField('pwd2')
-                }
-                callback()
-            }
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.temp.pwd2 !== '') {
+          this.$refs.dataForm.validateField('pwd2');
         }
+        callback();
+      }
+    };
 
-        let validatePass2 = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请再次输入密码'))
-            } else if (value != this.temp.pwd) {
-                callback(new Error('两次输入密码不一致!'))
-            } else {
-                callback()
-            }
-        }
+    const validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value != this.temp.pwd) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
 
-        return {
-            parseTime: parseTime,
-            tableLoading: false,
-            tableData: [],
-            tableQuery: {
-                nick: null,
-            },
-            tablePage: {
-                current: null,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            dialogFormVisible: false,
-            editRolesDialogVisible: false,
-            dialogStatus: '',
-            temp: {
-                idx: null, //tableData中的下标
-                uid: null,
-                uname: null,
-                nick: null,
-                pwd: null,
-                pwd2: null,
-                created: null,
-                updated: null,
-            },
-            textMap: {
-                update: '编辑用户',
-                create: '新增用户',
-            },
-            rules: {
-                uname: [{ validator: validateName, trigger: 'blur' }],
-                pwd: [{ validator: validatePass, trigger: 'blur' }],
-                pwd2: [{ validator: validatePass2, trigger: 'change' }],
-            },
-            checkAll: false,
-            isIndeterminate: true,
-            //所有角色(管理员除外)
-            roleOptions: [],
-            roleMap: new Map(),
-            // 更新用户的角色的数据
-            updateUserRolesData: {
-                idx: null,
-                uid: null,
-                rids: [],
-            },
-        }
+    return {
+      parseTime: parseTime,
+      tableLoading: false,
+      tableData: [],
+      tableQuery: {
+        nick: null,
+      },
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      dialogFormVisible: false,
+      editRolesDialogVisible: false,
+      dialogStatus: '',
+      temp: {
+        idx: null, // tableData中的下标
+        uid: null,
+        uname: null,
+        nick: null,
+        pwd: null,
+        pwd2: null,
+        created: null,
+        updated: null,
+      },
+      textMap: {
+        update: '编辑用户',
+        create: '新增用户',
+      },
+      rules: {
+        uname: [{validator: validateName, trigger: 'blur'}],
+        pwd: [{validator: validatePass, trigger: 'blur'}],
+        pwd2: [{validator: validatePass2, trigger: 'change'}],
+      },
+      checkAll: false,
+      isIndeterminate: true,
+      // 所有角色(管理员除外)
+      roleOptions: [],
+      roleMap: new Map(),
+      // 更新用户的角色的数据
+      updateUserRolesData: {
+        idx: null,
+        uid: null,
+        rids: [],
+      },
+    };
+  },
+
+  created() {
+    this.initData();
+    this.fetchData();
+  },
+
+  watch: {
+    // 延时查询
+    'tableQuery.nick': debounce(function() {
+      this.fetchData();
+    }, 500),
+  }, // watch
+
+  methods: {
+    initData() {
+      // 所有角色选项
+      optionApi.listRoleOptions().then((res) => {
+        res.data.options.forEach((obj) => {
+          if (obj.val2 != root.rval) {
+            // 排除管理员
+            this.roleOptions.push(obj);
+            this.roleMap.set(obj.id, obj.val);
+          }
+        });
+      });
     },
 
-    created() {
-        this.initData()
-        this.fetchData()
+    hasAdminRole(row) {
+      if (row && row.roleList) {
+        return row.roleList.some((role) => role.rval == root.rval);
+      }
+      return false;
     },
 
-    watch: {
-        //延时查询
-        'tableQuery.nick': debounce(function() {
-            this.fetchData()
-        }, 500),
-    }, //watch
+    // 全选
+    handleCheckAllChange(val) {
+      const allRids = this.roleOptions.map((role) => role.id);
+      this.updateUserRolesData.rids = val ? allRids : [];
+      this.isIndeterminate = false;
+    },
 
-    methods: {
-        initData() {
-            //所有角色选项
-            optionApi.listRoleOptions().then(res => {
-                res.data.options.forEach(obj => {
-                    if (obj.val2 != root.rval) {
-                        //排除管理员
-                        this.roleOptions.push(obj)
-                        this.roleMap.set(obj.id, obj.val)
-                    }
-                })
-            })
-        },
+    // 分页
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
 
-        hasAdminRole(row) {
-            if (row && row.roleList) {
-                return row.roleList.some(role => role.rval == root.rval)
-            }
-            return false
-        },
+    // 查询
+    fetchData(current) {
+      if (current) {
+        this.tablePage.current = current;
+      }
+      this.tableLoading = true;
+      userApi.queryUser(this.tableQuery, this.tablePage).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+        pageParamNames.forEach((name) =>
+          this.$set(this.tablePage, name, res.data.page[name])
+        );
+      });
+    },
 
-        //全选
-        handleCheckAllChange(val) {
-            let allRids = this.roleOptions.map(role => role.id)
-            this.updateUserRolesData.rids = val ? allRids : []
-            this.isIndeterminate = false
-        },
+    // 更新
+    handleUpdate(idx, row) {
+      this.temp = Object.assign({}, row); // copy obj
+      this.temp.idx = idx;
+      this.temp.pwd = null;
+      this.temp.pwd2 = null;
+      this.dialogStatus = 'update';
+      this.dialogFormVisible = true;
+      this.$nextTick(() => this.$refs['dataForm'].clearValidate());
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (!valid) return;
+        const tempData = Object.assign({}, this.temp); // copy obj
+        userApi.updateUser(tempData).then((res) => {
+          tempData.updated = res.data.updated;
+          this.tableData.splice(tempData.idx, 1, tempData);
+          this.dialogFormVisible = false;
+          this.$message.success('更新成功');
+        });
+      });
+    },
 
-        //分页
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
+    // 更新用户的角色
+    handleUpdateUserRoles(idx, row) {
+      // 显示用户的角色
+      this.updateUserRolesData = {
+        idx: idx,
+        uid: row.uid,
+        rids: row.roleList.map((role) => role.rid),
+      };
+      // 显示弹窗
+      this.editRolesDialogVisible = true;
+    },
 
-        //查询
-        fetchData(current) {
-            if (current) {
-                this.tablePage.current = current
-            }
-            this.tableLoading = true
-            userApi.queryUser(this.tableQuery, this.tablePage).then(res => {
-                this.tableData = res.data.page.records
-                this.tableLoading = false
-                pageParamNames.forEach(name =>
-                    this.$set(this.tablePage, name, res.data.page[name])
-                )
-            })
-        },
-
-        //更新
-        handleUpdate(idx, row) {
-            this.temp = Object.assign({}, row) // copy obj
-            this.temp.idx = idx
-            this.temp.pwd = null
-            this.temp.pwd2 = null
-            this.dialogStatus = 'update'
-            this.dialogFormVisible = true
-            this.$nextTick(() => this.$refs['dataForm'].clearValidate())
-        },
-        updateData() {
-            this.$refs['dataForm'].validate(valid => {
-                if (!valid) return
-                const tempData = Object.assign({}, this.temp) //copy obj
-                userApi.updateUser(tempData).then(res => {
-                    tempData.updated = res.data.updated
-                    this.tableData.splice(tempData.idx, 1, tempData)
-                    this.dialogFormVisible = false
-                    this.$message.success('更新成功')
-                })
-            })
-        },
-
-        //更新用户的角色
-        handleUpdateUserRoles(idx, row) {
-            // 显示用户的角色
-            this.updateUserRolesData = {
-                idx: idx,
-                uid: row.uid,
-                rids: row.roleList.map(role => role.rid),
-            }
-            // 显示弹窗
-            this.editRolesDialogVisible = true
-        },
-
-        checkUpdateUserRolesData() {
-            const noRolesSelected =
+    checkUpdateUserRolesData() {
+      const noRolesSelected =
                 this.updateUserRolesData &&
                 this.updateUserRolesData.rids &&
-                this.updateUserRolesData.rids.length == 0
-            if (noRolesSelected) {
-                this.$confirm(
-                    '当前没有选中任何角色，会清除该用户已有的角色, 是否继续?',
-                    '提示',
-                    confirm
-                )
-                    .then(() => {
-                        this.invokeUpdateUserRolesApi()
-                    })
-                    .catch(() => {
-                        this.$message('已取消编辑用户角色')
-                    })
-            } else {
-                this.invokeUpdateUserRolesApi()
-            }
-        },
-
-        invokeUpdateUserRolesApi() {
-            userApi.updateUserRoles(this.updateUserRolesData).then(res => {
-                let newRoles = this.updateUserRolesData.rids.map(rid => {
-                    let rname = this.roleMap.get(rid)
-                    if (rname) return { rid, rname }
-                })
-                this.tableData[this.updateUserRolesData.idx].roleList = newRoles
-                this.editRolesDialogVisible = false
-                this.$message.success('更新成功')
+                this.updateUserRolesData.rids.length == 0;
+      if (noRolesSelected) {
+        this.$confirm(
+            '当前没有选中任何角色，会清除该用户已有的角色, 是否继续?',
+            '提示',
+            confirm
+        )
+            .then(() => {
+              this.invokeUpdateUserRolesApi();
             })
-        },
-
-        //删除
-        handleDelete(idx, row) {
-            this.$confirm('您确定要永久删除该用户？', '提示', confirm)
-                .then(() => {
-                    userApi.deleteUser({ uid: row.uid }).then(res => {
-                        this.tableData.splice(idx, 1)
-                        --this.tablePage.total
-                        this.dialogFormVisible = false
-                        this.$message.success('删除成功')
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消删除')
-                })
-        },
-
-        //新增
-        handleCreate() {
-            resetTemp(this.temp)
-            this.dialogStatus = 'create'
-            this.dialogFormVisible = true
-            this.$nextTick(() => {
-                this.$refs['dataForm'].clearValidate()
-            })
-        },
-        createData() {
-            this.$refs['dataForm'].validate(valid => {
-                if (!valid) return
-                userApi.addUser(this.temp).then(res => {
-                    this.temp.uid = res.data.uid //后台传回来新增记录的id
-                    this.temp.created = res.data.created //后台传回来新增记录的时间
-                    this.temp.roleList = []
-                    this.tableData.unshift(Object.assign({}, this.temp))
-                    ++this.tablePage.total
-                    this.dialogFormVisible = false
-                    this.$message.success('添加成功')
-                })
-            })
-        },
+            .catch(() => {
+              this.$message('已取消编辑用户角色');
+            });
+      } else {
+        this.invokeUpdateUserRolesApi();
+      }
     },
-}
+
+    invokeUpdateUserRolesApi() {
+      userApi.updateUserRoles(this.updateUserRolesData).then((res) => {
+        const newRoles = this.updateUserRolesData.rids.map((rid) => {
+          const rname = this.roleMap.get(rid);
+          if (rname) return {rid, rname};
+        });
+        this.tableData[this.updateUserRolesData.idx].roleList = newRoles;
+        this.editRolesDialogVisible = false;
+        this.$message.success('更新成功');
+      });
+    },
+
+    // 删除
+    handleDelete(idx, row) {
+      this.$confirm('您确定要永久删除该用户？', '提示', confirm)
+          .then(() => {
+            userApi.deleteUser({uid: row.uid}).then((res) => {
+              this.tableData.splice(idx, 1);
+              --this.tablePage.total;
+              this.dialogFormVisible = false;
+              this.$message.success('删除成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
+          });
+    },
+
+    // 新增
+    handleCreate() {
+      resetTemp(this.temp);
+      this.dialogStatus = 'create';
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate();
+      });
+    },
+    createData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (!valid) return;
+        userApi.addUser(this.temp).then((res) => {
+          this.temp.uid = res.data.uid; // 后台传回来新增记录的id
+          this.temp.created = res.data.created; // 后台传回来新增记录的时间
+          this.temp.roleList = [];
+          this.tableData.unshift(Object.assign({}, this.temp));
+          ++this.tablePage.total;
+          this.dialogFormVisible = false;
+          this.$message.success('添加成功');
+        });
+      });
+    },
+  },
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

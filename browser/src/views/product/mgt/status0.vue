@@ -285,193 +285,193 @@
 </template>
 
 <script>
-import request from '../../../utils/service'
+import request from '../../../utils/service';
 
 export default {
-    name: 'status0',
-    data() {
-        return {
-            tablePage: {
-                current: null,
-                pages: null,
-                size: null,
-                total: null,
-            },
-            tableLoading: false,
-            tableData: [],
-            multiSelected: false,
-            skus: [],
-            form: {
-                sku: null,
-                dySku: null,
-                length: null,
-                width: null,
-                height: null,
-                weight: null,
-            },
-            users: [],
-            search: {
-                sku: '',
-                dySku: '',
-                name: '',
-                creator: '',
-            },
-            dialogVisible: false,
-        }
+  name: 'status0',
+  data() {
+    return {
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      multiSelected: false,
+      skus: [],
+      form: {
+        sku: null,
+        dySku: null,
+        length: null,
+        width: null,
+        height: null,
+        weight: null,
+      },
+      users: [],
+      search: {
+        sku: '',
+        dySku: '',
+        name: '',
+        creator: '',
+      },
+      dialogVisible: false,
+    };
+  },
+  created() {
+    this.fetchData();
+    this.initUserList();
+  },
+  methods: {
+    initUserList() {
+      request({
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data.page.records;
+      });
     },
-    created() {
-        this.fetchData()
-        this.initUserList()
+    searchProduct() {
+      this.tableLoading = true;
+      request({
+        url: 'product/list/0',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
+          sku: this.search.sku,
+          dySku: this.search.dySku,
+          creator: this.search.creator,
+          name: this.search.name,
+        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    methods: {
-        initUserList() {
-            request({
-                url: '/sys_user/query4Option',
-                method: 'post',
-                data: {
-                    current: null,
-                    size: 'all',
-                },
-            }).then(res => {
-                this.users = res.data.page.records
-            })
+    fetchData() {
+      this.tableLoading = true;
+      request({
+        url: '/product/list/0',
+        method: 'post',
+        data: {
+          current: this.tablePage.current,
+          size: this.tablePage.size,
         },
-        searchProduct() {
-            this.tableLoading = true
-            request({
-                url: 'product/list/0',
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                    sku: this.search.sku,
-                    dySku: this.search.dySku,
-                    creator: this.search.creator,
-                    name: this.search.name,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.current = res.data.page.current
-                this.tablePage.pages = res.data.page.pages
-                this.tablePage.size = res.data.page.size
-                this.tablePage.total = res.data.page.total
-                this.tableLoading = false
-            })
-        },
-        fetchData() {
-            this.tableLoading = true
-            request({
-                url: '/product/list/0',
-                method: 'post',
-                data: {
-                    current: this.tablePage.current,
-                    size: this.tablePage.size,
-                },
-            }).then(res => {
-                this.tableData = res.data.page.records
-                this.tablePage.total = res.data.page.total
-                this.tablePage.current = res.data.page.current
-                this.tablePage.size = res.data.page.size
-                this.tableLoading = false
-            })
-        },
-        handleSizeChange(val) {
-            this.tablePage.size = val
-            this.fetchData()
-        },
-        handleCurrentChange(val) {
-            this.tablePage.current = val
-            this.fetchData()
-        },
-        statusUpdate(index, row) {
-            this.form.sku = row.sku
-            this.form.dySku = row.dySku
-            this.form.length = row.length
-            this.form.width = row.width
-            this.form.height = row.height
-            this.form.weight = row.weight
-            this.dialogVisible = true
-        },
-        statusUpdateInDialog() {
-            this.$confirm('您确定审核通过该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/update',
-                        method: 'post',
-                        data: this.form,
-                    }).then(() => {
-                        this.$message.success('体积重量信息更新成功')
-                        request({
-                            url: '/product/status/' + this.form.sku + '/1',
-                            method: 'get',
-                        }).then(() => {
-                            this.$message.success('审核成功')
-                            this.dialogVisible = false
-                            this.fetchData()
-                        })
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消审核')
-                    this.dialogVisible = false
-                })
-        },
-        handleDelete(index, row) {
-            console.log(row)
-            this.$confirm('您确定删除该商品？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/delete/' + row.sku,
-                        method: 'get',
-                    }).then(() => {
-                        this.$message.success(row.sku + '删除成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消删除')
-                })
-        },
-        handleUpdate(index, row) {
-            this.$router.push({
-                path: '/new-product/new-product?sku=' + row.sku,
-            })
-        },
-        handleSelectionChange(val) {
-            this.multiSelected = val.length > 1
-            for (let i = 0; i < val.length; i++) {
-                this.skus.push(val[i]['sku'])
-            }
-        },
-        batchUpdate() {
-            this.$confirm('您确定要审核这些商品吗？', '提示', confirm)
-                .then(() => {
-                    request({
-                        url: '/product/update/approval',
-                        method: 'post',
-                        data: this.skus,
-                    }).then(() => {
-                        this.$message.success('更新成功')
-                        this.fetchData()
-                    })
-                })
-                .catch(() => {
-                    this.$message.info('已取消审核')
-                })
-        },
-        route2New() {
-            this.$router.push({
-                path: '/new-product/new-product',
-            })
-        },
-        export2Excel() {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = process.env.BASE_API + '/product/excel/0'
-            link.target = '_blank'
-            document.body.appendChild(link)
-            link.click()
-        },
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.total = res.data.page.total;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.size = res.data.page.size;
+        this.tableLoading = false;
+      });
     },
-}
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
+    },
+    statusUpdate(index, row) {
+      this.form.sku = row.sku;
+      this.form.dySku = row.dySku;
+      this.form.length = row.length;
+      this.form.width = row.width;
+      this.form.height = row.height;
+      this.form.weight = row.weight;
+      this.dialogVisible = true;
+    },
+    statusUpdateInDialog() {
+      this.$confirm('您确定审核通过该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/update',
+              method: 'post',
+              data: this.form,
+            }).then(() => {
+              this.$message.success('体积重量信息更新成功');
+              request({
+                url: '/product/status/' + this.form.sku + '/1',
+                method: 'get',
+              }).then(() => {
+                this.$message.success('审核成功');
+                this.dialogVisible = false;
+                this.fetchData();
+              });
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消审核');
+            this.dialogVisible = false;
+          });
+    },
+    handleDelete(index, row) {
+      console.log(row);
+      this.$confirm('您确定删除该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/delete/' + row.sku,
+              method: 'get',
+            }).then(() => {
+              this.$message.success(row.sku + '删除成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
+          });
+    },
+    handleUpdate(index, row) {
+      this.$router.push({
+        path: '/new-product/new-product?sku=' + row.sku,
+      });
+    },
+    handleSelectionChange(val) {
+      this.multiSelected = val.length > 1;
+      for (let i = 0; i < val.length; i++) {
+        this.skus.push(val[i]['sku']);
+      }
+    },
+    batchUpdate() {
+      this.$confirm('您确定要审核这些商品吗？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/update/approval',
+              method: 'post',
+              data: this.skus,
+            }).then(() => {
+              this.$message.success('更新成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消审核');
+          });
+    },
+    route2New() {
+      this.$router.push({
+        path: '/new-product/new-product',
+      });
+    },
+    export2Excel() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/product/excel/0';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+  },
+};
 </script>

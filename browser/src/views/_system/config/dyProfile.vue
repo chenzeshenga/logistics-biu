@@ -92,52 +92,52 @@
 </template>
 
 <script>
-import request from '@/utils/service'
+import request from '@/utils/service';
 
 export default {
-    name: 'dyProfile',
-    data() {
-        return {
-            profile: {
-                chineseName: '',
-                englishName: '',
-                chineseAddr: '',
-                englishAddr: '',
-                zipCode: '',
-                contactEnglishName: '',
-                contactChineseName: '',
-                phone: '',
-            },
+  name: 'dyProfile',
+  data() {
+    return {
+      profile: {
+        chineseName: '',
+        englishName: '',
+        chineseAddr: '',
+        englishAddr: '',
+        zipCode: '',
+        contactEnglishName: '',
+        contactChineseName: '',
+        phone: '',
+      },
+    };
+  },
+  created() {
+    this.initPersonalProfile();
+  },
+  inject: ['reload'],
+  methods: {
+    initPersonalProfile() {
+      request({
+        url: '/profile/init?userId=dy',
+        method: 'get',
+      }).then((res) => {
+        const profile = res.data.data;
+        if (profile == null) {
+          console.log(profile);
+        } else {
+          this.profile = profile;
         }
+      });
     },
-    created() {
-        this.initPersonalProfile()
+    saveProfile() {
+      request({
+        url: '/profile/update?userId=dy',
+        method: 'post',
+        data: this.profile,
+      }).then(() => {
+        this.$message.success('更新成功');
+        this.reload();
+      });
     },
-    inject: ['reload'],
-    methods: {
-        initPersonalProfile() {
-            request({
-                url: '/profile/init?userId=dy',
-                method: 'get',
-            }).then(res => {
-                const profile = res.data.data
-                if (profile == null) {
-                    console.log(profile)
-                } else {
-                    this.profile = profile
-                }
-            })
-        },
-        saveProfile() {
-            request({
-                url: '/profile/update?userId=dy',
-                method: 'post',
-                data: this.profile,
-            }).then(() => {
-                this.$message.success('更新成功')
-                this.reload()
-            })
-        },
-    },
-}
+  },
+};
 </script>

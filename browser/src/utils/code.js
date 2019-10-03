@@ -4,7 +4,7 @@ export default {
   SUCC: 1,
 
   /** 失败 */
-  FAIL:-1,
+  FAIL: -1,
 
   /** 未登录 */
   UNAUTHEN: 4401,
@@ -16,7 +16,7 @@ export default {
   SESSION_TIMOUT: 4433,
 
   /** 服务端异常 */
-  SERVER_ERR: 5500
+  SERVER_ERR: 5500,
 
-}
+};
 

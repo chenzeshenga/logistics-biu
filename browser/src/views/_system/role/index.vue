@@ -94,149 +94,149 @@
 
 <script>
 
-  import roleApi from '@/api/role';
-  import {parseTime, resetTemp} from '@/utils';
-  import {pageParamNames, confirm, root} from '@/utils/constants';
-  import debounce from 'lodash/debounce';
+import roleApi from '@/api/role';
+import {parseTime, resetTemp} from '@/utils';
+import {pageParamNames, confirm, root} from '@/utils/constants';
+import debounce from 'lodash/debounce';
 
-  export default {
-    name: 'RoleManage',
-    data() {
-      return {
-        tableLoading: false,
-        tableData: [],
-        tableQuery: {
-          rname: null,
-        },
-        tablePage: {
-          current: null,
-          pages: null,
-          size: null,
-          total: null,
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        temp: {
-          idx: null,//表格的下标
-          rid: null,
-          rname: null,
-          rdesc: null,
-          rval: null,
-          created: null,
-          updated: null,
-        },
-        textMap: {
-          update: '编辑角色',
-          create: '新增角色',
-        },
-        rules: {
-          rname: [{required: true, message: '必填', trigger: 'blur'}],
-          rval: [{required: true, message: '必填', trigger: 'blur'}],
-        },
-      };
+export default {
+  name: 'RoleManage',
+  data() {
+    return {
+      tableLoading: false,
+      tableData: [],
+      tableQuery: {
+        rname: null,
+      },
+      tablePage: {
+        current: null,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      dialogFormVisible: false,
+      dialogStatus: '',
+      temp: {
+        idx: null, // 表格的下标
+        rid: null,
+        rname: null,
+        rdesc: null,
+        rval: null,
+        created: null,
+        updated: null,
+      },
+      textMap: {
+        update: '编辑角色',
+        create: '新增角色',
+      },
+      rules: {
+        rname: [{required: true, message: '必填', trigger: 'blur'}],
+        rval: [{required: true, message: '必填', trigger: 'blur'}],
+      },
+    };
+  },
+
+  created() {
+    this.fetchData();
+  },
+
+  watch: {
+    // 延时查询
+    'tableQuery.rname': debounce(function() {
+      this.fetchData();
+    }, 500),
+    'tableQuery.rval': debounce(function() {
+      this.fetchData();
+    }, 500),
+  }, // watch
+
+  methods: {
+    parseTime,
+    hasAdminRole(row) {
+      return row && row.rval == root.rval;
     },
-
-    created() {
+    // 分页
+    handleSizeChange(val) {
+      this.tablePage.size = val;
       this.fetchData();
     },
-
-    watch: {
-      //延时查询
-      'tableQuery.rname': debounce(function() {
-        this.fetchData();
-      }, 500),
-      'tableQuery.rval': debounce(function() {
-        this.fetchData();
-      }, 500),
-    },//watch
-
-    methods: {
-      parseTime,
-      hasAdminRole(row) {
-        return row && row.rval == root.rval;
-      },
-      //分页
-      handleSizeChange(val) {
-        this.tablePage.size = val;
-        this.fetchData();
-      },
-      handleCurrentChange(val) {
-        this.tablePage.current = val;
-        this.fetchData();
-      },
-      //查询
-      fetchData() {
-        this.tableLoading = true;
-        roleApi.queryRole(this.tableQuery, this.tablePage).then(res => {
-          this.tableData = res.data.page.records;
-          this.tableLoading = false;
-          //设置后台返回的分页参数
-          pageParamNames.forEach(name => this.$set(this.tablePage, name, res.data.page[name]));
-        });
-      },
-
-      //更新
-      handleUpdate(idx, row) {
-        this.temp = Object.assign({}, row); // copy obj
-        this.temp.idx = idx;
-        this.dialogStatus = 'update';
-        this.dialogFormVisible = true;
-        this.$nextTick(() => this.$refs['dataForm'].clearValidate());
-      },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (!valid) return;
-          const tempData = Object.assign({}, this.temp);//copy obj
-          roleApi.updateRole(tempData).then(res => {
-            tempData.updated = res.data.updated;
-            this.tableData.splice(tempData.idx, 1, tempData);
-            this.dialogFormVisible = false;
-            this.$message.success('更新角色信息成功');
-          });
-        });
-      },
-
-      //更新用户的角色
-      handleUpdateRolePerms(idx, row) {
-        this.$router.push({path: '/system/role_manage/' + row.rid + '/assign_perm'});
-      },
-
-      //删除
-      handleDelete(idx, row) {
-        this.$confirm('您确定要永久删除该用户？', '提示', confirm).then(() => {
-          roleApi.deleteRole({rid: row.rid}).then(res => {
-            this.tableData.splice(idx, 1);
-            --this.tablePage.total;
-            this.dialogFormVisible = false;
-            this.$message.success('删除角色成功');
-          });
-        }).catch(() => {
-          this.$message.info('已取消删除');
-        });
-      },
-
-      //新增
-      handleCreate() {
-        resetTemp(this.temp);
-        this.dialogStatus = 'create';
-        this.dialogFormVisible = true;
-        this.$nextTick(() => this.$refs['dataForm'].clearValidate());
-      },
-      createData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (!valid) return;
-          roleApi.addRole(this.temp).then((res) => {
-            this.temp.rid = res.data.rid;//后台传回来新增记录的id
-            this.temp.created = res.data.created;//后台传回来新增记录的时间
-            this.tableData.unshift(Object.assign({}, this.temp));
-            ++this.tablePage.total;
-            this.dialogFormVisible = false;
-            this.message.success('添加角色成功');
-          });
-        });
-      },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
     },
-  };
+    // 查询
+    fetchData() {
+      this.tableLoading = true;
+      roleApi.queryRole(this.tableQuery, this.tablePage).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tableLoading = false;
+        // 设置后台返回的分页参数
+        pageParamNames.forEach((name) => this.$set(this.tablePage, name, res.data.page[name]));
+      });
+    },
+
+    // 更新
+    handleUpdate(idx, row) {
+      this.temp = Object.assign({}, row); // copy obj
+      this.temp.idx = idx;
+      this.dialogStatus = 'update';
+      this.dialogFormVisible = true;
+      this.$nextTick(() => this.$refs['dataForm'].clearValidate());
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (!valid) return;
+        const tempData = Object.assign({}, this.temp);// copy obj
+        roleApi.updateRole(tempData).then((res) => {
+          tempData.updated = res.data.updated;
+          this.tableData.splice(tempData.idx, 1, tempData);
+          this.dialogFormVisible = false;
+          this.$message.success('更新角色信息成功');
+        });
+      });
+    },
+
+    // 更新用户的角色
+    handleUpdateRolePerms(idx, row) {
+      this.$router.push({path: '/system/role_manage/' + row.rid + '/assign_perm'});
+    },
+
+    // 删除
+    handleDelete(idx, row) {
+      this.$confirm('您确定要永久删除该用户？', '提示', confirm).then(() => {
+        roleApi.deleteRole({rid: row.rid}).then((res) => {
+          this.tableData.splice(idx, 1);
+          --this.tablePage.total;
+          this.dialogFormVisible = false;
+          this.$message.success('删除角色成功');
+        });
+      }).catch(() => {
+        this.$message.info('已取消删除');
+      });
+    },
+
+    // 新增
+    handleCreate() {
+      resetTemp(this.temp);
+      this.dialogStatus = 'create';
+      this.dialogFormVisible = true;
+      this.$nextTick(() => this.$refs['dataForm'].clearValidate());
+    },
+    createData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (!valid) return;
+        roleApi.addRole(this.temp).then((res) => {
+          this.temp.rid = res.data.rid;// 后台传回来新增记录的id
+          this.temp.created = res.data.created;// 后台传回来新增记录的时间
+          this.tableData.unshift(Object.assign({}, this.temp));
+          ++this.tablePage.total;
+          this.dialogFormVisible = false;
+          this.message.success('添加角色成功');
+        });
+      });
+    },
+  },
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
