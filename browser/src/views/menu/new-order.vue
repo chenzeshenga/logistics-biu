@@ -147,6 +147,7 @@
                             <el-cascader
                                     :span="12"
                                     :options="address"
+                                    :props="props"
                                     v-model="form.selectedAddress"
                                     @change="handleAddressChange"
                                     style="width: 80%"
@@ -453,6 +454,42 @@ export default {
   components: {loading},
   data() {
     return {
+      props: {
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const level=node.level;
+          if (level===1) {
+            const kenId=node.data.value;
+            request({
+              url: '/address/getCity?kenId='+kenId,
+              method: 'get',
+            }).then((ret)=>{
+              resolve(ret.data.data);
+            });
+          } else if (level===2) {
+            const cityId=node.data.value;
+            request({
+              url: '/address/getTown?cityId='+cityId,
+              method: 'get',
+            }).then((ret)=>{
+              const townList=ret.data.data;
+              const results=[];
+              for (let i=0; i<townList.length; i++) {
+                const sub=townList[i];
+                const result={
+                  label: sub.label,
+                  value: sub.value,
+                  leaf: true,
+                };
+                results.push(result);
+              }
+              resolve(results);
+            });
+          } else {
+            resolve(node);
+          }
+        },
+      },
       isLoading: false,
       fullPage: true,
       actionLink: process.env.BASE_API + '/ord/excel',
@@ -589,22 +626,12 @@ export default {
       }
     },
     getAddress() {
-      this.isLoading=true;
-      const addressInLocalStorage = JSON.parse(localStorage.getItem('address'));
-      if (addressInLocalStorage != null && addressInLocalStorage.length >= 10) {
-        this.address = addressInLocalStorage;
-      } else {
-        request({
-          url: '/address/getKen',
-          method: 'get',
-        }).then((res) => {
-          this.address = res.data.data;
-          localStorage.setItem('address', JSON.stringify(this.address));
-        });
-      }
-      setTimeout(()=>{
-        this.isLoading=false;
-      }, 3000);
+      request({
+        url: '/address/getKen',
+        method: 'get',
+      }).then((res) => {
+        this.address = res.data.data;
+      });
     },
     getMyProducts() {
       request({

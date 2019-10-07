@@ -7,10 +7,7 @@ import com.abc.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,9 +25,16 @@ import java.util.List;
 
     @GetMapping("/getKen") public Json getKen() {
         List<AddressLabel> result = japanAddressCache.getKen();
-        result.forEach(addressLabel -> {
-            addressLabel.setChildren(japanAddressCache.getCityByKenId(addressLabel.getValue()));
-        });
+        return Json.succ().data(result);
+    }
+
+    @GetMapping("/getCity") public Json getCityByKenId(@RequestParam String kenId) {
+        List<AddressLabel> result = japanAddressCache.getCityByKenId(kenId);
+        return Json.succ().data(result);
+    }
+
+    @GetMapping("/getTown") public Json getTownByCityId(@RequestParam String cityId) {
+        List<AddressLabel> result = japanAddressCache.getTownByCityId(cityId);
         return Json.succ().data(result);
     }
 

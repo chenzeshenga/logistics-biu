@@ -94,7 +94,6 @@ import java.util.*;
             jpAddress.setLabel(jpDetailAddress.getCityName());
             result.add(jpAddress);
         });
-        result.forEach(addressLabel -> addressLabel.setChildren(getTownByCityId(addressLabel.getValue())));
         return new ArrayList<>(result);
     }
 
@@ -109,7 +108,7 @@ import java.util.*;
         return new ArrayList<>(result);
     }
 
-    private List<AddressLabel> getTownByCityId(String cityId) {
+    public List<AddressLabel> getTownByCityId(String cityId) {
         Set<AddressLabel> result = new HashSet<>();
         List<JpDetailAddress> jpDetailAddressList = cityMap.get(cityId);
         jpDetailAddressList.forEach(jpDetailAddress -> {
