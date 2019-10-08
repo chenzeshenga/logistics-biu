@@ -194,6 +194,7 @@
                             <el-cascader
                                     :span="12"
                                     :options="address"
+                                    :props="props"
                                     v-model="form.selectedtoAddress"
                                     @change="handleAddressChange2"
                                     style="width: 80%"
