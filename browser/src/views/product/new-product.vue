@@ -450,16 +450,6 @@ export default {
           }
         });
       }
-      this.initOption();
-    },
-    initOption() {
-      request({
-        url: '/option/carrier',
-        method: 'get',
-      }).then((res) => {
-        console.log(res);
-        // todo here
-      });
     },
     handleRemove(file, fileList) {
       request({
@@ -564,7 +554,7 @@ export default {
     },
     changeUpdateLink(val) {
       console.log(val);
-      this.actionLink+="?standFor="+val;
+      this.actionLink+='?standFor='+val;
     },
   },
 };
