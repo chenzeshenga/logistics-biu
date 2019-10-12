@@ -1,6 +1,6 @@
 package com.abc.controller;
 
-import com.abc.constant.Codes;
+import com.abc.chenzeshenga.logistics.constant.Codes;
 import com.abc.vo.Json;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.UnauthenticatedException;
@@ -8,14 +8,10 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 统一捕捉异常，返回给前台一个json信息，前台根据这个信息显示对应的提示，或者做页面的跳转。

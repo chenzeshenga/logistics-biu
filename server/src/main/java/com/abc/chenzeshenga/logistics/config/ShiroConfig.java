@@ -1,4 +1,4 @@
-package com.abc.config;
+package com.abc.chenzeshenga.logistics.config;
 
 import com.abc.shiro.UserRealm;
 import org.apache.shiro.realm.Realm;
