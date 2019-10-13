@@ -22,6 +22,7 @@
                                             :key="creator.uname"
                                             :label="creator.nick"
                                             :value="creator.uname"
+                                            :disabled="creator.disabled"
                                     ></el-option>
                                 </el-select>
                             </el-tooltip>
@@ -806,6 +807,18 @@ export default {
         },
       }).then((res) => {
         this.myProducts = res.data.data;
+        if (this.myProducts==null || this.myProducts.length<=0) {
+          this.$message.error('当前用户未配置商品，请重新选择用户或者去为该用户添加商品');
+          for (let i = 0; i < this.users.length; i++) {
+            const subUser=this.users[i];
+            if (subUser['uname']===val) {
+              subUser['disabled']=true;
+            }
+            this.users[i]=subUser;
+          }
+          this.form.creator='';
+          return;
+        }
         for (const myProduct of this.myProducts) {
           const subProduct = myProduct;
           this.productMap[
