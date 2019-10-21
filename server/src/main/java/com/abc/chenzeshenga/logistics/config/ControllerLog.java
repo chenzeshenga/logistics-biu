@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j @Aspect @Component public class ControllerLog {
 
-    private static final ThreadLocal<Long> START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
-    private static final ThreadLocal<String> LOG_PREFIX_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalLogPrefix");
+    private ThreadLocal<Long> START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
+    private ThreadLocal<String> LOG_PREFIX_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalLogPrefix");
 
     /**
      * <li>Before       : 在方法执行前进行切面</li>
@@ -47,15 +47,23 @@ import org.springframework.stereotype.Component;
     }
 
     @AfterReturning(pointcut = "executionMethod()", returning = "rtn") public Object doAfter(Object rtn) {
+        if (START_TIME_THREAD_LOCAL == null) {
+            START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
+        }
         long endTime = System.currentTimeMillis();
-        long begin = START_TIME_THREAD_LOCAL.get();
+        long begin;
+        if (START_TIME_THREAD_LOCAL.get() == null) {
+            begin = System.currentTimeMillis() - 30L;
+        } else {
+            begin = START_TIME_THREAD_LOCAL.get();
+        }
         log.info(LOG_PREFIX_THREAD_LOCAL.get() + " End 出参为:{}", rtn, endTime - begin);
         log.info(LOG_PREFIX_THREAD_LOCAL.get() + " 耗时:{}ms", endTime - begin);
         destroyThreadLocal();
         return rtn;
     }
 
-    private static void destroyThreadLocal() {
+    private void destroyThreadLocal() {
         START_TIME_THREAD_LOCAL.remove();
         LOG_PREFIX_THREAD_LOCAL.remove();
     }
