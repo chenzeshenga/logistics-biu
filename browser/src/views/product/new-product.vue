@@ -14,7 +14,7 @@
                 <el-select
                     filterable
                     clearable
-                    v-model="form.creator"
+                    v-model="form.createdBy"
                     placeholder="请选择所属用户"
                     value="">
                   <el-option
@@ -310,7 +310,7 @@ export default {
         width: 0,
         height: 0,
         weight: 0,
-        creator: '',
+        createdBy: '',
       },
       checkRules: {
         sku: [
@@ -478,7 +478,7 @@ export default {
       });
     },
     submitForm(formName) {
-      if (this.adminRole && this.form.creator.length <= 0) {
+      if (this.adminRole && this.form.createdBy.length <= 0) {
         this.$message.warning('请选择商品所属人');
         return;
       }
@@ -511,7 +511,7 @@ export default {
       this.$message.error(JSON.parse(err.message)['message']);
     },
     updateForm() {
-      if (this.adminRole && this.form.creator.length <= 0) {
+      if (this.adminRole && this.form.createdBy.length <= 0) {
         this.$message.warning('请选择商品所属人');
         return;
       }
