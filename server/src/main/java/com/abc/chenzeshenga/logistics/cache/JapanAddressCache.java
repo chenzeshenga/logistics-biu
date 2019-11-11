@@ -74,17 +74,6 @@ import java.util.*;
         return new ArrayList<>(result);
     }
 
-    public List<JpAddress> getAllCity() {
-        Set<JpAddress> result = new HashSet<>();
-        for (Map.Entry<String, List<JpDetailAddress>> entry : cityMap.entrySet()) {
-            JpAddress jpAddress = new JpAddress();
-            jpAddress.setId(entry.getKey());
-            jpAddress.setName(entry.getValue().get(0).getCityName());
-            result.add(jpAddress);
-        }
-        return new ArrayList<>(result);
-    }
-
     public List<AddressLabel> getCityByKenId(String kenId) {
         Set<AddressLabel> result = new HashSet<>();
         List<JpDetailAddress> jpDetailAddressList = kenMap.get(kenId);
@@ -95,17 +84,6 @@ import java.util.*;
             result.add(jpAddress);
         });
         result.forEach(addressLabel -> addressLabel.setChildren(getTownByCityId(addressLabel.getValue())));
-        return new ArrayList<>(result);
-    }
-
-    public List<JpAddress> getAllTown() {
-        Set<JpAddress> result = new HashSet<>();
-        for (Map.Entry<String, List<JpDetailAddress>> entry : townMap.entrySet()) {
-            JpAddress jpAddress = new JpAddress();
-            jpAddress.setId(entry.getKey());
-            jpAddress.setName(entry.getValue().get(0).getTownName());
-            result.add(jpAddress);
-        }
         return new ArrayList<>(result);
     }
 
@@ -123,9 +101,10 @@ import java.util.*;
 
     public JpDetailAddress getJpDetailAddress(Integer kenId, Integer cityId, Integer townId) {
         List<JpDetailAddress> jpDetailAddressList = townMap.get(String.valueOf(townId));
-        if (jpDetailAddressList != null && jpDetailAddressList.size() > 0) {
+        if (jpDetailAddressList != null && !jpDetailAddressList.isEmpty()) {
             for (JpDetailAddress jpDetailAddress : jpDetailAddressList) {
-                if (String.valueOf(cityId).equals(jpDetailAddress.getCityId()) && String.valueOf(kenId).equals(jpDetailAddress.getKenId())) {
+                if (String.valueOf(cityId).equals(jpDetailAddress.getCityId()) && String.valueOf(kenId)
+                    .equals(jpDetailAddress.getKenId())) {
                     return jpDetailAddress;
                 }
             }

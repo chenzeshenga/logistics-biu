@@ -93,7 +93,7 @@ import java.util.List;
                     ImageDataFactory.create(BarCodeUtil.generate("http://www.jpdyu.com/#/order-info?ord=" + ordno)));
                 Paragraph paragraph = new Paragraph().add(barcode).addStyle(new Style().setMarginLeft(30));
                 document.add(paragraph);
-                Paragraph ordnoTitle = new Paragraph().add(new Text("お問い合わせ番号: " + ordno).setFontSize(8)).setFont(font)
+                Paragraph ordnoTitle = new Paragraph().add(new Text("お問い合わせ番号: " + ordno).setFontSize(6)).setFont(font)
                     .addStyle(new Style().setMarginLeft(5));
                 document.add(ordnoTitle);
             }
