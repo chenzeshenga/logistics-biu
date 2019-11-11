@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <div class="app-container">
-            <order-type2 v-bind:msg="this.msg"></order-type2>
+            <order-table v-bind:msg="this.msg"></order-table>
 
             <el-dialog
                 title="提交发货"
@@ -89,11 +89,11 @@
 </template>
 
 <script>
-import OrderType2 from '../../../../components/dy/orderTable/Type2/index';
+import OrderTable from '../../../../components/dy/orderTable/index';
 
 export default {
   name: 'order-list-mgt-type2-status2',
-  components: {OrderType2},
+  components: {OrderTable},
   data() {
     return {
       msg: {

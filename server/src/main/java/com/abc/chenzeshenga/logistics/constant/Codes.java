@@ -1,6 +1,4 @@
-package com.abc.constant;
-
-import org.apache.shiro.authz.UnauthorizedException;
+package com.abc.chenzeshenga.logistics.constant;
 
 /**
  * created by CaiBaoHong at 2018/4/18 11:07<br>

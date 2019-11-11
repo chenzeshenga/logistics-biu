@@ -61,7 +61,8 @@
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num
+        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num,
+        dy_sku as value,product_name as label
         from l_productions product
         where createdBy = #{username}
     </select>

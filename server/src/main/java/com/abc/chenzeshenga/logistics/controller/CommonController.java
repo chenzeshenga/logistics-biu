@@ -345,11 +345,15 @@ import java.util.*;
     }
 
     @PostMapping("/product/excel")
-    public Json parseProductExcel(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    public Json parseProductExcel(@RequestParam(value = "file") MultipartFile multipartFile,
+        @RequestParam(required = false, defaultValue = "") String standFor) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes());
         fileMapper.insert(file);
         String username = UserUtils.getUserName();
+        if (StringUtils.isNotEmpty(standFor)) {
+            username = standFor;
+        }
         UserFileRecord userFileRecord = new UserFileRecord(multipartFile.getOriginalFilename(), new Date());
         userFileRecord.setUid(username);
         userFileRecord.setFileUuid(uuid);

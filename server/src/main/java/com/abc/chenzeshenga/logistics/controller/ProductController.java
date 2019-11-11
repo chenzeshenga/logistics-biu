@@ -80,7 +80,10 @@ import java.util.*;
         Product ori = productMapper.selectByPrimaryKey(product.getSku());
         if (ori == null) {
             product.setDySku(SkuUtil.generateDySku());
-            product.setCreatedBy(username);
+            String creator = product.getCreatedBy();
+            if (StringUtils.isNoneBlank(creator)) {
+                product.setCreatedBy(creator);
+            }
             product.setUpdateBy(username);
             product.setCreateOn(curr);
             product.setUpdateOn(curr);

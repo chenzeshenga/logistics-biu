@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j @Aspect @Component public class ControllerLog {
 
-    private static final ThreadLocal<Long> START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
-    private static final ThreadLocal<String> LOG_PREFIX_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalLogPrefix");
+    private ThreadLocal<Long> START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
+    private ThreadLocal<String> LOG_PREFIX_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalLogPrefix");
 
     /**
      * <li>Before       : 在方法执行前进行切面</li>
@@ -39,26 +39,31 @@ import org.springframework.stereotype.Component;
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
         for (int i = 0; i < args.length; i++) {
-            argsDes.append("第").append(i + 1).append("个参数为:").append(args[i]).append("\n");
+            argsDes.append("第").append(i + 1).append("个参数为:").append(args[i]).append(" ");
         }
         String logPrefix = className + "." + methodName;
         LOG_PREFIX_THREAD_LOCAL.set(logPrefix);
-        log.info(logPrefix + "Begin 入参为:{}", argsDes.toString());
+        log.info(logPrefix + " Begin 入参为:{}", argsDes.toString());
     }
 
     @AfterReturning(pointcut = "executionMethod()", returning = "rtn") public Object doAfter(Object rtn) {
+        if (START_TIME_THREAD_LOCAL == null) {
+            START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
+        }
         long endTime = System.currentTimeMillis();
-        long begin = START_TIME_THREAD_LOCAL.get();
-        log.info(LOG_PREFIX_THREAD_LOCAL.get() + "End 出参为:{},\r\n耗时:{}ms", rtn, endTime - begin);
+        long begin;
+        if (START_TIME_THREAD_LOCAL.get() == null) {
+            begin = System.currentTimeMillis() - 30L;
+        } else {
+            begin = START_TIME_THREAD_LOCAL.get();
+        }
+        log.info(LOG_PREFIX_THREAD_LOCAL.get() + " End 出参为:{}", rtn, endTime - begin);
+        log.info(LOG_PREFIX_THREAD_LOCAL.get() + " 耗时:{}ms", endTime - begin);
         destroyThreadLocal();
         return rtn;
     }
 
-    public static String getLogPrefix() {
-        return LOG_PREFIX_THREAD_LOCAL.get();
-    }
-
-    private static void destroyThreadLocal() {
+    private void destroyThreadLocal() {
         START_TIME_THREAD_LOCAL.remove();
         LOG_PREFIX_THREAD_LOCAL.remove();
     }

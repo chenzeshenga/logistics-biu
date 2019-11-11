@@ -1,7 +1,7 @@
 package com.abc.controller;
 
 import com.abc.chenzeshenga.logistics.annotation.PermInfo;
-import com.abc.constant.Codes;
+import com.abc.chenzeshenga.logistics.constant.Codes;
 import com.abc.entity.SysUser;
 import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;

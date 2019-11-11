@@ -300,7 +300,7 @@ import java.util.concurrent.atomic.AtomicReference;
         }
     }
 
-    @GetMapping @RequestMapping("/delete/{ordNo}") public Json delete(@PathVariable String ordNo) {
+    @GetMapping("/delete/{ordNo}") public Json delete(@PathVariable String ordNo) {
         orderMapper.delete(ordNo);
         orderMapper.deleteContent(ordNo);
         return Json.succ();
@@ -312,9 +312,11 @@ import java.util.concurrent.atomic.AtomicReference;
         if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
             manualOrderContents.forEach(manualOrderContent -> {
                 Product product = productMapper.selectByPrimaryKey(manualOrderContent.getSku().split("/")[0]);
-                String uuid4Img1 = product.getImg1();
-                if (StringUtils.isNotBlank(uuid4Img1)) {
-                    manualOrderContent.setImgUrl("http://47.105.107.242:8888/api/v1/img/" + uuid4Img1);
+                if (product != null) {
+                    String uuid4Img1 = product.getImg1();
+                    if (StringUtils.isNotBlank(uuid4Img1)) {
+                        manualOrderContent.setImgUrl("http://47.105.107.242:8888/api/v1/img/" + uuid4Img1);
+                    }
                 }
             });
         }
