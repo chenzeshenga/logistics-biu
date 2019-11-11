@@ -109,7 +109,7 @@ import java.util.*;
         return new ArrayList<>(result);
     }
 
-    private List<AddressLabel> getTownByCityId(String cityId) {
+    public List<AddressLabel> getTownByCityId(String cityId) {
         Set<AddressLabel> result = new HashSet<>();
         List<JpDetailAddress> jpDetailAddressList = cityMap.get(cityId);
         jpDetailAddressList.forEach(jpDetailAddress -> {
