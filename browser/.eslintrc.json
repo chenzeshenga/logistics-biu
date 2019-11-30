@@ -19,5 +19,7 @@
         "vue"
     ],
     "rules": {
+      "max-len": "off",
+      "new-cap": "off"
     }
 }

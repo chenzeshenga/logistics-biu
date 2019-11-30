@@ -2,11 +2,11 @@ import axios from 'axios';
 import {
   Message, MessageBox,
 } from 'element-ui';
-import store from '@/store';
+import store from '../store';
 import {
   getToken,
-} from '@/utils/auth';
-import Code from '@/utils/code';
+} from './auth';
+import Code from './code';
 
 // create an axios instance
 const service = axios.create({
@@ -25,21 +25,21 @@ service.interceptors.request.use((config) => {
 }, (error) => {
   // Do something with request error
   console.log(error); // for debug
-  Promise.reject(error);
+  Promise.reject(error).then((r) => console.log(r));
 });
 
-// respone interceptor
+// response interceptor
+/**
+ * 下面的注释为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页
+ * 如通过 xmlhttprequest 状态码标识 逻辑可写在下面error中
+ */
 service.interceptors.response.use(
-    /**
-   * 下面的注释为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页
-   * 如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
-   */
     (res) => {
       if (res.data.succ) {
       // 如果后台返回的json显示成功，pass
         return res;
       } else {
-        if (res.data.code == Code.UNAUTHEN || res.data.code == Code.SESSION_TIMOUT) {
+        if (res.data.code === Code.UNAUTHEN || res.data.code === Code.SESSION_TIMOUT) {
         // 处理登录相关的错误
           MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出',
               {confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning'}).then(() => {
@@ -48,16 +48,14 @@ service.interceptors.response.use(
             });
           });
         } else {
-        // 其它错误弹出错误信息
+          // 其它错误弹出错误信息
           Message({message: res.data.msg, type: 'error', duration: 10000});
         }
-        return Promise.reject('error');
+        return Promise.reject(new Error('error'));
       }
     },
 
-    /**
-   * 请求发生错误，一般都是服务器抛异常了
-   */
+    // 请求发生错误，一般都是服务器抛异常了
     (err) => {
       console.error('request err: %o', err);// for debug
       Message({

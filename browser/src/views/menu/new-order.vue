@@ -588,11 +588,6 @@ export default {
       })
           .then((res) => {
             this.form.trackNo = res.data.data;
-          })
-          .catch(() => {
-            this.$message.error(
-                '日本追踪单号获取失败或未配置，请手动输入',
-            );
           });
     },
     listChannel(val) {
