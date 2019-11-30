@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since 20190819
  */
-@Data public class JpDetailAddress implements Serializable {
+@Data @ToString public class JpDetailAddress implements Serializable {
 
     private String kenId;
 
@@ -23,8 +24,6 @@ import java.io.Serializable;
 
     private String townName;
 
-    @Override public String toString() {
-        return kenName + " " + cityName + " " + townName + " ";
-    }
+    private String zip;
 
 }

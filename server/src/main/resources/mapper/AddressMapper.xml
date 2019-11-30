@@ -29,7 +29,8 @@
                         town_id   as townId,
                         ken_name  as kenName,
                         city_name as cityName,
-                        town_name as townName
+                        town_name as townName,
+                        zip
         from ad_address
         where ken_name != ''
           and city_name != ''

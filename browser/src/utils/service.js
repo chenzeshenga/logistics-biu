@@ -9,6 +9,7 @@ import {
 import Code from './code';
 
 // create an axios instance
+// noinspection JSUnresolvedVariable
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
   timeout: 60000, // request timeout

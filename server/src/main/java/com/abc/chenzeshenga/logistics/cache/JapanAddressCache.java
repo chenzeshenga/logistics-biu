@@ -94,7 +94,6 @@ import java.util.*;
             jpAddress.setLabel(jpDetailAddress.getCityName());
             result.add(jpAddress);
         });
-        result.forEach(addressLabel -> addressLabel.setChildren(getTownByCityId(addressLabel.getValue())));
         return new ArrayList<>(result);
     }
 
@@ -116,6 +115,7 @@ import java.util.*;
             AddressLabel jpAddress = new AddressLabel();
             jpAddress.setValue(jpDetailAddress.getTownId());
             jpAddress.setLabel(jpDetailAddress.getTownName());
+            jpAddress.setZip(jpDetailAddress.getZip());
             result.add(jpAddress);
         });
         return new ArrayList<>(result);
