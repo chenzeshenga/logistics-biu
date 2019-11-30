@@ -243,7 +243,7 @@ import java.util.*;
     }
 
     @PostMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
-        List<SkuLabel> skuLabelList = productMapper.list(request.get("user"));
+        List<SkuLabel> skuLabelList = productMapper.listAllByUser(request.get("user"));
         return Json.succ().data(skuLabelList);
     }
 

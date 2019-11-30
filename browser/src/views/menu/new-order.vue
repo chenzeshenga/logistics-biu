@@ -2,8 +2,7 @@
     <div class="login-container">
         <loading :active.sync="isLoading"
                  :can-cancel="true"
-                 :is-full-page="fullPage"></loading>
-        <!--                 :on-cancel="onCancel"-->
+                 :is-full-page="fullPage"/>
         <div class="app-container">
             <el-form ref="form" :model="form" label-width="120px">
                 <el-form-item label="订单所属用户" v-if="adminRole">
@@ -23,7 +22,7 @@
                                             :label="creator.nick"
                                             :value="creator.uname"
                                             :disabled="creator.disabled"
-                                    ></el-option>
+                                    />
                                 </el-select>
                             </el-tooltip>
                         </el-form-item>
@@ -68,7 +67,7 @@
                                     :options="channels"
                                     v-model="selectedChannels"
                                     @change="handleChange"
-                            ></el-cascader>
+                            />
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -78,7 +77,7 @@
                             <el-input
                                     v-model="form.chinaCarrier"
                                     placeholder="顺丰/圆通/中通..."
-                            ></el-input>
+                            />
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" v-if="form.category !== '1'">
@@ -86,7 +85,7 @@
                             <el-input
                                     v-model="form.chinaNo"
                                     placeholder="如果为特色小包和单票单清业务，请输入中国国内单号"
-                            ></el-input>
+                            />
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -97,7 +96,7 @@
                                     v-model="form.carrierDesc"
                                     disabled
                                     placeholder="请选择运送渠道"
-                            ></el-input>
+                            />
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -132,7 +131,7 @@
                             <el-input
                                     v-model="form.fromContact"
                                     placeholder="发件人联系方式"
-                            ></el-input>
+                            />
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -144,22 +143,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="margin-top: 1%">
-                        <!--            <el-form-item label="道/府/县-城市-乡">-->
-                        <!--              <el-cascader-->
-                        <!--                  :span="12"-->
-                        <!--                  :options="address"-->
-                        <!--                  :props="props"-->
-                        <!--                  v-model="form.selectedAddress"-->
-                        <!--                  @change="handleAddressChange"-->
-                        <!--                  style="width: 80%"-->
-                        <!--              >-->
-                        <!--              </el-cascader>-->
-                        <!--            </el-form-item>-->
                         <el-form-item label="道/府/县-城市-乡">
                             <el-select v-model="form.fromKenId" filterable
                                        clearable placeholder="请选择:道/府/县" :span="4"
                                        @change="getFromCityAddress()">
-                                <el-option v-for="item in address"
+                                <el-option v-for="item in fromKenAddress"
                                            :key="item.value"
                                            :label="item.label"
                                            :value="item.value">
@@ -167,8 +155,8 @@
                             </el-select>
                             <el-select v-model="form.fromCityId" filterable
                                        clearable placeholder="请选择:城市" :span="4"
-                                       @change="getTownAddress">
-                                <el-option v-for="item in cityAddress"
+                                       @change="getFromTownAddress">
+                                <el-option v-for="item in fromCityAddress"
                                            :key="item.value"
                                            :label="item.label"
                                            :value="item.value">
@@ -178,7 +166,7 @@
                                        clearable placeholder="请选择:乡" :span="4"
                                        @change="fillFromZipCode"
                             >
-                                <el-option v-for="item in townAddress"
+                                <el-option v-for="item in fromTownAddress"
                                            :key="item.value"
                                            :label="item.label"
                                            :value="item.value">
@@ -191,7 +179,7 @@
                             <el-input
                                     v-model="form.fromDetailAddress"
                                     placeholder="发件人详细地址"
-                            ></el-input>
+                            />
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -222,15 +210,34 @@
                     </el-col>
                     <el-col :span="12" style="margin-top: 1%">
                         <el-form-item label="道/府/县-城市-乡">
-                            <el-cascader
-                                    :span="12"
-                                    :options="address"
-                                    :props="props"
-                                    v-model="form.selectedtoAddress"
-                                    @change="handleAddressChange2"
-                                    style="width: 80%"
+                            <el-select v-model="form.toKenId" filterable
+                                       clearable placeholder="请选择:道/府/县" :span="4"
+                                       @change="getToCityAddress()">
+                                <el-option v-for="item in toKenAddress"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="form.toCityId" filterable
+                                       clearable placeholder="请选择:城市" :span="4"
+                                       @change="getToTownAddress">
+                                <el-option v-for="item in toCityAddress"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="form.toTownId" filterable
+                                       clearable placeholder="请选择:乡" :span="4"
+                                       @change="fillToZipCode"
                             >
-                            </el-cascader>
+                                <el-option v-for="item in toTownAddress"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="margin-top: 1%">
@@ -421,7 +428,7 @@
                                 type="success"
                                 @click="downloadTemplate"
                         >
-                            <svg-icon icon-class="doc"></svg-icon>
+                            <svg-icon icon-class="doc"/>
                             模版文件
                         </el-button>
                         <div slot="tip" class="el-upload__tip">
@@ -564,10 +571,14 @@
                 },
                 channels: [],
                 selectedChannels: [],
-                address: [],
-                cityAddress: [],
-                townAddress: [],
-                townAddressMap: {},
+                toKenAddress: [],
+                fromKenAddress: [],
+                toCityAddress: [],
+                fromCityAddress: [],
+                toTownAddress: [],
+                fromTownAddress: [],
+                toTownAddressMap: {},
+                fromTownAddressMap: {},
                 content: {
                     sku: '',
                     name: '',
@@ -667,52 +678,147 @@
                     url: '/address/getKen',
                     method: 'get',
                 }).then((res) => {
-                    this.address = res.data.data
+                    this.toKenAddress = res.data.data
+                    this.fromKenAddress = res.data.data
                 })
             },
             getFromCityAddress() {
                 if (this.form.fromKenId) {
-                    this.getCityAddress(this.form.fromKenId)
+                    request({
+                        url: '/address/getCity?kenId=' + this.form.fromKenId,
+                        method: 'get',
+                    }).then((ret) => {
+                        this.fromCityAddress = ret.data.data
+                    })
                     this.form.fromCityId = ''
                     this.form.fromTownId = ''
                 } else {
                     this.$message.warning('请选择 道/府/县')
                     this.form.fromCityId = ''
                     this.form.fromTownId = ''
-                    this.cityAddress = []
-                    this.townAddress = []
+                    this.fromCityAddress = []
+                    this.fromTownAddress = []
+                }
+            },
+            getToCityAddress() {
+                if (this.form.toKenId) {
+                    request({
+                        url: '/address/getCity?kenId=' + this.form.toKenId,
+                        method: 'get',
+                    }).then((ret) => {
+                        this.toCityAddress = ret.data.data
+                    })
+                    this.form.toCityId = ''
+                    this.form.toTownId = ''
+                } else {
+                    this.$message.warning('请选择 道/府/县')
+                    this.form.toCityId = ''
+                    this.form.toTownId = ''
+                    this.toCityAddress = []
+                    this.toTownAddress = []
+                }
+            },
+            getToTownAddress() {
+                if (this.form.toCityId) {
+                    request({
+                        url: '/address/getTown?cityId=' + this.form.toCityId,
+                        method: 'get',
+                    }).then((ret) => {
+                        this.toTownAddress = ret.data.data
+                        for (let i = 0; i < this.toTownAddress.length; i++) {
+                            const town = this.toTownAddress[i]
+                            if (!this.toTownAddressMap.hasOwnProperty(town.value)) {
+                                this.toTownAddressMap[town.value] = {
+                                    'value': town.value,
+                                    'label': town.label,
+                                    'zip': town.zip,
+                                }
+                            }
+                        }
+                    })
+                    this.form.toTownId = ''
+                } else {
+                    this.$message.warning('请选择 城市')
+                    this.form.toTownId = ''
+                    this.toTownAddress = []
+                }
+            },
+            getFromTownAddress() {
+                if (this.form.fromCityId) {
+                    request({
+                        url: '/address/getTown?cityId=' + this.form.fromCityId,
+                        method: 'get',
+                    }).then((ret) => {
+                        this.fromTownAddress = ret.data.data
+                        for (let i = 0; i < this.fromTownAddress.length; i++) {
+                            const town = this.fromTownAddress[i]
+                            if (!this.fromTownAddressMap.hasOwnProperty(town.value)) {
+                                this.fromTownAddressMap[town.value] = {
+                                    'value': town.value,
+                                    'label': town.label,
+                                    'zip': town.zip,
+                                }
+                            }
+                        }
+                    })
+                    this.form.fromTownId = ''
+                } else {
+                    this.$message.warning('请选择 城市')
+                    this.form.fromTownId = ''
+                    this.fromTownAddress = []
                 }
             },
             fillFromZipCode() {
                 if (this.form.fromTownId) {
-                    const town = this.townAddressMap[this.form.fromTownId]
+                    const town = this.fromTownAddressMap[this.form.fromTownId]
+                    const zip = town.zip
+                    if (zip !== this.form.fromZipCode) {
+                        this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }).then(() => {
+                            this.form.fromZipCode = zip
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功!',
+                            })
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消修改',
+                            })
+                        })
+                    }
+                } else {
+                    this.$message.warning('请选择乡镇')
                 }
             },
-            getCityAddress(kenId) {
-                request({
-                    url: '/address/getCity?kenId=' + kenId,
-                    method: 'get',
-                }).then((ret) => {
-                    this.cityAddress = ret.data.data
-                })
-            },
-            getTownAddress() {
-                request({
-                    url: '/address/getTown?cityId=' + this.form.fromCityId,
-                    method: 'get',
-                }).then((ret) => {
-                    this.townAddress = ret.data.data
-                    for (let i = 0; i < this.townAddress.length; i++) {
-                        const town = this.townAddress[i]
-                        if (!this.townAddressMap.hasOwnProperty(town.value)) {
-                            this.townAddressMap[town.value] = {
-                                'value': town.value,
-                                'label': town.label,
-                                'zip': town.zip,
-                            }
-                        }
+            fillToZipCode() {
+                if (this.form.toTownId) {
+                    const town = this.toTownAddressMap[this.form.toTownId]
+                    const zip = town.zip
+                    if (zip !== this.form.toZipCode) {
+                        this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }).then(() => {
+                            this.form.toZipCode = zip
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功!',
+                            })
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消修改',
+                            })
+                        })
                     }
-                })
+                } else {
+                    this.$message.warning('请选择乡镇')
+                }
             },
             getMyProducts() {
                 request({
@@ -878,32 +984,36 @@
                 })
             },
             filterProduct(val) {
-                request({
-                    url: '/product/listByUser',
-                    method: 'post',
-                    data: {
-                        user: val,
-                    },
-                }).then((res) => {
-                    this.myProducts = res.data.data
-                    if (this.myProducts == null || this.myProducts.length <= 0) {
-                        this.$message.error('当前用户未配置商品，请重新选择用户或者去为该用户添加商品')
-                        for (let i = 0; i < this.users.length; i++) {
-                            const subUser = this.users[i]
-                            if (subUser['uname'] === val) {
-                                subUser['disabled'] = true
+                if (!this.form.category) {
+                    this.$message.error('请选择订单种类')
+                    this.form.creator = ''
+                } else if (this.form.category === '1') {
+                    request({
+                        url: '/product/listByUser',
+                        method: 'post',
+                        data: {
+                            user: val,
+                        },
+                    }).then((res) => {
+                        this.myProducts = res.data.data
+                        if (this.myProducts == null || this.myProducts.length <= 0) {
+                            this.$message.error('当前用户未配置商品，请重新选择用户或者去为该用户添加商品')
+                            for (let i = 0; i < this.users.length; i++) {
+                                const subUser = this.users[i]
+                                if (subUser['uname'] === val) {
+                                    subUser['disabled'] = true
+                                }
+                                this.users[i] = subUser
                             }
-                            this.users[i] = subUser
+                            this.form.creator = ''
+                            return
                         }
-                        this.form.creator = ''
-                        return
-                    }
-                    console.log(this.myProducts)
-                    for (const myProduct of this.myProducts) {
-                        const subProduct = myProduct
-                        this.productMap[subProduct['dySku']] = subProduct
-                    }
-                })
+                        for (const myProduct of this.myProducts) {
+                            const subProduct = myProduct
+                            this.productMap[subProduct['dySku']] = subProduct
+                        }
+                    })
+                }
             },
             changeUpdateLink(val) {
                 this.actionLink += '?user=' + val

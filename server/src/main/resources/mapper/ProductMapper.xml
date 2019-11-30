@@ -61,15 +61,33 @@
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num,
-        dy_sku as value,product_name as label
+        select distinct product.sku,
+                        dy_sku          as dySku,
+                        product_name    as name,
+                        price           as price,
+                        product.ava_num as num,
+                        dy_sku          as value,
+                        product_name    as label
         from l_productions product
         where createdBy = #{username}
+          and ava_num > 0
     </select>
 
     <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
         select distinct product.sku, dy_sku as dySku, product_name as name, price as price, product.ava_num as num
         from l_productions product
+    </select>
+
+    <select id="listAllByUser" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
+        select distinct product.sku,
+                        dy_sku          as dySku,
+                        product_name    as name,
+                        price           as price,
+                        product.ava_num as num,
+                        dy_sku          as value,
+                        product_name    as label
+        from l_productions product
+        where createdBy = #{username}
     </select>
 
     <update id="addImg" parameterType="com.abc.chenzeshenga.logistics.model.Product">

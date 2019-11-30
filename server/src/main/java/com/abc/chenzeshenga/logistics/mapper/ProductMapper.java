@@ -18,6 +18,8 @@ import java.util.List;
 
     List<SkuLabel> listAll();
 
+    List<SkuLabel> listAllByUser(String username);
+
     int addImg(Product product);
 
     Product whetherImgs(String sku);
