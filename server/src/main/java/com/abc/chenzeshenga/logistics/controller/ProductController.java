@@ -106,8 +106,7 @@ import java.util.*;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/list/{status}")
-    public Json listProduct(@RequestBody String body, @PathVariable String status) {
+    @PostMapping("/list/{status}") public Json listProduct(@RequestBody String body, @PathVariable String status) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         String searchSku = jsonObject.getString("sku");
@@ -212,18 +211,18 @@ import java.util.*;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/delete/{sku}") public Json delete(@PathVariable String sku) {
+    @GetMapping("/delete/{sku}") public Json delete(@PathVariable String sku) {
         productMapper.deleteByPrimaryKey(sku);
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/status/{sku}/{status}")
+    @GetMapping("/status/{sku}/{status}")
     public Json statusUpdate(@PathVariable String sku, @PathVariable String status) {
         productMapper.statusUpdate(sku, status);
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/update") public Json update(@RequestBody Product product) {
+    @PostMapping("/update") public Json update(@RequestBody Product product) {
         String username = UserUtils.getUserName();
         Date curr = new Date();
         product.setUpdateBy(username);
@@ -232,17 +231,22 @@ import java.util.*;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/get/{sku}") public Json getSingleProduct(@PathVariable String sku) {
+    @GetMapping("/get/{sku}") public Json getSingleProduct(@PathVariable String sku) {
         Product product = productMapper.selectByPrimaryKey(sku);
         return Json.succ().data(product);
     }
 
-    @PostMapping @RequestMapping("/update/approval") public Json batchApproval(@RequestBody List<String> skus) {
+    @PostMapping("/update/approval") public Json batchApproval(@RequestBody List<String> skus) {
         productMapper.batchUpdate(skus);
         return Json.succ();
     }
 
     @PostMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
+        List<SkuLabel> skuLabelList = productMapper.list(request.get("user"));
+        return Json.succ().data(skuLabelList);
+    }
+
+    @PostMapping("/listAllByUser") public Json listAllByUser(@RequestBody Map<String, String> request) {
         List<SkuLabel> skuLabelList = productMapper.listAllByUser(request.get("user"));
         return Json.succ().data(skuLabelList);
     }

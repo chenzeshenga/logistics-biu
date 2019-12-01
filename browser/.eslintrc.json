@@ -23,6 +23,7 @@
     "new-cap": "off",
     "indent": "off",
     "object-curly-spacing": "off",
-    "semi": "off"
+    "semi": "off",
+    "guard-for-in": "off"
   }
 }
