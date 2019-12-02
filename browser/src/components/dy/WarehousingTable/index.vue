@@ -327,7 +327,7 @@
                             v-if="msgData.buttonVisible1"
                     >
                         <el-button
-                                @click="statusUpdate(scope.$index, scope.row, 2)"
+                                @click="printWarehousingBarcode(scope.$index, scope.row, 2)"
                                 size="mini"
                                 type="info"
                                 icon="el-icon-download"
@@ -662,12 +662,47 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+        <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4" width="20%">
+            <ejs-barcodegenerator
+                    id="barcode"
+                    :invalid="invalidInput"
+                    ref="barcodeControl"
+                    :width="width"
+                    :height="height"
+                    :type="type"
+                    :value="value"
+                    :mode="mode"
+            ></ejs-barcodegenerator>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import request from '../../../utils/service'
+    import {
+        Button,
+        ButtonPlugin,
+        CheckBoxPlugin,
+    } from '@syncfusion/ej2-vue-buttons'
+    import { Browser } from '@syncfusion/ej2-base'
+    import { BarcodeGeneratorPlugin } from '@syncfusion/ej2-vue-barcode-generator'
+    import {
+        NumericTextBox,
+        ColorPicker,
+        NumericTextBoxPlugin,
+        TextBoxPlugin,
+        ColorPickerPlugin,
+        ColorPickerEventArgs,
+        FormValidator,
+    } from '@syncfusion/ej2-vue-inputs'
+    import * as Vue from 'vue'
 
+    Vue.use(NumericTextBoxPlugin)
+    Vue.use(BarcodeGeneratorPlugin)
+    Vue.use(NumericTextBoxPlugin)
+    Vue.use(CheckBoxPlugin)
+    Vue.use(ColorPickerPlugin)
+    Vue.use(TextBoxPlugin)
     export default {
         name: 'warehousingTable',
         data() {
@@ -702,6 +737,7 @@
                 dialogVisible1: false,
                 dialogVisible2: false,
                 dialogVisible3: false,
+                dialogVisible4: false,
                 pickerOptions2: {
                     shortcuts: [
                         {
@@ -1006,7 +1042,7 @@
                 })
             },
             printWarehousingBarcode(index, row) {
-
+                this.dialogVisible4 = true
             },
         },
     }

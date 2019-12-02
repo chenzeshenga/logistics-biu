@@ -11,3 +11,4 @@ npm-debug.log
 /logs/
 /server/target/
 /applog/
+package-lock.json
