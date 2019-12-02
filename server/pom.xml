@@ -192,12 +192,12 @@
         </plugins>
     </build>
 
-    <!--    <repositories>-->
-    <!--        <repository>-->
-    <!--            <id>ali</id>-->
-    <!--            <name>ali-maven</name>-->
-    <!--            <url>http://maven.aliyun.com/nexus/content/groups/public</url>-->
-    <!--        </repository>-->
-    <!--    </repositories>-->
+        <repositories>
+            <repository>
+                <id>ali</id>
+                <name>ali-maven</name>
+                <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            </repository>
+        </repositories>
 
 </project>
