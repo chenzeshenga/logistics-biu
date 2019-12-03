@@ -665,48 +665,37 @@
         <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4" width="20%">
             <ejs-barcodegenerator
                     id="barcode"
-                    :invalid="invalidInput"
-                    ref="barcodeControl"
                     :width="width"
                     :height="height"
                     :type="type"
                     :value="value"
                     :mode="mode"
-            ></ejs-barcodegenerator>
+                    style="margin:20%"
+                    ref="barcodeControl"
+            />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible4 = false">取 消</el-button>
+                <el-button type="primary" @click="fillInTrackNo"
+                >下载</el-button
+                >
+            </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import request from '../../../utils/service'
-    import {
-        Button,
-        ButtonPlugin,
-        CheckBoxPlugin,
-    } from '@syncfusion/ej2-vue-buttons'
-    import { Browser } from '@syncfusion/ej2-base'
-    import { BarcodeGeneratorPlugin } from '@syncfusion/ej2-vue-barcode-generator'
-    import {
-        NumericTextBox,
-        ColorPicker,
-        NumericTextBoxPlugin,
-        TextBoxPlugin,
-        ColorPickerPlugin,
-        ColorPickerEventArgs,
-        FormValidator,
-    } from '@syncfusion/ej2-vue-inputs'
-    import * as Vue from 'vue'
 
-    Vue.use(NumericTextBoxPlugin)
-    Vue.use(BarcodeGeneratorPlugin)
-    Vue.use(NumericTextBoxPlugin)
-    Vue.use(CheckBoxPlugin)
-    Vue.use(ColorPickerPlugin)
-    Vue.use(TextBoxPlugin)
     export default {
         name: 'warehousingTable',
         data() {
             return {
+                width: '200px',
+                height: '150px',
+                mode: 'SVG',
+                type: 'Code128',
+                value: 'Code128',
+                barCodeInstance: null,
                 msgData: {
                     status: this.msg.status,
                     category: this.msg.category,
@@ -1043,8 +1032,24 @@
             },
             printWarehousingBarcode(index, row) {
                 this.dialogVisible4 = true
+                this.barCodeInstance = this.$refs.barcodeControl.ej2Instances
+                this.value = row.warehousingNo
             },
+        },
+        mounted() {
         },
     }
 </script>
 
+<style>
+    .center {
+        margin-left: 14px;
+        margin-right: 17px;
+        margin-top: 14px;
+        min-width: 280px;
+        width: auto;
+        border: 2px solid lightgray;
+        min-height: 40%;
+        padding-top: 35px;
+    }
+</style>
