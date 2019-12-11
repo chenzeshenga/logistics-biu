@@ -783,7 +783,7 @@ export const asyncRouterMap = [
             name: 'warehousing-mgt-other-list-status2',
             meta: {
               perm: 'm:warehousing:other:list:2',
-              title: '头程已收货',
+              title: '已收货',
               icon: 'chart',
               noCache: true,
             },
@@ -796,19 +796,6 @@ export const asyncRouterMap = [
             name: 'warehousing-mgt-other-list-status3',
             meta: {
               perm: 'm:warehousing:other:list:3',
-              title: '转运中',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
-          {
-            path: 'status4',
-            component: _import(
-                'warehousing/mgt/other/list/status4'
-            ),
-            name: 'warehousing-mgt-other-list-status4',
-            meta: {
-              perm: 'm:warehousing:other:list:4',
               title: '入库清点',
               icon: 'chart',
               noCache: true,

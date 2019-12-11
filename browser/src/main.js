@@ -21,6 +21,11 @@ import * as filters from './filters'; // global filters
 // 权限指令
 import hasPerm from '@/directive/permission/hasPerm';
 import perm from '@/directive/permission/perm';
+
+import htmlToPdf from './utils/htmlToPdf'
+// 使用Vue.use()方法就会调用工具方法中的install方法
+Vue.use(htmlToPdf)
+
 // 注册全局的权限判断方法和指令
 Vue.prototype.$hasPerm = hasPerm;
 Vue.directive('perm', perm);

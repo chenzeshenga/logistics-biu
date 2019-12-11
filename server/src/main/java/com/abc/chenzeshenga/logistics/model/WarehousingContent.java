@@ -9,7 +9,8 @@ import java.io.Serializable;
  *
  * @author chenzesheng
  */
-@Data public class WarehousingContent extends WarehousingContentKey implements Serializable {
+@Data
+public class WarehousingContent extends WarehousingContentKey implements Serializable {
     private String totalNum;
 
     private String wrapType;
@@ -19,5 +20,7 @@ import java.io.Serializable;
     private String price;
 
     private String weight;
+
+    private boolean received;
 
 }

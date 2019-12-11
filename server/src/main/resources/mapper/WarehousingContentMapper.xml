@@ -8,9 +8,10 @@
         <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
         <result column="wrap_type" jdbcType="VARCHAR" property="wrapType"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="received"/>
     </resultMap>
     <sql id="Base_Column_List">
-        warehousing_no, sku, box_seq, total_num, wrap_type, `name`
+        warehousing_no, sku, box_seq, total_num, wrap_type, `name`, received
     </sql>
     <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey"
             resultMap="BaseResultMap">
@@ -36,18 +37,18 @@
 
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
-                                           total_num, wrap_type, `name`)
+                                           total_num, wrap_type, `name`, received)
         values (#{warehousingNo,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{boxSeq,jdbcType=VARCHAR},
-                #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+                #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{received})
     </insert>
 
     <insert id="insertList" parameterType="java.util.List">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
-        total_num, wrap_type, `name`)
+        total_num, wrap_type, `name`, received)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
-            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR})
+            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received})
         </foreach>
     </insert>
 
@@ -72,6 +73,9 @@
             <if test="name != null">
                 `name`,
             </if>
+            <if test="received != null">
+                received,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="warehousingNo != null">
@@ -92,6 +96,9 @@
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
+            <if test="received != null">
+                #{received},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
@@ -106,6 +113,9 @@
             <if test="name != null">
                 `name` = #{name,jdbcType=VARCHAR},
             </if>
+            <if test="received != null">
+                received = #{received},
+            </if>
         </set>
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
         and sku = #{sku,jdbcType=VARCHAR}
@@ -115,6 +125,7 @@
         update l_warehousing_content
         set total_num = #{totalNum,jdbcType=VARCHAR},
             wrap_type = #{wrapType,jdbcType=VARCHAR},
+            received = #{received},
             `name`    = #{name,jdbcType=VARCHAR}
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
           and sku = #{sku,jdbcType=VARCHAR}
@@ -127,7 +138,8 @@
                box_seq        as boxSeq,
                total_num      as totalNum,
                wrap_type      as wrapType,
-               `name`         as name
+               `name`         as name,
+               received
         from l_warehousing_content
         where warehousing_no = #{warehousingNo}
     </select>
