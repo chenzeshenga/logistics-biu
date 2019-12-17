@@ -12,3 +12,6 @@ npm-debug.log
 /server/target/
 /applog/
 package-lock.json
+
+/server/target
+server/bin/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
