@@ -1,0 +1,10 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#61031C",
+        "titleBar.activeBackground": "#880427",
+        "titleBar.activeForeground": "#FFFBFC"
+    },
+    "cSpell.words": [
+        "barcode"
+    ]
+}

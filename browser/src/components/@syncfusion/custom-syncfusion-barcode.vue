@@ -67,18 +67,17 @@ const textAlignmentdataSourceValue = [
 
 export default {
   name: "customSyncfusionBarcode",
-  props: ['barcode'],
+  props: ["barcode"],
   data: function() {
     return {
-      width: "200px",
-      height: "150px",
+      width: this.barcode.width,
+      height: this.barcode.height,
       mode: "SVG",
       type: "Code128",
-      value: this.barcode,
+      value: this.barcode.value,
       fontcolorvalue: "#000",
       textPositionwidth: "100%",
       ftextPositionfields: { value: "type", text: "text" },
-    
       textPositiondataSource: textPositiondataSourceValue,
       textAlignmentdataSource: textAlignmentdataSourceValue,
       invalidInput: arg => {
@@ -93,9 +92,11 @@ export default {
   mounted: function() {
     barCodeInstance = this.$refs.barcodeControl.ej2Instances;
     formObject = new FormValidator("#form-element", options);
+    if (this.barcode.textSize) {
+      barCodeInstance.displayText.size = this.barcode.textSize;
+    }
   }
 };
 </script>
 
-<style>
-</style>
+<style></style>
