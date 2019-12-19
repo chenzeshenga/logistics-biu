@@ -1,12 +1,10 @@
 package com.abc.vo;
 
-import com.abc.entity.SysPerm;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateRolePermVo implements Serializable{
+public class UpdateRolePermVo implements Serializable {
 
     private String rid;
     private Integer ptype;
