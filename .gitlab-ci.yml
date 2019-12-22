@@ -1,0 +1,18 @@
+cache:
+  paths:
+    - .m2/repository
+
+deploy:jdk8:
+  # Use stage test here, so the pages job may later pickup the created site.
+  stage: test
+  script:
+    - 'ls'
+    - 'mvn $MAVEN_CLI_OPTS deploy site site:stage'
+  only:
+    - master
+  # Archive up the built documentation site.
+  artifacts:
+    paths:
+    - target/staging
+  image: maven:3.3.9-jdk-8
+
