@@ -539,21 +539,41 @@
       </span>
     </el-dialog>
     <el-dialog title="货物清点" :visible.sync="dialogVisible6" width="40%">
-      <p>入库单号:{{ dialogForm6.warehousingNo }}</p>
+      <el-row>
+        <el-col :span="14">
+          <p>入库单号:{{ dialogForm6.warehousingNo }}</p>
+        </el-col>
+        <el-col :span="10">
+          <el-input
+            v-model="dialogForm6.skuFromScanner"
+            @change="searchWarehousingContentList()"
+            placeholder="请扫描商品sku"
+          />
+        </el-col>
+      </el-row>
       <div
         v-for="warehousingContent in dialogForm6.warehousingContentList"
         v-bind:key="warehousingContent.boxSeq"
         style="margin:2%"
       >
-        箱号: {{ warehousingContent.boxSeq }}
-        sku: {{warehousingContent.sku}}
-        名称: {{warehousingContent.name}}
-        发货数量: {{warehousingContent.num}}
-        收货数量: <el-input-number v-model="warehousingContent.actualNum" placeholder="收货数量"></el-input-number>
+        箱号:
+        <b style="margin-left:4px">{{ warehousingContent.boxSeq}}</b>
+        sku:
+        <b style="margin-left:4px">{{warehousingContent.sku}}</b>
+        名称:
+        <b style="margin-left:4px">{{warehousingContent.name}}</b>
+        发货数量:
+        <b style="margin-left:4px">{{warehousingContent.totalNum}}</b>
+        收货数量:
+        <el-input-number
+          style="margin-left:4px"
+          v-model="warehousingContent.actualNum"
+          placeholder="收货数量"
+        ></el-input-number>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible6 = false">取 消</el-button>
-        <el-button type="primary" @click="updateWarehousingContent()">确定</el-button>
+        <el-button type="primary" @click="updateWarehousingContent2nd()">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -707,7 +727,8 @@ export default {
       dialogForm6: {
         warehousingNo: "",
         warehousingContentList: "",
-        warehousing: ""
+        warehousing: "",
+        skuFromScanner: ""
       }
     };
   },
@@ -965,6 +986,7 @@ export default {
       this.dialogForm6.warehousingNo = row.warehousingNo;
       this.dialogForm6.warehousingContentList = row.warehousingContentList;
       this.dialogForm6.warehousing = row;
+      console.log(this.dialogForm6.warehousingContentList);
     },
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
@@ -978,6 +1000,39 @@ export default {
         this.dialogVisible5 = false;
         this.fetchData();
       });
+    },
+    updateWarehousingContent2nd() {
+      let flag = true;
+      for (const i in this.dialogForm6.warehousingContentList) {
+        if (this.dialogForm6.warehousingContentList.hasOwnProperty(i)) {
+          const element = this.dialogForm6.warehousingContentList[i];
+          if (element["actualNum"] !== element["totalNum"]) {
+            this.$message.warning(element["sku"] + "到货数量与预期不符");
+            this.$confirm("您确定要入库吗？", "提示", confirm)
+              .then(() => {
+                flag = true;
+              })
+              .catch(() => {
+                flag = false;
+                this.$message.info("已取消入库");
+              });
+          }
+        }
+      }
+      if (flag) {
+        this.dialogForm6.warehousing.warehousingContentList = this.dialogForm6.warehousingContentList;
+        this.dialogForm6.warehousing.status = "4";
+        console.log(this.dialogForm6);
+        request({
+          url: "/warehousing/update",
+          method: "post",
+          data: this.dialogForm6.warehousing
+        }).then(() => {
+          this.$message.success("上架清点完成");
+          this.dialogVisible5 = false;
+          this.fetchData();
+        });
+      }
     },
     getBarcode() {
       if (this.dialog4["radio"] === "3*8") {
@@ -999,6 +1054,26 @@ export default {
         this.dialogVisible4 = true;
         this.dialogVisible4Sub = false;
         this.dialog4["radio"] = "4*10";
+      }
+    },
+    searchWarehousingContentList() {
+      const sku = this.dialogForm6.skuFromScanner.trim();
+      const contentList = this.dialogForm6.warehousingContentList;
+      for (const i in contentList) {
+        if (contentList.hasOwnProperty(i)) {
+          const element = contentList[i];
+          if (element["sku"] === sku) {
+            if (
+              element.hasOwnProperty("actualNum") &&
+              element["actualNum"] >= 0
+            ) {
+              element["actualNum"] += 1;
+            } else {
+              element["actualNum"] = 1;
+            }
+            break;
+          }
+        }
       }
     }
   },
