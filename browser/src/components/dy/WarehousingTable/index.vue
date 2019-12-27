@@ -102,6 +102,7 @@
             <el-table-column prop="boxSeq" label="箱号" width="150" />
             <el-table-column prop="totalNum" label="数量" width="200" />
             <el-table-column prop="wrapType" label="包装方式" width="250" />
+            <el-table-column prop="actual" label="实际收货数量" width="250" />
           </el-table>
         </template>
       </el-table-column>
@@ -313,6 +314,16 @@
           <el-tooltip content="货物清点" placement="top" v-if="msgData.buttonVisible13">
             <el-button
               @click="handleDialogVisible6(scope.$index, scope.row)"
+              size="mini"
+              type="info"
+              icon="el-icon-check"
+              circle
+              plain
+            />
+          </el-tooltip>
+          <el-tooltip content="货物上架" placement="top" v-if="msgData.buttonVisible14">
+            <el-button
+              @click="handleDialogVisible7(scope.$index, scope.row)"
               size="mini"
               type="info"
               icon="el-icon-check"
@@ -567,13 +578,49 @@
         收货数量:
         <el-input-number
           style="margin-left:4px"
-          v-model="warehousingContent.actualNum"
+          v-model="warehousingContent.actual"
           placeholder="收货数量"
         ></el-input-number>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible6 = false">取 消</el-button>
         <el-button type="primary" @click="updateWarehousingContent2nd()">确定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="40%">
+      <el-row>
+        <el-col :span="14">
+          <p>入库单号:{{ dialogForm7.warehousingNo }}</p>
+        </el-col>
+        <el-col :span="10">
+          <el-input
+            v-model="dialogForm7.skuFromScanner"
+            @change="searchWarehousingContentList7()"
+            placeholder="请扫描商品sku"
+          />
+        </el-col>
+      </el-row>
+      <div
+        v-for="warehousingContent in dialogForm7.warehousingContentList"
+        v-bind:key="warehousingContent.boxSeq"
+        style="margin:2%"
+      >
+        箱号:
+        <b style="margin-left:4px">{{ warehousingContent.boxSeq}}</b>
+        sku:
+        <b style="margin-left:4px">{{warehousingContent.sku}}</b>
+        名称:
+        <b style="margin-left:4px">{{warehousingContent.name}}</b>
+        收货数量:
+        <el-input-number
+          style="margin-left:4px"
+          v-model="warehousingContent.actual"
+          placeholder="收货数量"
+        ></el-input-number>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible7 = false">取 消</el-button>
+        <el-button type="primary" @click="up2shelf()">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -611,7 +658,8 @@ export default {
         buttonVisible10: this.msg.buttonVisible10 === true,
         buttonVisible11: this.msg.buttonVisible11 === true,
         buttonVisible12: this.msg.buttonVisible12 === true,
-        buttonVisible13: this.msg.buttonVisible13 === true
+        buttonVisible13: this.msg.buttonVisible13 === true,
+        buttonVisible14: this.msg.buttonVisible14 === true
       },
       // page data
       tablePage: {
@@ -658,6 +706,7 @@ export default {
       },
       dialogVisible5: false,
       dialogVisible6: false,
+      dialogVisible7: false,
       pickerOptions2: {
         shortcuts: [
           {
@@ -725,6 +774,12 @@ export default {
         warehousing: {}
       },
       dialogForm6: {
+        warehousingNo: "",
+        warehousingContentList: "",
+        warehousing: "",
+        skuFromScanner: ""
+      },
+      dialogForm7: {
         warehousingNo: "",
         warehousingContentList: "",
         warehousing: "",
@@ -986,7 +1041,12 @@ export default {
       this.dialogForm6.warehousingNo = row.warehousingNo;
       this.dialogForm6.warehousingContentList = row.warehousingContentList;
       this.dialogForm6.warehousing = row;
-      console.log(this.dialogForm6.warehousingContentList);
+    },
+    handleDialogVisible7(index, row) {
+      this.dialogVisible7 = true;
+      this.dialogForm7.warehousingNo = row.warehousingNo;
+      this.dialogForm7.warehousingContentList = row.warehousingContentList;
+      this.dialogForm7.warehousing = row;
     },
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
@@ -1008,14 +1068,6 @@ export default {
           const element = this.dialogForm6.warehousingContentList[i];
           if (element["actualNum"] !== element["totalNum"]) {
             this.$message.warning(element["sku"] + "到货数量与预期不符");
-            this.$confirm("您确定要入库吗？", "提示", confirm)
-              .then(() => {
-                flag = true;
-              })
-              .catch(() => {
-                flag = false;
-                this.$message.info("已取消入库");
-              });
           }
         }
       }
@@ -1028,8 +1080,8 @@ export default {
           method: "post",
           data: this.dialogForm6.warehousing
         }).then(() => {
+          this.dialogVisible6 = false;
           this.$message.success("上架清点完成");
-          this.dialogVisible5 = false;
           this.fetchData();
         });
       }

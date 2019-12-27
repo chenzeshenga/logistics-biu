@@ -1,58 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.WarehousingMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Warehousing">
-        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
-        <result column="target" jdbcType="VARCHAR" property="target"/>
-        <result column="method" jdbcType="VARCHAR" property="method"/>
-        <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
-        <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
-        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan"/>
-        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan"/>
-        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
-        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
-        <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
-        <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
-        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
-        <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
-        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
-        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
-        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
-        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
-        <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="updator" jdbcType="VARCHAR" property="updator"/>
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
+        <result column="target" jdbcType="VARCHAR" property="target" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="carrier" jdbcType="VARCHAR" property="carrier" />
+        <result column="track_no" jdbcType="VARCHAR" property="trackNo" />
+        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan" />
+        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan" />
+        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod" />
+        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType" />
+        <result column="tax_type" jdbcType="VARCHAR" property="taxType" />
+        <result column="insurance" jdbcType="VARCHAR" property="insurance" />
+        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum" />
+        <result column="channel_code" jdbcType="VARCHAR" property="channel" />
+        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc" />
+        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate" />
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn" />
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="updator" jdbcType="VARCHAR" property="updator" />
     </resultMap>
 
     <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Warehousing">
-        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
-        <result column="target" jdbcType="VARCHAR" property="target"/>
-        <result column="method" jdbcType="VARCHAR" property="method"/>
-        <result column="carrier" jdbcType="VARCHAR" property="carrier"/>
-        <result column="track_no" jdbcType="VARCHAR" property="trackNo"/>
-        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan"/>
-        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan"/>
-        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod"/>
-        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType"/>
-        <result column="tax_type" jdbcType="VARCHAR" property="taxType"/>
-        <result column="insurance" jdbcType="VARCHAR" property="insurance"/>
-        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum"/>
-        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate"/>
-        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
-        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
-        <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="updator" jdbcType="VARCHAR" property="updator"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
-        <result column="channel_code" jdbcType="VARCHAR" property="channel"/>
-        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc"/>
-        <result column="user_warehousing_file_uuid" jdbcType="VARCHAR" property="userWarehousingFileUuid"/>
-        <result column="system_file_uuid" jdbcType="VARCHAR" property="systemFileUuid"/>
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
+        <result column="target" jdbcType="VARCHAR" property="target" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="carrier" jdbcType="VARCHAR" property="carrier" />
+        <result column="track_no" jdbcType="VARCHAR" property="trackNo" />
+        <result column="carrier_in_japan" jdbcType="VARCHAR" property="carrierInJapan" />
+        <result column="track_no_in_japan" jdbcType="VARCHAR" property="trackNoInJapan" />
+        <result column="deliver_method" jdbcType="VARCHAR" property="deliverMethod" />
+        <result column="clearance_type" jdbcType="VARCHAR" property="clearanceType" />
+        <result column="tax_type" jdbcType="VARCHAR" property="taxType" />
+        <result column="insurance" jdbcType="VARCHAR" property="insurance" />
+        <result column="insurance_num" jdbcType="VARCHAR" property="insuranceNum" />
+        <result column="estimated_date" jdbcType="TIMESTAMP" property="estimatedDate" />
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn" />
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="updator" jdbcType="VARCHAR" property="updator" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="channel_code" jdbcType="VARCHAR" property="channel" />
+        <result column="channel_name" jdbcType="VARCHAR" property="channelDesc" />
+        <result column="user_warehousing_file_uuid" jdbcType="VARCHAR" property="userWarehousingFileUuid" />
+        <result column="system_file_uuid" jdbcType="VARCHAR" property="systemFileUuid" />
         <collection property="warehousingContentList" ofType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
-            <result column="warehousing_no" property="warehousingNo"/>
-            <result column="sku" property="sku"/>
-            <result column="box_seq" property="boxSeq"/>
-            <result column="total_num" property="totalNum"/>
-            <result column="wrap_type" property="wrapType"/>
-            <result column="name" property="name"/>
+            <result column="warehousing_no" property="warehousingNo" />
+            <result column="sku" property="sku" />
+            <result column="box_seq" property="boxSeq" />
+            <result column="total_num" property="totalNum" />
+            <result column="wrap_type" property="wrapType" />
+            <result column="name" property="name" />
+            <result column="actual" property="actual" />
+            <result column="received" property="received" />
         </collection>
     </resultMap>
 
