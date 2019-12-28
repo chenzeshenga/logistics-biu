@@ -13,4 +13,6 @@ jobs:
         username: root
         password: Charlotte34
         port: 22
-        script: whoami
+        script: |
+          cd /opt/biu
+          git pull https://github.com/chenzeshenga/logistics-biu.git
