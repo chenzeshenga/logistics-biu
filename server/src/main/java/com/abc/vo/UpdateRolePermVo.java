@@ -6,6 +6,7 @@ import java.util.List;
 
 public class UpdateRolePermVo implements Serializable {
 
+    private static final long serialVersionUID = 7726481551616563278L;
     private String rid;
     private Integer ptype;
     private List<String> pvals = new ArrayList<>();

@@ -11,7 +11,12 @@ import java.io.Serializable;
  *
  * @author
  */
-@Data @AllArgsConstructor @NoArgsConstructor public class Img implements Serializable {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Img implements Serializable {
+
+    private static final long serialVersionUID = -2428746817170082687L;
 
     private String uuid;
 

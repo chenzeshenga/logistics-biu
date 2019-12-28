@@ -5,8 +5,9 @@ import java.io.Serializable;
 /**
  * 通用的选项对象
  */
-public class Option implements Serializable{
+public class Option implements Serializable {
 
+    private static final long serialVersionUID = -4699672724453971063L;
     private Serializable id;
     private String val;
     private String val2;

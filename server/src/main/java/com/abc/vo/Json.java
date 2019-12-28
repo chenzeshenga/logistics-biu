@@ -9,6 +9,7 @@ public class Json extends HashMap<String, Object> {
 
     /////////////////////// 默认的键 ///////////////////////
 
+    private static final long serialVersionUID = -1138419502691954748L;
     public static final String KEY_OPER = "oper";
     public static final String KEY_SUCC = "succ";
     public static final String KEY_CODE = "code";
@@ -114,17 +115,17 @@ public class Json extends HashMap<String, Object> {
 
     public static Json result(String operate, boolean success) {
         return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
-            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null);
+                (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null);
     }
 
     public static Json result(String operate, boolean success, Object data) {
         return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
-            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), data);
+                (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), data);
     }
 
     public static Json result(String operate, boolean success, String dataKey, Object dataVal) {
         return new Json(operate, success, (success ? DEFAULT_SUCC_CODE : DEFAULT_FAIL_CODE),
-            (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null).data(dataKey, dataVal);
+                (success ? DEFAULT_SUCC_MSG : DEFAULT_FAIL_MSG), null).data(dataKey, dataVal);
     }
 
     /////////////////////// 各种链式调用方法 ///////////////////////

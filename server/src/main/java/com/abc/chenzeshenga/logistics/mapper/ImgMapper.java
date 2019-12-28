@@ -2,13 +2,13 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Img;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 /**
  * @author chenzesheng
  * @version 1.0
  */
-@Mapper public interface ImgMapper {
+@Mapper
+public interface ImgMapper {
 
     int deleteByPrimaryKey(String uuid);
 

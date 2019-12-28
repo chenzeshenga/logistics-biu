@@ -12,7 +12,10 @@ import java.util.List;
  *
  * @author
  */
-@Data public class Channel implements Serializable {
+@Data
+public class Channel implements Serializable {
+
+    private static final long serialVersionUID = 3847302764352457071L;
 
     private String channelCode;
 
@@ -48,8 +51,10 @@ import java.util.List;
 
     private String updateBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createOn;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date updateOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateOn;
 
 }

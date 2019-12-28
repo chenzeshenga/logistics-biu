@@ -20,21 +20,26 @@ import java.util.List;
  * @version 1.0
  * @since 20190809
  */
-@RestController @RequestMapping("/statistics") public class ProductStatisticsController {
+@RestController
+@RequestMapping("/statistics")
+public class ProductStatisticsController {
 
-    @Resource private ProductStatisticsMapper productStatisticsMapper;
+    @Resource
+    private ProductStatisticsMapper productStatisticsMapper;
 
     private ProductStatisticsService productStatisticsService;
 
-    @Autowired public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
+    @Autowired
+    public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
         this.productStatisticsService = productStatisticsService;
     }
 
-    @PostMapping @RequestMapping("/list") public Json list(@RequestBody String body) {
+    @PostMapping
+    @RequestMapping("/list")
+    public Json list(@RequestBody String body) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
-        List<ProductStatistics> productStatisticsList;
         Page<ProductStatistics> productStatisticsPage = new Page<>();
         if ("admin".equals(username)) {
             productStatisticsPage = productStatisticsService.selectAll(page);
@@ -44,14 +49,14 @@ import java.util.List;
         return Json.succ().data("page", productStatisticsPage);
     }
 
-    @PostMapping("/listBySearch") public Json listBySearch(@RequestBody String body) {
+    @PostMapping("/listBySearch")
+    public Json listBySearch(@RequestBody String body) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         String sku = jsonObject.getString("sku");
         String name = jsonObject.getString("name");
         String owner = jsonObject.getString("owner");
         Page page = PageUtils.getPageParam(jsonObject);
-        List<ProductStatistics> productStatisticsList;
         Page<ProductStatistics> productStatisticsPage = new Page<>();
         if ("admin".equals(username)) {
             productStatisticsPage = productStatisticsService.selectAllBySearch(page, sku, name, owner);

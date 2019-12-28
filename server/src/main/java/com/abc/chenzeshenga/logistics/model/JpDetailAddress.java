@@ -10,7 +10,11 @@ import java.io.Serializable;
  * @version 1.0
  * @since 20190819
  */
-@Data @ToString public class JpDetailAddress implements Serializable {
+@Data
+@ToString
+public class JpDetailAddress implements Serializable {
+
+    private static final long serialVersionUID = 4664906408754186144L;
 
     private String kenId;
 
