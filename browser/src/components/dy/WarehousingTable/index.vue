@@ -107,6 +107,7 @@
         </template>
       </el-table-column>
       <el-table-column width="200" prop="warehousingNo" label="入库单号" />
+      <el-table-column width="150" prop="fromAddress" label="发货地址" />
       <el-table-column width="150" prop="target" label="仓库地址" />
       <el-table-column width="100" prop="statusDesc" label="状态" />
       <el-table-column width="150" prop="method" label="头程方式" />

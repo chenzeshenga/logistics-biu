@@ -11,7 +11,7 @@
                   clearable
                   v-model="form.creator"
                   placeholder="请选择所属用户"
-                  @change="filterProduct"
+                  @change="filterProductAndUserAddress"
                 >
                   <el-option
                     v-for="creator in users"
@@ -339,7 +339,7 @@ export default {
         }
       });
     },
-    filterProduct(val) {
+    filterProductAndUserAddress(val) {
       request({
         url: "/product/listAllByUser",
         method: "post",
@@ -370,6 +370,15 @@ export default {
         }
         console.log(this.products);
         console.log(this.productMap);
+      });
+      request({
+        url: "/user/info/get",
+        method: "post",
+        data: {
+          userId: val
+        }
+      }).then(ret => {
+        this.form.fromAddress = ret.data.data.userAddress;
       });
     },
     initPage() {

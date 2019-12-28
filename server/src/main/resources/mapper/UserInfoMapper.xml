@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.UserInfoMapper">
+
+    <select id="getUserInfoById" resultType="com.abc.chenzeshenga.logistics.model.UserInfo">
+        select *
+        from l_user_info info , sys_user user
+        where 
+        info.userId=user.uid
+        and user.uname=#{userId}
+        limit 1
+    </select>
+
+</mapper>

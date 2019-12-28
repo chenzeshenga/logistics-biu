@@ -26,7 +26,7 @@
 
     <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Warehousing">
         <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
-        <result column="fromAddress" />
+        <result column="fromAddress" property="fromAddress" jdbcType="VARCHAR" />
         <result column="target" jdbcType="VARCHAR" property="target" />
         <result column="method" jdbcType="VARCHAR" property="method" />
         <result column="carrier" jdbcType="VARCHAR" property="carrier" />
