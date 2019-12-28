@@ -486,6 +486,7 @@
       <div>
         <el-radio v-model="dialog4.radio" label="3*8">3*8</el-radio>
         <el-radio v-model="dialog4.radio" label="4*10">4*10</el-radio>
+        <el-radio v-model="dialog4.radio" label="2*2">2*2</el-radio>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible4Main = false">取 消</el-button>
@@ -523,6 +524,23 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible4Sub = false">取 消</el-button>
+        <el-button type="primary" @click="getPdf('#pdfDom')">下载</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4Sub2" width="40%">
+      <div id="pdfDom" class="a4-pdf-v2">
+        <div v-for="item in dialog4.barcodeLength2" v-bind:key="item.item">
+          <div
+            v-for="item in dialog4.barcodeLength2"
+            v-bind:key="item.item"
+            style="display:inline-block;margin:1%"
+          >
+            <custom-syncfusion-barcode-detail v-bind:barcode="barcode2"></custom-syncfusion-barcode-detail>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Sub2 = false">取 消</el-button>
         <el-button type="primary" @click="getPdf('#pdfDom')">下载</el-button>
       </span>
     </el-dialog>
@@ -629,10 +647,11 @@
 <script>
 import request from "../../../utils/service";
 import CustomSyncfusionBarcode from "../../@syncfusion/custom-syncfusion-barcode";
+import CustomSyncfusionBarcodeDetail from "../../@syncfusion/custom-syncfusion-barcode-detail";
 
 export default {
   name: "warehousingTable",
-  components: { CustomSyncfusionBarcode },
+  components: { CustomSyncfusionBarcode, CustomSyncfusionBarcodeDetail },
   data() {
     return {
       width: "200px",
@@ -677,8 +696,10 @@ export default {
       dialogVisible4: false,
       dialogVisible4Main: false,
       dialogVisible4Sub: false,
+      dialogVisible4Sub2: false,
       dialog4: {
         radio: "3*8",
+        barcodeLength2: [{ item: 1 }, { item: 2 }],
         barcodeLength3: [{ item: 1 }, { item: 2 }, { item: 3 }],
         barcodeLength4: [{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }],
         barcodeLength8: [
@@ -768,6 +789,7 @@ export default {
       uploadLink: process.env.BASE_API + "/warehousing/userFile",
       barcode1: {},
       barcode2: {},
+      barcode3: {},
       dialogForm5: {
         warehousingNo: "",
         warehousingContentList: [],
@@ -815,7 +837,6 @@ export default {
         this.tablePage.size = res.data.page.size;
         this.tablePage.total = res.data.page.total;
         this.tableLoading = false;
-        console.log(this.tableData);
       });
     },
     handleUpdate(index, row) {
@@ -1018,12 +1039,19 @@ export default {
     },
     printWarehousingBarcode(index, row) {
       this.dialogVisible4Main = true;
+      console.log(row);
       this.barcode1 = {
         value: row.warehousingNo,
         width: 185,
         height: 93
       };
       this.barcode2 = {
+        value: row.warehousingNo,
+        width: 130,
+        height: 72,
+        textSize: 13
+      };
+      this.barcode3 = {
         value: row.warehousingNo,
         width: 130,
         height: 72,
@@ -1088,13 +1116,20 @@ export default {
     },
     getBarcode() {
       if (this.dialog4["radio"] === "3*8") {
-        this.dialogVisible4 = true;
         this.dialogVisible4Main = false;
         this.dialogVisible4Sub = false;
+        this.dialogVisible4Sub2 = false;
+        this.dialogVisible4 = true;
       } else if (this.dialog4["radio"] === "4*10") {
         this.dialogVisible4 = false;
         this.dialogVisible4Main = false;
+        this.dialogVisible4Sub2 = false;
         this.dialogVisible4Sub = true;
+      } else if (this.dialog4["radio"] === "2*2") {
+        this.dialogVisible4 = false;
+        this.dialogVisible4Main = false;
+        this.dialogVisible4Sub = false;
+        this.dialogVisible4Sub2 = true;
       }
     },
     customBarcodeSize(val) {

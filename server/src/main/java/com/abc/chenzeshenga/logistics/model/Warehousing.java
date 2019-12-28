@@ -19,6 +19,10 @@ import java.util.List;
 public class Warehousing extends BaseRowModel implements Serializable {
 
     private static final long serialVersionUID = -4866257602133972659L;
+    /**
+     * 用户发货地址
+     */
+    private String fromAddress;
     @ExcelProperty(index = 0, value = "目的仓库")
     private String target;
     @ExcelProperty(index = 1, value = "入库单号")

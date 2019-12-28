@@ -40,6 +40,7 @@ public class ProductStatisticsController {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
+        List<ProductStatistics> productStatisticsList;
         Page<ProductStatistics> productStatisticsPage = new Page<>();
         if ("admin".equals(username)) {
             productStatisticsPage = productStatisticsService.selectAll(page);
@@ -57,6 +58,7 @@ public class ProductStatisticsController {
         String name = jsonObject.getString("name");
         String owner = jsonObject.getString("owner");
         Page page = PageUtils.getPageParam(jsonObject);
+        List<ProductStatistics> productStatisticsList;
         Page<ProductStatistics> productStatisticsPage = new Page<>();
         if ("admin".equals(username)) {
             productStatisticsPage = productStatisticsService.selectAllBySearch(page, sku, name, owner);

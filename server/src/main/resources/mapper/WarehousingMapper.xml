@@ -3,6 +3,7 @@
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.WarehousingMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.Warehousing">
         <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
+        <result column="fromAddress" />
         <result column="target" jdbcType="VARCHAR" property="target" />
         <result column="method" jdbcType="VARCHAR" property="method" />
         <result column="carrier" jdbcType="VARCHAR" property="carrier" />
@@ -25,6 +26,7 @@
 
     <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.Warehousing">
         <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
+        <result column="fromAddress" />
         <result column="target" jdbcType="VARCHAR" property="target" />
         <result column="method" jdbcType="VARCHAR" property="method" />
         <result column="carrier" jdbcType="VARCHAR" property="carrier" />
@@ -59,11 +61,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        warehousing_no, target, `method`, carrier, track_no, deliver_method, clearance_type,tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator,updator
+        warehousing_no, fromAddress, target, `method`, carrier, track_no, deliver_method, clearance_type,tax_type, insurance, insurance_num, estimated_date, create_on, update_on, creator,updator
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select warehousing_no,
+               fromAddress,
                target,
                `method`,
                carrier,
@@ -92,12 +95,12 @@
     </delete>
 
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
-        insert into l_warehousing (warehousing_no, target, `method`,
+        insert into l_warehousing (warehousing_no, fromAddress,target, `method`,
                                    carrier, track_no, channel_code, deliver_method,
                                    clearance_type, tax_type, insurance,
                                    insurance_num, estimated_date, create_on,
                                    update_on, creator, updator, status)
-        values (#{warehousingNo,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
+        values (#{warehousingNo,jdbcType=VARCHAR},#{fromAddress}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
                 #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR},
                 #{channel}, #{deliverMethod,jdbcType=VARCHAR},
                 #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR},
@@ -109,6 +112,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="warehousingNo != null">
                 warehousing_no,
+            </if>
+            <if test="fromAddress != null">
+                fromAddress,
             </if>
             <if test="target != null">
                 target,
@@ -157,6 +163,9 @@
             <if test="warehousingNo != null">
                 #{warehousingNo,jdbcType=VARCHAR},
             </if>
+            <if test="fromAddress != null">
+                #{fromAddress},
+            </if>
             <if test="target != null">
                 #{target,jdbcType=VARCHAR},
             </if>
@@ -204,6 +213,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
         update l_warehousing
         <set>
+            <if test="fromAddress != null">
+                fromAddress = #{fromAddress},
+            </if>
             <if test="target != null">
                 target = #{target,jdbcType=VARCHAR},
             </if>
@@ -267,6 +279,7 @@
     <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
         update l_warehousing
         set target         = #{target,jdbcType=VARCHAR},
+            fromAddress    = #{fromAddress},
             `method`       = #{method,jdbcType=VARCHAR},
             carrier        = #{carrier,jdbcType=VARCHAR},
             track_no       = #{trackNo,jdbcType=VARCHAR},

@@ -25,6 +25,13 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item label="发货地址">
+          <el-col :span="12">
+            <el-form-item label="发货地址">
+              <el-input v-model="form.fromAddress" />
+            </el-form-item>
+          </el-col>
+        </el-form-item>
         <el-form-item label="仓库地址">
           <el-col :span="12">
             <el-form-item label="默认地址">
@@ -226,6 +233,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       form: {
+        fromAddress: "",
         target: "岡山县岡山市中区新京橋3丁目4-26",
         warehousingNo: "",
         method: "东岳头程",
