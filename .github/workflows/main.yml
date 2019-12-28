@@ -16,3 +16,5 @@ jobs:
         script: |
           cd /opt/biu
           git pull https://github.com/chenzeshenga/logistics-biu.git
+          cd ./server
+          mvn clean package
