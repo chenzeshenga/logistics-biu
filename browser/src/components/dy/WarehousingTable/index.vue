@@ -630,7 +630,7 @@
           sku:
           <b style="margin-left:4px">{{warehousingContent.sku}}</b>
         </el-row>
-        <el-row>
+        <el-row style="margin-top:1%">
           名称:
           <b style="margin-left:4px">{{warehousingContent.name}}</b>
           收货数量:
