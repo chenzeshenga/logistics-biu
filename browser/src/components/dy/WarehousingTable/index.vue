@@ -606,7 +606,7 @@
         <el-button type="primary" @click="updateWarehousingContent2nd()">确定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="40%">
+    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="30%">
       <el-row>
         <el-col :span="14">
           <p>入库单号:{{ dialogForm7.warehousingNo }}</p>
@@ -624,18 +624,36 @@
         v-bind:key="warehousingContent.boxSeq"
         style="margin:2%"
       >
-        箱号:
-        <b style="margin-left:4px">{{ warehousingContent.boxSeq}}</b>
-        sku:
-        <b style="margin-left:4px">{{warehousingContent.sku}}</b>
-        名称:
-        <b style="margin-left:4px">{{warehousingContent.name}}</b>
-        收货数量:
-        <el-input-number
-          style="margin-left:4px"
-          v-model="warehousingContent.actual"
-          placeholder="收货数量"
-        ></el-input-number>
+        <el-row>
+          箱号:
+          <b style="margin-left:4px">{{ warehousingContent.boxSeq}}</b>
+          sku:
+          <b style="margin-left:4px">{{warehousingContent.sku}}</b>
+        </el-row>
+        <el-row>
+          名称:
+          <b style="margin-left:4px">{{warehousingContent.name}}</b>
+          收货数量:
+          <b style="margin-left:4px">{{warehousingContent.actual}}</b>
+        </el-row>
+        <div
+          v-for="upShelfContent in warehousingContent.upShelfContentList"
+          v-bind:key="upShelfContent.seq"
+          style="margin:2%"
+        >
+          上架数量:
+          <el-input-number
+            style="margin-left:4px"
+            v-model="upShelfContent.upShelfNum"
+            placeholder="收货数量"
+          ></el-input-number>货架：
+          <el-option
+            v-for="shelf in shelves"
+            :key="shelf.shelfNo"
+            :label="shelf.shelfNo"
+            :value="shelf.shelfNo"
+          ></el-option>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible7 = false">取 消</el-button>
@@ -1076,7 +1094,9 @@ export default {
       this.dialogForm7.warehousingNo = row.warehousingNo;
       this.dialogForm7.warehousingContentList = row.warehousingContentList;
       this.dialogForm7.warehousing = row;
+      this.fetchShelves();
     },
+    fetchShelves() {},
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
       this.dialogForm5.warehousing.status = "3";
@@ -1091,7 +1111,7 @@ export default {
       });
     },
     updateWarehousingContent2nd() {
-      let flag = true;
+      const flag = true;
       for (const i in this.dialogForm6.warehousingContentList) {
         if (this.dialogForm6.warehousingContentList.hasOwnProperty(i)) {
           const element = this.dialogForm6.warehousingContentList[i];
