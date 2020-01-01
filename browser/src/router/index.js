@@ -164,6 +164,16 @@ export const asyncRouterMap = [
         }
       },
       {
+        path: "shelf",
+        name: "system-config-shelf",
+        component: _import("_system/config/shelf"),
+        meta: {
+          perm: "m:config:list:shelf",
+          title: "货架设置",
+          icon: "chart"
+        }
+      },
+      {
         path: "dyProfile",
         name: "dyProfile",
         component: _import("_system/config/dyProfile"),
