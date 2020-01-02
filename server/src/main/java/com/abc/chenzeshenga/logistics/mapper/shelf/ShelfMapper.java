@@ -1,7 +1,10 @@
 package com.abc.chenzeshenga.logistics.mapper.shelf;
 
+import java.util.List;
+
 import com.abc.chenzeshenga.logistics.model.shelf.Shelf;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,5 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ShelfMapper extends BaseMapper<Shelf> {
+
+    List<Shelf> list(String reg, Pagination page);
 
 }

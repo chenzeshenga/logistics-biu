@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="app-container">
-      <shelf-table v-bind:msg="this.mgs"></shelf-table>
+      <shelf-table v-bind:msg="this.msg"></shelf-table>
     </div>
   </div>
 </template>
