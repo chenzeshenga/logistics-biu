@@ -6,4 +6,6 @@ install:
   - cd server
   - mvn clean package
   - cd target
-  - ftp push . --user root --passwd Charlotte34 ftp://47.105.33.48/tmp
+  - sudo apt-get install -y lftp
+  - lftp root:Charlotte34@47.105.33.48;mirror -R *.jar /opt/biu
+  - echo "successful"
