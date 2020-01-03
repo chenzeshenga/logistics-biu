@@ -5,7 +5,4 @@ jdk:
 install:
   - cd server
   - mvn clean package
-  - cd target
-  - sudo apt-get install -y lftp
-  - lftp root:Charlotte34@47.105.33.48;mirror -R *.jar /opt/biu
-  - echo "successful"
+
