@@ -5,4 +5,5 @@ jdk:
 install:
   - cd server
   - mvn clean package
-  - pwd & ls -l
+  - cd target
+  - ftp push . --user root --passwd Charlotte34 ftp://47.105.33.48/tmp
