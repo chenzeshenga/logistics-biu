@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,30 @@ public class ShelfController {
         Page page = PageUtils.getPageParam(jsonObject);
         Page<Shelf> shelfPage = shelfService.list(page, reg);
         return Json.succ().data("page", shelfPage);
+    }
+
+    @GetMapping("/enable")
+    public Json enable(@RequestParam String shelfNo) {
+        shelfMapper.enable(shelfNo);
+        return Json.succ();
+    }
+
+    @GetMapping("/disable")
+    public Json disable(@RequestParam String shelfNo) {
+        shelfMapper.disable(shelfNo);
+        return Json.succ();
+    }
+
+    @GetMapping("/drop")
+    public Json drop(@RequestParam String shelfNo) {
+        shelfMapper.drop(shelfNo);
+        return Json.succ();
+    }
+
+    @PostMapping(value = "/add")
+    public Json add(@RequestBody Shelf shelf) {
+        shelfService.insert(shelf);
+        return Json.succ();
     }
 
 }

@@ -19,4 +19,17 @@
           or layer like CONCAT('%', #{reg}, '%')
     </select>
 
+    <update id="enable">
+        update l_shelf set enable="1" where shelf_no=#{shelfNo}
+    </update>
+
+    <update id="disable">
+        update l_shelf set enable="0" where shelf_no=#{shelfNo}
+    </update>
+
+
+    <delete id="drop">
+          delete from l_shelf where shelf_no=#{shelfNo}
+    </delete>
+
 </mapper>

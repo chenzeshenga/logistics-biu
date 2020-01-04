@@ -1,5 +1,7 @@
 package com.abc.chenzeshenga.logistics.model.shelf;
 
+import com.baomidou.mybatisplus.annotations.TableName;
+
 import lombok.Data;
 
 /**
@@ -7,6 +9,7 @@ import lombok.Data;
  * @since 2020-01-01 23:33
  */
 @Data
+@TableName(value = "l_shelf")
 public class Shelf {
 
     /**

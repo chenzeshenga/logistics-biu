@@ -1,6 +1,14 @@
 <template>
   <div class="login-container">
     <div class="app-container">
+      <el-row>
+        <el-col :span="18">
+          <el-button type="primary" round @click="dialogVisible = true"
+            >新建</el-button
+          >
+        </el-col>
+        <el-col :span="6"> </el-col>
+      </el-row>
       <el-table
         style="margin-top: 10px"
         :data="tableData"
@@ -8,14 +16,74 @@
         element-loading-text="加载中"
         stripe
         highlight-current-row
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column width="200" prop="shelfNo" label="货架号"></el-table-column>
-        <el-table-column width="200" prop="area" label="货架区域"></el-table-column>
-        <el-table-column width="200" prop="rowNo" label="货架行数"></el-table-column>
-        <el-table-column width="200" prop="layer" label="货架层数"></el-table-column>
-        <el-table-column width="200" prop="enable" label="是否启用"></el-table-column>
+        <el-table-column
+          width="300"
+          prop="shelfNo"
+          label="货架号"
+        ></el-table-column>
+        <el-table-column
+          width="300"
+          prop="area"
+          label="货架区域"
+        ></el-table-column>
+        <el-table-column
+          width="300"
+          prop="rowNo"
+          label="货架行数"
+        ></el-table-column>
+        <el-table-column
+          width="300"
+          prop="layer"
+          label="货架层数"
+        ></el-table-column>
+        <el-table-column width="300" label="是否启用">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.enable ? 'success' : 'danger'"
+              disable-transitions
+            >
+              {{ scope.row.enable ? "启用" : "禁用" }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column width="300" label="操作" fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip content="快速启用" placement="top">
+              <el-button
+                @click="enable(scope.$index, scope.row)"
+                size="mini"
+                type="success"
+                circle
+                plain
+              >
+                <svg-icon icon-class="enable"></svg-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="快速禁用" placement="top">
+              <el-button
+                @click="disable(scope.$index, scope.row)"
+                size="mini"
+                type="warning"
+                circle
+                plain
+              >
+                <svg-icon icon-class="disable"></svg-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button
+                @click="drop(scope.$index, scope.row)"
+                size="mini"
+                type="danger"
+                icon="el-icon-remove"
+                circle
+                plain
+              >
+              </el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         style="margin-left: 65%;margin-top: 10px"
@@ -28,6 +96,44 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="tablePage.total"
       ></el-pagination>
+      <el-dialog title="新建货架" :visible.sync="dialogVisible" width="30%">
+        <el-row>
+          <el-input placeholder="新建货架号" v-model="form.shelfNo" disabled>
+            <el-button slot="append" @click="generateShelfNo()"
+              >生成货架号</el-button
+            >
+          </el-input>
+        </el-row>
+        <el-row style="margin-top:2%">
+          <el-col :span="10">
+            <div class="sub-title">区域</div>
+            <el-input v-model="form.area"></el-input>
+          </el-col>
+          <el-col :span="10" style="margin-left:3%">
+            <div class="sub-title">行数</div>
+            <el-input v-model="form.rowNo"></el-input>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:2%">
+          <el-col :span="10">
+            <div class="sub-title">层数</div>
+            <el-input v-model="form.layer"></el-input>
+          </el-col>
+          <el-col :span="10" style="margin-left:3%">
+            <div class="sub-title">启用</div>
+            <el-switch
+              v-model="form.enable"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch>
+          </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="createShelf()">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -49,7 +155,15 @@ export default {
       tableData: [],
       regTxt: "",
       multiSelected: false,
-      shelfNoList: []
+      shelfNoList: [],
+      dialogVisible: false,
+      form: {
+        shelfNo: "",
+        area: "",
+        rowNo: "",
+        layer: "",
+        enable: true
+      }
     };
   },
   props: ["msg"],
@@ -89,18 +203,56 @@ export default {
       this.tablePage.current = val;
       this.fetch();
     },
-    handleSelectionChange(val) {
-      this.multiSelected = val.length > 1;
-      if (this.multiSelected) {
-        this.shelfNoList = [];
-        for (const index in val) {
-          this.shelfNoList.push(val[index]["shelfNo"]);
-        }
-      }
+    enable(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: "/shelf/enable?shelfNo=" + shelfNo,
+        method: "get"
+      }).then(() => {
+        this.$message.success("启用成功");
+        this.fetch();
+      });
+    },
+    disable(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: "/shelf/disable?shelfNo=" + shelfNo,
+        method: "get"
+      }).then(() => {
+        this.$message.success("禁用成功");
+        this.fetch();
+      });
+    },
+    drop(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: "/shelf/drop?shelfNo=" + shelfNo,
+        method: "get"
+      }).then(() => {
+        this.$message.success("删除成功");
+        this.fetch();
+      });
+    },
+    createShelf() {
+      request({
+        url: "/shelf/add",
+        method: "post",
+        data: this.form
+      }).then(() => {
+        this.$message.success("添加成功");
+        this.fetch();
+      });
+    },
+    generateShelfNo() {
+      request({
+        url: "/generate/pk",
+        method: "get"
+      }).then(res => {
+        this.form.shelfNo = res.data.data;
+      });
     }
   }
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -18,4 +18,10 @@ public interface ShelfMapper extends BaseMapper<Shelf> {
 
     List<Shelf> list(String reg, Pagination page);
 
+    void enable(String shelfNo);
+
+    void disable(String shelfNo);
+
+    void drop(String shelfNo);
+
 }
