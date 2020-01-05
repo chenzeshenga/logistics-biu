@@ -29,9 +29,9 @@
   ];
 
   export default {
-    name: 'customSyncfusionBarcode',
+    name: 'customSyncfusionBarcode4ShelfNo',
     props: ['barcode'],
-    data: function() {
+    data: function () {
       return {
         width: this.barcode.width,
         height: this.barcode.height,
@@ -43,17 +43,17 @@
         ftextPositionfields: {value: 'type', text: 'text'},
         textPositiondataSource: textPositiondataSourceValue,
         textAlignmentdataSource: textAlignmentdataSourceValue,
-        created: (args) => {
-          addEvents();
-        },
       };
     },
-    mounted: function() {
+    mounted: function () {
       barCodeInstance = this.$refs.barcodeControl.ej2Instances;
       if (this.barcode.textSize) {
         barCodeInstance.displayText.size = this.barcode.textSize;
       }
     },
-  };
+  }
 </script>
 
+<style scoped>
+
+</style>

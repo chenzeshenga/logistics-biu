@@ -24,6 +24,7 @@
     "indent": "off",
     "object-curly-spacing": "off",
     "semi": "off",
-    "guard-for-in": "off"
+    "guard-for-in": "off",
+    "space-before-function-paren": "off"
   }
 }
