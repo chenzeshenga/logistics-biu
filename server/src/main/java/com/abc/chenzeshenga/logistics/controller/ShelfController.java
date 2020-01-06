@@ -25,50 +25,45 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author chenzeshenga
  * @since 2020-01-01 23:42
- * 
  */
-@RestController
-@RequestMapping("/shelf")
-public class ShelfController {
+@RestController @RequestMapping("/shelf") public class ShelfController {
 
-    @Resource
-    private ShelfMapper shelfMapper;
+    @Resource private ShelfMapper shelfMapper;
 
     private ShelfService shelfService;
 
-    @Autowired
-    public ShelfController(ShelfService shelfService) {
+    @Autowired public ShelfController(ShelfService shelfService) {
         this.shelfService = shelfService;
     }
 
-    @PostMapping("/list")
-    public Json list(@RequestParam String reg, @RequestBody String body) {
+    @PostMapping("/list") public Json list(@RequestParam String reg, @RequestBody String body) {
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Page<Shelf> shelfPage = shelfService.list(page, reg);
         return Json.succ().data("page", shelfPage);
     }
 
-    @GetMapping("/enable")
-    public Json enable(@RequestParam String shelfNo) {
+    @GetMapping("/list/enable") public Json listEnable() {
+        List<Shelf> shelves = shelfService.listEnable();
+        return Json.succ().data("data", shelves);
+    }
+
+    @GetMapping("/enable") public Json enable(@RequestParam String shelfNo) {
         shelfMapper.enable(shelfNo);
         return Json.succ();
     }
 
-    @GetMapping("/disable")
-    public Json disable(@RequestParam String shelfNo) {
+    @GetMapping("/disable") public Json disable(@RequestParam String shelfNo) {
         shelfMapper.disable(shelfNo);
         return Json.succ();
     }
 
-    @GetMapping("/drop")
-    public Json drop(@RequestParam String shelfNo) {
+    @GetMapping("/drop") public Json drop(@RequestParam String shelfNo) {
         shelfMapper.drop(shelfNo);
         return Json.succ();
     }
 
-    @PostMapping(value = "/add")
-    public Json add(@RequestBody Shelf shelf) {
+    @PostMapping(value = "/add") public Json add(@RequestBody Shelf shelf) {
         shelfService.insert(shelf);
         return Json.succ();
     }

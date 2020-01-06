@@ -2,34 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.shelf.ShelfMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.shelf.Shelf">
-        <id column="shelf_no" jdbcType="VARCHAR" property="shelfNo" />
-        <result column="area" jdbcType="VARCHAR" property="area" />
-        <result column="row_no" jdbcType="VARCHAR" property="rowNo" />
-        <result column="layer" jdbcType="VARCHAR" property="layer" />
-        <result column="enable" javaType="Boolean" jdbcType="VARCHAR" property="enable" />
+        <id column="shelf_no" jdbcType="VARCHAR" property="shelfNo"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="row_no" jdbcType="VARCHAR" property="rowNo"/>
+        <result column="layer" jdbcType="VARCHAR" property="layer"/>
+        <result column="enable" javaType="Boolean" jdbcType="VARCHAR" property="enable"/>
     </resultMap>
 
 
     <select id="list" resultMap="BaseResultMap">
-          select * from l_shelf
-          where 
-          shelf_no like CONCAT('%', #{reg}, '%')
-          or area like CONCAT('%', #{reg}, '%')
-          or row_no like CONCAT('%', #{reg}, '%')
-          or layer like CONCAT('%', #{reg}, '%')
+        select *
+        from l_shelf
+        where shelf_no like CONCAT('%', #{reg}, '%')
+           or area like CONCAT('%', #{reg}, '%')
+           or row_no like CONCAT('%', #{reg}, '%')
+           or layer like CONCAT('%', #{reg}, '%')
+    </select>
+
+    <select id="listEnable" resultMap="BaseResultMap">
+        select *
+        from l_shelf
+        where enable = '1'
     </select>
 
     <update id="enable">
-        update l_shelf set enable="1" where shelf_no=#{shelfNo}
+        update l_shelf
+        set enable='1'
+        where shelf_no = #{shelfNo}
     </update>
 
     <update id="disable">
-        update l_shelf set enable="0" where shelf_no=#{shelfNo}
+        update l_shelf
+        set enable='0'
+        where shelf_no = #{shelfNo}
     </update>
 
 
     <delete id="drop">
-          delete from l_shelf where shelf_no=#{shelfNo}
+        delete
+        from l_shelf
+        where shelf_no = #{shelfNo}
     </delete>
 
 </mapper>

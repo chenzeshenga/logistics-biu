@@ -7,15 +7,20 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author chenzeshenga
  * @since 2020-01-03 0:31
  */
-@Service
-public class ShelfService extends ServiceImpl<ShelfMapper, Shelf> {
+@Service public class ShelfService extends ServiceImpl<ShelfMapper, Shelf> {
 
     public Page<Shelf> list(Page page, String reg) {
         return page.setRecords(baseMapper.list(reg, page));
+    }
+
+    public List<Shelf> listEnable() {
+        return baseMapper.listEnable();
     }
 
 }
