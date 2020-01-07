@@ -29,9 +29,7 @@ import java.util.*;
  * @author chenzeshenga
  * @version 1.0
  */
-@RestController
-@RequestMapping("/product")
-public class ProductController {
+@RestController @RequestMapping("/product") public class ProductController {
 
     private static final String ADMIN = "admin";
 
@@ -39,11 +37,9 @@ public class ProductController {
 
     private static final String ZERO = "0";
 
-    @Resource
-    private ProductMapper productMapper;
+    @Resource private ProductMapper productMapper;
 
-    @Resource
-    private ImgMapper imgMapper;
+    @Resource private ImgMapper imgMapper;
 
     private ProductService productService;
 
@@ -58,8 +54,7 @@ public class ProductController {
         this.commonController = commonController;
     }
 
-    @GetMapping("/list")
-    public Json listProduct() {
+    @GetMapping("/list") public Json listProduct() {
         String uname = UserUtils.getUserName();
         List<SkuLabel> skuLabelList;
         if (ADMIN.equals(uname)) {
@@ -74,8 +69,7 @@ public class ProductController {
         return Json.succ().data(skuLabelList);
     }
 
-    @PostMapping(value = "/add")
-    public Json add(@RequestBody @Valid Product product, BindingResult bindingResult) {
+    @PostMapping(value = "/add") public Json add(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errMsg = getErrMsg(bindingResult);
             return Json.fail().msg(errMsg.toString());
@@ -88,6 +82,8 @@ public class ProductController {
             String creator = product.getCreatedBy();
             if (StringUtils.isNoneBlank(creator)) {
                 product.setCreatedBy(creator);
+            } else {
+                product.setCreatedBy(username);
             }
             product.setUpdateBy(username);
             product.setCreateOn(curr);
@@ -111,8 +107,7 @@ public class ProductController {
         return Json.succ();
     }
 
-    @PostMapping("/list/{status}")
-    public Json listProduct(@RequestBody String body, @PathVariable String status) {
+    @PostMapping("/list/{status}") public Json listProduct(@RequestBody String body, @PathVariable String status) {
         String username = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         String searchSku = jsonObject.getString("sku");
@@ -125,11 +120,11 @@ public class ProductController {
             productPage = productService.listByStatus(page, status, searchSku, searchDySku, searchName, searchCreator);
         } else {
             if (StringUtils.isNotBlank(searchCreator)) {
-                productPage = productService.listByStatusWithUser(page, searchCreator, status, searchSku, searchDySku,
-                        searchName);
+                productPage = productService
+                    .listByStatusWithUser(page, searchCreator, status, searchSku, searchDySku, searchName);
             } else {
-                productPage = productService.listByStatusWithUser(page, username, status, searchSku, searchDySku,
-                        searchName);
+                productPage =
+                    productService.listByStatusWithUser(page, username, status, searchSku, searchDySku, searchName);
             }
 
         }
@@ -155,9 +150,8 @@ public class ProductController {
         return errMsg;
     }
 
-    @PostMapping(value = "/img/put")
-    public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile,
-            @RequestParam(value = "sku") String sku) throws IOException {
+    @PostMapping(value = "/img/put") public Json putImg(@RequestParam(value = "file") MultipartFile multipartFile,
+        @RequestParam(value = "sku") String sku) throws IOException {
         if (StringUtils.isEmpty(sku)) {
             throw new IllegalArgumentException("商品sku必填");
         }
@@ -170,8 +164,8 @@ public class ProductController {
             } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isEmpty(ori.getImg2())) {
                 ori.setImg2(uuid);
                 commonController.putImg(multipartFile, uuid);
-            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isNotEmpty(ori.getImg2())
-                    && StringUtils.isEmpty(ori.getImg3())) {
+            } else if (StringUtils.isNotEmpty(ori.getImg1()) && StringUtils.isNotEmpty(ori.getImg2()) && StringUtils
+                .isEmpty(ori.getImg3())) {
                 ori.setImg3(uuid);
                 commonController.putImg(multipartFile, uuid);
             }
@@ -199,17 +193,17 @@ public class ProductController {
         Product product = new Product();
         product.setSku(sku);
         switch (index) {
-        case "1":
-            product.setImg1("");
-            break;
-        case "2":
-            product.setImg2("");
-            break;
-        case "3":
-            product.setImg3("");
-            break;
-        default:
-            break;
+            case "1":
+                product.setImg1("");
+                break;
+            case "2":
+                product.setImg2("");
+                break;
+            case "3":
+                product.setImg3("");
+                break;
+            default:
+                break;
         }
         product.setUpdateBy(UserUtils.getUserName());
         product.setUpdateOn(new Date());
@@ -218,8 +212,7 @@ public class ProductController {
         return Json.succ();
     }
 
-    @GetMapping("/delete/{sku}")
-    public Json delete(@PathVariable String sku) {
+    @GetMapping("/delete/{sku}") public Json delete(@PathVariable String sku) {
         productMapper.deleteByPrimaryKey(sku);
         return Json.succ();
     }
@@ -230,8 +223,7 @@ public class ProductController {
         return Json.succ();
     }
 
-    @PostMapping("/update")
-    public Json update(@RequestBody Product product) {
+    @PostMapping("/update") public Json update(@RequestBody Product product) {
         String username = UserUtils.getUserName();
         Date curr = new Date();
         product.setUpdateBy(username);
@@ -240,26 +232,22 @@ public class ProductController {
         return Json.succ();
     }
 
-    @GetMapping("/get/{sku}")
-    public Json getSingleProduct(@PathVariable String sku) {
+    @GetMapping("/get/{sku}") public Json getSingleProduct(@PathVariable String sku) {
         Product product = productMapper.selectByPrimaryKey(sku);
         return Json.succ().data(product);
     }
 
-    @PostMapping("/update/approval")
-    public Json batchApproval(@RequestBody List<String> skus) {
+    @PostMapping("/update/approval") public Json batchApproval(@RequestBody List<String> skus) {
         productMapper.batchUpdate(skus);
         return Json.succ();
     }
 
-    @PostMapping("/listByUser")
-    public Json listByUser(@RequestBody Map<String, String> request) {
+    @PostMapping("/listByUser") public Json listByUser(@RequestBody Map<String, String> request) {
         List<SkuLabel> skuLabelList = productMapper.list(request.get("user"));
         return Json.succ().data(skuLabelList);
     }
 
-    @PostMapping("/listAllByUser")
-    public Json listAllByUser(@RequestBody Map<String, String> request) {
+    @PostMapping("/listAllByUser") public Json listAllByUser(@RequestBody Map<String, String> request) {
         List<SkuLabel> skuLabelList = productMapper.listAllByUser(request.get("user"));
         return Json.succ().data(skuLabelList);
     }
