@@ -35,22 +35,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author chenzesheng
  * @version 1.0
  */
-@Slf4j
-@RestController
-@RequestMapping("/warehousing")
-public class WarehousingController {
+@Slf4j @RestController @RequestMapping("/warehousing") public class WarehousingController {
 
-    @Resource
-    private WarehousingMapper warehousingMapper;
+    @Resource private WarehousingMapper warehousingMapper;
 
-    @Resource
-    private WarehousingContentMapper warehousingContentMapper;
+    @Resource private WarehousingContentMapper warehousingContentMapper;
 
-    @Resource
-    private CompanyProfileMapper companyProfileMapper;
+    @Resource private CompanyProfileMapper companyProfileMapper;
 
-    @Resource
-    private FileMapper fileMapper;
+    @Resource private FileMapper fileMapper;
 
     private WarehousingService warehousingService;
 
@@ -58,16 +51,14 @@ public class WarehousingController {
 
     private CustomsDeclarationUtil customsDeclarationUtil;
 
-    @Autowired
-    public WarehousingController(WarehousingService warehousingService, LabelCache labelCache,
-            CustomsDeclarationUtil customsDeclarationUtil) {
+    @Autowired public WarehousingController(WarehousingService warehousingService, LabelCache labelCache,
+        CustomsDeclarationUtil customsDeclarationUtil) {
         this.warehousingService = warehousingService;
         this.labelCache = labelCache;
         this.customsDeclarationUtil = customsDeclarationUtil;
     }
 
-    @PostMapping
-    @RequestMapping("/add")
+    @PostMapping @RequestMapping("/add")
     public Json add(@RequestBody @Valid Warehousing warehousing, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errMsg = getErrMsg(bindingResult);
@@ -90,9 +81,7 @@ public class WarehousingController {
         return Json.succ();
     }
 
-    @PostMapping
-    @RequestMapping("/update")
-    public Json update(@RequestBody Warehousing warehousing) {
+    @PostMapping @RequestMapping("/update") public Json update(@RequestBody Warehousing warehousing) {
         String username = UserUtils.getUserName();
         warehousing.setUpdator(username);
         Date curr = new Date();
@@ -104,15 +93,14 @@ public class WarehousingController {
         return Json.succ();
     }
 
-    @PostMapping
-    @RequestMapping("/list/{method}/{status}")
+    @PostMapping @RequestMapping("/list/{method}/{status}")
     public Json list(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
         method = switchMethod(method);
         String cname = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Subject subject = SecurityUtils.getSubject();
-        SysUser user = (SysUser) subject.getPrincipal();
+        SysUser user = (SysUser)subject.getPrincipal();
         Set<AuthVo> authVos = user.getRoles();
         AtomicBoolean queryAll = new AtomicBoolean(false);
         authVos.forEach(authVo -> {
@@ -124,7 +112,7 @@ public class WarehousingController {
         if (queryAll.get()) {
             warehousingPage = warehousingService.listByStatus(page, status, method);
         } else {
-            warehousingPage = warehousingService.listByOwnerAndStatus(page, cname, method, status);
+            warehousingPage = warehousingService.listByOwnerAndStatus(page, cname, status, method);
         }
         enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);
@@ -143,7 +131,7 @@ public class WarehousingController {
         warehousingReq.setFrom(jsonObject.getDate("from"));
         warehousingReq.setTo(jsonObject.getDate("to"));
         Subject subject = SecurityUtils.getSubject();
-        SysUser user = (SysUser) subject.getPrincipal();
+        SysUser user = (SysUser)subject.getPrincipal();
         Set<AuthVo> authVos = user.getRoles();
         AtomicBoolean queryAll = new AtomicBoolean(false);
         authVos.forEach(authVo -> {
@@ -155,8 +143,8 @@ public class WarehousingController {
         if (queryAll.get()) {
             warehousingPage = warehousingService.listByStatusAndFilter(page, status, method, warehousingReq);
         } else {
-            warehousingPage = warehousingService.listByOwnerAndStatusAndFilter(page, cname, method, status,
-                    warehousingReq);
+            warehousingPage =
+                warehousingService.listByOwnerAndStatusAndFilter(page, cname, method, status, warehousingReq);
         }
         enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);
@@ -164,11 +152,11 @@ public class WarehousingController {
 
     private String switchMethod(String method) {
         switch (method) {
-        case "2":
-            return "其他头程";
-        case "1":
-        default:
-            return "东岳头程";
+            case "2":
+                return "其他头程";
+            case "1":
+            default:
+                return "东岳头程";
         }
     }
 
@@ -179,9 +167,7 @@ public class WarehousingController {
         });
     }
 
-    @PostMapping
-    @RequestMapping("/status")
-    public Json statusUpdate(@RequestBody Map<String, String> request) {
+    @PostMapping @RequestMapping("/status") public Json statusUpdate(@RequestBody Map<String, String> request) {
         String to = request.get("to");
         String warehousingNo = request.get("warehousingNo");
         Date curr = new Date();
@@ -195,8 +181,7 @@ public class WarehousingController {
         return Json.succ();
     }
 
-    @GetMapping
-    @RequestMapping("/info")
+    @GetMapping @RequestMapping("/info")
     public Json getWarehousing(@RequestParam("warehousingNo") String warehousingNo) {
         Warehousing warehousing = warehousingMapper.selectByPrimaryKey(warehousingNo);
         List<WarehousingContent> warehousingContentList = warehousingContentMapper.listContent(warehousingNo);
@@ -204,8 +189,7 @@ public class WarehousingController {
         return Json.succ().data(warehousing);
     }
 
-    @GetMapping("/drop")
-    public Json dropWarehousing(@RequestParam String warehousingNo) {
+    @GetMapping("/drop") public Json dropWarehousing(@RequestParam String warehousingNo) {
         warehousingMapper.deleteByPrimaryKey(warehousingNo);
         warehousingContentMapper.deleteByWarehousingNo(warehousingNo);
         return Json.succ();
@@ -219,9 +203,7 @@ public class WarehousingController {
         return errMsg;
     }
 
-    @PostMapping
-    @RequestMapping("/trackno")
-    public Json fillInTrackNo(@RequestBody Warehousing warehousing) {
+    @PostMapping @RequestMapping("/trackno") public Json fillInTrackNo(@RequestBody Warehousing warehousing) {
         Date curr = new Date();
         String username = UserUtils.getUserName();
         warehousing.setUpdateOn(curr);
@@ -230,17 +212,16 @@ public class WarehousingController {
         return Json.succ();
     }
 
-    @PostMapping
-    @RequestMapping("/printCustomsDeclaration")
+    @PostMapping @RequestMapping("/printCustomsDeclaration")
     public Json printCustomsDeclaration(@RequestBody CompanyProfile companyProfile) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         CompanyProfile dyCompanyProfile = companyProfileMapper.init("dy");
         File file = fileMapper.selectByPrimaryKey("COMMERCIAL_INVOICE_TEMPLATE");
         InputStream templateInputStream = new ByteArrayInputStream(file.getFile());
-        List<WarehousingContent> warehousingContentList = warehousingContentMapper
-                .listContent(companyProfile.getWarehousingNo());
-        customsDeclarationUtil.print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream,
-                outputStream);
+        List<WarehousingContent> warehousingContentList =
+            warehousingContentMapper.listContent(companyProfile.getWarehousingNo());
+        customsDeclarationUtil
+            .print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream, outputStream);
         byte[] fileBytes = outputStream.toByteArray();
         File resultFile = new File(UUID.randomUUID().toString(), fileBytes, "报关单.docx");
         fileMapper.insertWithName(resultFile);
@@ -249,10 +230,9 @@ public class WarehousingController {
         return Json.succ().data(resultFile.getUuid());
     }
 
-    @PostMapping
-    @RequestMapping("/userFile")
+    @PostMapping @RequestMapping("/userFile")
     public Json uploadFile4Warehousing(@RequestParam(value = "file") MultipartFile multipartFile,
-            @RequestParam String warehousingNo) throws IOException {
+        @RequestParam String warehousingNo) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes(), multipartFile.getOriginalFilename());
         fileMapper.insertWithName(file);
