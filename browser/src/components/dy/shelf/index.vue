@@ -159,7 +159,26 @@
           <el-button type="primary" @click="createShelf()">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog title="打印尺寸" :visible.sync="dialogVisible4PrintOption" width="20%">
+        <el-row>
+          <el-radio v-model="radioOption" label="1">单条形码</el-radio>
+          <el-radio v-model="radioOption" label="2">条形码带详情</el-radio>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible4PrintOption = false">取 消</el-button>
+          <el-button type="primary" @click="togglePrintShelfNo()">确 定</el-button>
+        </span>
+      </el-dialog>
       <el-dialog title="货架标签" :visible.sync="dialogVisible2" width="20%">
+        <div id="pdf">
+          <custom-syncfusion-barcode4-shelf-no v-bind:barcode="barcodeSetting"/>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible2 = false">取 消</el-button>
+          <el-button type="primary" @click="getPdfV2(barcodeSetting.value,'#pdf')">下 载</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog title="货架标签" :visible.sync="dialogVisible2_detail" width="20%">
         <div id="pdfDom">
           <custom-syncfusion-barcode4-shelf-no v-bind:barcode="barcodeSetting"/>
         </div>
@@ -204,6 +223,9 @@
           height: 150,
           value: '',
         },
+        dialogVisible4PrintOption: false,
+        radioOption: '1',
+        dialogVisible2_detail: false,
       };
     },
     props: ['msg'],
@@ -292,9 +314,18 @@
           this.form.shelfNo = res.data.data;
         });
       },
+      togglePrintShelfNo() {
+        if (this.radioOption === '1') {
+          this.dialogVisible4PrintOption = false;
+          this.dialogVisible2 = true;
+        } else if (this.radioOption === '2') {
+          this.dialogVisible4PrintOption = false;
+          this.dialogVisible2 = true;
+        }
+      },
       printShelfNo(index, row) {
         this.barcodeSetting.value = row.shelfNo;
-        this.dialogVisible2 = true;
+        this.dialogVisible4PrintOption = true;
       },
     },
   };

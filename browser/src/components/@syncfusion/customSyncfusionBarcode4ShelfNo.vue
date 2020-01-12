@@ -7,6 +7,7 @@
       :type="type"
       :value="value"
       :mode="mode"
+      style="margin:5%"
   />
 </template>
 
@@ -16,17 +17,6 @@
 
   Vue.use(BarcodeGeneratorPlugin);
   let barCodeInstance;
-
-  const textPositiondataSourceValue = [
-    {type: 'Bottom', text: 'Bottom'},
-    {type: 'Top', text: 'Top'},
-  ];
-
-  const textAlignmentdataSourceValue = [
-    {type: 'Center', text: 'Center'},
-    {type: 'Left', text: 'Left'},
-    {type: 'Right', text: 'Right'},
-  ];
 
   export default {
     name: 'customSyncfusionBarcode4ShelfNo',
@@ -41,8 +31,8 @@
         fontcolorvalue: '#000',
         textPositionwidth: '100%',
         ftextPositionfields: {value: 'type', text: 'text'},
-        textPositiondataSource: textPositiondataSourceValue,
-        textAlignmentdataSource: textAlignmentdataSourceValue,
+        textPositiondataSource: {type: 'Bottom', text: 'Bottom'},
+        textAlignmentdataSource: {type: 'Center', text: 'Center'},
       };
     },
     mounted: function () {
