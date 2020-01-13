@@ -7,7 +7,7 @@
       :type="type"
       :value="value"
       :mode="mode"
-      style="margin:5%"
+      style="margin:9%"
   />
 </template>
 

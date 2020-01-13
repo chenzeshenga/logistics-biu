@@ -181,10 +181,26 @@
       <el-dialog title="货架标签" :visible.sync="dialogVisible2_detail" width="20%">
         <div id="pdfDom">
           <custom-syncfusion-barcode4-shelf-no v-bind:barcode="barcodeSetting"/>
+          <el-row style="margin-top: 1%;margin-left: 1%">
+            货架号:
+            <el-tag>{{selectedShelf.shelfNo}}</el-tag>
+          </el-row>
+          <el-row style="margin-top: 1%;margin-left: 1%">
+            货架区域:
+            <el-tag>{{selectedShelf.area}}</el-tag>
+          </el-row>
+          <el-row style="margin-top: 1%;margin-left: 1%">
+            货架行数:
+            <el-tag>{{selectedShelf.rowNo}}</el-tag>
+          </el-row>
+          <el-row style="margin-top: 1%;margin-left: 1%">
+            货架层数:
+            <el-tag>{{selectedShelf.layer}}</el-tag>
+          </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible2 = false">取 消</el-button>
-          <el-button type="primary" @click="getPdf()">下 载</el-button>
+          <el-button @click="dialogVisible2_detail = false">取 消</el-button>
+          <el-button type="primary" @click="getPdfWithSetting(barcodeSetting.value,'#pdfDom',setting)">下 载</el-button>
         </span>
       </el-dialog>
     </div>
@@ -222,10 +238,21 @@
           width: 200,
           height: 150,
           value: '',
+          textSize: 12,
         },
         dialogVisible4PrintOption: false,
         radioOption: '1',
         dialogVisible2_detail: false,
+        selectedShelf: {
+          shelfNo: '',
+          area: '',
+          rowNo: '',
+          layer: '',
+        },
+        setting: {
+          width: 340,
+          length: 420,
+        },
       };
     },
     props: ['msg'],
@@ -315,17 +342,17 @@
         });
       },
       togglePrintShelfNo() {
+        this.dialogVisible4PrintOption = false;
         if (this.radioOption === '1') {
-          this.dialogVisible4PrintOption = false;
           this.dialogVisible2 = true;
         } else if (this.radioOption === '2') {
-          this.dialogVisible4PrintOption = false;
-          this.dialogVisible2 = true;
+          this.dialogVisible2_detail = true;
         }
       },
       printShelfNo(index, row) {
         this.barcodeSetting.value = row.shelfNo;
         this.dialogVisible4PrintOption = true;
+        this.selectedShelf = row;
       },
     },
   };

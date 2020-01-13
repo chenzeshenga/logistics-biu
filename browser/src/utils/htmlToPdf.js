@@ -66,5 +66,39 @@ export default {
         PDF.save(title + '.pdf');
       });
     };
+    Vue.prototype.getPdfWithSetting = function (title, domSelectors, setting) {
+      const width = setting.width;
+      const length = setting.length;
+      const pdfOptions = {
+        orientation: 'p',
+        unit: 'px',
+        format: [width, length],
+      };
+      html2Canvas(document.querySelector(domSelectors), {
+        allowTaint: true,
+      }).then(function (canvas) {
+        const contentWidth = canvas.width;
+        const contentHeight = canvas.height;
+        let leftHeight = contentHeight;
+        let position = 0;
+        const imgWidth = contentWidth;
+        const imgHeight = contentHeight;
+        const pageData = canvas.toDataURL('image/jpeg', 1.0);
+        const PDF = new JsPDF(pdfOptions);
+        if (leftHeight < contentHeight) {
+          PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        } else {
+          while (leftHeight > 0) {
+            PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+            leftHeight -= contentHeight;
+            position -= length;
+            if (leftHeight > 0) {
+              PDF.addPage();
+            }
+          }
+        }
+        PDF.save(title + '.pdf');
+      });
+    };
   },
 };

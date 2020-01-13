@@ -611,7 +611,7 @@
         <el-button type="primary" @click="updateWarehousingContent2nd()">确定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="30%">
+    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="40%">
       <el-row>
         <el-col :span="14">
           <p>入库单号:{{ dialogForm7.warehousingNo }}</p>
@@ -641,22 +641,29 @@
           收货数量:
           <b style="margin-left:4px">{{warehousingContent.actual}}</b>
         </el-row>
-        <el-row style="margin-top:1%">
-          上架数量:
-          <el-input-number v-model="warehousingContent.upshelfNum" clearable
-                           placeholder="上架数量"/>
-        </el-row>
-        <el-row style="margin-top: 1%">
-          上架货架:
-          <el-select v-model="warehousingContent.shelfNo" filterable placeholder="上架货架">
-            <el-option
-                v-for="item in options"
-                :key="item.shelfNo"
-                :label="item.shelfNo"
-                :value="item.shelfNo">
-            </el-option>
-          </el-select>
-        </el-row>
+        <div v-for="upshelfItem in warehousingContent.upshelf"
+             v-bind:key="upshelfItem.seq"
+             style="margin:2%">
+          <el-row style="margin-top:1%">
+            上架数量:
+            <el-input-number v-model="upshelfItem.upshelfNum" clearable
+                             placeholder="上架数量"/>
+            上架货架:
+            <el-select v-model="upshelfItem.shelfNo" filterable placeholder="上架货架">
+              <el-option
+                  v-for="item in options"
+                  :key="item.shelfNo"
+                  :label="item.shelfNo"
+                  :value="item.shelfNo">
+                <span>货架号 {{ item.shelfNo }} 货架区域 {{item.area}} 货架行数 {{item.layer}} 货架层数 {{item.rowNo}}</span>
+              </el-option>
+            </el-select>
+            <el-button icon="el-icon-circle-plus-outline" circle
+                       @click="addUpShelf(upshelfItem,warehousingContent.upshelf)"/>
+            <el-button icon="el-icon-remove-outline" circle
+                       @click="removeUpShelf(upshelfItem,warehousingContent.upshelf)"/>
+          </el-row>
+        </div>
         <div
             v-for="upShelfContent in warehousingContent.upShelfContentList"
             v-bind:key="upShelfContent.seq"
@@ -669,12 +676,14 @@
               placeholder="收货数量"
           ></el-input-number>
           货架：
-          <el-option
-              v-for="shelf in shelves"
-              :key="shelf.shelfNo"
-              :label="shelf.shelfNo"
-              :value="shelf.shelfNo"
-          ></el-option>
+          <el-row>
+            <el-option
+                v-for="shelf in shelves"
+                :key="shelf.shelfNo"
+                :label="shelf.shelfNo"
+                :value="shelf.shelfNo"
+            />
+          </el-row>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -1117,6 +1126,19 @@
         this.dialogForm7.warehousingNo = row.warehousingNo;
         this.dialogForm7.warehousingContentList = row.warehousingContentList;
         this.dialogForm7.warehousing = row;
+        console.log(this.dialogForm7.warehousingContentList);
+        for (const warehousingContent of this.dialogForm7.warehousingContentList) {
+          const upshelfItem = {
+            seq: 0,
+            upshelfNum: 0,
+            shelfNo: '',
+            sku: warehousingContent.sku,
+          };
+          const upshelfItems = [];
+          upshelfItems.push(upshelfItem);
+          warehousingContent['upshelf'] = upshelfItems;
+        }
+        console.log(this.dialogForm7.warehousingContentList);
         this.fetchShelves();
       },
       fetchShelves() {
@@ -1217,6 +1239,25 @@
             }
           }
         }
+      },
+      addUpShelf(item, all) {
+        const lastItem = all[all.length - 1];
+        console.log(lastItem);
+        const lastSeq = lastItem['seq'];
+        const nextItem = {
+          seq: lastSeq + 1,
+          upshelfNum: 0,
+          shelfNo: '',
+          sku: lastItem.sku,
+        };
+        console.log(nextItem);
+        console.log(item);
+        console.log(all);
+        all.push(nextItem);
+      },
+      removeUpShelf(item, all) {
+        console.log(item)
+        console.log(all)
       },
     },
     mounted() {
