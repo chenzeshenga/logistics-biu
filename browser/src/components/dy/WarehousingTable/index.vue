@@ -641,50 +641,31 @@
           收货数量:
           <b style="margin-left:4px">{{warehousingContent.actual}}</b>
         </el-row>
-        <div v-for="upshelfItem in warehousingContent.upshelf"
-             v-bind:key="upshelfItem.seq"
-             style="margin:2%">
-          <el-row style="margin-top:1%">
-            上架数量:
-            <el-input-number v-model="upshelfItem.upshelfNum" clearable
-                             placeholder="上架数量"/>
-            上架货架:
-            <el-select v-model="upshelfItem.shelfNo" filterable placeholder="上架货架">
-              <el-option
-                  v-for="item in options"
-                  :key="item.shelfNo"
-                  :label="item.shelfNo"
-                  :value="item.shelfNo">
-                <span>货架号 {{ item.shelfNo }} 货架区域 {{item.area}} 货架行数 {{item.layer}} 货架层数 {{item.rowNo}}</span>
-              </el-option>
-            </el-select>
-            <el-button icon="el-icon-circle-plus-outline" circle
-                       @click="addUpShelf(upshelfItem,warehousingContent.upshelf)"/>
-            <el-button icon="el-icon-remove-outline" circle
-                       @click="removeUpShelf(upshelfItem,warehousingContent.upshelf)"/>
-          </el-row>
-        </div>
-        <div
-            v-for="upShelfContent in warehousingContent.upShelfContentList"
-            v-bind:key="upShelfContent.seq"
-            style="margin:2%"
-        >
+        <el-row style="margin-top: 1%">
           上架数量:
-          <el-input-number
-              style="margin-left:4px"
-              v-model="upShelfContent.upShelfNum"
-              placeholder="收货数量"
-          ></el-input-number>
-          货架：
-          <el-row>
+          <el-input-number v-model="upshelfNum" clearable
+                           placeholder="上架数量"/>
+          上架货架:
+          <el-select v-model="shelfNo" filterable placeholder="上架货架">
             <el-option
-                v-for="shelf in shelves"
-                :key="shelf.shelfNo"
-                :label="shelf.shelfNo"
-                :value="shelf.shelfNo"
-            />
-          </el-row>
-        </div>
+                v-for="item in options"
+                :key="item.shelfNo"
+                :label="item.shelfNo"
+                :value="item.shelfNo">
+              <span>货架号 {{ item.shelfNo }} 货架区域 {{item.area}} 货架行数 {{item.layer}} 货架层数 {{item.rowNo}}</span>
+            </el-option>
+          </el-select>
+          <el-button icon="el-icon-circle-plus-outline" circle @click="addUpShelf(warehousingContent)"/>
+        </el-row>
+        <el-table style="margin-top:1%;width: 100%"
+                  :data="warehousingContent['upshelfData']"
+                  v-loading.body="tableLoading"
+                  element-loading-text="加载中"
+                  stripe
+                  highlight-current-row>
+
+        </el-table>
+
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible7 = false">取 消</el-button>
@@ -858,6 +839,8 @@
           skuFromScanner: '',
         },
         options: [],
+        upshelfNum: 0,
+        shelfNo: '',
       };
     },
     props: ['msg'],
@@ -1126,19 +1109,6 @@
         this.dialogForm7.warehousingNo = row.warehousingNo;
         this.dialogForm7.warehousingContentList = row.warehousingContentList;
         this.dialogForm7.warehousing = row;
-        console.log(this.dialogForm7.warehousingContentList);
-        for (const warehousingContent of this.dialogForm7.warehousingContentList) {
-          const upshelfItem = {
-            seq: 0,
-            upshelfNum: 0,
-            shelfNo: '',
-            sku: warehousingContent.sku,
-          };
-          const upshelfItems = [];
-          upshelfItems.push(upshelfItem);
-          warehousingContent['upshelf'] = upshelfItems;
-        }
-        console.log(this.dialogForm7.warehousingContentList);
         this.fetchShelves();
       },
       fetchShelves() {
@@ -1240,20 +1210,21 @@
           }
         }
       },
-      addUpShelf(item, all) {
-        const lastItem = all[all.length - 1];
-        console.log(lastItem);
-        const lastSeq = lastItem['seq'];
-        const nextItem = {
-          seq: lastSeq + 1,
-          upshelfNum: 0,
-          shelfNo: '',
-          sku: lastItem.sku,
-        };
-        console.log(nextItem);
-        console.log(item);
-        console.log(all);
-        all.push(nextItem);
+      addUpShelf(warehousingContent) {
+        if (this.shelfNo.length <= 0 || this.upshelfNum <= 0) {
+          this.$message.warning('请选择货架和上架数量');
+          return;
+        }
+        let upshelfData = warehousingContent['upshelfData'];
+        if (upshelfData === undefined || upshelfData.length <= 0) {
+          upshelfData = [];
+        }
+        upshelfData.push({
+          'shelfNo': this.shelfNo,
+          'upshelfNum': this.upshelfNum,
+          'sku': warehousingContent.sku,
+        });
+        warehousingContent['upshelfData'] = upshelfData;
       },
       removeUpShelf(item, all) {
         console.log(item)
