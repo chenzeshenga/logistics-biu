@@ -663,7 +663,7 @@
                   element-loading-text="加载中"
                   stripe
                   highlight-current-row>
-
+          <el-table-column width="200" prop="sku" label="sku"/>
         </el-table>
 
       </div>
