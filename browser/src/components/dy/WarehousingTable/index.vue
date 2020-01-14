@@ -1225,6 +1225,8 @@
           'sku': warehousingContent.sku,
         });
         warehousingContent['upshelfData'] = upshelfData;
+        console.log(warehousingContent);
+        console.log(this.dialogForm7.warehousingContentList);
       },
       removeUpShelf(item, all) {
         console.log(item)
