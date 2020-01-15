@@ -1105,11 +1105,7 @@
         this.dialogForm6.warehousing = row;
       },
       handleDialogVisible7(index, row) {
-        this.dialogVisible7 = true;
-        this.dialogForm7.warehousingNo = row.warehousingNo;
-        this.dialogForm7.warehousingContentList = row.warehousingContentList;
-        this.dialogForm7.warehousing = row;
-        this.fetchShelves();
+        this.$router.push({path: '/warehousing/mgt/other/upshelf?warehousingNo=' + row.warehousingNo});
       },
       fetchShelves() {
         request({
