@@ -100,12 +100,8 @@
                                    clearance_type, tax_type, insurance,
                                    insurance_num, estimated_date, create_on,
                                    update_on, creator, updator, status)
-        values (#{warehousingNo,jdbcType=VARCHAR},#{fromAddress}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
-                #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR},
-                #{channel}, #{deliverMethod,jdbcType=VARCHAR},
-                #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR},
-                #{insuranceNum,jdbcType=VARCHAR}, #{estimatedDate,jdbcType=TIMESTAMP}, #{createOn,jdbcType=TIMESTAMP},
-                #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR}, #{status})
+        values (#{warehousingNo,jdbcType=VARCHAR},#{fromAddress}, #{target,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{carrier,jdbcType=VARCHAR}, #{trackNo,jdbcType=VARCHAR},
+                #{channel}, #{deliverMethod,jdbcType=VARCHAR}, #{clearanceType,jdbcType=VARCHAR}, #{taxType,jdbcType=VARCHAR}, #{insurance,jdbcType=VARCHAR}, #{insuranceNum,jdbcType=VARCHAR}, #{estimatedDate,jdbcType=TIMESTAMP}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updator,jdbcType=VARCHAR}, #{status})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.Warehousing">
         insert into l_warehousing
@@ -160,53 +156,38 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="warehousingNo != null">
-                #{warehousingNo,jdbcType=VARCHAR},
+            <if test="warehousingNo != null"> #{warehousingNo,jdbcType=VARCHAR},
             </if>
             <if test="fromAddress != null">
                 #{fromAddress},
             </if>
-            <if test="target != null">
-                #{target,jdbcType=VARCHAR},
+            <if test="target != null"> #{target,jdbcType=VARCHAR},
             </if>
-            <if test="method != null">
-                #{method,jdbcType=VARCHAR},
+            <if test="method != null"> #{method,jdbcType=VARCHAR},
             </if>
-            <if test="carrier != null">
-                #{carrier,jdbcType=VARCHAR},
+            <if test="carrier != null"> #{carrier,jdbcType=VARCHAR},
             </if>
-            <if test="trackNo != null">
-                #{trackNo,jdbcType=VARCHAR},
+            <if test="trackNo != null"> #{trackNo,jdbcType=VARCHAR},
             </if>
-            <if test="deliverMethod != null">
-                #{deliverMethod,jdbcType=VARCHAR},
+            <if test="deliverMethod != null"> #{deliverMethod,jdbcType=VARCHAR},
             </if>
-            <if test="clearanceType != null">
-                #{clearanceType,jdbcType=VARCHAR},
+            <if test="clearanceType != null"> #{clearanceType,jdbcType=VARCHAR},
             </if>
-            <if test="taxType != null">
-                #{taxType,jdbcType=VARCHAR},
+            <if test="taxType != null"> #{taxType,jdbcType=VARCHAR},
             </if>
-            <if test="insurance != null">
-                #{insurance,jdbcType=VARCHAR},
+            <if test="insurance != null"> #{insurance,jdbcType=VARCHAR},
             </if>
-            <if test="insuranceNum != null">
-                #{insuranceNum,jdbcType=VARCHAR},
+            <if test="insuranceNum != null"> #{insuranceNum,jdbcType=VARCHAR},
             </if>
-            <if test="estimatedDate != null">
-                #{estimatedDate,jdbcType=TIMESTAMP},
+            <if test="estimatedDate != null"> #{estimatedDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="createOn != null">
-                #{createOn,jdbcType=TIMESTAMP},
+            <if test="createOn != null"> #{createOn,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateOn != null">
-                #{updateOn,jdbcType=TIMESTAMP},
+            <if test="updateOn != null"> #{updateOn,jdbcType=TIMESTAMP},
             </if>
-            <if test="creator != null">
-                #{creator,jdbcType=VARCHAR},
+            <if test="creator != null"> #{creator,jdbcType=VARCHAR},
             </if>
-            <if test="updator != null">
-                #{updator,jdbcType=VARCHAR},
+            <if test="updator != null"> #{updator,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -313,13 +294,19 @@
         order by warehousing.create_on desc
     </select>
 
+    <select id="fetchByWarehousingNo" resultMap="result">
+        select *
+        from l_warehousing warehousing
+                 left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
+        where warehousing.warehousing_no = #{warehousingNo}
+    </select>
+
     <select id="listByOwnerAndStatus" resultMap="result">
         select *
         from l_warehousing warehousing
         left join l_warehousing_content content on (warehousing.warehousing_no = content.warehousing_no)
         left join l_channel channel on (warehousing.channel_code = channel.channel_code)
-        where
-        1=1
+        where 1=1
         <if test="creator != null and creator != ''">
             and warehousing.creator = #{creator}
         </if>
@@ -364,9 +351,7 @@
 
     <update id="statusUpdate">
         update l_warehousing
-        set status=#{to},
-            updator=#{username},
-            update_on=#{curr}
+        set status=#{to}, updator=#{username}, update_on=#{curr}
         where warehousing_no = #{warehousingNo}
           and status = #{from}
     </update>

@@ -5,6 +5,7 @@ import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class Warehousing extends BaseRowModel implements Serializable {
 
     private static final long serialVersionUID = -4866257602133972659L;

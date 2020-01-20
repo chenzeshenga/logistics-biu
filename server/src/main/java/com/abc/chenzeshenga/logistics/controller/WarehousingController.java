@@ -35,15 +35,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author chenzesheng
  * @version 1.0
  */
-@Slf4j @RestController @RequestMapping("/warehousing") public class WarehousingController {
+@Slf4j
+@RestController
+@RequestMapping("/warehousing")
+public class WarehousingController {
 
-    @Resource private WarehousingMapper warehousingMapper;
+    @Resource
+    private WarehousingMapper warehousingMapper;
 
-    @Resource private WarehousingContentMapper warehousingContentMapper;
+    @Resource
+    private WarehousingContentMapper warehousingContentMapper;
 
-    @Resource private CompanyProfileMapper companyProfileMapper;
+    @Resource
+    private CompanyProfileMapper companyProfileMapper;
 
-    @Resource private FileMapper fileMapper;
+    @Resource
+    private FileMapper fileMapper;
 
     private WarehousingService warehousingService;
 
@@ -51,14 +58,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     private CustomsDeclarationUtil customsDeclarationUtil;
 
-    @Autowired public WarehousingController(WarehousingService warehousingService, LabelCache labelCache,
-        CustomsDeclarationUtil customsDeclarationUtil) {
+    @Autowired
+    public WarehousingController(WarehousingService warehousingService, LabelCache labelCache,
+            CustomsDeclarationUtil customsDeclarationUtil) {
         this.warehousingService = warehousingService;
         this.labelCache = labelCache;
         this.customsDeclarationUtil = customsDeclarationUtil;
     }
 
-    @PostMapping @RequestMapping("/add")
+    @PostMapping
+    @RequestMapping("/add")
     public Json add(@RequestBody @Valid Warehousing warehousing, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errMsg = getErrMsg(bindingResult);
@@ -81,7 +90,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/update") public Json update(@RequestBody Warehousing warehousing) {
+    @PostMapping
+    @RequestMapping("/update")
+    public Json update(@RequestBody Warehousing warehousing) {
         String username = UserUtils.getUserName();
         warehousing.setUpdator(username);
         Date curr = new Date();
@@ -93,14 +104,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/list/{method}/{status}")
+    @PostMapping
+    @RequestMapping("/list/{method}/{status}")
     public Json list(@RequestBody String body, @PathVariable String method, @PathVariable String status) {
         method = switchMethod(method);
         String cname = UserUtils.getUserName();
         JSONObject jsonObject = JSON.parseObject(body);
         Page page = PageUtils.getPageParam(jsonObject);
         Subject subject = SecurityUtils.getSubject();
-        SysUser user = (SysUser)subject.getPrincipal();
+        SysUser user = (SysUser) subject.getPrincipal();
         Set<AuthVo> authVos = user.getRoles();
         AtomicBoolean queryAll = new AtomicBoolean(false);
         authVos.forEach(authVo -> {
@@ -131,7 +143,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         warehousingReq.setFrom(jsonObject.getDate("from"));
         warehousingReq.setTo(jsonObject.getDate("to"));
         Subject subject = SecurityUtils.getSubject();
-        SysUser user = (SysUser)subject.getPrincipal();
+        SysUser user = (SysUser) subject.getPrincipal();
         Set<AuthVo> authVos = user.getRoles();
         AtomicBoolean queryAll = new AtomicBoolean(false);
         authVos.forEach(authVo -> {
@@ -143,8 +155,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         if (queryAll.get()) {
             warehousingPage = warehousingService.listByStatusAndFilter(page, status, method, warehousingReq);
         } else {
-            warehousingPage =
-                warehousingService.listByOwnerAndStatusAndFilter(page, cname, method, status, warehousingReq);
+            warehousingPage = warehousingService.listByOwnerAndStatusAndFilter(page, cname, method, status,
+                    warehousingReq);
         }
         enrichWarehousing(warehousingPage);
         return Json.succ().data("page", warehousingPage);
@@ -152,11 +164,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     private String switchMethod(String method) {
         switch (method) {
-            case "2":
-                return "其他头程";
-            case "1":
-            default:
-                return "东岳头程";
+        case "2":
+            return "其他头程";
+        case "1":
+        default:
+            return "东岳头程";
         }
     }
 
@@ -167,7 +179,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
         });
     }
 
-    @PostMapping @RequestMapping("/status") public Json statusUpdate(@RequestBody Map<String, String> request) {
+    @PostMapping
+    @RequestMapping("/status")
+    public Json statusUpdate(@RequestBody Map<String, String> request) {
         String to = request.get("to");
         String warehousingNo = request.get("warehousingNo");
         Date curr = new Date();
@@ -181,7 +195,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ();
     }
 
-    @GetMapping @RequestMapping("/info")
+    @GetMapping
+    @RequestMapping("/info")
     public Json getWarehousing(@RequestParam("warehousingNo") String warehousingNo) {
         Warehousing warehousing = warehousingMapper.selectByPrimaryKey(warehousingNo);
         List<WarehousingContent> warehousingContentList = warehousingContentMapper.listContent(warehousingNo);
@@ -189,7 +204,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ().data(warehousing);
     }
 
-    @GetMapping("/drop") public Json dropWarehousing(@RequestParam String warehousingNo) {
+    @GetMapping("/drop")
+    public Json dropWarehousing(@RequestParam String warehousingNo) {
         warehousingMapper.deleteByPrimaryKey(warehousingNo);
         warehousingContentMapper.deleteByWarehousingNo(warehousingNo);
         return Json.succ();
@@ -203,7 +219,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return errMsg;
     }
 
-    @PostMapping @RequestMapping("/trackno") public Json fillInTrackNo(@RequestBody Warehousing warehousing) {
+    @PostMapping
+    @RequestMapping("/trackno")
+    public Json fillInTrackNo(@RequestBody Warehousing warehousing) {
         Date curr = new Date();
         String username = UserUtils.getUserName();
         warehousing.setUpdateOn(curr);
@@ -212,16 +230,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ();
     }
 
-    @PostMapping @RequestMapping("/printCustomsDeclaration")
+    @PostMapping
+    @RequestMapping("/printCustomsDeclaration")
     public Json printCustomsDeclaration(@RequestBody CompanyProfile companyProfile) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         CompanyProfile dyCompanyProfile = companyProfileMapper.init("dy");
         File file = fileMapper.selectByPrimaryKey("COMMERCIAL_INVOICE_TEMPLATE");
         InputStream templateInputStream = new ByteArrayInputStream(file.getFile());
-        List<WarehousingContent> warehousingContentList =
-            warehousingContentMapper.listContent(companyProfile.getWarehousingNo());
-        customsDeclarationUtil
-            .print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream, outputStream);
+        List<WarehousingContent> warehousingContentList = warehousingContentMapper
+                .listContent(companyProfile.getWarehousingNo());
+        customsDeclarationUtil.print(companyProfile, dyCompanyProfile, warehousingContentList, templateInputStream,
+                outputStream);
         byte[] fileBytes = outputStream.toByteArray();
         File resultFile = new File(UUID.randomUUID().toString(), fileBytes, "报关单.docx");
         fileMapper.insertWithName(resultFile);
@@ -230,9 +249,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
         return Json.succ().data(resultFile.getUuid());
     }
 
-    @PostMapping @RequestMapping("/userFile")
+    @PostMapping
+    @RequestMapping("/userFile")
     public Json uploadFile4Warehousing(@RequestParam(value = "file") MultipartFile multipartFile,
-        @RequestParam String warehousingNo) throws IOException {
+            @RequestParam String warehousingNo) throws IOException {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         File file = new File(uuid, multipartFile.getBytes(), multipartFile.getOriginalFilename());
         fileMapper.insertWithName(file);
@@ -241,6 +261,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
         warehousing.setUserWarehousingFileUuid(uuid);
         warehousingMapper.updateByPrimaryKeySelective(warehousing);
         return Json.succ();
+    }
+
+    @GetMapping("/fetchByWarehousingNo")
+    public Json fetchByWarehousingNo(@RequestParam String warehousingNo) {
+        return Json.succ().data("warehousing", warehousingMapper.fetchByWarehousingNo(warehousingNo));
     }
 
 }

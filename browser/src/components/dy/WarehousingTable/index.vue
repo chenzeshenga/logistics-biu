@@ -1105,7 +1105,7 @@
         this.dialogForm6.warehousing = row;
       },
       handleDialogVisible7(index, row) {
-        this.$router.push({path: '/warehousing/mgt/other/upshelf?warehousingNo=' + row.warehousingNo});
+        this.$router.push({path: '/warehousing/upshelf/upshelf?warehousingNo=' + row.warehousingNo});
       },
       fetchShelves() {
         request({

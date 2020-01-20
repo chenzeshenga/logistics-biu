@@ -250,6 +250,22 @@ export const asyncRouterMap = [
     ],
   },
   {
+    path: '/warehousing/upshelf',
+    component: Layout,
+    children: [
+      {
+        path: 'upshelf',
+        name: 'upshelf',
+        component: _import('warehousing/upshelf'),
+        meta: {
+          perm: 'm:warehousing:upshelf',
+          title: '上架清点',
+          icon: 'icon',
+        },
+      },
+    ],
+  },
+  {
     path: '/order-list/mgt',
     name: 'order-list-mgt',
     component: Layout,

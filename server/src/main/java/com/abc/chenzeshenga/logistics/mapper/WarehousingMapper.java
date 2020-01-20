@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-@Repository public interface WarehousingMapper extends BaseMapper<Warehousing> {
+@Repository
+public interface WarehousingMapper extends BaseMapper<Warehousing> {
     int deleteByPrimaryKey(String warehousingNo);
 
-    //    boolean insert(Warehousing record);
+    // boolean insert(Warehousing record);
 
     int insertSelective(Warehousing record);
 
@@ -29,15 +30,17 @@ import java.util.List;
     List<Warehousing> listByOwnerAndStatus(Pagination pagination, String creator, String status, String method);
 
     List<Warehousing> listByOwnerAndStatusAndFilter(Pagination pagination, String creator, String status, String method,
-        WarehousingReq warehousingReq);
+            WarehousingReq warehousingReq);
 
     List<Warehousing> listByStatus(Pagination pagination, String status, String method);
 
     List<Warehousing> listByStatusAndFilter(Pagination pagination, String status, String method,
-        WarehousingReq warehousingReq);
+            WarehousingReq warehousingReq);
 
     Warehousing getWarehousingSeq();
 
     int statusUpdate(String warehousingNo, String from, String to, String username, Date curr);
+
+    Warehousing fetchByWarehousingNo(String warehousingNo);
 
 }
