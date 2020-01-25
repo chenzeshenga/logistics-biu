@@ -1,7 +1,6 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
-import com.abc.chenzeshenga.logistics.model.ManualOrder4Input;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -17,7 +16,8 @@ import java.util.Map;
  * @author chenzeshenga
  * @version 1.0
  */
-@Mapper public interface OrderMapper extends BaseMapper<ManualOrder> {
+@Mapper
+public interface OrderMapper extends BaseMapper<ManualOrder> {
 
     int add(ManualOrder manualOrder);
 
@@ -28,11 +28,11 @@ import java.util.Map;
     int insertContent(List<ManualOrderContent> manualOrderContents);
 
     List<ManualOrder> list(Pagination pagination, @Param("cname") String cname, @Param("type") String type,
-        @Param("status") String status);
+            @Param("status") String status);
 
     List<ManualOrder> listByRange(Pagination pagination, @Param("cname") String cname, @Param("type") String type,
-        @Param("status") String status, @Param("from") Date from, @Param("to") Date to, @Param("ordno") String ordno,
-        @Param("creator") String creator, @Param("channelCode") String channelCode);
+            @Param("status") String status, @Param("from") Date from, @Param("to") Date to,
+            @Param("ordno") String ordno, @Param("creator") String creator, @Param("channelCode") String channelCode);
 
     int delete(String ordNo);
 
@@ -56,7 +56,7 @@ import java.util.Map;
 
     Product getProduct(String sku);
 
-    //    List<ManualOrder> listAll(String status);
+    // List<ManualOrder> listAll(String status);
 
     List<ManualOrder> listAllByUsername(Map<String, String> request);
 

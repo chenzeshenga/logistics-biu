@@ -15,6 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class ManualOrder4Input extends BaseRowModel implements Serializable {
 
+    private static final long serialVersionUID = 4293084136427695346L;
     @ExcelProperty(index = 0, value = "订单类型")
     private String categoryName;
     @ExcelProperty(index = 1, value = "渠道类型")

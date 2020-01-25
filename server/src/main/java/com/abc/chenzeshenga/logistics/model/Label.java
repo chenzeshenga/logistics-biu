@@ -14,7 +14,12 @@ import java.io.Serializable;
  * @createOn 2018-12-21 0:58
  * @updateOn 2018-12-21 0:58
  */
-@Data @AllArgsConstructor @NoArgsConstructor public class Label implements Serializable {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Label implements Serializable {
+
+    private static final long serialVersionUID = -2553893219114259851L;
 
     private int id;
 

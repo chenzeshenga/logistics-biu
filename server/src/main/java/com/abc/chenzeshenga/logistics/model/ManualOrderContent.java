@@ -1,7 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
 import lombok.Data;
-import lombok.NonNull;
 
 import java.io.Serializable;
 
@@ -9,7 +8,10 @@ import java.io.Serializable;
  * @author chenzeshenga
  * @version 1.0
  */
-@Data public class ManualOrderContent implements Serializable {
+@Data
+public class ManualOrderContent implements Serializable {
+
+    private static final long serialVersionUID = -1370202425183014350L;
 
     private String sku;
 
