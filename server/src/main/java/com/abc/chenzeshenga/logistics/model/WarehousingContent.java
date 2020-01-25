@@ -21,5 +21,6 @@ public class WarehousingContent extends WarehousingContentKey implements Seriali
     private String weight;
     private boolean received;
     private String actual;
+    private String uuid;
 
 }

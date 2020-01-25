@@ -265,7 +265,8 @@ public class WarehousingController {
 
     @GetMapping("/fetchByWarehousingNo")
     public Json fetchByWarehousingNo(@RequestParam String warehousingNo) {
-        return Json.succ().data("warehousing", warehousingMapper.fetchByWarehousingNo(warehousingNo));
+        Warehousing warehousing = warehousingMapper.fetchByWarehousingNo(warehousingNo);
+        return Json.succ().data("warehousing", warehousing);
     }
 
 }
