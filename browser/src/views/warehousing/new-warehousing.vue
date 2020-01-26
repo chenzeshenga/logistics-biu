@@ -360,7 +360,6 @@
               const subUser = this.users[i];
               if (subUser['uname'] === val) {
                 subUser['disabled'] = true;
-                console.log(subUser);
                 this.users[i] = subUser;
                 break;
               }
@@ -372,8 +371,6 @@
             const subProduct = myProduct;
             this.productMap[subProduct['value']] = subProduct;
           }
-          console.log(this.products);
-          console.log(this.productMap);
         });
         request({
           url: '/user/info/get',

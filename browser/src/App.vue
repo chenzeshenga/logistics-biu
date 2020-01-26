@@ -19,12 +19,10 @@ export default {
   },
   methods: {
     reload() {
-      console.log('reloading');
       this.isRouterAlive = false;
       this.$nextTick(function() {
         this.isRouterAlive = true;
       });
-      console.log('reload END');
     },
   },
 
