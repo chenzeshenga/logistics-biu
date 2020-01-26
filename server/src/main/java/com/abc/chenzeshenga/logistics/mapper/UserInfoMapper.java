@@ -1,7 +1,6 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.UserInfo;
-
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,6 +11,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserInfoMapper {
 
-    UserInfo getUserInfoById(String userId);
-
+  UserInfo getUserInfoById(String userId);
 }

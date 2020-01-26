@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
  * @author chenzeshenga
  * @version 1.0
  */
-@Service public class TrackNoService extends ServiceImpl<TrackNoMapper, TrackNo> {
+@Service
+public class TrackNoService extends ServiceImpl<TrackNoMapper, TrackNo> {
 
-    public Page<TrackNo> list(Page page) {
-        return page.setRecords(baseMapper.list(page));
-    }
+  public Page<TrackNo> list(Page page) {
+    return page.setRecords(baseMapper.list(page));
+  }
 
-    public Page<TrackNo> carrierNo(Page page, String carrierNo, String channelCode) {
-        return page.setRecords(baseMapper.carrierNo(page, carrierNo, channelCode));
-    }
+  public Page<TrackNo> carrierNo(Page page, String carrierNo, String channelCode) {
+    return page.setRecords(baseMapper.carrierNo(page, carrierNo, channelCode));
+  }
 
-    public Page<TrackNo> carrierNo(Page page, String carrierNo) {
-        return page.setRecords(baseMapper.listByCarrierNo(page, carrierNo));
-    }
-
+  public Page<TrackNo> carrierNo(Page page, String carrierNo) {
+    return page.setRecords(baseMapper.listByCarrierNo(page, carrierNo));
+  }
 }

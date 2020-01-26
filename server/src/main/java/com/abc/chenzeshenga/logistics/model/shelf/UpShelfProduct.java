@@ -1,9 +1,7 @@
 package com.abc.chenzeshenga.logistics.model.shelf;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotations.TableName;
-
+import java.util.Date;
 import lombok.Data;
 
 /**
@@ -14,11 +12,10 @@ import lombok.Data;
 @TableName(value = "l_up_shelf_product")
 public class UpShelfProduct {
 
-    private String uuid;
-    private String sku;
-    private String name;
-    private String num;
-    private String shelfNo;
-    private Date uptime;
-
+  private String uuid;
+  private String sku;
+  private String name;
+  private String num;
+  private String shelfNo;
+  private Date uptime;
 }

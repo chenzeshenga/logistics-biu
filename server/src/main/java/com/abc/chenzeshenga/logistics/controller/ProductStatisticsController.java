@@ -9,11 +9,10 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import java.util.List;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -24,48 +23,46 @@ import java.util.List;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-    @Resource
-    private ProductStatisticsMapper productStatisticsMapper;
+  @Resource private ProductStatisticsMapper productStatisticsMapper;
 
-    private ProductStatisticsService productStatisticsService;
+  private ProductStatisticsService productStatisticsService;
 
-    @Autowired
-    public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
-        this.productStatisticsService = productStatisticsService;
+  @Autowired
+  public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
+    this.productStatisticsService = productStatisticsService;
+  }
+
+  @PostMapping
+  @RequestMapping("/list")
+  public Json list(@RequestBody String body) {
+    String username = UserUtils.getUserName();
+    JSONObject jsonObject = JSON.parseObject(body);
+    Page page = PageUtils.getPageParam(jsonObject);
+    List<ProductStatistics> productStatisticsList;
+    Page<ProductStatistics> productStatisticsPage = new Page<>();
+    if ("admin".equals(username)) {
+      productStatisticsPage = productStatisticsService.selectAll(page);
+    } else {
+      productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
     }
+    return Json.succ().data("page", productStatisticsPage);
+  }
 
-    @PostMapping
-    @RequestMapping("/list")
-    public Json list(@RequestBody String body) {
-        String username = UserUtils.getUserName();
-        JSONObject jsonObject = JSON.parseObject(body);
-        Page page = PageUtils.getPageParam(jsonObject);
-        List<ProductStatistics> productStatisticsList;
-        Page<ProductStatistics> productStatisticsPage = new Page<>();
-        if ("admin".equals(username)) {
-            productStatisticsPage = productStatisticsService.selectAll(page);
-        } else {
-            productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
-        }
-        return Json.succ().data("page", productStatisticsPage);
+  @PostMapping("/listBySearch")
+  public Json listBySearch(@RequestBody String body) {
+    String username = UserUtils.getUserName();
+    JSONObject jsonObject = JSON.parseObject(body);
+    String sku = jsonObject.getString("sku");
+    String name = jsonObject.getString("name");
+    String owner = jsonObject.getString("owner");
+    Page page = PageUtils.getPageParam(jsonObject);
+    List<ProductStatistics> productStatisticsList;
+    Page<ProductStatistics> productStatisticsPage = new Page<>();
+    if ("admin".equals(username)) {
+      productStatisticsPage = productStatisticsService.selectAllBySearch(page, sku, name, owner);
+    } else {
+      productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
     }
-
-    @PostMapping("/listBySearch")
-    public Json listBySearch(@RequestBody String body) {
-        String username = UserUtils.getUserName();
-        JSONObject jsonObject = JSON.parseObject(body);
-        String sku = jsonObject.getString("sku");
-        String name = jsonObject.getString("name");
-        String owner = jsonObject.getString("owner");
-        Page page = PageUtils.getPageParam(jsonObject);
-        List<ProductStatistics> productStatisticsList;
-        Page<ProductStatistics> productStatisticsPage = new Page<>();
-        if ("admin".equals(username)) {
-            productStatisticsPage = productStatisticsService.selectAllBySearch(page, sku, name, owner);
-        } else {
-            productStatisticsList = productStatisticsMapper.selectAllByUsername(username);
-        }
-        return Json.succ().data("page", productStatisticsPage);
-    }
-
+    return Json.succ().data("page", productStatisticsPage);
+  }
 }

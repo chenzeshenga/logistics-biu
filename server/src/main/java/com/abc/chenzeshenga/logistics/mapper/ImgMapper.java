@@ -10,16 +10,15 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ImgMapper {
 
-    int deleteByPrimaryKey(String uuid);
+  int deleteByPrimaryKey(String uuid);
 
-    int insert(Img record);
+  int insert(Img record);
 
-    int insertSelective(Img record);
+  int insertSelective(Img record);
 
-    Img selectByPrimaryKey(String uuid);
+  Img selectByPrimaryKey(String uuid);
 
-    int updateByPrimaryKeySelective(Img record);
+  int updateByPrimaryKeySelective(Img record);
 
-    int updateByPrimaryKeyWithBLOBs(Img record);
-
+  int updateByPrimaryKeyWithBLOBs(Img record);
 }

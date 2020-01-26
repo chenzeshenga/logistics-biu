@@ -1,10 +1,9 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * @author chenzeshenga
@@ -16,16 +15,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ReturnContent implements Serializable {
 
-    private static final long serialVersionUID = 999405990725459271L;
+  private static final long serialVersionUID = 999405990725459271L;
 
-    private String returnNo;
+  private String returnNo;
 
-    private String sku;
+  private String sku;
 
-    private String name;
+  private String name;
 
-    private String num;
+  private String num;
 
-    private String dealWith;
-
+  private String dealWith;
 }

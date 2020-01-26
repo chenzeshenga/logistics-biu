@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import java.io.Serializable;
 import lombok.Data;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 /**
  * @author chenzeshenga
@@ -14,20 +13,19 @@ import java.io.Serializable;
 @ToString
 public class JpDetailAddress implements Serializable {
 
-    private static final long serialVersionUID = 4664906408754186144L;
+  private static final long serialVersionUID = 4664906408754186144L;
 
-    private String kenId;
+  private String kenId;
 
-    private String kenName;
+  private String kenName;
 
-    private String cityId;
+  private String cityId;
 
-    private String cityName;
+  private String cityName;
 
-    private String townId;
+  private String townId;
 
-    private String townName;
+  private String townName;
 
-    private String zip;
-
+  private String zip;
 }

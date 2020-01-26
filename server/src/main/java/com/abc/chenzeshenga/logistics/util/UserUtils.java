@@ -9,12 +9,12 @@ import org.apache.shiro.subject.Subject;
  * @author chenzeshenga
  * @version 1.0
  */
-@Slf4j public class UserUtils {
+@Slf4j
+public class UserUtils {
 
-    public static String getUserName() {
-        Subject subject = SecurityUtils.getSubject();
-        SysUser user = (SysUser)subject.getPrincipal();
-        return user.getUname();
-    }
-
+  public static String getUserName() {
+    Subject subject = SecurityUtils.getSubject();
+    SysUser user = (SysUser) subject.getPrincipal();
+    return user.getUname();
+  }
 }

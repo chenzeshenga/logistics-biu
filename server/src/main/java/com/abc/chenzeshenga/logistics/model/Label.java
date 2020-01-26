@@ -1,10 +1,9 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * @author chenzeshenga
@@ -19,22 +18,21 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Label implements Serializable {
 
-    private static final long serialVersionUID = -2553893219114259851L;
+  private static final long serialVersionUID = -2553893219114259851L;
 
-    private int id;
+  private int id;
 
-    private int seq;
+  private int seq;
 
-    private String key;
+  private String key;
 
-    private String value;
+  private String value;
 
-    private String label;
+  private String label;
 
-    public Label(int seq, String key, String value) {
-        this.seq = seq;
-        this.key = key;
-        this.value = value;
-    }
-
+  public Label(int seq, String key, String value) {
+    this.seq = seq;
+    this.key = key;
+    this.value = value;
+  }
 }

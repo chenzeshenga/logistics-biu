@@ -16,7 +16,6 @@ import lombok.ToString;
 @ToString
 public class UserInfo {
 
-    private String userId;
-    private String userAddress;
-
+  private String userId;
+  private String userAddress;
 }

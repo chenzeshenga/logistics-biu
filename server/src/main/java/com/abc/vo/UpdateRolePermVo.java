@@ -6,32 +6,32 @@ import java.util.List;
 
 public class UpdateRolePermVo implements Serializable {
 
-    private static final long serialVersionUID = 7726481551616563278L;
-    private String rid;
-    private Integer ptype;
-    private List<String> pvals = new ArrayList<>();
+  private static final long serialVersionUID = 7726481551616563278L;
+  private String rid;
+  private Integer ptype;
+  private List<String> pvals = new ArrayList<>();
 
-    public Integer getPtype() {
-        return ptype;
-    }
+  public Integer getPtype() {
+    return ptype;
+  }
 
-    public void setPtype(Integer ptype) {
-        this.ptype = ptype;
-    }
+  public void setPtype(Integer ptype) {
+    this.ptype = ptype;
+  }
 
-    public String getRid() {
-        return rid;
-    }
+  public String getRid() {
+    return rid;
+  }
 
-    public void setRid(String rid) {
-        this.rid = rid;
-    }
+  public void setRid(String rid) {
+    this.rid = rid;
+  }
 
-    public List<String> getPvals() {
-        return pvals;
-    }
+  public List<String> getPvals() {
+    return pvals;
+  }
 
-    public void setPvals(List<String> pvals) {
-        this.pvals = pvals;
-    }
+  public void setPvals(List<String> pvals) {
+    this.pvals = pvals;
+  }
 }

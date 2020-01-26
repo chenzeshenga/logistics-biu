@@ -11,14 +11,16 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  * @since 20190809
  */
-@Service public class ProductStatisticsService extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
+@Service
+public class ProductStatisticsService
+    extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
 
-    public Page<ProductStatistics> selectAll(Page page) {
-        return page.setRecords(baseMapper.selectAll(page));
-    }
+  public Page<ProductStatistics> selectAll(Page page) {
+    return page.setRecords(baseMapper.selectAll(page));
+  }
 
-    public Page<ProductStatistics> selectAllBySearch(Page page, String sku, String name, String owner) {
-        return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
-    }
-
+  public Page<ProductStatistics> selectAllBySearch(
+      Page page, String sku, String name, String owner) {
+    return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
+  }
 }

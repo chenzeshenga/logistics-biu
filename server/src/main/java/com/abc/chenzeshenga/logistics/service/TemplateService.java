@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-@Service public class TemplateService extends ServiceImpl<TemplateMapper, Template> {
+@Service
+public class TemplateService extends ServiceImpl<TemplateMapper, Template> {
 
-    public Page<Template> list(Page page, CommonObj reg) {
-        return page.setRecords(baseMapper.list(page,reg));
-    }
-
+  public Page<Template> list(Page page, CommonObj reg) {
+    return page.setRecords(baseMapper.list(page, reg));
+  }
 }

@@ -8,35 +8,35 @@ import java.io.Serializable;
  * @author
  */
 public class WarehousingContentKey implements Serializable {
-    private String warehousingNo;
+  private String warehousingNo;
 
-    private String sku;
+  private String sku;
 
-    private String boxSeq;
+  private String boxSeq;
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public String getWarehousingNo() {
-        return warehousingNo;
-    }
+  public String getWarehousingNo() {
+    return warehousingNo;
+  }
 
-    public void setWarehousingNo(String warehousingNo) {
-        this.warehousingNo = warehousingNo;
-    }
+  public void setWarehousingNo(String warehousingNo) {
+    this.warehousingNo = warehousingNo;
+  }
 
-    public String getSku() {
-        return sku;
-    }
+  public String getSku() {
+    return sku;
+  }
 
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
+  public void setSku(String sku) {
+    this.sku = sku;
+  }
 
-    public String getBoxSeq() {
-        return boxSeq;
-    }
+  public String getBoxSeq() {
+    return boxSeq;
+  }
 
-    public void setBoxSeq(String boxSeq) {
-        this.boxSeq = boxSeq;
-    }
+  public void setBoxSeq(String boxSeq) {
+    this.boxSeq = boxSeq;
+  }
 }

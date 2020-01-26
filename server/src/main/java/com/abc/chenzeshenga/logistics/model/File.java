@@ -1,43 +1,45 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * l_file
  *
  * @author
  */
-@Data @AllArgsConstructor @NoArgsConstructor public class File implements Serializable {
-    private String uuid;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class File implements Serializable {
+  private String uuid;
 
-    private byte[] file;
+  private byte[] file;
 
-    private String fileName;
+  private String fileName;
 
-    public File(String uuid, byte[] file) {
-        this.uuid = uuid;
-        this.file = file;
-    }
+  public File(String uuid, byte[] file) {
+    this.uuid = uuid;
+    this.file = file;
+  }
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public String getUuid() {
-        return uuid;
-    }
+  public String getUuid() {
+    return uuid;
+  }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-    public byte[] getFile() {
-        return file;
-    }
+  public byte[] getFile() {
+    return file;
+  }
 
-    public void setFile(byte[] file) {
-        this.file = file;
-    }
+  public void setFile(byte[] file) {
+    this.file = file;
+  }
 }

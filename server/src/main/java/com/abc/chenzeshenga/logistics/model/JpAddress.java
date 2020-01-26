@@ -1,8 +1,7 @@
 package com.abc.chenzeshenga.logistics.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * @author chenzeshenga
@@ -15,10 +14,9 @@ import java.io.Serializable;
 @Data
 public class JpAddress implements Serializable {
 
-    private static final long serialVersionUID = -8740664592535035911L;
+  private static final long serialVersionUID = -8740664592535035911L;
 
-    private String id;
+  private String id;
 
-    private String name;
-
+  private String name;
 }

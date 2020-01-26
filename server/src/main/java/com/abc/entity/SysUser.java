@@ -6,120 +6,128 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import java.io.Serializable;
+import java.util.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.util.*;
+/** created by CaiBaoHong at 2018/4/17 14:55<br> */
+@TableName("sys_user")
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class SysUser extends Model<SysUser> {
 
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
-@TableName("sys_user") @Data @EqualsAndHashCode(callSuper = false) public class SysUser extends Model<SysUser> {
+  // 用户id
+  @TableId(type = IdType.ID_WORKER_STR)
+  private String uid;
 
-    // 用户id
-    @TableId(type = IdType.ID_WORKER_STR) private String uid;
-    private String uname;   // 登录名，不可改
-    private String nick;    // 用户昵称，可改
-    private String pwd;     // 已加密的登录密码
-    private String salt;    // 加密盐值
-    private Boolean lock;   // 是否锁定
-    private Date created;   // 创建时间
-    private Date updated;   // 修改时间
+  private String uname; // 登录名，不可改
+  private String nick; // 用户昵称，可改
+  private String pwd; // 已加密的登录密码
+  private String salt; // 加密盐值
+  private Boolean lock; // 是否锁定
+  private Date created; // 创建时间
+  private Date updated; // 修改时间
 
-    @TableField(exist = false) private List<SysRole> roleList = new ArrayList<>();    //用户所有角色值，在管理后台显示用户的角色
-    @TableField(exist = false) private Set<AuthVo> roles = new HashSet<>();    //用户所有角色值，用于shiro做角色权限的判断
-    @TableField(exist = false) private Set<AuthVo> perms = new HashSet<>();    //用户所有权限值，用于shiro做资源权限的判断
+  @TableField(exist = false)
+  private List<SysRole> roleList = new ArrayList<>(); // 用户所有角色值，在管理后台显示用户的角色
 
-    @Override protected Serializable pkVal() {
-        return uid;
-    }
+  @TableField(exist = false)
+  private Set<AuthVo> roles = new HashSet<>(); // 用户所有角色值，用于shiro做角色权限的判断
 
-    public String getUid() {
-        return uid;
-    }
+  @TableField(exist = false)
+  private Set<AuthVo> perms = new HashSet<>(); // 用户所有权限值，用于shiro做资源权限的判断
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+  @Override
+  protected Serializable pkVal() {
+    return uid;
+  }
 
-    public String getUname() {
-        return uname;
-    }
+  public String getUid() {
+    return uid;
+  }
 
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
+  public void setUid(String uid) {
+    this.uid = uid;
+  }
 
-    public String getNick() {
-        return nick;
-    }
+  public String getUname() {
+    return uname;
+  }
 
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
+  public void setUname(String uname) {
+    this.uname = uname;
+  }
 
-    public String getPwd() {
-        return pwd;
-    }
+  public String getNick() {
+    return nick;
+  }
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
+  public void setNick(String nick) {
+    this.nick = nick;
+  }
 
-    public String getSalt() {
-        return salt;
-    }
+  public String getPwd() {
+    return pwd;
+  }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
+  public void setPwd(String pwd) {
+    this.pwd = pwd;
+  }
 
-    public Boolean getLock() {
-        return lock;
-    }
+  public String getSalt() {
+    return salt;
+  }
 
-    public void setLock(Boolean lock) {
-        this.lock = lock;
-    }
+  public void setSalt(String salt) {
+    this.salt = salt;
+  }
 
-    public Date getCreated() {
-        return created;
-    }
+  public Boolean getLock() {
+    return lock;
+  }
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+  public void setLock(Boolean lock) {
+    this.lock = lock;
+  }
 
-    public Date getUpdated() {
-        return updated;
-    }
+  public Date getCreated() {
+    return created;
+  }
 
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
+  public void setCreated(Date created) {
+    this.created = created;
+  }
 
-    public List<SysRole> getRoleList() {
-        return roleList;
-    }
+  public Date getUpdated() {
+    return updated;
+  }
 
-    public void setRoleList(List<SysRole> roleList) {
-        this.roleList = roleList;
-    }
+  public void setUpdated(Date updated) {
+    this.updated = updated;
+  }
 
-    public Set<AuthVo> getRoles() {
-        return roles;
-    }
+  public List<SysRole> getRoleList() {
+    return roleList;
+  }
 
-    public void setRoles(Set<AuthVo> roles) {
-        this.roles = roles;
-    }
+  public void setRoleList(List<SysRole> roleList) {
+    this.roleList = roleList;
+  }
 
-    public Set<AuthVo> getPerms() {
-        return perms;
-    }
+  public Set<AuthVo> getRoles() {
+    return roles;
+  }
 
-    public void setPerms(Set<AuthVo> perms) {
-        this.perms = perms;
-    }
+  public void setRoles(Set<AuthVo> roles) {
+    this.roles = roles;
+  }
+
+  public Set<AuthVo> getPerms() {
+    return perms;
+  }
+
+  public void setPerms(Set<AuthVo> perms) {
+    this.perms = perms;
+  }
 }

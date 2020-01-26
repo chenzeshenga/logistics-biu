@@ -2,52 +2,50 @@ package com.abc.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
 
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
+/** created by CaiBaoHong at 2018/4/17 14:55<br> */
 @TableName("sys_role_perm")
 public class SysRolePerm implements Serializable {
 
-    @TableField("role_id")
-    private String roleId;
-    @TableField("perm_val")
-    private String permVal;
-    @TableField("perm_type")
-    private Integer permType;
+  @TableField("role_id")
+  private String roleId;
 
-    public SysRolePerm() {
-    }
+  @TableField("perm_val")
+  private String permVal;
 
-    public SysRolePerm(String roleId, String permVal,Integer permType) {
-        this.roleId = roleId;
-        this.permVal = permVal;
-        this.permType = permType;
-    }
+  @TableField("perm_type")
+  private Integer permType;
 
-    public Integer getPermType() {
-        return permType;
-    }
+  public SysRolePerm() {}
 
-    public void setPermType(Integer permType) {
-        this.permType = permType;
-    }
+  public SysRolePerm(String roleId, String permVal, Integer permType) {
+    this.roleId = roleId;
+    this.permVal = permVal;
+    this.permType = permType;
+  }
 
-    public String getRoleId() {
-        return roleId;
-    }
+  public Integer getPermType() {
+    return permType;
+  }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
+  public void setPermType(Integer permType) {
+    this.permType = permType;
+  }
 
-    public String getPermVal() {
-        return permVal;
-    }
+  public String getRoleId() {
+    return roleId;
+  }
 
-    public void setPermVal(String permVal) {
-        this.permVal = permVal;
-    }
+  public void setRoleId(String roleId) {
+    this.roleId = roleId;
+  }
+
+  public String getPermVal() {
+    return permVal;
+  }
+
+  public void setPermVal(String permVal) {
+    this.permVal = permVal;
+  }
 }

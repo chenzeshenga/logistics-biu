@@ -12,24 +12,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author chenzesheng
- */
-@Service @RestController @RequestMapping(path = "/template") @Slf4j public class TemplateController {
+/** @author chenzesheng */
+@Service
+@RestController
+@RequestMapping(path = "/template")
+@Slf4j
+public class TemplateController {
 
-    private TemplateService templateService;
+  private TemplateService templateService;
 
-    public TemplateController(TemplateService templateService) {
-        this.templateService = templateService;
-    }
+  public TemplateController(TemplateService templateService) {
+    this.templateService = templateService;
+  }
 
-    @PostMapping @RequestMapping("/list")
-    public Json list(@RequestBody String body, @RequestParam(required = false) String reg) {
-        JSONObject jsonObject = JSON.parseObject(body);
-        Page page = PageUtils.getPageParam(jsonObject);
-        reg = "null".equals(reg) ? "" : reg;
-        Page<Template> templatePage = templateService.list(page, new CommonObj(reg));
-        return Json.succ().data("page", templatePage);
-    }
-
+  @PostMapping
+  @RequestMapping("/list")
+  public Json list(@RequestBody String body, @RequestParam(required = false) String reg) {
+    JSONObject jsonObject = JSON.parseObject(body);
+    Page page = PageUtils.getPageParam(jsonObject);
+    reg = "null".equals(reg) ? "" : reg;
+    Page<Template> templatePage = templateService.list(page, new CommonObj(reg));
+    return Json.succ().data("page", templatePage);
+  }
 }

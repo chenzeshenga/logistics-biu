@@ -6,14 +6,12 @@ package com.abc.chenzeshenga.logistics.util;
  */
 public class StringUtil {
 
-    private StringUtil() {
-    }
+  private StringUtil() {}
 
-    public static String correctString(String str) {
-        if (str == null) {
-            return "";
-        }
-        return str;
+  public static String correctString(String str) {
+    if (str == null) {
+      return "";
     }
-
+    return str;
+  }
 }

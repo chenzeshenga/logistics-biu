@@ -8,11 +8,9 @@ import java.util.UUID;
  */
 public class CommonUtil {
 
-    private CommonUtil() {
-    }
+  private CommonUtil() {}
 
-    public static String generate() {
-        return "DY" + UUID.randomUUID().toString().split("-")[0];
-    }
-
+  public static String generate() {
+    return "DY" + UUID.randomUUID().toString().split("-")[0];
+  }
 }

@@ -7,5 +7,5 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SysRolePermServiceImpl extends ServiceImpl<SysRolePermMapper, SysRolePerm> implements SysRolePermService {
-}
+public class SysRolePermServiceImpl extends ServiceImpl<SysRolePermMapper, SysRolePerm>
+    implements SysRolePermService {}

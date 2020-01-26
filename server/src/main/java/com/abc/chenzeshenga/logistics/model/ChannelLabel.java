@@ -6,16 +6,16 @@ import lombok.Data;
  * @author chenzeshenga
  * @version 1.0
  */
-@Data public class ChannelLabel {
+@Data
+public class ChannelLabel {
 
-    private String label;
+  private String label;
 
-    private String value;
+  private String value;
 
-    private String partner;
+  private String partner;
 
-    private String partnerDesc;
+  private String partnerDesc;
 
-    private String checkedRules;
-
+  private String checkedRules;
 }

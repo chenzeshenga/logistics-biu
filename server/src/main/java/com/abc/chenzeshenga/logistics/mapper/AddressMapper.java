@@ -2,9 +2,8 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.JpAddress;
 import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author chenzeshenga
@@ -17,15 +16,15 @@ import java.util.List;
 @Mapper
 public interface AddressMapper {
 
-    List<JpAddress> getKen();
+  List<JpAddress> getKen();
 
-    List<JpAddress> getCity(String kenId);
+  List<JpAddress> getCity(String kenId);
 
-    List<JpAddress> getTown(String cityId);
+  List<JpAddress> getTown(String cityId);
 
-    List<JpDetailAddress> getAll();
+  List<JpDetailAddress> getAll();
 
-    JpDetailAddress selectByPk(String zip);
+  JpDetailAddress selectByPk(String zip);
 
-    JpDetailAddress selectByName(String kenName, String cityName, String townName);
+  JpDetailAddress selectByName(String kenName, String cityName, String townName);
 }

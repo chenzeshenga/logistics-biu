@@ -7,5 +7,5 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements SysUserRoleService {
-}
+public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole>
+    implements SysUserRoleService {}
