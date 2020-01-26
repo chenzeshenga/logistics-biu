@@ -1,0 +1,12 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Google Java Format
+      - uses: axel-op/googlejavaformat-action@v2.0.0
