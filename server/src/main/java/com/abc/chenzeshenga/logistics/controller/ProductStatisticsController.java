@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.entity.SysUser;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
@@ -23,7 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource private ProductStatisticsMapper productStatisticsMapper;
+  @Resource
+  private ProductStatisticsMapper productStatisticsMapper;
 
   private ProductStatisticsService productStatisticsService;
 
@@ -65,4 +67,18 @@ public class ProductStatisticsController {
     }
     return Json.succ().data("page", productStatisticsPage);
   }
+
+  @PostMapping("/productInWarehouse")
+  public Json searchProductInWarehouse(@RequestBody String body) {
+    String username = UserUtils.getUserName();
+    JSONObject jsonObject = JSON.parseObject(body);
+    String sku = jsonObject.getString("sku");
+    String name = jsonObject.getString("name");
+    String owner = jsonObject.getString("owner");
+    Page page = PageUtils.getPageParam(jsonObject);
+    SysUser sysUser;
+
+    return Json.succ();
+  }
+
 }
