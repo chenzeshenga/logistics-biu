@@ -24,8 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource
-  private ProductStatisticsMapper productStatisticsMapper;
+  @Resource private ProductStatisticsMapper productStatisticsMapper;
 
   private ProductStatisticsService productStatisticsService;
 
@@ -80,5 +79,4 @@ public class ProductStatisticsController {
 
     return Json.succ();
   }
-
 }
