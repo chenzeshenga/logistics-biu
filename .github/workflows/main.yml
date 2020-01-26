@@ -1,13 +1,14 @@
-name: CI
+name: Format
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
 
+  formatting:
     runs-on: ubuntu-latest
-
     steps:
+      - uses: actions/checkout@v2
       - uses: axel-op/googlejavaformat-action@v2.0.0
-      - name: Google Java Format
-     
