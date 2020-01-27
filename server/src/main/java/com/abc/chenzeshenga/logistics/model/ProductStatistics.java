@@ -12,6 +12,8 @@ import lombok.Data;
  */
 @Data
 public class ProductStatistics implements Serializable {
+  private static final long serialVersionUID = -7084156648221414824L;
+
   private String sku;
 
   private String dysku;

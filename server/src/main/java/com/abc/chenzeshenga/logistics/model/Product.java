@@ -18,6 +18,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Product extends BaseRowModel implements Serializable, Cloneable {
 
+  private static final long serialVersionUID = -546337548244975226L;
+
   @ExcelProperty(index = 0, value = "sku")
   @NotEmpty(message = "商品sku必填")
   private String sku;
