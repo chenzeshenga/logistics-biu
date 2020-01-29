@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
+import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -32,10 +33,13 @@ public class ProductShelfController {
   @PostMapping("/add")
   public Json add(
       @RequestBody List<UpShelfProduct> upShelfProductList, @RequestParam String warehousingNo) {
+    Warehousing warehousing = warehousingMapper.selectById(warehousingNo);
     upShelfProductList.forEach(
         upshelfProduct -> {
           upshelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
           upshelfProduct.setUptime(new Date());
+          upshelfProduct.setWarehousingNo(warehousingNo);
+          upshelfProduct.setOwner(warehousing.getCreator());
           upShelfProductMapper.insert(upshelfProduct);
         });
     warehousingMapper.statusUpdate(warehousingNo, "4", "5", UserUtils.getUserName(), new Date());

@@ -18,4 +18,7 @@ public class UpShelfProduct {
   private String num;
   private String shelfNo;
   private Date uptime;
+  private String owner;
+  private String warehousingNo;
+
 }

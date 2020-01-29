@@ -9,4 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2020-01-23 23:25
  */
 @Mapper
-public interface UpShelfProductMapper extends BaseMapper<UpShelfProduct> {}
+public interface UpShelfProductMapper extends BaseMapper<UpShelfProduct> {
+
+    IPage
+
+}
