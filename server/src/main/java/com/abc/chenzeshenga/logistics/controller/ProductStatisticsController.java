@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
+import com.abc.chenzeshenga.logistics.service.user.UserRoleService;
 import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.entity.SysUser;
@@ -12,7 +13,11 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +31,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource private ProductStatisticsMapper productStatisticsMapper;
+  @Resource
+  private ProductStatisticsMapper productStatisticsMapper;
 
   private ProductStatisticsService productStatisticsService;
 
   private UserService userService;
 
+  private UserRoleService userRoleService;
+
   @Autowired
-  public ProductStatisticsController(
-      ProductStatisticsService productStatisticsService, UserService userService) {
+  public ProductStatisticsController(ProductStatisticsService productStatisticsService, UserService userService,
+      UserRoleService userRoleService) {
     this.productStatisticsService = productStatisticsService;
     this.userService = userService;
+    this.userRoleService = userRoleService;
   }
 
   @PostMapping
@@ -82,7 +91,9 @@ public class ProductStatisticsController {
     String owner = jsonObject.getString("owner");
     Page page = PageUtils.getPageParam(jsonObject);
     CustSysUser custSysUser = userService.fetchUser(username);
-
+    Map<String, Object> columnMap = new HashMap<>(1);
+    columnMap.put("user_id", custSysUser.getUid());
+    List roleList = userRoleService.selectByMap(columnMap);
     return Json.succ();
   }
 }
