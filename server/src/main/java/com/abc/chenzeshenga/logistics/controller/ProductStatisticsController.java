@@ -7,7 +7,6 @@ import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.user.UserRoleService;
 import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
-import com.abc.entity.SysUser;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
