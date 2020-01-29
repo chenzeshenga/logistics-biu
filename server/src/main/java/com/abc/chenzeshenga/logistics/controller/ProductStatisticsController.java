@@ -12,11 +12,9 @@ import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource
-  private ProductStatisticsMapper productStatisticsMapper;
+  @Resource private ProductStatisticsMapper productStatisticsMapper;
 
   private ProductStatisticsService productStatisticsService;
 
@@ -40,7 +37,9 @@ public class ProductStatisticsController {
   private UserRoleService userRoleService;
 
   @Autowired
-  public ProductStatisticsController(ProductStatisticsService productStatisticsService, UserService userService,
+  public ProductStatisticsController(
+      ProductStatisticsService productStatisticsService,
+      UserService userService,
       UserRoleService userRoleService) {
     this.productStatisticsService = productStatisticsService;
     this.userService = userService;
