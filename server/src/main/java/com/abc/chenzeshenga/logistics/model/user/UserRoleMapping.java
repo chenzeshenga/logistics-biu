@@ -11,6 +11,6 @@ import lombok.Data;
 @Data
 public class UserRoleMapping {
 
-    private String userId;
-    private String roleId;
+  private String userId;
+  private String roleId;
 }
