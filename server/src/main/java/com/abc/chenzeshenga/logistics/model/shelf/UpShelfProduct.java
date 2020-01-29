@@ -20,5 +20,4 @@ public class UpShelfProduct {
   private Date uptime;
   private String owner;
   private String warehousingNo;
-
 }

@@ -7,6 +7,4 @@ import lombok.Data;
  * @since 2020-01-29 23:57
  */
 @Data
-public class ProductInWarehouseSummary {
-    
-}
+public class ProductInWarehouseSummary {}
