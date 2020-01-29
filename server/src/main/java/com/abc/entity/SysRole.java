@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
 import java.util.Date;
 
-/** created by CaiBaoHong at 2018/4/17 14:55<br> */
+/**
+ * created by CaiBaoHong at 2018/4/17 14:55<br>
+ */
 @TableName("sys_role")
 public class SysRole extends Model<SysRole> {
 
@@ -17,6 +19,7 @@ public class SysRole extends Model<SysRole> {
   private String rname; // 角色名，用于显示
   private String rdesc; // 角色描述
   private String rval; // 角色值，用于权限判断
+  private boolean manager;
   private Date created; // 创建时间
   private Date updated; // 修改时间
 
@@ -72,4 +75,19 @@ public class SysRole extends Model<SysRole> {
   public void setUpdated(Date updated) {
     this.updated = updated;
   }
+
+  /**
+   * @return boolean return the manager
+   */
+  public boolean isManager() {
+    return manager;
+  }
+
+  /**
+   * @param manager the manager to set
+   */
+  public void setManager(boolean manager) {
+    this.manager = manager;
+  }
+
 }

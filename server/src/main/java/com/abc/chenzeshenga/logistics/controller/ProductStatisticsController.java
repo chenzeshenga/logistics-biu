@@ -3,8 +3,10 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
+import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.entity.SysUser;
+import com.abc.service.impl.SysUserServiceImpl;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
 import com.alibaba.fastjson.JSON;
@@ -24,13 +26,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource private ProductStatisticsMapper productStatisticsMapper;
+  @Resource
+  private ProductStatisticsMapper productStatisticsMapper;
 
   private ProductStatisticsService productStatisticsService;
 
+  private UserService userService;
+
   @Autowired
-  public ProductStatisticsController(ProductStatisticsService productStatisticsService) {
+  public ProductStatisticsController(ProductStatisticsService productStatisticsService, UserService userService) {
     this.productStatisticsService = productStatisticsService;
+    this.userService = userService;
   }
 
   @PostMapping

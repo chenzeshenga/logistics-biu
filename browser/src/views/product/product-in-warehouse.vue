@@ -4,28 +4,17 @@
       <el-row :gutter="20" style="margin: 1%">
         <el-col :span="6">
           <el-tooltip content="请输入商品sku/东岳sku" placement="top">
-            <el-input
-              v-model="search.sku"
-              placeholder="请输入商品sku/东岳sku"
-            ></el-input>
+            <el-input v-model="search.sku" placeholder="请输入商品sku/东岳sku"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
           <el-tooltip content="请输入商品名称" placement="top">
-            <el-input
-              v-model="search.name"
-              placeholder="请输入商品名称"
-            ></el-input>
+            <el-input v-model="search.name" placeholder="请输入商品名称"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="3">
           <el-tooltip content="请选择商品属主" placement="top">
-            <el-select
-              filterable
-              clearable
-              v-model="search.owner"
-              placeholder="请选择商品属主"
-            >
+            <el-select filterable clearable v-model="search.owner" placeholder="请选择商品属主">
               <el-option
                 v-for="creator in options.owners"
                 :key="creator.uname"
@@ -36,17 +25,16 @@
           </el-tooltip>
         </el-col>
         <el-col :span="1">
-          <el-button
-            icon="el-icon-search"
-            @click="searchProductInWarehouse()"
-          ></el-button>
+          <el-tooltip content="搜索" placement="top">
+            <el-button icon="el-icon-search" @click="searchProductInWarehouse()"></el-button>
+          </el-tooltip>
         </el-col>
         <el-col :span="1">
-          <el-button
-            icon="el-icon-refresh"
-            @click="searchProductInWarehouse()"
-          ></el-button>
+          <el-tooltip content="刷新" placement="top">
+            <el-button icon="el-icon-refresh" @click="searchProductInWarehouse()"></el-button>
+          </el-tooltip>
         </el-col>
+        <el-col :span="6">刷新时间： {{tip.timestamp}}</el-col>
       </el-row>
       <el-table
         style="width: 100%;margin: 10px;margin-left:50px"
@@ -82,14 +70,14 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="tablePage.total"
         style="margin-left: 65%;margin-top: 10px"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
 import request from "@/utils/service";
+import * as moment from "moment";
 
 export default {
   name: "product-in-warehouse",
@@ -110,15 +98,20 @@ export default {
         pages: null,
         size: null,
         total: null
+      },
+      tip: {
+        timestamp: null
       }
     };
   },
   created() {
     this.initUserList();
+    this.searchProductInWarehouse();
   },
   methods: {
     searchProductInWarehouse() {
       this.$message.info("搜索...");
+      this.tip.timestamp = moment().format("YYYY-MM-DD HH:mm:ss ddd");
     },
     initUserList() {
       request({
