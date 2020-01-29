@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
+/** created by CaiBaoHong at 2018/4/17 14:55<br> */
 @TableName("sys_role")
 public class SysRole extends Model<SysRole> {
 
@@ -76,18 +74,13 @@ public class SysRole extends Model<SysRole> {
     this.updated = updated;
   }
 
-  /**
-   * @return boolean return the manager
-   */
+  /** @return boolean return the manager */
   public boolean isManager() {
     return manager;
   }
 
-  /**
-   * @param manager the manager to set
-   */
+  /** @param manager the manager to set */
   public void setManager(boolean manager) {
     this.manager = manager;
   }
-
 }

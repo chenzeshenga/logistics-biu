@@ -1,10 +1,8 @@
 package com.abc.chenzeshenga.logistics.service.user;
 
-import javax.annotation.Resource;
-
 import com.abc.chenzeshenga.logistics.mapper.user.CustSysUserMapper;
 import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
-
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,11 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Resource
-    private CustSysUserMapper custSysUserMapper;
+  @Resource private CustSysUserMapper custSysUserMapper;
 
-    public CustSysUser fetchUser(String userId) {
-        return custSysUserMapper.fetchUserByUserName(userId);
-    }
-
+  public CustSysUser fetchUser(String userId) {
+    return custSysUserMapper.fetchUserByUserName(userId);
+  }
 }
