@@ -112,6 +112,13 @@ export default {
     searchProductInWarehouse() {
       this.$message.info("搜索...");
       this.tip.timestamp = moment().format("YYYY-MM-DD HH:mm:ss ddd");
+      request({
+        url: "/statistics/productInWarehouse",
+        method: "post",
+        data: this.tablePage
+      }).then(ret => {
+        console.log(ret);
+      });
     },
     initUserList() {
       request({

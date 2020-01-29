@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -81,7 +82,7 @@ public class ProductStatisticsController {
     String name = jsonObject.getString("name");
     String owner = jsonObject.getString("owner");
     Page page = PageUtils.getPageParam(jsonObject);
-    SysUser sysUser;
+    CustSysUser custSysUser = userService.fetchUser(username);
 
     return Json.succ();
   }

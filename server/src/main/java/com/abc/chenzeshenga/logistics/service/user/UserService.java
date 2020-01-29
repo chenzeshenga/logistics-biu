@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.service.user;
 
-import javax.annotation.Resource;
-
 import com.abc.chenzeshenga.logistics.mapper.user.CustSysUserMapper;
 import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import org.springframework.stereotype.Service;
 
@@ -12,13 +11,10 @@ import org.springframework.stereotype.Service;
  * @since 2020-01-29 20:48
  */
 @Service
-public class UserService {
-
-    @Resource
-    private CustSysUserMapper custSysUserMapper;
+public class UserService extends ServiceImpl<CustSysUserMapper, CustSysUser> {
 
     public CustSysUser fetchUser(String userId) {
-        return custSysUserMapper.fetchUserByUserName(userId);
+        return baseMapper.fetchUserByUserName(userId);
     }
 
 }
