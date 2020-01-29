@@ -2,7 +2,6 @@ package com.abc.chenzeshenga.logistics.mapper.user;
 
 import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,6 +11,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CustSysUserMapper extends BaseMapper<CustSysUser> {
 
-    CustSysUser fetchUserByUserName(String userName);
-
+  CustSysUser fetchUserByUserName(String userName);
 }

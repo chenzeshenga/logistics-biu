@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService extends ServiceImpl<CustSysUserMapper, CustSysUser> {
 
-    public CustSysUser fetchUser(String userId) {
-        return baseMapper.fetchUserByUserName(userId);
-    }
+  public CustSysUser fetchUser(String userId) {
+    return baseMapper.fetchUserByUserName(userId);
+  }
 
 }
