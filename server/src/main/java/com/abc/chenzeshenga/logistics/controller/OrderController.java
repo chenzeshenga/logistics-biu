@@ -191,7 +191,7 @@ public class OrderController {
 
   @PostMapping
   @RequestMapping("/trackno/list")
-  @SuppressWarnings({"rawtypes","unchecked"})
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public Json fillInTrackNoList(@RequestBody Map ords) {
     List<String> ordNos = (List<String>) ords.get("ords");
     String carrierNo = ((String) ords.get("carrierNo")).replace(CARRIER, "");
