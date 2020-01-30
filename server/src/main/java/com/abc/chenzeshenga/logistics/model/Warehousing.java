@@ -7,16 +7,15 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.poi.ss.usermodel.CellStyle;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 /** @author chenzeshenga */
 @Data
@@ -32,8 +31,10 @@ public class Warehousing extends BaseRowModel implements Serializable {
   /** 用户发货地址 */
   @TableField(exist = false)
   private String fromAddress;
+
   @ExcelProperty(index = 0, value = "目的仓库")
   private String target;
+
   @ExcelProperty(index = 1, value = "入库单号")
   @NotEmpty(message = "入库单号必填")
   @TableId(type = IdType.ID_WORKER_STR)
@@ -166,6 +167,7 @@ public class Warehousing extends BaseRowModel implements Serializable {
 
   @TableField(exist = false)
   private String userWarehousingFileUuid;
+
   @TableField(exist = false)
   private String systemFileUuid;
 }
