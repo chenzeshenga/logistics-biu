@@ -12,7 +12,8 @@ public class DateUtil {
 
   private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-  private static final SimpleDateFormat SIMPLE_STR_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final SimpleDateFormat SIMPLE_STR_FORMAT =
+      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   public static Date getDateFromStr(String dateString) throws ParseException {
     return SIMPLE_DATE_FORMAT.parse(dateString);
@@ -36,5 +37,4 @@ public class DateUtil {
     long min = diff % nd % nh / nm;
     return day + "天" + hour + "小时" + min + "分钟";
   }
-
 }

@@ -1,11 +1,9 @@
 package com.abc.chenzeshenga.logistics.model.warehouse;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.baomidou.mybatisplus.annotations.TableName;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -16,13 +14,12 @@ import lombok.Data;
 @TableName("l_up_shelf_product")
 public class ProductInWarehouseSummary {
 
-    private String sku;
-    private String name;
-    private String num;
-    private String owner;
-    private String shelfNo;
-    private String warehousingNo;
-    private String totalWarehousingTime;
-    private List<UpShelfProduct> children = new ArrayList<>();
-
+  private String sku;
+  private String name;
+  private String num;
+  private String owner;
+  private String shelfNo;
+  private String warehousingNo;
+  private String totalWarehousingTime;
+  private List<UpShelfProduct> children = new ArrayList<>();
 }
