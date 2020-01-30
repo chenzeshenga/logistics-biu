@@ -17,7 +17,6 @@ export default {
       msg: {
         status: "2",
         category: "1",
-        buttonVisible2: true,
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,

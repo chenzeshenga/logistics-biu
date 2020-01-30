@@ -13,12 +13,17 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class WarehousingContent extends WarehousingContentKey implements Serializable {
 
+  private static final long serialVersionUID = 6943231354146357407L;
   private String totalNum;
   private String wrapType;
   private String name;
   private String price;
-  private String weight;
   private boolean received;
   private String actual;
   private String uuid;
+  private String length;
+  private String width;
+  private String height;
+  private String weight;
+
 }

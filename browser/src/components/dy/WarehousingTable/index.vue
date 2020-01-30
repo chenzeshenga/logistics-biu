@@ -222,9 +222,9 @@
               plain
             />
           </el-tooltip>
-          <el-tooltip content="东岳国内前置海外仓已收货，发往头程校验" placement="top" v-if="msgData.buttonVisible8">
+          <el-tooltip content="东岳国内前置海外仓已收货，记录整体体积重量" placement="top" v-if="msgData.buttonVisible8">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 3)"
+              @click="toggleHeadCheckDialog(scope.$index, scope.row)"
               size="mini"
               type="info"
               icon="el-icon-check"
@@ -676,6 +676,36 @@
         <el-button type="primary" @click="up2shelf()">确定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="头程校验" :visible.sync="dialogVisible8" width="40%">
+      <div v-for="box in dialogForm8.boxList" v-bind:key="box.seq" style="margin:2%">
+        <el-row>
+          箱号:
+          <b>{{box.seq}}</b>
+        </el-row>
+        <el-row style="margin-top:2%">
+          <el-col :span="8">
+            长(cm):
+            <el-input-number v-model="box.length"></el-input-number>
+          </el-col>
+          <el-col :span="8">
+            宽(cm):
+            <el-input-number v-model="box.width"></el-input-number>
+          </el-col>
+          <el-col :span="8">
+            高(cm):
+            <el-input-number v-model="box.height"></el-input-number>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:2%">
+          重量(kg):
+          <el-input-number v-model="box.weight"></el-input-number>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible8 = false">取消</el-button>
+        <el-button type="primary" @click="headCheck()">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -763,6 +793,7 @@ export default {
       dialogVisible5: false,
       dialogVisible6: false,
       dialogVisible7: false,
+      dialogVisible8: false,
       pickerOptions2: {
         shortcuts: [
           {
@@ -842,6 +873,7 @@ export default {
         warehousing: "",
         skuFromScanner: ""
       },
+      dialogForm8: {},
       options: [],
       upshelfNum: 0,
       shelfNo: ""
@@ -1234,6 +1266,26 @@ export default {
     removeUpShelf(item, all) {
       console.log(item);
       console.log(all);
+    },
+    toggleHeadCheckDialog(index, row) {
+      this.dialogVisible8 = true;
+      this.dialogForm8.ori = row;
+      const warehousingContentList = row.warehousingContentList;
+      let distinctSeqList = new Set();
+      for (const warehousingContent of warehousingContentList) {
+        distinctSeqList.add(warehousingContent.boxSeq);
+      }
+      this.dialogForm8.boxList = [];
+      for (const seq of distinctSeqList) {
+        let tmp = {
+          seq: seq,
+          warehousingNo: row.warehousingNo
+        };
+        this.dialogForm8.boxList.push(tmp);
+      }
+    },
+    headCheck() {
+      console.log(this.dialogForm8.boxList);
     }
   },
   mounted() {}
