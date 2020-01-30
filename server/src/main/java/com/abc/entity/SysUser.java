@@ -17,6 +17,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class SysUser extends Model<SysUser> {
 
+  private static final long serialVersionUID = -9196678993144944443L;
+
   // 用户id
   @TableId(type = IdType.ID_WORKER_STR)
   private String uid;

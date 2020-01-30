@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 
 /** created by CaiBaoHong at 2018/5/16 10:15<br> */
+@SuppressWarnings("rawtypes")
 public class PageUtils {
 
   /**

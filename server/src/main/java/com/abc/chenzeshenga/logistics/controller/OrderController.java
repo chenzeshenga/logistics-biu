@@ -191,6 +191,7 @@ public class OrderController {
 
   @PostMapping
   @RequestMapping("/trackno/list")
+  @SuppressWarnings({"rawtypes","unchecked"})
   public Json fillInTrackNoList(@RequestBody Map ords) {
     List<String> ordNos = (List<String>) ords.get("ords");
     String carrierNo = ((String) ords.get("carrierNo")).replace(CARRIER, "");
@@ -226,6 +227,7 @@ public class OrderController {
 
   @PostMapping
   @RequestMapping("/list/{type}/{status}")
+  @SuppressWarnings("rawtypes")
   public Json list(
       @RequestBody String body, @PathVariable String type, @PathVariable String status) {
     String cname = UserUtils.getUserName();
@@ -238,6 +240,7 @@ public class OrderController {
 
   @PostMapping
   @RequestMapping("/list/{type}/{status}/{fromDate}/{toDate}")
+  @SuppressWarnings("rawtypes")
   public Json listByRange(
       @RequestBody String body,
       @PathVariable String type,

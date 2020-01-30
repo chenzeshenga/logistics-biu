@@ -8,7 +8,6 @@ import com.abc.entity.SysRolePerm;
 import com.abc.service.SysPermService;
 import com.abc.service.SysRolePermService;
 import com.abc.service.SysRoleService;
-import com.abc.service.SysUserRoleService;
 import com.abc.vo.Json;
 import com.abc.vo.UpdateRolePermVo;
 import com.alibaba.fastjson.JSON;
@@ -39,7 +38,6 @@ public class SysRoleController {
 
   @Autowired private SysRoleService roleService;
   @Autowired private SysPermService permService;
-  @Autowired private SysUserRoleService userRoleService;
   @Autowired private SysRolePermService rolePermService;
 
   @PostMapping

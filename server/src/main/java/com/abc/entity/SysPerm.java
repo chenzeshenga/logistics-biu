@@ -14,6 +14,8 @@ import java.util.List;
 @TableName("sys_perm")
 public class SysPerm extends Model<SysPerm> {
 
+  private static final long serialVersionUID = 6544983002361941L;
+
   @TableId(type = IdType.INPUT)
   private String pval; // 权限值，shiro的权限控制表达式
 

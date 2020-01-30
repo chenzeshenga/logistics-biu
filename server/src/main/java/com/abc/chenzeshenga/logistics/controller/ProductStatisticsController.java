@@ -7,10 +7,7 @@ import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.statistics.ProductInWarehouseService;
-import com.abc.chenzeshenga.logistics.service.user.RoleService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
-import com.abc.chenzeshenga.logistics.service.user.UserRoleService;
-import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
@@ -44,26 +41,14 @@ public class ProductStatisticsController {
 
   private ProductInWarehouseService productInWarehouseService;
 
-  private UserService userService;
-
-  private UserRoleService userRoleService;
-
-  private RoleService roleService;
-
   private UserCommonService userCommonService;
 
   @Autowired
   public ProductStatisticsController(
       ProductStatisticsService productStatisticsService,
-      UserService userService,
-      UserRoleService userRoleService,
-      RoleService roleService,
       UserCommonService userCommonService,
       ProductInWarehouseService productInWarehouseService) {
     this.productStatisticsService = productStatisticsService;
-    this.userService = userService;
-    this.userRoleService = userRoleService;
-    this.roleService = roleService;
     this.userCommonService = userCommonService;
     this.productInWarehouseService = productInWarehouseService;
   }
@@ -103,6 +88,7 @@ public class ProductStatisticsController {
   }
 
   @PostMapping("/productInWarehouse")
+  @SuppressWarnings("rawtypes")
   public Json searchProductInWarehouse(@RequestBody String body) {
     JSONObject jsonObject = JSON.parseObject(body);
     String sku = jsonObject.getString("sku");

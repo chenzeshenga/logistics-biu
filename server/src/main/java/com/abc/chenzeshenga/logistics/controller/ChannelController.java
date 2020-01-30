@@ -99,6 +99,7 @@ public class ChannelController {
 
   @PostMapping
   @RequestMapping("/page")
+  @SuppressWarnings("rawtypes")
   public Json page(@RequestBody String body) {
     JSONObject jsonObject = JSON.parseObject(body);
     Page page = PageUtils.getPageParam(jsonObject);
@@ -121,6 +122,7 @@ public class ChannelController {
 
   @PostMapping
   @RequestMapping("/pageReg")
+  @SuppressWarnings("rawtypes")
   public Json pageReg(@RequestBody String body, @RequestParam String reg) {
     JSONObject jsonObject = JSON.parseObject(body);
     Page page = PageUtils.getPageParam(jsonObject);

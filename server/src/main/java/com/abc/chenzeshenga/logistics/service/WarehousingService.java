@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  */
 @Service
+@SuppressWarnings("rawtypes")
 public class WarehousingService extends ServiceImpl<WarehousingMapper, Warehousing> {
 
   public Page<Warehousing> listAll(Page page, String method) {

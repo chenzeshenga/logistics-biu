@@ -213,6 +213,7 @@ public class CommonController {
   }
 
   @GetMapping("/product/excel/{status}")
+  @SuppressWarnings("rawtypes")
   public void getProductExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
       throws IOException {
     String fileName = "商品信息.xlsx";
@@ -447,6 +448,7 @@ public class CommonController {
   }
 
   @GetMapping("/warehousing/excel/{status}")
+  @SuppressWarnings("rawtypes")
   public void getWarehousingExcel(
       @PathVariable String status,
       HttpServletResponse httpServletResponse,

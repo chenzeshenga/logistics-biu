@@ -8,6 +8,8 @@ import java.io.Serializable;
 @TableName("sys_role_perm")
 public class SysRolePerm implements Serializable {
 
+  private static final long serialVersionUID = -8995410219986990187L;
+
   @TableField("role_id")
   private String roleId;
 

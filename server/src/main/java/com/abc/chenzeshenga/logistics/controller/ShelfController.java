@@ -36,6 +36,7 @@ public class ShelfController {
   }
 
   @PostMapping("/list")
+  @SuppressWarnings("rawtypes")
   public Json list(@RequestParam String reg, @RequestBody String body) {
     JSONObject jsonObject = JSON.parseObject(body);
     Page page = PageUtils.getPageParam(jsonObject);

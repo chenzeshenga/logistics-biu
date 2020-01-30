@@ -113,6 +113,7 @@ public class ProductController {
   }
 
   @PostMapping("/list/{status}")
+  @SuppressWarnings("rawtypes")
   public Json listProduct(@RequestBody String body, @PathVariable String status) {
     String username = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);

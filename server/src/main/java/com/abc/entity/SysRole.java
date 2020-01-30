@@ -11,6 +11,8 @@ import java.util.Date;
 @TableName("sys_role")
 public class SysRole extends Model<SysRole> {
 
+  private static final long serialVersionUID = -1147802580300641865L;
+
   @TableId(type = IdType.ID_WORKER_STR)
   private String rid; // 角色id
 
