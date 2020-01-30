@@ -44,11 +44,11 @@
 
     <insert id="insertList" parameterType="java.util.List">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
-        total_num, wrap_type, `name`, received,actual)
+        total_num, wrap_type, `name`, received,actual,uuid)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
-            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received},#{item.actual})
+            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received},#{item.actual},#{item.uuid})
         </foreach>
     </insert>
 
