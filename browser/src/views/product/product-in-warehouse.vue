@@ -36,6 +36,7 @@
         </el-col>
         <el-col :span="6">刷新时间： {{tip.timestamp}}</el-col>
       </el-row>
+      <el-alert title="当前页面显示的在库时间仅做参考，实际在库时间以账单为准" type="info"></el-alert>
       <el-table
         style="width: 100%;margin: 10px;margin-left:50px"
         :data="tableData"
@@ -46,20 +47,22 @@
       >
         <el-table-column type="expand">
           <template slot-scope="tableData">
-            <el-table :data="tableData.row.warehousingContentList">
+            <el-table :data="tableData.row.children">
               <el-table-column prop="sku" label="sku" />
               <el-table-column prop="name" label="商品名称" />
               <el-table-column prop="shelfNo" label="货架号" />
               <el-table-column prop="num" label="数量" />
+              <el-table-column prop="owner" label="属主" />
+              <el-table-column prop="warehousingNo" label="入库单号" />
               <el-table-column prop="uptime" label="上架时间" />
-              <el-table-column prop="period" label="在库时间" />
+              <el-table-column prop="datePoor" label="在库时间" />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column prop="sku" label="sku"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
-        <el-table-column prop="totalNum" label="在库总数量"></el-table-column>
+        <el-table-column prop="num" label="在库总数量"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -110,14 +113,24 @@ export default {
   },
   methods: {
     searchProductInWarehouse() {
-      this.$message.info("搜索...");
       this.tip.timestamp = moment().format("YYYY-MM-DD HH:mm:ss ddd");
+      const postData = {
+        current: this.tablePage.current,
+        pages: this.tablePage.pages,
+        size: this.tablePage.size,
+        total: this.tablePage.total,
+        sku: this.search.sku,
+        name: this.search.name,
+        owner: this.search.owner
+      };
+      this.tableLoading = true;
       request({
         url: "/statistics/productInWarehouse",
         method: "post",
-        data: this.tablePage
+        data: postData
       }).then(ret => {
-        console.log(ret);
+        this.tableData = ret.data.data;
+        this.tableLoading = false;
       });
     },
     initUserList() {

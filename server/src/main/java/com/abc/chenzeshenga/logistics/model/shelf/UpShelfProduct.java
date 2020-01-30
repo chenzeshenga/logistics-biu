@@ -1,6 +1,9 @@
 package com.abc.chenzeshenga.logistics.model.shelf;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import lombok.Data;
 
@@ -17,7 +20,10 @@ public class UpShelfProduct {
   private String name;
   private String num;
   private String shelfNo;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
   private Date uptime;
   private String owner;
   private String warehousingNo;
+  @TableField(exist = false)
+  private String datePoor;
 }
