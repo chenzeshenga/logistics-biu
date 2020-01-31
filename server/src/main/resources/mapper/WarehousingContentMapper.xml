@@ -160,4 +160,14 @@
         where warehousing_no = #{warehousingNo}
     </delete>
 
+    <update id="updateContentHeadCheck" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        update l_warehousing_content
+        set height=#{height},
+            length=#{length},
+            width=#{width},
+            weight=#{weight}
+        where warehousing_no=#{warehousingNo}
+            and box_seq=#{boxSeq}
+    </update>
+
 </mapper>

@@ -3,9 +3,10 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.abc.chenzeshenga.logistics.model.WarehousingContentKey;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public interface WarehousingContentMapper {
   int deleteByPrimaryKey(WarehousingContentKey key);
 
@@ -26,4 +27,6 @@ public interface WarehousingContentMapper {
   List<WarehousingContent> listContent(String warehousingNo);
 
   int deleteContent(String warehousingNo);
+
+  int updateContentHeadCheck(WarehousingContent warehousingContent);
 }

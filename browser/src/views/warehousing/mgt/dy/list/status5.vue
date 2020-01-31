@@ -17,13 +17,13 @@ export default {
       msg: {
         status: "5",
         category: "1",
-        buttonVisible2: true,
-        buttonVisible3: true,
+        buttonVisible1: true,
         buttonVisible4: true,
         buttonVisible5: true,
         buttonVisible6: true,
         buttonVisible7: true,
-        buttonVisibleB: true
+        buttonVisible10: true,
+        buttonVisible13: true
       }
     };
   }

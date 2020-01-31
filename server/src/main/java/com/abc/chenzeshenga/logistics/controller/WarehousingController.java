@@ -285,4 +285,15 @@ public class WarehousingController {
     Warehousing warehousing = warehousingMapper.fetchByWarehousingNo(warehousingNo);
     return Json.succ().data("warehousing", warehousing);
   }
+
+  @PostMapping("/content/headCheck")
+  public Json headCheck4WarehousingOrder(@RequestBody List<WarehousingContent> boxList,
+      @RequestParam String warehousingNo) {
+    boxList.forEach(box -> {
+      warehousingContentMapper.updateContentHeadCheck(box);
+    });
+    warehousingMapper.statusUpdate(warehousingNo, "2", "3", UserUtils.getUserName(), new Date());
+    return Json.succ();
+  }
+
 }

@@ -716,7 +716,7 @@ export const asyncRouterMap = [
             name: "warehousing-mgt-dy-list-status4",
             meta: {
               perm: "m:warehousing:dy:list:4",
-              title: "转运中",
+              title: "日仓已收货",
               icon: "chart",
               noCache: true
             }
@@ -755,22 +755,22 @@ export const asyncRouterMap = [
             }
           },
           {
-            path: "status8",
-            component: _import("warehousing/mgt/dy/list/status8"),
-            name: "warehousing-mgt-dy-list-status8",
+            path: "status88",
+            component: _import("warehousing/mgt/dy/list/status88"),
+            name: "warehousing-mgt-dy-list-status88",
             meta: {
-              perm: "m:warehousing:dy:list:8",
+              perm: "m:warehousing:dy:list:88",
               title: "废弃",
               icon: "chart",
               noCache: true
             }
           },
           {
-            path: "status9",
-            component: _import("warehousing/mgt/dy/list/status9"),
-            name: "warehousing-mgt-dy-list-status9",
+            path: "status99",
+            component: _import("warehousing/mgt/dy/list/status99"),
+            name: "warehousing-mgt-dy-list-status99",
             meta: {
-              perm: "m:warehousing:dy:list:9",
+              perm: "m:warehousing:dy:list:99",
               title: "异常",
               icon: "chart",
               noCache: true

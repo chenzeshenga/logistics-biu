@@ -234,7 +234,7 @@
           </el-tooltip>
           <el-tooltip content="头程校验完成，发往日本" placement="top" v-if="msgData.buttonVisible9">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 4)"
+              @click="confirmTrackNo(scope.$index,scope.row)"
               size="mini"
               type="info"
               icon="el-icon-check"
@@ -392,6 +392,24 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible1 = false">取 消</el-button>
         <el-button type="primary" @click="fillInTrackNo">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="确认单号" :visible.sync="dialogVisible1Sub" width="30%">
+      <el-form :model="dialog">
+        <el-form-item label="承运人">
+          <el-tooltip content="东岳头程默认承运人为东岳" placement="top">
+            <el-input v-model="dialog.carrier"></el-input>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item label="追踪单号">
+          <el-tooltip content="东岳头程默认追踪单号为订单号" placement="top">
+            <el-input v-model="dialog.trackNo"></el-input>
+          </el-tooltip>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible1Sub = false">取 消</el-button>
+        <el-button type="primary" @click="submitTrackNo(4)">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="申请报关单" :visible.sync="dialogVisible2" width="40%">
@@ -677,10 +695,10 @@
       </span>
     </el-dialog>
     <el-dialog title="头程校验" :visible.sync="dialogVisible8" width="40%">
-      <div v-for="box in dialogForm8.boxList" v-bind:key="box.seq" style="margin:2%">
+      <div v-for="box in dialogForm8.boxList" v-bind:key="box.boxSeq" style="margin:2%">
         <el-row>
           箱号:
-          <b>{{box.seq}}</b>
+          <b>{{box.boxSeq}}</b>
         </el-row>
         <el-row style="margin-top:2%">
           <el-col :span="8">
@@ -756,6 +774,7 @@ export default {
       tableData: [],
       daterange: null,
       dialogVisible1: false,
+      dialogVisible1Sub: false,
       dialogVisible2: false,
       dialogVisible3: false,
       dialogVisible4: false,
@@ -1160,6 +1179,10 @@ export default {
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
       this.dialogForm5.warehousing.status = "3";
+      const method = this.dialogForm5.warehousing.method;
+      if ("东岳头程" === method) {
+        this.dialogForm5.warehousing.status = "5";
+      }
       request({
         url: "/warehousing/update",
         method: "post",
@@ -1185,6 +1208,11 @@ export default {
       if (flag) {
         this.dialogForm6.warehousing.warehousingContentList = this.dialogForm6.warehousingContentList;
         this.dialogForm6.warehousing.status = "4";
+        const method = this.dialogForm6.warehousing.method;
+        debugger;
+        if ("东岳头程" === method) {
+          this.dialogForm6.warehousing.status = "6";
+        }
         request({
           url: "/warehousing/update",
           method: "post",
@@ -1278,14 +1306,45 @@ export default {
       this.dialogForm8.boxList = [];
       for (const seq of distinctSeqList) {
         let tmp = {
-          seq: seq,
+          boxSeq: seq,
           warehousingNo: row.warehousingNo
         };
         this.dialogForm8.boxList.push(tmp);
       }
     },
     headCheck() {
-      console.log(this.dialogForm8.boxList);
+      const warehousingNo = this.dialogForm8.ori.warehousingNo;
+      request({
+        url: "/warehousing/content/headCheck?warehousingNo=" + warehousingNo,
+        method: "post",
+        data: this.dialogForm8.boxList
+      }).then(() => {
+        this.$message.success(
+          "入库单" + warehousingNo + "头程检查结束，等待发货"
+        );
+        this.dialogVisible8 = false;
+        this.fetchData();
+      });
+    },
+    confirmTrackNo(index, row) {
+      this.dialog.warehousingNo = row.warehousingNo;
+      this.dialog.carrier = row.carrier;
+      this.dialog.trackNo = row.trackNo;
+      this.dialogVisible1Sub = true;
+    },
+    submitTrackNo(statusUpdateTo) {
+      request({
+        url: "warehousing/status",
+        method: "post",
+        data: {
+          to: statusUpdateTo,
+          warehousingNo: this.dialog.warehousingNo
+        }
+      }).then(() => {
+        this.fetchData();
+        this.$message.success("更新成功");
+        this.dialogVisible1Sub = false;
+      });
     }
   },
   mounted() {}
