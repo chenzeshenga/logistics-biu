@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class UserFileRecord extends UserFileRecordKey implements Serializable {
 
+  private static final long serialVersionUID = 3204937508759228917L;
+
   private String fileName;
 
   private Date createOn;

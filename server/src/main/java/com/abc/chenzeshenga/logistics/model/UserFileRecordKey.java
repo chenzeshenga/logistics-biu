@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserFileRecordKey implements Serializable {
 
+  private static final long serialVersionUID = -2786872391209228063L;
+
   private String uid;
 
   private String fileUuid;

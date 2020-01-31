@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Return implements Serializable {
 
+  private static final long serialVersionUID = -6249013466703476021L;
+
   private String returnNo;
 
   private boolean withoutOrderNoFlag;
