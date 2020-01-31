@@ -26,22 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product/shelf")
 public class ProductShelfController {
 
-  @Resource
-  private UpShelfProductMapper upShelfProductMapper;
+  @Resource private UpShelfProductMapper upShelfProductMapper;
 
-  @Resource
-  private WarehousingMapper warehousingMapper;
+  @Resource private WarehousingMapper warehousingMapper;
 
   @PostMapping("/add")
-  public Json add(@RequestBody List<UpShelfProduct> upShelfProductList, @RequestParam String warehousingNo) {
+  public Json add(
+      @RequestBody List<UpShelfProduct> upShelfProductList, @RequestParam String warehousingNo) {
     Warehousing warehousing = warehousingMapper.selectById(warehousingNo);
-    upShelfProductList.forEach(upshelfProduct -> {
-      upshelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
-      upshelfProduct.setUptime(new Date());
-      upshelfProduct.setWarehousingNo(warehousingNo);
-      upshelfProduct.setOwner(warehousing.getCreator());
-      upShelfProductMapper.insert(upshelfProduct);
-    });
+    upShelfProductList.forEach(
+        upshelfProduct -> {
+          upshelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
+          upshelfProduct.setUptime(new Date());
+          upshelfProduct.setWarehousingNo(warehousingNo);
+          upshelfProduct.setOwner(warehousing.getCreator());
+          upShelfProductMapper.insert(upshelfProduct);
+        });
     String method = warehousing.getMethod();
     if ("东岳头程".equals(method)) {
       warehousingMapper.statusUpdate(warehousingNo, "6", "7", UserUtils.getUserName(), new Date());

@@ -3,7 +3,6 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.abc.chenzeshenga.logistics.model.WarehousingContentKey;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

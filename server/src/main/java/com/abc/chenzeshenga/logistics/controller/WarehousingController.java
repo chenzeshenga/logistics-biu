@@ -287,13 +287,13 @@ public class WarehousingController {
   }
 
   @PostMapping("/content/headCheck")
-  public Json headCheck4WarehousingOrder(@RequestBody List<WarehousingContent> boxList,
-      @RequestParam String warehousingNo) {
-    boxList.forEach(box -> {
-      warehousingContentMapper.updateContentHeadCheck(box);
-    });
+  public Json headCheck4WarehousingOrder(
+      @RequestBody List<WarehousingContent> boxList, @RequestParam String warehousingNo) {
+    boxList.forEach(
+        box -> {
+          warehousingContentMapper.updateContentHeadCheck(box);
+        });
     warehousingMapper.statusUpdate(warehousingNo, "2", "3", UserUtils.getUserName(), new Date());
     return Json.succ();
   }
-
 }
