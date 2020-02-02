@@ -32,5 +32,5 @@ public class ManualOrderContent implements Serializable {
 
   private String imgUrl;
 
-  private  String shelfNo;
+  private String shelfNo;
 }

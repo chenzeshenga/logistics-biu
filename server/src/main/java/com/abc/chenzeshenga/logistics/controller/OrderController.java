@@ -419,22 +419,26 @@ public class OrderController {
     return Json.succ().data(manualOrder);
   }
 
-  @GetMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
+  @GetMapping("/pickup/{regTxt}")
+  public Json search(@PathVariable String regTxt) {
     List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
-    contentList.forEach(manualOrderContent -> {
-      String sku = manualOrderContent.getSku();
-      String orderNo = manualOrderContent.getOrdno();
-      ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
-      UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(sku, manualOrder.getCreator());
-      manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
-    });
+    contentList.forEach(
+        manualOrderContent -> {
+          String sku = manualOrderContent.getSku();
+          String orderNo = manualOrderContent.getOrdno();
+          ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
+          UpShelfProduct upShelfProduct =
+              upShelfProductMapper.selectOneBySku(sku, manualOrder.getCreator());
+          manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
+        });
     if (contentList.isEmpty()) {
       return Json.fail().msg("该订单无法拣货");
     }
     return Json.succ().data(contentList);
   }
 
-  @PostMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
+  @PostMapping("/pickup")
+  public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
     log.info(manualOrderContentList.toString());
     String ordno;
     if (!manualOrderContentList.isEmpty()) {
@@ -448,15 +452,18 @@ public class OrderController {
         manualOrder.setStatus(String.valueOf(Integer.parseInt(status) + 1));
         orderMapper.statusUpdate(manualOrder);
         // 更新库存
-        manualOrderContentList.forEach(manualOrderContent -> {
-          String sku = manualOrderContent.getSku();
-          int num = Integer.parseInt(manualOrderContent.getNum());
-          String owner = manualOrder.getCreator();
-          String shelfNo = manualOrderContent.getShelfNo();
-          UpShelfProduct upShelfProduct = upShelfProductMapper.selectOne(new UpShelfProduct(sku, owner, shelfNo));
-          upShelfProduct.setNum(String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
-          upShelfProductMapper.updateAllColumnById(upShelfProduct);
-        });
+        manualOrderContentList.forEach(
+            manualOrderContent -> {
+              String sku = manualOrderContent.getSku();
+              int num = Integer.parseInt(manualOrderContent.getNum());
+              String owner = manualOrder.getCreator();
+              String shelfNo = manualOrderContent.getShelfNo();
+              UpShelfProduct upShelfProduct =
+                  upShelfProductMapper.selectOne(new UpShelfProduct(sku, owner, shelfNo));
+              upShelfProduct.setNum(
+                  String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
+              upShelfProductMapper.updateAllColumnById(upShelfProduct);
+            });
       }
     } else {
       return Json.fail();

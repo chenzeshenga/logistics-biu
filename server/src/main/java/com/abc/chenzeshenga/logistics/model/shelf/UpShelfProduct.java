@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +22,7 @@ public class UpShelfProduct {
 
   @TableId(type = IdType.ID_WORKER_STR)
   private String uuid;
+
   private String sku;
   private String name;
   private String num;
@@ -38,10 +37,9 @@ public class UpShelfProduct {
   @TableField(exist = false)
   private String datePoor;
 
-  public  UpShelfProduct(String sku,String owner,String shelfNo){
-    this.sku=sku;
-    this.owner=owner;
-    this.shelfNo=shelfNo;
+  public UpShelfProduct(String sku, String owner, String shelfNo) {
+    this.sku = sku;
+    this.owner = owner;
+    this.shelfNo = shelfNo;
   }
-
 }
