@@ -1,10 +1,16 @@
 package com.abc.chenzeshenga.logistics.model.shelf;
 
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author chenzeshenga
@@ -12,8 +18,11 @@ import lombok.Data;
  */
 @Data
 @TableName(value = "l_up_shelf_product")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpShelfProduct {
 
+  @TableId(type = IdType.ID_WORKER_STR)
   private String uuid;
   private String sku;
   private String name;
@@ -28,4 +37,11 @@ public class UpShelfProduct {
 
   @TableField(exist = false)
   private String datePoor;
+
+  public  UpShelfProduct(String sku,String owner,String shelfNo){
+    this.sku=sku;
+    this.owner=owner;
+    this.shelfNo=shelfNo;
+  }
+
 }

@@ -4,7 +4,9 @@ import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
+import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.model.*;
+import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -47,6 +49,8 @@ public class OrderController {
   @Resource private ImgMapper imgMapper;
 
   @Resource private ProductMapper productMapper;
+
+  @Resource private UpShelfProductMapper upShelfProductMapper;
 
   private OrderService orderService;
 
@@ -415,31 +419,52 @@ public class OrderController {
     return Json.succ().data(manualOrder);
   }
 
-  @GetMapping("/pickup/{regTxt}")
-  public Json search(@PathVariable String regTxt) {
+  @GetMapping("/pickup/{regTxt}") public Json search(@PathVariable String regTxt) {
     List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
+    contentList.forEach(manualOrderContent -> {
+      String sku = manualOrderContent.getSku();
+      String orderNo = manualOrderContent.getOrdno();
+      ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
+      UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(sku, manualOrder.getCreator());
+      manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
+    });
     if (contentList.isEmpty()) {
       return Json.fail().msg("该订单无法拣货");
     }
     return Json.succ().data(contentList);
   }
 
-  @PostMapping("/pickup")
-  public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
+  @PostMapping("/pickup") public Json pickup(@RequestBody List<ManualOrderContent> manualOrderContentList) {
     log.info(manualOrderContentList.toString());
     String ordno;
     if (!manualOrderContentList.isEmpty()) {
       ordno = manualOrderContentList.get(0).getOrdno();
       orderMapper.deleteContent(ordno);
       orderMapper.insertContent(manualOrderContentList);
+      ManualOrder manualOrder = orderMapper.getOrdDetail(ordno);
+      String category = manualOrder.getCategory();
+      if ("1".equals(category)) {
+        String status = manualOrder.getStatus();
+        manualOrder.setStatus(String.valueOf(Integer.parseInt(status) + 1));
+        orderMapper.statusUpdate(manualOrder);
+        // 更新库存
+        manualOrderContentList.forEach(manualOrderContent -> {
+          String sku = manualOrderContent.getSku();
+          int num = Integer.parseInt(manualOrderContent.getNum());
+          String owner = manualOrder.getCreator();
+          String shelfNo = manualOrderContent.getShelfNo();
+          UpShelfProduct upShelfProduct = upShelfProductMapper.selectOne(new UpShelfProduct(sku, owner, shelfNo));
+          upShelfProduct.setNum(String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
+          upShelfProductMapper.updateAllColumnById(upShelfProduct);
+        });
+      }
     } else {
       return Json.fail();
     }
     return Json.succ();
   }
 
-  @GetMapping
-  @RequestMapping("/update/{category}/{ordno}/{status}")
+  @GetMapping("/update/{category}/{ordno}/{status}")
   public Json statusUpdate(
       @PathVariable String category, @PathVariable String ordno, @PathVariable String status) {
     if (ONE.equals(category) && THREE.equals(status)) {
