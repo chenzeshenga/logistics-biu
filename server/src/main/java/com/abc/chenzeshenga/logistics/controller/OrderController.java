@@ -350,7 +350,7 @@ public class OrderController {
 
   @GetMapping("/get/{ordNo}")
   public Json selectByPk(@PathVariable String ordNo) {
-    ManualOrder manualOrder = orderMapper.selectById(ordNo);
+    ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
     List<ManualOrderContent> manualOrderContents = orderMapper.listContent(ordNo);
     if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
       manualOrderContents.forEach(
