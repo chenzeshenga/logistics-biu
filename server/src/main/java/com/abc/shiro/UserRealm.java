@@ -18,14 +18,10 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** 这个类是参照JDBCRealm写的，主要是自定义了如何查询用户信息，如何查询用户的角色和权限，如何校验密码等逻辑 */
 public class UserRealm extends AuthorizingRealm {
-
-  private static final Logger log = LoggerFactory.getLogger(UserRealm.class);
 
   @Autowired private SysUserService userService;
   @Autowired private SysRoleService roleService;
@@ -51,7 +47,6 @@ public class UserRealm extends AuthorizingRealm {
     SysUser user = (SysUser) getAvailablePrincipal(principals);
     Set<AuthVo> roles = user.getRoles();
     Set<AuthVo> perms = user.getPerms();
-    log.info("获取角色权限信息: roles: {}, perms: {}", roles, perms);
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
     info.setRoles(roles.stream().map(AuthVo::getVal).collect(Collectors.toSet()));

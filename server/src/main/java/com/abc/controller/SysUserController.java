@@ -169,7 +169,6 @@ public class SysUserController {
   @PostMapping("/query4Option")
   public Json query4Option(@RequestBody String body) {
     String oper = "query user for option";
-    log.info("{}, body: {}", oper, body);
     JSONObject json = JSON.parseObject(body);
     String nick = json.getString("nick");
     Subject subject = SecurityUtils.getSubject();
@@ -215,7 +214,6 @@ public class SysUserController {
   @GetMapping("/info")
   public Json userInfo() {
     String oper = "query user info";
-    log.info("{}", oper);
     Object userInfo = SecurityUtils.getSubject().getPrincipal();
     return Json.succ(oper, "userInfo", userInfo);
   }
