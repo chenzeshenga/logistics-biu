@@ -18,7 +18,6 @@ import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -79,9 +78,8 @@ public class OrderController {
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.channelCache = channelCache;
-    this.commonController=commonController;
+    this.commonController = commonController;
   }
-
 
   @PostMapping
   @RequestMapping("/detail")
@@ -164,7 +162,8 @@ public class OrderController {
         List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
         if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
           orderMapper.deleteContent(manualOrder.getOrderNo());
-          manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
+          manualOrderContents.forEach(
+              manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
           orderMapper.insertContent(manualOrderContents);
         }
         return Json.succ().data("订单已发货");
@@ -213,17 +212,23 @@ public class OrderController {
   }
 
   @PostMapping("/trackno/list")
-  public Json fillInTrackNoList(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+  public Json fillInTrackNoList(@RequestParam(value = "file") MultipartFile multipartFile)
+      throws IOException {
     List<Object> ordTrackNoMappingList =
-      EasyExcelFactory.read(multipartFile.getInputStream(), new Sheet(1, 1));
-    ordTrackNoMappingList.forEach(data->{
-      if (data instanceof List) {
-        if(((List)data).size()==3){
-          OrdTrackNoMapping ordTrackNoMapping=new OrdTrackNoMapping((String)((List)data).get(0),(String)((List)data).get(1),(String)((List)data).get(2));
-          orderMapper.updateTrackNo(ordTrackNoMapping);
-        }
-      }
-    });
+        EasyExcelFactory.read(multipartFile.getInputStream(), new Sheet(1, 1));
+    ordTrackNoMappingList.forEach(
+        data -> {
+          if (data instanceof List) {
+            if (((List) data).size() == 3) {
+              OrdTrackNoMapping ordTrackNoMapping =
+                  new OrdTrackNoMapping(
+                      (String) ((List) data).get(0),
+                      (String) ((List) data).get(1),
+                      (String) ((List) data).get(2));
+              orderMapper.updateTrackNo(ordTrackNoMapping);
+            }
+          }
+        });
     log.info(ordTrackNoMappingList.toString());
     return Json.succ();
   }
@@ -513,12 +518,13 @@ public class OrderController {
   public Json getCarrierList() {
     List<Label> carrierList = labelMapper.listCarrier();
     List<CommonLabel> commonLabelList = new ArrayList<>(4);
-    carrierList.forEach(carrier -> {
-      CommonLabel commonLabel = new CommonLabel();
-      commonLabel.setLabel(carrier.getValue());
-      commonLabel.setValue(carrier.getKey());
-      commonLabelList.add(commonLabel);
-    });
+    carrierList.forEach(
+        carrier -> {
+          CommonLabel commonLabel = new CommonLabel();
+          commonLabel.setLabel(carrier.getValue());
+          commonLabel.setValue(carrier.getKey());
+          commonLabelList.add(commonLabel);
+        });
     return Json.succ().data(commonLabelList);
   }
 

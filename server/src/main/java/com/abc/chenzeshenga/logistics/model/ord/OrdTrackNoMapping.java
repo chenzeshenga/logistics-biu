@@ -16,5 +16,4 @@ public class OrdTrackNoMapping {
   private String ordNo;
   private String carrierNo;
   private String trackNo;
-
 }
