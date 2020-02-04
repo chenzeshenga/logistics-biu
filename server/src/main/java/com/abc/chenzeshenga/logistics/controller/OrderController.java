@@ -351,24 +351,6 @@ public class OrderController {
   @GetMapping("/get/{ordNo}")
   public Json selectByPk(@PathVariable String ordNo) {
     ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
-    List<ManualOrderContent> manualOrderContents = orderMapper.listContent(ordNo);
-    if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-      manualOrderContents.forEach(
-          manualOrderContent -> {
-            Product product =
-                productMapper.selectByPrimaryKey(manualOrderContent.getSku().split("/")[0]);
-            if (product != null) {
-              String uuid4Img1 = product.getImg1();
-              if (StringUtils.isNotBlank(uuid4Img1)) {
-                manualOrderContent.setImgUrl("http://47.105.107.242:8888/api/v1/img/" + uuid4Img1);
-              }
-            }
-          });
-    }
-    if (manualOrder == null) {
-      return Json.succ().data(new ManualOrder());
-    }
-    manualOrder.setManualOrderContents(manualOrderContents);
     if (StringUtils.isNotEmpty(manualOrder.getFromKenId())
         && StringUtils.isNotEmpty(manualOrder.getToKenId())) {
       List<String> selectedAddress = new ArrayList<>();
@@ -415,7 +397,6 @@ public class OrderController {
       manualOrder.setSelectedAddress(new ArrayList<>());
       manualOrder.setSelectedToAddress(new ArrayList<>());
     }
-
     return Json.succ().data(manualOrder);
   }
 

@@ -657,7 +657,6 @@ export default {
           this.channelMap[channel['value']] = channel;
         }
       });
-      this.initPage();
     },
     initPage() {
       const ordno = this.$route.query.ordno;
@@ -666,10 +665,47 @@ export default {
           url: 'ord/get/' + ordno,
           method: 'get',
         }).then((res) => {
-          this.form = res.data.data;
-          this.selectedChannels.push(res.data.data.channel);
+          const ord = res.data.data;
           this.onUpdate = true;
           this.onCreate = false;
+          if (ord.creator) {
+            this.filterProduct(ord.creator);
+          }
+          if (ord.category) {
+            this.listChannel(ord.category);
+            this.selectedChannels.push(ord.channel);
+          }
+          if (ord.fromKenId) {
+            this.form.fromKenId = ord.fromKenId;
+            this.form.fromCityId = ord.fromCityId;
+            this.getFromCityAddress();
+            if (ord.fromCityId) {
+              this.form.fromCityId = ord.fromCityId;
+              this.form.fromTownId = ord.fromTownId;
+              this.getFromTownAddress();
+              this.form.fromTownId = ord.fromTownId;
+            }
+          }
+          if (ord.toKenId) {
+            this.form.toKenId = ord.toKenId;
+            this.form.toCityId = ord.toCityId;
+            this.getToCityAddress();
+            if (ord.toCityId) {
+              this.form.toCityId = ord.toCityId;
+              this.form.toTownId = ord.toTownId;
+              this.getToTownAddress();
+              this.form.toTownId = ord.toTownId;
+            }
+          }
+          setTimeout(() => {
+            this.form = ord;
+            const contentList = ord.contentList;
+            this.form.contentList = [];
+            for (const content of contentList) {
+              this.content = content;
+              this.add2Cart();
+            }
+          }, 1000);
         });
       }
     },
@@ -867,6 +903,7 @@ export default {
     },
     add2Cart() {
       let tmpContent = {};
+      this.content.num = Number(this.content.num);
       tmpContent = JSON.parse(JSON.stringify(this.content));
       tmpContent['index'] = this.form.contentList.length;
       if (this.selectedProductMap.hasOwnProperty(this.content['sku'])) {
@@ -989,7 +1026,6 @@ export default {
           user: val,
         },
       }).then((res) => {
-        console.log(res);
         this.myProducts = res.data.data;
         if (this.myProducts == null || this.myProducts.length <= 0) {
           this.$message.error('当前用户未配置商品，请重新选择用户或者去为该用户添加商品');
@@ -1007,6 +1043,7 @@ export default {
           const subProduct = myProduct;
           this.productMap[subProduct['sku']] = subProduct;
         }
+        console.log(this.productMap);
       });
     },
     changeUpdateLink(val) {
