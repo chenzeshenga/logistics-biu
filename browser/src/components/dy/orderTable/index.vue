@@ -80,7 +80,7 @@
                 @click="applyTrackNo()"
                 v-if="multiSelection"
             >
-              批量申请单号
+              批量修改单号
             </el-button>
           </el-col>
           <el-col :span="2">
@@ -518,26 +518,27 @@
         :visible.sync="dialogVisibleList"
         width="30%"
     >
-      <div style="margin-bottom: 20px">
-        <span>请选择承运人,系统将自动分配追踪单号</span>
-      </div>
-      <el-form :model="form">
-        <el-col :span="24">
-          <el-form-item label="承运人">
-            <el-cascader
-                :options="carrier"
-                v-model="form.selectedCarrier"
-                @change="handleCarrierChange"
-                filterable
-            ></el-cascader>
-          </el-form-item>
-        </el-col>
-      </el-form>
+      <el-upload
+          :action="actionLink1"
+          with-credentials
+          multiple
+          ref="upload"
+          :auto-upload="false"
+          :on-success="handleSuccess"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+        >选取文件
+        </el-button>
+        <el-button
+            style="margin-left: 10px;"
+            size="small"
+            type="success"
+            @click="submitUpload"
+        >上传到服务器
+        </el-button>
+      </el-upload>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleList = false">取 消</el-button>
-                <el-button type="primary" @click="fillInTrackNoList"
-                >确 定</el-button
-                >
             </span>
     </el-dialog>
     <el-dialog title="提交发货" :visible.sync="dialogVisible2" width="50%">
@@ -846,6 +847,7 @@ export default {
       },
       users: [],
       channels: [],
+      actionLink1: process.env.BASE_API + '/ord/trackno/list',
     };
   },
   props: ['msg'],
@@ -1239,6 +1241,14 @@ export default {
     },
     route2PickUpPage(index, row) {
       this.$router.push({path: '/order-list/mgt/type1/pickup?orderNo=' + row.orderNo});
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    handleSuccess(response, file, fileList) {
+      console.log(response);
+      this.dialogVisibleList = false;
+      this.fetchData();
     },
   },
 };

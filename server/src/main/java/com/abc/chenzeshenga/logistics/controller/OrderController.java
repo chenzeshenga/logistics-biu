@@ -6,15 +6,20 @@ import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.model.*;
+import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author chenzeshenga
@@ -60,17 +66,22 @@ public class OrderController {
 
   private ChannelCache channelCache;
 
+  private CommonController commonController;
+
   @Autowired
   public OrderController(
       OrderService orderService,
       JapanAddressCache japanAddressCache,
       LabelCache labelCache,
-      ChannelCache channelCache) {
+      ChannelCache channelCache,
+      CommonController commonController) {
     this.orderService = orderService;
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.channelCache = channelCache;
+    this.commonController=commonController;
   }
+
 
   @PostMapping
   @RequestMapping("/detail")
@@ -201,24 +212,19 @@ public class OrderController {
     return Json.succ().data(result);
   }
 
-  @PostMapping
-  @RequestMapping("/trackno/list")
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Json fillInTrackNoList(@RequestBody Map ords) {
-    List<String> ordNos = (List<String>) ords.get("ords");
-    String carrierNo = ((String) ords.get("carrierNo")).replace(CARRIER, "");
-    Date curr = new Date();
-    String cname = UserUtils.getUserName();
-    ordNos.forEach(
-        ordNo -> {
-          ManualOrder manualOrder = new ManualOrder();
-          manualOrder.setOrderNo(ordNo);
-          manualOrder.setCarrierNo(carrierNo);
-          manualOrder.setUpdator(cname);
-          manualOrder.setUpdateOn(curr);
-          manualOrder.setTrackNo(String.valueOf(trackNoMapper.generate().getMin()));
-          orderMapper.fillInTrackNo(manualOrder);
-        });
+  @PostMapping("/trackno/list")
+  public Json fillInTrackNoList(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    List<Object> ordTrackNoMappingList =
+      EasyExcelFactory.read(multipartFile.getInputStream(), new Sheet(1, 1));
+    ordTrackNoMappingList.forEach(data->{
+      if (data instanceof List) {
+        if(((List)data).size()==3){
+          OrdTrackNoMapping ordTrackNoMapping=new OrdTrackNoMapping((String)((List)data).get(0),(String)((List)data).get(1),(String)((List)data).get(2));
+          orderMapper.updateTrackNo(ordTrackNoMapping);
+        }
+      }
+    });
+    log.info(ordTrackNoMappingList.toString());
     return Json.succ();
   }
 

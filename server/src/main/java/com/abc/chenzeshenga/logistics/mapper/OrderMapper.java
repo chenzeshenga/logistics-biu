@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.model.Product;
+import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import java.util.Date;
@@ -78,4 +79,6 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
   List<ManualOrder> fetchOrderNo(String creator);
 
   ManualOrder getOrdDetail(String ordNo);
+
+  int updateTrackNo(OrdTrackNoMapping ordTrackNoMapping);
 }
