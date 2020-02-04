@@ -1,9 +1,9 @@
 <template>
-    <div class="login-container">
-        <div class="app-container">
-            <order-table v-bind:msg="this.msg"></order-table>
-        </div>
+  <div class="login-container">
+    <div class="app-container">
+      <order-table v-bind:msg="this.msg"></order-table>
     </div>
+  </div>
 </template>
 
 <script>
@@ -19,6 +19,7 @@ export default {
         status: '2',
         statusTo: '3',
         statusAbandon: '5',
+        buttonVisible2: true,
         buttonVisible6: true,
         buttonVisible3: true,
         buttonVisible4: true,

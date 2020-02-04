@@ -46,7 +46,7 @@ public class OrderController {
 
   @Resource private TrackNoMapper trackNoMapper;
 
-  @Resource private ImgMapper imgMapper;
+  @Resource private LabelMapper labelMapper;
 
   @Resource private ProductMapper productMapper;
 
@@ -124,7 +124,7 @@ public class OrderController {
   public Json update(@RequestBody ManualOrder manualOrder) {
     String ordno = manualOrder.getOrderNo();
     ManualOrder manualOrderOri = orderMapper.selectById(ordno);
-    if ("3".equals(manualOrder.getStatus()) && "1".equals(manualOrderOri.getCategory())) {
+    if ("2".equals(manualOrder.getStatus()) && "1".equals(manualOrderOri.getCategory())) {
       List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
       boolean satisfied = true;
       for (ManualOrderContent manualOrderContent : manualOrderContentList) {
@@ -134,24 +134,32 @@ public class OrderController {
         }
       }
       if (!satisfied) {
-        return Json.fail("update ord fail", "该订单商品未完成拣货操作");
+        setAddress(manualOrder);
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        orderMapper.update(manualOrder);
+        return Json.succ("update ord fail", "该订单商品未完成拣货操作，基本信息已更新");
+      } else {
+        setAddress(manualOrder);
+        Date curr = new Date();
+        manualOrder.setUpdateOn(curr);
+        String cname = UserUtils.getUserName();
+        manualOrder.setUpdator(cname);
+        String status = manualOrder.getStatus();
+        manualOrder.setStatus(String.valueOf(Integer.parseInt(status) + 1));
+        orderMapper.update(manualOrder);
+        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
+        if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
+          orderMapper.deleteContent(manualOrder.getOrderNo());
+          manualOrderContents.forEach(manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
+          orderMapper.insertContent(manualOrderContents);
+        }
+        return Json.succ().data("订单已发货");
       }
     }
-    log.info(manualOrder.toString());
-    setAddress(manualOrder);
-    Date curr = new Date();
-    manualOrder.setUpdateOn(curr);
-    String cname = UserUtils.getUserName();
-    manualOrder.setUpdator(cname);
-    int result = orderMapper.update(manualOrder);
-    List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
-    if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-      orderMapper.deleteContent(manualOrder.getOrderNo());
-      manualOrderContents.forEach(
-          manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
-      orderMapper.insertContent(manualOrderContents);
-    }
-    return Json.succ().data(result);
+    return Json.fail("update", "非可更新状态");
   }
 
   @PostMapping("/updateOrd")
@@ -429,9 +437,6 @@ public class OrderController {
       ManualOrder manualOrder = orderMapper.getOrdDetail(ordno);
       String category = manualOrder.getCategory();
       if ("1".equals(category)) {
-        String status = manualOrder.getStatus();
-        manualOrder.setStatus(String.valueOf(Integer.parseInt(status) + 1));
-        orderMapper.statusUpdate(manualOrder);
         // 更新库存
         manualOrderContentList.forEach(
             manualOrderContent -> {
@@ -498,18 +503,16 @@ public class OrderController {
     return !satisfied;
   }
 
-  @GetMapping
-  @RequestMapping("/carrier/distinct")
+  @GetMapping("/carrier/distinct")
   public Json getCarrierList() {
-    List<Label> carrierList = labelCache.getLabelList(CARRIER);
+    List<Label> carrierList = labelMapper.listCarrier();
     List<CommonLabel> commonLabelList = new ArrayList<>(4);
-    carrierList.forEach(
-        carrier -> {
-          CommonLabel commonLabel = new CommonLabel();
-          commonLabel.setLabel(carrier.getValue());
-          commonLabel.setValue(carrier.getKey());
-          commonLabelList.add(commonLabel);
-        });
+    carrierList.forEach(carrier -> {
+      CommonLabel commonLabel = new CommonLabel();
+      commonLabel.setLabel(carrier.getValue());
+      commonLabel.setValue(carrier.getKey());
+      commonLabelList.add(commonLabel);
+    });
     return Json.succ().data(commonLabelList);
   }
 

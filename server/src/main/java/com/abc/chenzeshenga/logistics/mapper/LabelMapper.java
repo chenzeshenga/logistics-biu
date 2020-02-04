@@ -16,4 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LabelMapper {
 
   List<Label> list();
+
+  List<Label> listCarrier();
 }
