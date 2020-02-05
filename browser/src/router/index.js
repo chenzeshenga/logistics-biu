@@ -502,29 +502,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status3',
             meta: {
               perm: 'm:order3:list:3',
-              title: '国内已发货',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
-          {
-            path: 'status8',
-            component: _import('order/type3/list/status8'),
-            name: 'order-list-mgt-type3-status8',
-            meta: {
-              perm: 'm:order3:list:4',
-              title: '日本待发货',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
-          {
-            path: 'status9',
-            component: _import('order/type3/list/status9'),
-            name: 'order-list-mgt-type3-status9',
-            meta: {
-              perm: 'm:order3:list:5',
-              title: '日本已发货',
+              title: '日仓收货',
               icon: 'chart',
               noCache: true,
             },
@@ -535,7 +513,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status4',
             meta: {
               perm: 'm:order3:list:6',
-              title: '问题件',
+              title: '日仓发货',
               icon: 'chart',
               noCache: true,
             },
@@ -546,7 +524,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status5',
             meta: {
               perm: 'm:order3:list:7',
-              title: '已废弃',
+              title: '已完成',
               icon: 'chart',
               noCache: true,
             },
@@ -558,6 +536,17 @@ export const asyncRouterMap = [
             meta: {
               perm: 'm:order3:list:8',
               title: '暂存',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status8',
+            component: _import('order/type3/list/status8'),
+            name: 'order-list-mgt-type3-status8',
+            meta: {
+              perm: 'm:order3:list:4',
+              title: '异常',
               icon: 'chart',
               noCache: true,
             },
