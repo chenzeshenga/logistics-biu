@@ -16,18 +16,13 @@ export default {
     return {
       msg: {
         status: '9',
-        buttonVisible1: false,
+        buttonVisible1: true,
         buttonVisible2: true,
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,
         buttonVisible6: true,
         buttonVisible7: true,
-        buttonVisible8: false,
-        buttonVisible9: false,
-        buttonVisibleA: false,
-        buttonVisibleB: false,
-        buttonVisibleC: false,
       },
     };
   },

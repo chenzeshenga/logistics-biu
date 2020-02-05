@@ -518,25 +518,30 @@
         :visible.sync="dialogVisibleList"
         width="30%"
     >
-      <el-upload
-          :action="actionLink1"
-          with-credentials
-          multiple
-          ref="upload"
-          :auto-upload="false"
-          :on-success="handleSuccess"
-      >
-        <el-button slot="trigger" size="small" type="primary"
-        >选取文件
-        </el-button>
-        <el-button
-            style="margin-left: 10px;"
-            size="small"
-            type="success"
-            @click="submitUpload"
-        >上传到服务器
-        </el-button>
-      </el-upload>
+      <el-col :span="18">
+        <el-upload
+            :action="actionLink1"
+            with-credentials
+            multiple
+            ref="upload"
+            :auto-upload="false"
+            :on-success="handleSuccess"
+        >
+          <el-button slot="trigger" size="small" type="primary"
+          >选取文件
+          </el-button>
+          <el-button
+              style="margin-left: 10px;"
+              size="small"
+              type="success"
+              @click="submitUpload"
+          >上传
+          </el-button>
+        </el-upload>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="info" @click="downloadTemplate">下载模板</el-button>
+      </el-col>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleList = false">取 消</el-button>
             </span>
@@ -1249,6 +1254,14 @@ export default {
       console.log(response);
       this.dialogVisibleList = false;
       this.fetchData();
+    },
+    downloadTemplate() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/template/file/ORD_TRACKNO_MAPPING';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
   },
 };

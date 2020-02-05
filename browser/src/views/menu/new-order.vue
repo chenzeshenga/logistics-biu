@@ -56,7 +56,7 @@
                   @change="changeByCategory"
                   value="">
                 <el-option label="海外仓代发订单" value="1"/>
-                <el-option label="特色小包" value="2"/>
+                <el-option label="单票单清" value="2"/>
                 <el-option label="虚拟海外仓" value="3"/>
               </el-select>
             </el-form-item>
@@ -113,11 +113,9 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item style="color: #606266;font-size: 14px;"
-        >发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)]
-          发件人 [东岳物流]
-        </el-form-item>
-        <el-form-item label="发件人信息">
+        <el-alert type="info" title="普通订单发件人信息可不填，默认为 发件地址 [日本岡山仓(okayama)] 发件人 [东岳物流], 若为单票单清业务，请填写发件人相关信息"
+                  :closable="false" center show-icon></el-alert>
+        <el-form-item label="发件人信息" style="margin-top: 1%">
           <el-col :span="8">
             <el-form-item label="发件人姓名">
               <el-input
@@ -672,6 +670,7 @@ export default {
             this.filterProduct(ord.creator);
           }
           if (ord.category) {
+            this.skuFlag = (ord.category !== '1');
             this.listChannel(ord.category);
             this.selectedChannels.push(ord.channel);
           }
@@ -1043,7 +1042,6 @@ export default {
           const subProduct = myProduct;
           this.productMap[subProduct['sku']] = subProduct;
         }
-        console.log(this.productMap);
       });
     },
     changeUpdateLink(val) {

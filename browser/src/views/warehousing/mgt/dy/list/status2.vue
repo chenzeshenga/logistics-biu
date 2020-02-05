@@ -7,24 +7,25 @@
 </template>
 
 <script>
-import WarehousingTable from "../../../../../components/dy/WarehousingTable/index";
+import WarehousingTable from '../../../../../components/dy/WarehousingTable/index';
 
 export default {
-  name: "warehousing-mgt-dy-list-status2",
-  components: { WarehousingTable },
+  name: 'warehousing-mgt-dy-list-status2',
+  components: {WarehousingTable},
   data() {
     return {
       msg: {
-        status: "2",
-        category: "1",
+        status: '2',
+        category: '1',
+        buttonVisible1: true,
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,
         buttonVisible6: true,
         buttonVisible7: true,
-        buttonVisible8: true
-      }
+        buttonVisible8: true,
+      },
     };
-  }
+  },
 };
 </script>
