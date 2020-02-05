@@ -1168,7 +1168,7 @@ export default {
       });
     },
     findWhere() {
-      this.$message.info('物流查询，功能待开发');
+      this.$message.info('物流查询');
     },
     triggerVolumeAndWeight(index, row) {
       this.dialogVisible2 = true;
