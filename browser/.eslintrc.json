@@ -20,6 +20,7 @@
   ],
   "rules": {
     "linebreak-style": "off",
-    "max-len": "off"
+    "max-len": "off",
+    "guard-for-in": "off"
   }
 }

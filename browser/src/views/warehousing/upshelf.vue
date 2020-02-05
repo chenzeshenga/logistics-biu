@@ -119,20 +119,21 @@
 </template>
 
 <script>
-import request from "../../utils/service";
+import request from '../../utils/service';
 
 export default {
-  name: "upshelf",
+  name: 'upshelf',
   data() {
     return {
       warehousing: {},
       products: [],
       currContent: {},
       warehousingContentList: [],
-      shelves: []
+      shelves: [],
+      currShelvesMapping: {},
     };
   },
-  inject: ["reload"],
+  inject: ['reload'],
   created() {
     this.initData();
     this.fetchShelves();
@@ -140,7 +141,7 @@ export default {
   watch: {
     $route() {
       this.initData();
-    }
+    },
   },
   methods: {
     initData() {
@@ -148,13 +149,12 @@ export default {
       if (warehousingNo !== undefined && warehousingNo.length > 0) {
         request({
           url:
-            "/warehousing/fetchByWarehousingNo?warehousingNo=" + warehousingNo,
-          method: "get"
-        }).then(ret => {
+            '/warehousing/fetchByWarehousingNo?warehousingNo=' + warehousingNo,
+          method: 'get',
+        }).then((ret) => {
           const retWarehousing = ret.data.warehousing;
           this.warehousing = {
             warehousingNo: warehousingNo,
-            target: retWarehousing.target,
             fromAddress: retWarehousing.fromAddress,
             target: retWarehousing.target,
             method: retWarehousing.method,
@@ -168,13 +168,13 @@ export default {
             insurance: retWarehousing.insurance,
             insuranceNum: retWarehousing.insuranceNum,
             estimatedDate: retWarehousing.estimatedDate,
-            warehousingContentList: retWarehousing.warehousingContentList
+            warehousingContentList: retWarehousing.warehousingContentList,
           };
           const warehousingContentList = retWarehousing.warehousingContentList;
           for (const content of warehousingContentList) {
             const product = {
               value: content.sku,
-              label: content.name
+              label: content.name,
             };
             this.products.push(product);
           }
@@ -191,14 +191,25 @@ export default {
       }
     },
     add2Cart() {
-      this.warehousingContentList.push(this.currContent);
+      const key = this.currContent.sku + '-' + this.currContent.shelfNo;
+      if (this.currShelvesMapping.hasOwnProperty(key)) {
+        const value = this.currShelvesMapping[key];
+        this.$message.info('相同sku与相同货架号的上架内容将合并');
+        value['num'] = this.currContent.num + value['num'];
+      } else {
+        this.currShelvesMapping[key] = this.currContent;
+      }
+      this.warehousingContentList = [];
+      for (const k in this.currShelvesMapping) {
+        this.warehousingContentList.push(this.currShelvesMapping[k]);
+      }
       this.currContent = {};
     },
     fetchShelves() {
       request({
-        url: "/shelf/list/enable",
-        method: "get"
-      }).then(res => {
+        url: '/shelf/list/enable',
+        method: 'get',
+      }).then((res) => {
         this.shelves = res.data.data;
       });
     },
@@ -208,14 +219,14 @@ export default {
     upshelf2backend() {
       request({
         url:
-          "/product/shelf/add?warehousingNo=" + this.warehousing.warehousingNo,
-        method: "post",
-        data: this.warehousingContentList
-      }).then(ret => {
-        this.$router.push({ path: "/warehousing/mgt/other/status4" });
+          '/product/shelf/add?warehousingNo=' + this.warehousing.warehousingNo,
+        method: 'post',
+        data: this.warehousingContentList,
+      }).then((ret) => {
+        this.$router.push({path: '/warehousing/mgt/other/status4'});
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

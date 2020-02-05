@@ -728,20 +728,20 @@
 </template>
 
 <script>
-import request from "../../../utils/service";
-import CustomSyncfusionBarcode from "../../@syncfusion/custom-syncfusion-barcode";
-import CustomSyncfusionBarcodeDetail from "../../@syncfusion/custom-syncfusion-barcode-detail";
+import request from '../../../utils/service';
+import CustomSyncfusionBarcode from '../../@syncfusion/custom-syncfusion-barcode';
+import CustomSyncfusionBarcodeDetail from '../../@syncfusion/custom-syncfusion-barcode-detail';
 
 export default {
-  name: "warehousingTable",
-  components: { CustomSyncfusionBarcode, CustomSyncfusionBarcodeDetail },
+  name: 'warehousingTable',
+  components: {CustomSyncfusionBarcode, CustomSyncfusionBarcodeDetail},
   data() {
     return {
-      width: "200px",
-      height: "150px",
-      mode: "SVG",
-      type: "Code128",
-      value: "Code128",
+      width: '200px',
+      height: '150px',
+      mode: 'SVG',
+      type: 'Code128',
+      value: 'Code128',
       msgData: {
         status: this.msg.status,
         category: this.msg.category,
@@ -761,14 +761,14 @@ export default {
         buttonVisible11: this.msg.buttonVisible11 === true,
         buttonVisible12: this.msg.buttonVisible12 === true,
         buttonVisible13: this.msg.buttonVisible13 === true,
-        buttonVisible14: this.msg.buttonVisible14 === true
+        buttonVisible14: this.msg.buttonVisible14 === true,
       },
       // page data
       tablePage: {
         current: 1,
         pages: null,
         size: null,
-        total: null
+        total: null,
       },
       tableLoading: false,
       tableData: [],
@@ -782,32 +782,32 @@ export default {
       dialogVisible4Sub: false,
       dialogVisible4Sub2: false,
       dialog4: {
-        radio: "3*8",
-        barcodeLength2: [{ item: 1 }, { item: 2 }],
-        barcodeLength3: [{ item: 1 }, { item: 2 }, { item: 3 }],
-        barcodeLength4: [{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }],
+        radio: '3*8',
+        barcodeLength2: [{item: 1}, {item: 2}],
+        barcodeLength3: [{item: 1}, {item: 2}, {item: 3}],
+        barcodeLength4: [{item: 1}, {item: 2}, {item: 3}, {item: 4}],
         barcodeLength8: [
-          { item: 1 },
-          { item: 2 },
-          { item: 3 },
-          { item: 4 },
-          { item: 5 },
-          { item: 6 },
-          { item: 7 },
-          { item: 8 }
+          {item: 1},
+          {item: 2},
+          {item: 3},
+          {item: 4},
+          {item: 5},
+          {item: 6},
+          {item: 7},
+          {item: 8},
         ],
         barcodeLength10: [
-          { item: 1 },
-          { item: 2 },
-          { item: 3 },
-          { item: 4 },
-          { item: 5 },
-          { item: 6 },
-          { item: 7 },
-          { item: 8 },
-          { item: 9 },
-          { item: 10 }
-        ]
+          {item: 1},
+          {item: 2},
+          {item: 3},
+          {item: 4},
+          {item: 5},
+          {item: 6},
+          {item: 7},
+          {item: 8},
+          {item: 9},
+          {item: 10},
+        ],
       },
       dialogVisible5: false,
       dialogVisible6: false,
@@ -816,89 +816,89 @@ export default {
       pickerOptions2: {
         shortcuts: [
           {
-            text: "最近一周",
+            text: '最近一周',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            }
+              picker.$emit('pick', [start, end]);
+            },
           },
           {
-            text: "最近一个月",
+            text: '最近一个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
+              picker.$emit('pick', [start, end]);
+            },
           },
           {
-            text: "最近三个月",
+            text: '最近三个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
+              picker.$emit('pick', [start, end]);
+            },
+          },
+        ],
       },
       users: [],
       channels: [],
       search: {
-        warehousingNo: "",
-        creator: "",
-        channelCode: ""
+        warehousingNo: '',
+        creator: '',
+        channelCode: '',
       },
       dialog: {
-        carrier: "",
-        trackNo: "",
-        warehousingNo: ""
+        carrier: '',
+        trackNo: '',
+        warehousingNo: '',
       },
       print: {},
       profile: {
-        chineseName: "",
-        englishName: "",
-        chineseAddr: "",
-        englishAddr: "",
-        zipCode: "",
-        contactEnglishName: "",
-        contactChineseName: "",
-        phone: "",
-        deliverDate: "",
-        trackNo: "",
-        warehousingNo: ""
+        chineseName: '',
+        englishName: '',
+        chineseAddr: '',
+        englishAddr: '',
+        zipCode: '',
+        contactEnglishName: '',
+        contactChineseName: '',
+        phone: '',
+        deliverDate: '',
+        trackNo: '',
+        warehousingNo: '',
       },
       dialogForm3: {},
-      uploadLink: process.env.BASE_API + "/warehousing/userFile",
+      uploadLink: process.env.BASE_API + '/warehousing/userFile',
       barcode1: {},
       barcode2: {},
       barcode3: {},
       dialogForm5: {
-        warehousingNo: "",
+        warehousingNo: '',
         warehousingContentList: [],
-        warehousing: {}
+        warehousing: {},
       },
       dialogForm6: {
-        warehousingNo: "",
-        warehousingContentList: "",
-        warehousing: "",
-        skuFromScanner: ""
+        warehousingNo: '',
+        warehousingContentList: '',
+        warehousing: '',
+        skuFromScanner: '',
       },
       dialogForm7: {
-        warehousingNo: "",
-        warehousingContentList: "",
-        warehousing: "",
-        skuFromScanner: ""
+        warehousingNo: '',
+        warehousingContentList: '',
+        warehousing: '',
+        skuFromScanner: '',
       },
       dialogForm8: {},
       options: [],
       upshelfNum: 0,
-      shelfNo: ""
+      shelfNo: '',
     };
   },
-  props: ["msg"],
+  props: ['msg'],
   created() {
     this.fetchData();
     this.initUserList();
@@ -908,13 +908,13 @@ export default {
       this.tableLoading = true;
       request({
         url:
-          "warehousing/list/" +
+          'warehousing/list/' +
           this.msgData.category +
-          "/" +
+          '/' +
           this.msgData.status,
-        method: "post",
-        data: this.tablePage
-      }).then(res => {
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
         const tableRecords = res.data.page.records;
         for (let i = 0; i < tableRecords.length; i++) {
           const record = tableRecords[i];
@@ -931,79 +931,79 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path:
-          "/new-warehousing/new-warehousing?warehousingNo=" + row.warehousingNo
+          '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo,
       });
     },
     statusUpdate(index, row, statusUpdateTo) {
-      this.$confirm("您确定要提交该订单？", "提示", confirm)
-        .then(() => {
-          request({
-            url: "warehousing/status",
-            method: "post",
-            data: {
-              to: statusUpdateTo,
-              warehousingNo: row.warehousingNo
-            }
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("提交成功");
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: statusUpdateTo,
+                warehousingNo: row.warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消提交");
-        });
     },
     route2NewWarehousing() {
       this.$router.push({
-        path: "/new-warehousing/new-warehousing"
+        path: '/new-warehousing/new-warehousing',
       });
     },
     hold(index, row) {
       const warehousingNo = row.warehousingNo;
       this.$confirm(
-        "您确定要暂存该入库单？（该订单可在暂存页面查看）",
-        "提示",
-        confirm
+          '您确定要暂存该入库单？（该订单可在暂存页面查看）',
+          '提示',
+          confirm
       )
-        .then(() => {
-          request({
-            url: "warehousing/status",
-            method: "post",
-            data: {
-              to: "8",
-              warehousingNo: warehousingNo
-            }
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("暂存成功");
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: '8',
+                warehousingNo: warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('暂存成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消提交");
-        });
     },
     handleDelete(index, row) {
-      this.$confirm("您确定要删除该入库单？(该订单将无法恢复)", "提示", confirm)
-        .then(() => {
-          request({
-            url: "warehousing/drop?warehousingNo=" + row.warehousingNo,
-            method: "get"
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("删除成功");
+      this.$confirm('您确定要删除该入库单？(该订单将无法恢复)', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/drop?warehousingNo=' + row.warehousingNo,
+              method: 'get',
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('删除成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消");
-        });
     },
     handlePrint(index, row) {
       this.profile.trackNo = row.trackNo;
       this.profile.warehousingNo = row.warehousingNo;
       request({
-        url: "/profile/init",
-        method: "get"
-      }).then(res => {
+        url: '/profile/init',
+        method: 'get',
+      }).then((res) => {
         const profile = res.data.data;
         this.profile.chineseName = profile.chineseName;
         this.profile.englishName = profile.englishName;
@@ -1026,22 +1026,22 @@ export default {
     },
     route2ChannelPage(index, row) {
       this.$router.push({
-        path: "/system/channel?filter=" + row.channel
+        path: '/system/channel?filter=' + row.channel,
       });
     },
     exportExcel() {
-      const link = document.createElement("a");
-      link.style.display = "none";
+      const link = document.createElement('a');
+      link.style.display = 'none';
       if (this.search.creator.length > 0) {
         link.href =
           process.env.BASE_API +
-          "/warehousing/excel/1?method=东岳头程&creator=" +
+          '/warehousing/excel/1?method=东岳头程&creator=' +
           this.search.creator;
       } else {
         link.href =
-          process.env.BASE_API + "/warehousing/excel/1?method=东岳头程";
+          process.env.BASE_API + '/warehousing/excel/1?method=东岳头程';
       }
-      link.target = "_blank";
+      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
     },
@@ -1053,9 +1053,9 @@ export default {
     },
     fillInTrackNo() {
       request({
-        url: "warehousing/trackno",
-        method: "post",
-        data: this.dialog
+        url: 'warehousing/trackno',
+        method: 'post',
+        data: this.dialog,
       }).then(() => {
         this.dialogVisible1 = false;
         this.fetchData();
@@ -1063,15 +1063,15 @@ export default {
     },
     printAndSave() {
       request({
-        url: "/warehousing/printCustomsDeclaration",
-        method: "post",
-        data: this.profile
-      }).then(res => {
+        url: '/warehousing/printCustomsDeclaration',
+        method: 'post',
+        data: this.profile,
+      }).then((res) => {
         const uuid = res.data.data;
-        const link = document.createElement("a");
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
         this.dialogVisible2 = false;
@@ -1079,50 +1079,50 @@ export default {
     },
     handleUploadFile(index, row) {
       this.dialogVisible3 = true;
-      this.uploadLink = this.uploadLink + "?warehousingNo=" + row.warehousingNo;
+      this.uploadLink = this.uploadLink + '?warehousingNo=' + row.warehousingNo;
     },
     submitUpload() {
       this.$refs.upload.submit();
-      this.$message.success("上传成功");
+      this.$message.success('上传成功');
     },
     handleError(err) {
-      this.$message.error(JSON.parse(err.message)["message"]);
+      this.$message.error(JSON.parse(err.message)['message']);
     },
     handleSystemFile(index, row) {
-      if (row["systemFileUuid"] == null) {
-        this.$message.warning("报关单未生成，请点击获取报关单生成报关单");
+      if (row['systemFileUuid'] == null) {
+        this.$message.warning('报关单未生成，请点击获取报关单生成报关单');
       } else {
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         const uuid = row.systemFileUuid;
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
       }
     },
     handleUserWarehousingFile(index, row) {
       if (row.userWarehousingFileUuid == null) {
-        this.$message.warning("报关单未上传，请点击上传报关单进行上传");
+        this.$message.warning('报关单未上传，请点击上传报关单进行上传');
       } else {
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         const uuid = row.userWarehousingFileUuid;
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
       }
     },
     initUserList() {
       request({
-        url: "/sys_user/query4Option",
-        method: "post",
+        url: '/sys_user/query4Option',
+        method: 'post',
         data: {
           current: null,
-          size: "all"
-        }
-      }).then(res => {
+          size: 'all',
+        },
+      }).then((res) => {
         this.users = res.data.page.records;
       });
     },
@@ -1132,19 +1132,19 @@ export default {
       this.barcode1 = {
         value: row.warehousingNo,
         width: 185,
-        height: 93
+        height: 93,
       };
       this.barcode2 = {
         value: row.warehousingNo,
         width: 130,
         height: 72,
-        textSize: 13
+        textSize: 13,
       };
       this.barcode3 = {
         value: row.warehousingNo,
         width: 130,
         height: 72,
-        textSize: 13
+        textSize: 13,
       };
     },
     handleDialogVisible5(index, row) {
@@ -1161,34 +1161,34 @@ export default {
     },
     handleDialogVisible7(index, row) {
       this.$router.push({
-        path: "/warehousing/upshelf/upshelf?warehousingNo=" + row.warehousingNo
+        path: '/warehousing/upshelf/upshelf?warehousingNo=' + row.warehousingNo,
       });
     },
     fetchShelves() {
       request({
-        url: "/shelf/list/enable",
-        method: "get"
-      }).then(res => {
+        url: '/shelf/list/enable',
+        method: 'get',
+      }).then((res) => {
         this.options = res.data.data;
       });
     },
     up2shelf() {
-      this.$message.success("上架成功");
+      this.$message.success('上架成功');
       this.dialogVisible7 = false;
     },
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
-      this.dialogForm5.warehousing.status = "3";
+      this.dialogForm5.warehousing.status = '3';
       const method = this.dialogForm5.warehousing.method;
-      if ("东岳头程" === method) {
-        this.dialogForm5.warehousing.status = "5";
+      if ('东岳头程' === method) {
+        this.dialogForm5.warehousing.status = '5';
       }
       request({
-        url: "/warehousing/update",
-        method: "post",
-        data: this.dialogForm5.warehousing
+        url: '/warehousing/update',
+        method: 'post',
+        data: this.dialogForm5.warehousing,
       }).then(() => {
-        this.$message.success("预审完成，准备上架清点");
+        this.$message.success('预审完成，准备上架清点');
         this.dialogVisible5 = false;
         this.fetchData();
       });
@@ -1198,8 +1198,8 @@ export default {
       for (const i in this.dialogForm6.warehousingContentList) {
         if (this.dialogForm6.warehousingContentList.hasOwnProperty(i)) {
           const element = this.dialogForm6.warehousingContentList[i];
-          if (element["actual"] != element["totalNum"]) {
-            this.$message.warning(element["sku"] + "到货数量与预期不符");
+          if (element['actual'] != element['totalNum']) {
+            this.$message.warning(element['sku'] + '到货数量与预期不符');
             flag = false;
             break;
           }
@@ -1207,35 +1207,34 @@ export default {
       }
       if (flag) {
         this.dialogForm6.warehousing.warehousingContentList = this.dialogForm6.warehousingContentList;
-        this.dialogForm6.warehousing.status = "4";
+        this.dialogForm6.warehousing.status = '4';
         const method = this.dialogForm6.warehousing.method;
-        debugger;
-        if ("东岳头程" === method) {
-          this.dialogForm6.warehousing.status = "6";
+        if ('东岳头程' === method) {
+          this.dialogForm6.warehousing.status = '6';
         }
         request({
-          url: "/warehousing/update",
-          method: "post",
-          data: this.dialogForm6.warehousing
+          url: '/warehousing/update',
+          method: 'post',
+          data: this.dialogForm6.warehousing,
         }).then(() => {
           this.dialogVisible6 = false;
-          this.$message.success("上架清点完成");
+          this.$message.success('上架清点完成');
           this.fetchData();
         });
       }
     },
     getBarcode() {
-      if (this.dialog4["radio"] === "3*8") {
+      if (this.dialog4['radio'] === '3*8') {
         this.dialogVisible4Main = false;
         this.dialogVisible4Sub = false;
         this.dialogVisible4Sub2 = false;
         this.dialogVisible4 = true;
-      } else if (this.dialog4["radio"] === "4*10") {
+      } else if (this.dialog4['radio'] === '4*10') {
         this.dialogVisible4 = false;
         this.dialogVisible4Main = false;
         this.dialogVisible4Sub2 = false;
         this.dialogVisible4Sub = true;
-      } else if (this.dialog4["radio"] === "2*2") {
+      } else if (this.dialog4['radio'] === '2*2') {
         this.dialogVisible4 = false;
         this.dialogVisible4Main = false;
         this.dialogVisible4Sub = false;
@@ -1243,14 +1242,14 @@ export default {
       }
     },
     customBarcodeSize(val) {
-      if (val === "3*8") {
+      if (val === '3*8') {
         this.dialogVisible4 = false;
         this.dialogVisible4Sub = true;
-        this.dialog4["radio"] = "3*8";
-      } else if (val === "4*10") {
+        this.dialog4['radio'] = '3*8';
+      } else if (val === '4*10') {
         this.dialogVisible4 = true;
         this.dialogVisible4Sub = false;
-        this.dialog4["radio"] = "4*10";
+        this.dialog4['radio'] = '4*10';
       }
     },
     searchWarehousingContentList() {
@@ -1259,14 +1258,14 @@ export default {
       for (const i in contentList) {
         if (contentList.hasOwnProperty(i)) {
           const element = contentList[i];
-          if (element["sku"] === sku) {
+          if (element['sku'] === sku) {
             if (
-              element.hasOwnProperty("actualNum") &&
-              element["actualNum"] >= 0
+              element.hasOwnProperty('actualNum') &&
+              element['actualNum'] >= 0
             ) {
-              element["actualNum"] += 1;
+              element['actualNum'] += 1;
             } else {
-              element["actualNum"] = 1;
+              element['actualNum'] = 1;
             }
             break;
           }
@@ -1275,19 +1274,19 @@ export default {
     },
     addUpShelf(warehousingContent) {
       if (this.shelfNo.length <= 0 || this.upshelfNum <= 0) {
-        this.$message.warning("请选择货架和上架数量");
+        this.$message.warning('请选择货架和上架数量');
         return;
       }
-      let upshelfData = warehousingContent["upshelfData"];
+      let upshelfData = warehousingContent['upshelfData'];
       if (upshelfData === undefined || upshelfData.length <= 0) {
         upshelfData = [];
       }
       upshelfData.push({
         shelfNo: this.shelfNo,
         upshelfNum: this.upshelfNum,
-        sku: warehousingContent.sku
+        sku: warehousingContent.sku,
       });
-      warehousingContent["upshelfData"] = upshelfData;
+      warehousingContent['upshelfData'] = upshelfData;
       console.log(warehousingContent);
       console.log(this.dialogForm7.warehousingContentList);
     },
@@ -1299,15 +1298,15 @@ export default {
       this.dialogVisible8 = true;
       this.dialogForm8.ori = row;
       const warehousingContentList = row.warehousingContentList;
-      let distinctSeqList = new Set();
+      const distinctSeqList = new Set();
       for (const warehousingContent of warehousingContentList) {
         distinctSeqList.add(warehousingContent.boxSeq);
       }
       this.dialogForm8.boxList = [];
       for (const seq of distinctSeqList) {
-        let tmp = {
+        const tmp = {
           boxSeq: seq,
-          warehousingNo: row.warehousingNo
+          warehousingNo: row.warehousingNo,
         };
         this.dialogForm8.boxList.push(tmp);
       }
@@ -1315,12 +1314,12 @@ export default {
     headCheck() {
       const warehousingNo = this.dialogForm8.ori.warehousingNo;
       request({
-        url: "/warehousing/content/headCheck?warehousingNo=" + warehousingNo,
-        method: "post",
-        data: this.dialogForm8.boxList
+        url: '/warehousing/content/headCheck?warehousingNo=' + warehousingNo,
+        method: 'post',
+        data: this.dialogForm8.boxList,
       }).then(() => {
         this.$message.success(
-          "入库单" + warehousingNo + "头程检查结束，等待发货"
+            '入库单' + warehousingNo + '头程检查结束，等待发货'
         );
         this.dialogVisible8 = false;
         this.fetchData();
@@ -1334,20 +1333,20 @@ export default {
     },
     submitTrackNo(statusUpdateTo) {
       request({
-        url: "warehousing/status",
-        method: "post",
+        url: 'warehousing/status',
+        method: 'post',
         data: {
           to: statusUpdateTo,
-          warehousingNo: this.dialog.warehousingNo
-        }
+          warehousingNo: this.dialog.warehousingNo,
+        },
       }).then(() => {
         this.fetchData();
-        this.$message.success("更新成功");
+        this.$message.success('更新成功');
         this.dialogVisible1Sub = false;
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
