@@ -398,18 +398,24 @@ public class CommonController {
     userFileRecord.setFileUuid(uuid);
     userFileRecordMapper.insert(userFileRecord);
     InputStream inputStream = multipartFile.getInputStream();
-    List<Object> productList = EasyExcelFactory.read(inputStream, new Sheet(1, 1, Product.class));
-    for (Object o : productList) {
-      Product product = (Product) o;
-      product.setCategory(switchFromCategoryName(product.getCategoryName()));
-      product.setDySku(SkuUtil.generateDySku());
-      product.setStatus("0");
-      product.setCreatedBy(username);
-      product.setUpdateBy(username);
-      Date curr = new Date();
-      product.setUpdateOn(curr);
-      product.setCreateOn(curr);
-      productMapper.insertSelective(product);
+    List<Object> productList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, Product.class));
+    //  ignore the first item since it's the Excel head
+    for (int i = 1; i < productList.size(); i++) {
+      Product product = (Product)productList.get(i);
+      try {
+        product.setCategory(switchFromCategoryName(product.getCategoryName()));
+        product.setDySku(SkuUtil.generateDySku());
+        product.setStatus("0");
+        product.setCreatedBy(username);
+        product.setUpdateBy(username);
+        Date curr = new Date();
+        product.setUpdateOn(curr);
+        product.setCreateOn(curr);
+        productMapper.insertSelective(product);
+      } catch (Exception e) {
+        log.error("error data {}", product);
+        log.error("error stack info", e);
+      }
     }
     return Json.succ();
   }

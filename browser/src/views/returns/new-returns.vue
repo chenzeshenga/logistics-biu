@@ -1,302 +1,302 @@
 <template>
-    <div class="login-container">
-        <div class="app-container">
-            <el-form :ref="form" :model="form" label-width="120px">
-                <el-form-item label="退货单所属用户" v-if="adminRole">
-                    <el-col :span="12">
-                        <el-form-item label="所属用户">
-                            <el-tooltip content="所属用户" placement="top">
-                                <el-select
-                                    filterable
-                                    clearable
-                                    v-model="form.creator"
-                                    placeholder="请选择所属用户"
-                                >
-                                    <el-option
-                                        v-for="creator in users"
-                                        :key="creator.uname"
-                                        :label="creator.nick"
-                                        :value="creator.uname"
-                                    ></el-option>
-                                </el-select>
-                            </el-tooltip>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="退货单号">
-                    <el-col :span="12">
-                        <el-form-item label="退货单号">
-                            <el-input
-                                placeholder="请输入或点击按钮获取退货单号"
-                                v-model="form.returnNo"
-                                @input="trimInput"
-                            >
-                                <el-button
-                                    slot="append"
-                                    v-bind:disabled="onUpdate"
-                                    @click="getOrdNo"
-                                    >获取单号
-                                </el-button>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="订单号">
-                    <el-col :span="12">
-                        <el-form-item label="是否对应订单号">
-                            <el-switch
-                                v-model="form.withoutOrderNoFlag"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949"
-                            >
-                            </el-switch>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" v-if="form.withoutOrderNoFlag">
-                        <el-form-item label="">
-                            <el-input
-                                placeholder="请输入订单号"
-                                v-model="form.orderNo"
-                                @change="initOrderContent"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-col :span="12">
-                        <el-form-item label="承运人">
-                            <el-input
-                                placeholder="请输入退货订单承运人"
-                                v-model="form.carrier"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="承运人追踪单号">
-                            <el-input
-                                placeholder="请输入退货订单追踪单号"
-                                v-model="form.trackNo"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item style="color: #606266;font-size: 14px;"
-                    >收件人信息可不填，默认为 收件地址 [日本岡山仓(okayama)]
-                    收件人 [东岳物流]
-                </el-form-item>
-                <el-form-item label="收件人信息">
-                    <el-col :span="8">
-                        <el-form-item label="收件人姓名">
-                            <el-input
-                                v-model="form.toName"
-                                placeholder="收件人姓名"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="收件人联系方式">
-                            <el-input
-                                v-model="form.toContact"
-                                placeholder="收件人联系方式"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="收件人邮编">
-                            <el-input
-                                v-model="form.toZipCode"
-                                placeholder="收件人邮编"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="道/府/县-城市-乡">
-                            <el-cascader
-                                :span="12"
-                                :options="address"
-                                v-model="form.selectedAddress"
-                                @change="handleAddressChange"
-                                style="width: 80%"
-                            >
-                            </el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="收件人详细地址">
-                            <el-input
-                                v-model="form.toDetailAddress"
-                                placeholder="收件人详细地址"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="发件人信息">
-                    <el-col :span="8">
-                        <el-form-item label="发件人姓名">
-                            <el-input
-                                v-model="form.fromName"
-                                placeholder="发件人姓名"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="发件人联系方式">
-                            <el-input
-                                v-model="form.fromContact"
-                                placeholder="发件人联系方式"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="发件人邮编">
-                            <el-input
-                                v-model="form.fromZipCode"
-                                placeholder="发件人邮编"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="道/府/县-城市-乡">
-                            <el-cascader
-                                :span="12"
-                                :options="address"
-                                v-model="form.selectedfromAddress"
-                                @change="handleAddressChange2"
-                                style="width: 80%"
-                            >
-                            </el-cascader>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12" style="margin-top: 1%">
-                        <el-form-item label="发件人详细地址">
-                            <el-input
-                                v-model="form.fromDetailAddress"
-                                placeholder="发件人详细地址"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="退件货物">
-                    <el-col :span="5">
-                        <el-form-item label="sku">
-                            <el-input
-                                v-model="content.sku"
-                                placeholder="请输入或者扫描sku"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="名称">
-                            <el-input
-                                v-model="content.name"
-                                placeholder="请输入产品名称"
-                            ></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="商品数量">
-                            <el-input-number
-                                v-model="content.num"
-                                :min="1"
-                            ></el-input-number>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="2" style="margin-left: 2%">
-                        <el-button type="primary" round @click="add2Cart"
-                            >添加
-                        </el-button>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-table
-                        :data="form.contentList"
-                        stripe
-                        style="width: 90%"
-                    >
-                        <el-table-column
-                            prop="sku"
-                            label="sku"
-                            width="250"
-                        ></el-table-column>
-                        <el-table-column
-                            prop="name"
-                            label="商品名称"
-                        ></el-table-column>
-                        <el-table-column
-                            prop="num"
-                            label="商品数量"
-                            width="180"
-                        ></el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button
-                                    size="mini"
-                                    type="danger"
-                                    @click="
+  <div class="login-container">
+    <div class="app-container">
+      <el-form :ref="form" :model="form" label-width="120px">
+        <el-form-item label="退货单所属用户" v-if="adminRole">
+          <el-col :span="12">
+            <el-form-item label="所属用户">
+              <el-tooltip content="所属用户" placement="top">
+                <el-select
+                    filterable
+                    clearable
+                    v-model="form.creator"
+                    placeholder="请选择所属用户"
+                >
+                  <el-option
+                      v-for="creator in users"
+                      :key="creator.uname"
+                      :label="creator.nick"
+                      :value="creator.uname"
+                  ></el-option>
+                </el-select>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="退货单号">
+          <el-col :span="12">
+            <el-form-item label="退货单号">
+              <el-input
+                  placeholder="请输入或点击按钮获取退货单号"
+                  v-model="form.returnNo"
+                  @input="trimInput"
+              >
+                <el-button
+                    slot="append"
+                    v-bind:disabled="onUpdate"
+                    @click="getOrdNo"
+                >获取单号
+                </el-button>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="订单号">
+          <el-col :span="12">
+            <el-form-item label="是否对应订单号">
+              <el-switch
+                  v-model="form.withoutOrderNoFlag"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+              >
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.withoutOrderNoFlag">
+            <el-form-item label="">
+              <el-input
+                  placeholder="请输入订单号"
+                  v-model="form.orderNo"
+                  @change="initOrderContent"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="">
+          <el-col :span="12">
+            <el-form-item label="承运人">
+              <el-input
+                  placeholder="请输入退货订单承运人"
+                  v-model="form.carrier"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="承运人追踪单号">
+              <el-input
+                  placeholder="请输入退货订单追踪单号"
+                  v-model="form.trackNo"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item style="color: #606266;font-size: 14px;"
+        >收件人信息可不填，默认为 收件地址 [日本岡山仓(okayama)]
+          收件人 [东岳物流]
+        </el-form-item>
+        <el-form-item label="收件人信息">
+          <el-col :span="8">
+            <el-form-item label="收件人姓名">
+              <el-input
+                  v-model="form.toName"
+                  placeholder="收件人姓名"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收件人联系方式">
+              <el-input
+                  v-model="form.toContact"
+                  placeholder="收件人联系方式"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="收件人邮编">
+              <el-input
+                  v-model="form.toZipCode"
+                  placeholder="收件人邮编"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="道/府/县-城市-乡">
+              <el-cascader
+                  :span="12"
+                  :options="address"
+                  v-model="form.selectedAddress"
+                  @change="handleAddressChange"
+                  style="width: 80%"
+              >
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="收件人详细地址">
+              <el-input
+                  v-model="form.toDetailAddress"
+                  placeholder="收件人详细地址"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="发件人信息">
+          <el-col :span="8">
+            <el-form-item label="发件人姓名">
+              <el-input
+                  v-model="form.fromName"
+                  placeholder="发件人姓名"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="发件人联系方式">
+              <el-input
+                  v-model="form.fromContact"
+                  placeholder="发件人联系方式"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="发件人邮编">
+              <el-input
+                  v-model="form.fromZipCode"
+                  placeholder="发件人邮编"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="道/府/县-城市-乡">
+              <el-cascader
+                  :span="12"
+                  :options="address"
+                  v-model="form.selectedfromAddress"
+                  @change="handleAddressChange2"
+                  style="width: 80%"
+              >
+              </el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="margin-top: 1%">
+            <el-form-item label="发件人详细地址">
+              <el-input
+                  v-model="form.fromDetailAddress"
+                  placeholder="发件人详细地址"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="退件货物">
+          <el-col :span="5">
+            <el-form-item label="sku">
+              <el-input
+                  v-model="content.sku"
+                  placeholder="请输入或者扫描sku"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="名称">
+              <el-input
+                  v-model="content.name"
+                  placeholder="请输入产品名称"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="商品数量">
+              <el-input-number
+                  v-model="content.num"
+                  :min="1"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="margin-left: 2%">
+            <el-button type="primary" round @click="add2Cart"
+            >添加
+            </el-button>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="">
+          <el-table
+              :data="form.contentList"
+              stripe
+              style="width: 90%"
+          >
+            <el-table-column
+                prop="sku"
+                label="sku"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="name"
+                label="商品名称"
+            ></el-table-column>
+            <el-table-column
+                prop="num"
+                label="商品数量"
+                width="180"
+            ></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="
                                         handleDelete(scope.$index, scope.row)
                                     "
-                                    >删除
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-form-item>
-                <el-form-item label="退件相关图片">
-                    <el-upload
-                        :action="actionLink1"
-                        with-credentials
-                        multiple
-                        list-type="picture"
-                        :file-list="fileList"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                        :data="form"
-                        ref="upload"
-                        :on-error="handleError"
-                        :limit="3"
-                    >
-                        <el-button slot="trigger" size="small" type="primary"
-                            >选取文件
-                        </el-button>
-                        <el-button
-                            style="margin-left: 10px;"
-                            size="small"
-                            type="success"
-                            @click="submitUpload"
-                            >上传到服务器
-                        </el-button>
-                        <div slot="tip" class="el-upload__tip">
-                            只能上传jpg/png文件，且不超过2MB
-                        </div>
-                    </el-upload>
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="" />
-                    </el-dialog>
-                </el-form-item>
-                <el-form-item>
-                    <el-col :offset="18">
-                        <el-button
-                            type="primary"
-                            @click="submitForm()"
-                            v-if="onCreate"
-                            >立即创建
-                        </el-button>
-                        <el-button
-                            type="primary"
-                            @click="updateForm()"
-                            v-if="onUpdate"
-                            >立即更新
-                        </el-button>
-                        <el-button @click="resetForm('form')">重置</el-button>
-                    </el-col>
-                </el-form-item>
-            </el-form>
+                >删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
+        <el-form-item label="退件相关图片">
+          <el-upload
+              :action="actionLink1"
+              with-credentials
+              multiple
+              list-type="picture"
+              :file-list="fileList"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :data="form"
+              ref="upload"
+              :on-error="handleError"
+              :limit="3"
+          >
+            <el-button slot="trigger" size="small" type="primary"
+            >选取文件
+            </el-button>
+            <el-button
+                style="margin-left: 10px;"
+                size="small"
+                type="success"
+                @click="submitUpload"
+            >上传到服务器
+            </el-button>
+            <div slot="tip" class="el-upload__tip">
+              只能上传jpg/png文件，且不超过2MB
+            </div>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt=""/>
+          </el-dialog>
+        </el-form-item>
+        <el-form-item>
+          <el-col :offset="18">
+            <el-button
+                type="primary"
+                @click="submitForm()"
+                v-if="onCreate"
+            >立即创建
+            </el-button>
+            <el-button
+                type="primary"
+                @click="updateForm()"
+                v-if="onUpdate"
+            >立即更新
+            </el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+          </el-col>
+        </el-form-item>
+      </el-form>
 
-            <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
-        </div>
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt=""/>
+      </el-dialog>
     </div>
+  </div>
 </template>
 
 <script>
@@ -361,11 +361,11 @@ export default {
     this.getAddress();
   },
   inject: ['reload'],
-  // watch: {
-  //     $route() {
-  //         this.initPage()
-  //     },
-  // },
+  watch: {
+    $route() {
+      this.initPage();
+    },
+  },
   methods: {
     getOrdNo() {
       request({

@@ -65,20 +65,16 @@ public class OrderController {
 
   private ChannelCache channelCache;
 
-  private CommonController commonController;
-
   @Autowired
   public OrderController(
       OrderService orderService,
       JapanAddressCache japanAddressCache,
       LabelCache labelCache,
-      ChannelCache channelCache,
-      CommonController commonController) {
+      ChannelCache channelCache) {
     this.orderService = orderService;
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.channelCache = channelCache;
-    this.commonController = commonController;
   }
 
   @PostMapping
@@ -88,8 +84,7 @@ public class OrderController {
     return Json.succ().data(manualOrder);
   }
 
-  @PostMapping
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public Json add(@RequestBody @Valid ManualOrder manualOrder, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       StringBuilder errMsg = new StringBuilder();
@@ -182,8 +177,7 @@ public class OrderController {
     return Json.succ().data(result);
   }
 
-  @PostMapping
-  @RequestMapping("/update/{ordno}")
+  @PostMapping("/update/{ordno}")
   public Json update(@RequestBody Map<String, Object> data, @PathVariable String ordno) {
     ManualOrder manualOrder = new ManualOrder();
     manualOrder.setOrderNo(ordno);
@@ -248,8 +242,7 @@ public class OrderController {
     }
   }
 
-  @PostMapping
-  @RequestMapping("/list/{type}/{status}")
+  @PostMapping("/list/{type}/{status}")
   @SuppressWarnings("rawtypes")
   public Json list(
       @RequestBody String body, @PathVariable String type, @PathVariable String status) {
@@ -261,8 +254,7 @@ public class OrderController {
     return Json.succ().data("page", manualOrderPage);
   }
 
-  @PostMapping
-  @RequestMapping("/list/{type}/{status}/{fromDate}/{toDate}")
+  @PostMapping("/list/{type}/{status}/{fromDate}/{toDate}")
   @SuppressWarnings("rawtypes")
   public Json listByRange(
       @RequestBody String body,
@@ -484,8 +476,7 @@ public class OrderController {
     return Json.succ();
   }
 
-  @PostMapping
-  @RequestMapping("/update/{category}/{status}")
+  @PostMapping("/update/{category}/{status}")
   public Json batchStatusUpdate(
       @RequestBody List<String> ords, @PathVariable String category, @PathVariable String status) {
     if (ONE.equals(category) && THREE.equals(status)) {
@@ -528,15 +519,13 @@ public class OrderController {
     return Json.succ().data(commonLabelList);
   }
 
-  @PostMapping
-  @RequestMapping("/abnormal")
+  @PostMapping("/abnormal")
   public Json abnormal(@RequestBody ManualOrder manualOrder) {
     orderMapper.abnormal(manualOrder);
     return Json.succ();
   }
 
-  @GetMapping
-  @RequestMapping("/getVolumeAndWeight/{ordno}")
+  @GetMapping("/getVolumeAndWeight/{ordno}")
   public Json getVolumeAndWeight(@PathVariable String ordno) {
     List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
     Map<String, Double> result = new HashMap<>(2);
@@ -564,8 +553,7 @@ public class OrderController {
     return Json.succ().data(result);
   }
 
-  @GetMapping
-  @RequestMapping("/quickSearch/{search}")
+  @GetMapping("/quickSearch/{search}")
   public Json quickSearch(@PathVariable String search) {
     log.info(search);
     ManualOrder manualOrder = orderMapper.quickSearch(search);
@@ -577,11 +565,17 @@ public class OrderController {
     }
   }
 
-  @PostMapping
-  @RequestMapping("/fetchOrderNo")
+  @PostMapping("/fetchOrderNo")
   public Json fetchOrderNo(@RequestBody Map<String, String> request) {
     String creator = request.get("creator");
     List<ManualOrder> manualOrderList = orderMapper.fetchOrderNo(creator);
     return Json.succ().data(manualOrderList);
   }
+
+  @GetMapping("/ordContent")
+  public Json getOrdContentByOrdNo(@RequestParam String ordNo) {
+    List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordNo);
+    return Json.succ().data(manualOrderContentList);
+  }
+
 }
