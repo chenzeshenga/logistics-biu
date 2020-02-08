@@ -415,11 +415,18 @@
     >
       <el-form :model="form">
         <el-form-item label="订单文件">
-          <el-upload :action="actionLink" with-credentials :limit="1">
+          <el-upload :action="actionLink" ref="upload" with-credentials :auto-upload="false" :limit="1">
             <el-button slot="trigger" size="small" type="primary"
             >选取文件
             </el-button
             >
+            <el-button
+                style="margin-left: 10px;"
+                size="small"
+                type="success"
+                @click="submitUpload"
+            >上传
+            </el-button>
             <el-button
                 style="margin-left: 150px;"
                 size="small"
@@ -449,7 +456,7 @@
                 clearable
                 v-model="standFor"
                 placeholder="请选择您所代表的用户"
-                :on-change="changeUpdateLink"
+                @change="changeUpdateLink"
                 value="">
               <el-option
                   v-for="creator in users"
@@ -907,18 +914,18 @@ export default {
       tmpContent['index'] = this.form.contentList.length;
       if (this.selectedProductMap.hasOwnProperty(this.content['sku'])) {
         const plannedNum =
-          this.selectedProductMap[this.content['sku']]['num'] +
-          Number(this.content.num);
+            this.selectedProductMap[this.content['sku']]['num'] +
+            Number(this.content.num);
         const product = this.productMap[
             this.content['sku']
         ];
         if (plannedNum > product.num) {
           this.selectedProductMap[this.content['sku']]['num'] =
-            product.num;
+              product.num;
           this.$message.warning(
               '当前订单中商品' +
-            product.label +
-            '总数量大于该商品可售数量，系统已自动调整为最大可售数量',
+              product.label +
+              '总数量大于该商品可售数量，系统已自动调整为最大可售数量',
           );
         } else {
           this.selectedProductMap[this.content['sku']][
@@ -1046,8 +1053,11 @@ export default {
     },
     changeUpdateLink(val) {
       this.actionLink += '?user=' + val;
+      console.log(this.standFor);
+      this.standFor = val;
     },
     triggerUploadDialog() {
+      console.log(this.standFor);
       if (this.standFor.length > 0) {
         this.dialogVisible4StandFor = false;
         this.dialogVisible4Excel = true;
@@ -1058,6 +1068,11 @@ export default {
     checkChannelSize() {
       console.log(this.channels);
       return false;
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+      this.$message.success('上传成功');
+      this.dialogVisible4Excel = false;
     },
   },
 };

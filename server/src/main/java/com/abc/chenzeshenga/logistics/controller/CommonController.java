@@ -443,9 +443,9 @@ public class CommonController {
 
   private String switchOrderCategoryFromCategoryName(String categoryName) {
     switch (categoryName) {
-      case "特色小包":
-        return "2";
       case "单票单清":
+        return "2";
+      case "虚拟海外仓":
         return "3";
       case "海外仓代发订单":
       default:
