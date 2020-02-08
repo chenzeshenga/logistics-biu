@@ -12,9 +12,7 @@ npm-debug.log
 /server/target/
 /applog/
 package-lock.json
-
+*.log
 /server/target
 server/bin/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-
 /server/applog
-.vscode
