@@ -12,3 +12,4 @@ npm-debug.log
 /server/target/
 /applog/
 package-lock.json
+*.log
