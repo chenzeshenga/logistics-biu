@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.WarehousingContent">
-        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo"/>
-        <id column="sku" jdbcType="VARCHAR" property="sku"/>
-        <id column="box_seq" jdbcType="VARCHAR" property="boxSeq"/>
-        <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
-        <result column="wrap_type" jdbcType="VARCHAR" property="wrapType"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="received"/>
+        <id column="warehousing_no" jdbcType="VARCHAR" property="warehousingNo" />
+        <id column="sku" jdbcType="VARCHAR" property="sku" />
+        <id column="box_seq" jdbcType="VARCHAR" property="boxSeq" />
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
+        <result column="wrap_type" jdbcType="VARCHAR" property="wrapType" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="received" />
+        <result column="actual" property="actual" />
     </resultMap>
     <sql id="Base_Column_List">
         warehousing_no, sku, box_seq, total_num, wrap_type, `name`, received
     </sql>
-    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey"
-            resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContentKey" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from l_warehousing_content
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
         and sku = #{sku,jdbcType=VARCHAR}
@@ -37,18 +37,18 @@
 
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
-                                           total_num, wrap_type, `name`, received)
+                                           total_num, wrap_type, `name`, received,actual)
         values (#{warehousingNo,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{boxSeq,jdbcType=VARCHAR},
-                #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{received})
+                #{totalNum,jdbcType=VARCHAR}, #{wrapType,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{received},#{actual})
     </insert>
 
     <insert id="insertList" parameterType="java.util.List">
         insert into l_warehousing_content (warehousing_no, sku, box_seq,
-        total_num, wrap_type, `name`, received)
+        total_num, wrap_type, `name`, received,actual,uuid)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
-            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received})
+            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received},#{item.actual},#{item.uuid})
         </foreach>
     </insert>
 
@@ -76,6 +76,9 @@
             <if test="received != null">
                 received,
             </if>
+            <if test="actual != null">
+                actual,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="warehousingNo != null">
@@ -99,6 +102,9 @@
             <if test="received != null">
                 #{received},
             </if>
+            <if test="actual != null">
+                #{actual},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
@@ -115,6 +121,9 @@
             </if>
             <if test="received != null">
                 received = #{received},
+            </if>
+            <if test="actual != null">
+                actual = #{actual},
             </if>
         </set>
         where warehousing_no = #{warehousingNo,jdbcType=VARCHAR}
@@ -140,6 +149,7 @@
                wrap_type      as wrapType,
                `name`         as name,
                received
+               actual
         from l_warehousing_content
         where warehousing_no = #{warehousingNo}
     </select>
@@ -149,5 +159,15 @@
         from l_warehousing_content
         where warehousing_no = #{warehousingNo}
     </delete>
+
+    <update id="updateContentHeadCheck" parameterType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
+        update l_warehousing_content
+        set height=#{height},
+            length=#{length},
+            width=#{width},
+            weight=#{weight}
+        where warehousing_no=#{warehousingNo}
+            and box_seq=#{boxSeq}
+    </update>
 
 </mapper>

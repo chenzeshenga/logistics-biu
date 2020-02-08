@@ -20,7 +20,6 @@ export default {
         statusTo: '2',
         statusAbandon: '5',
         buttonVisible1: true,
-        buttonVisible2: true,
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,

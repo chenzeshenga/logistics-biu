@@ -1,55 +1,58 @@
 package com.abc.chenzeshenga.logistics.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 /**
  * l_channel
  *
  * @author
  */
-@Data public class Channel implements Serializable {
+@Data
+public class Channel implements Serializable {
 
-    private String channelCode;
+  private static final long serialVersionUID = 3847302764352457071L;
 
-    private String channelName;
+  private String channelCode;
 
-    private String partner;
+  private String channelName;
 
-    private String partnerDesc;
+  private String partner;
 
-    private String min;
+  private String partnerDesc;
 
-    private String max;
+  private String min;
 
-    private String checkedRules;
+  private String max;
 
-    private String ruleDesc;
+  private String checkedRules;
 
-    private List<String> checkedRules2;
+  private String ruleDesc;
 
-    private String active;
+  private List<String> checkedRules2;
 
-    private String adapter;
+  private String active;
 
-    private String adapterDesc;
+  private String adapter;
 
-    private String rule;
+  private String adapterDesc;
 
-    private String calculateRuleDesc;
+  private String rule;
 
-    private String comments;
+  private String calculateRuleDesc;
 
-    private String createBy;
+  private String comments;
 
-    private String updateBy;
+  private String createBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date createOn;
+  private String updateBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") private Date updateOn;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+  private Date createOn;
 
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+  private Date updateOn;
 }

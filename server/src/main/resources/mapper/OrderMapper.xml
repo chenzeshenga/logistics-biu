@@ -384,4 +384,12 @@
         where ord.ord_no like CONCAT('%', #{ordNo}, '%')
         limit 1
     </select>
+
+    <update id="updateTrackNo" parameterType="com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping">
+        update l_manual_order
+        set carrier_no=#{carrierNo},
+            track_no=#{trackNo}
+        where ord_no = #{ordNo}
+    </update>
+
 </mapper>

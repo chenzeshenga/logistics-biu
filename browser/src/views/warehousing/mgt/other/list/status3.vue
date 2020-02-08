@@ -23,7 +23,7 @@ export default {
         buttonVisible6: true,
         buttonVisible7: true,
         buttonVisible10: true,
-        buttonVisible12: true
+        buttonVisible13: true
       }
     };
   }

@@ -1,9 +1,9 @@
 <template>
-    <div class="login-container">
-        <div class="app-container">
-            <warehousing-table v-bind:msg="this.msg"></warehousing-table>
-        </div>
+  <div class="login-container">
+    <div class="app-container">
+      <warehousing-table v-bind:msg="this.msg"></warehousing-table>
     </div>
+  </div>
 </template>
 
 <script>
@@ -16,18 +16,14 @@ export default {
     return {
       msg: {
         status: '3',
-        buttonVisible1: false,
-        buttonVisible2: true,
+        category: '1',
+        buttonVisible1: true,
+        buttonVisible9: true,
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,
         buttonVisible6: true,
         buttonVisible7: true,
-        buttonVisible8: false,
-        buttonVisible9: true,
-        buttonVisibleA: false,
-        buttonVisibleB: false,
-        buttonVisibleC: false,
       },
     };
   },

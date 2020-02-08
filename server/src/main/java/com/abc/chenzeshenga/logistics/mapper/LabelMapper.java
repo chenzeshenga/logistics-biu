@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Label;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author chenzeshenga
@@ -13,8 +12,10 @@ import java.util.List;
  * @createOn 2019-3-6 1:18
  * @updateOn 2019-3-6 1:18
  */
-@Mapper public interface LabelMapper {
+@Mapper
+public interface LabelMapper {
 
-    List<Label> list();
+  List<Label> list();
 
+  List<Label> listCarrier();
 }

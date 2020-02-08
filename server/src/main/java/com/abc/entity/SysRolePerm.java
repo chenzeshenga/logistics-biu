@@ -2,52 +2,52 @@ package com.abc.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
 
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
+/** created by CaiBaoHong at 2018/4/17 14:55<br> */
 @TableName("sys_role_perm")
 public class SysRolePerm implements Serializable {
 
-    @TableField("role_id")
-    private String roleId;
-    @TableField("perm_val")
-    private String permVal;
-    @TableField("perm_type")
-    private Integer permType;
+  private static final long serialVersionUID = -8995410219986990187L;
 
-    public SysRolePerm() {
-    }
+  @TableField("role_id")
+  private String roleId;
 
-    public SysRolePerm(String roleId, String permVal,Integer permType) {
-        this.roleId = roleId;
-        this.permVal = permVal;
-        this.permType = permType;
-    }
+  @TableField("perm_val")
+  private String permVal;
 
-    public Integer getPermType() {
-        return permType;
-    }
+  @TableField("perm_type")
+  private Integer permType;
 
-    public void setPermType(Integer permType) {
-        this.permType = permType;
-    }
+  public SysRolePerm() {}
 
-    public String getRoleId() {
-        return roleId;
-    }
+  public SysRolePerm(String roleId, String permVal, Integer permType) {
+    this.roleId = roleId;
+    this.permVal = permVal;
+    this.permType = permType;
+  }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
+  public Integer getPermType() {
+    return permType;
+  }
 
-    public String getPermVal() {
-        return permVal;
-    }
+  public void setPermType(Integer permType) {
+    this.permType = permType;
+  }
 
-    public void setPermVal(String permVal) {
-        this.permVal = permVal;
-    }
+  public String getRoleId() {
+    return roleId;
+  }
+
+  public void setRoleId(String roleId) {
+    this.roleId = roleId;
+  }
+
+  public String getPermVal() {
+    return permVal;
+  }
+
+  public void setPermVal(String permVal) {
+    this.permVal = permVal;
+  }
 }

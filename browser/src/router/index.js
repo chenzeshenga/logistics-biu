@@ -10,7 +10,7 @@ const _import = require('./_import_' + process.env.NODE_ENV);
 Vue.use(Router);
 
 /** note: submenu only appear when children.length>=1
- *   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
+ *   detail see https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
  **/
 
 /**
@@ -164,6 +164,16 @@ export const asyncRouterMap = [
         },
       },
       {
+        path: 'shelf',
+        name: 'system-config-shelf',
+        component: _import('_system/config/shelf'),
+        meta: {
+          perm: 'm:config:list:shelf',
+          title: '货架设置',
+          icon: 'chart',
+        },
+      },
+      {
         path: 'dyProfile',
         name: 'dyProfile',
         component: _import('_system/config/dyProfile'),
@@ -240,6 +250,22 @@ export const asyncRouterMap = [
     ],
   },
   {
+    path: '/warehousing/upshelf',
+    component: Layout,
+    children: [
+      {
+        path: 'upshelf',
+        name: 'upshelf',
+        component: _import('warehousing/upshelf'),
+        meta: {
+          perm: 'm:warehousing:upshelf',
+          title: '上架清点',
+          icon: 'icon',
+        },
+      },
+    ],
+  },
+  {
     path: '/order-list/mgt',
     name: 'order-list-mgt',
     component: Layout,
@@ -259,17 +285,6 @@ export const asyncRouterMap = [
           icon: 'chart',
         },
         children: [
-          {
-            path: 'pickup',
-            component: _import('order/type1/list/pickup'),
-            name: 'order-list-mgt-type1-pickup',
-            meta: {
-              perm: 'm:order1:list:1',
-              title: '拣货',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
           {
             path: 'status1',
             component: _import('order/type1/list/status1'),
@@ -343,6 +358,17 @@ export const asyncRouterMap = [
             meta: {
               perm: 'm:order1:list:8',
               title: '历史',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'pickup',
+            component: _import('order/type1/list/pickup'),
+            name: 'order-list-mgt-type1-pickup',
+            meta: {
+              perm: 'm:order1:list:1',
+              title: '拣货',
               icon: 'chart',
               noCache: true,
             },
@@ -476,29 +502,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status3',
             meta: {
               perm: 'm:order3:list:3',
-              title: '国内已发货',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
-          {
-            path: 'status8',
-            component: _import('order/type3/list/status8'),
-            name: 'order-list-mgt-type3-status8',
-            meta: {
-              perm: 'm:order3:list:4',
-              title: '日本待发货',
-              icon: 'chart',
-              noCache: true,
-            },
-          },
-          {
-            path: 'status9',
-            component: _import('order/type3/list/status9'),
-            name: 'order-list-mgt-type3-status9',
-            meta: {
-              perm: 'm:order3:list:5',
-              title: '日本已发货',
+              title: '日仓收货',
               icon: 'chart',
               noCache: true,
             },
@@ -509,7 +513,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status4',
             meta: {
               perm: 'm:order3:list:6',
-              title: '问题件',
+              title: '日仓发货',
               icon: 'chart',
               noCache: true,
             },
@@ -520,7 +524,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status5',
             meta: {
               perm: 'm:order3:list:7',
-              title: '已废弃',
+              title: '已完成',
               icon: 'chart',
               noCache: true,
             },
@@ -532,6 +536,17 @@ export const asyncRouterMap = [
             meta: {
               perm: 'm:order3:list:8',
               title: '暂存',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status8',
+            component: _import('order/type3/list/status8'),
+            name: 'order-list-mgt-type3-status8',
+            meta: {
+              perm: 'm:order3:list:4',
+              title: '异常',
               icon: 'chart',
               noCache: true,
             },
@@ -690,7 +705,7 @@ export const asyncRouterMap = [
             name: 'warehousing-mgt-dy-list-status4',
             meta: {
               perm: 'm:warehousing:dy:list:4',
-              title: '转运中',
+              title: '日仓已收货',
               icon: 'chart',
               noCache: true,
             },
@@ -729,22 +744,22 @@ export const asyncRouterMap = [
             },
           },
           {
-            path: 'status8',
-            component: _import('warehousing/mgt/dy/list/status8'),
-            name: 'warehousing-mgt-dy-list-status8',
+            path: 'status88',
+            component: _import('warehousing/mgt/dy/list/status88'),
+            name: 'warehousing-mgt-dy-list-status88',
             meta: {
-              perm: 'm:warehousing:dy:list:8',
+              perm: 'm:warehousing:dy:list:88',
               title: '废弃',
               icon: 'chart',
               noCache: true,
             },
           },
           {
-            path: 'status9',
-            component: _import('warehousing/mgt/dy/list/status9'),
-            name: 'warehousing-mgt-dy-list-status9',
+            path: 'status99',
+            component: _import('warehousing/mgt/dy/list/status99'),
+            name: 'warehousing-mgt-dy-list-status99',
             meta: {
-              perm: 'm:warehousing:dy:list:9',
+              perm: 'm:warehousing:dy:list:99',
               title: '异常',
               icon: 'chart',
               noCache: true,
@@ -764,9 +779,7 @@ export const asyncRouterMap = [
         children: [
           {
             path: 'status1',
-            component: _import(
-                'warehousing/mgt/other/list/status1'
-            ),
+            component: _import('warehousing/mgt/other/list/status1'),
             name: 'warehousing-mgt-other-list-status1',
             meta: {
               perm: 'm:warehousing:other:list:1',
@@ -777,9 +790,7 @@ export const asyncRouterMap = [
           },
           {
             path: 'status2',
-            component: _import(
-                'warehousing/mgt/other/list/status2'
-            ),
+            component: _import('warehousing/mgt/other/list/status2'),
             name: 'warehousing-mgt-other-list-status2',
             meta: {
               perm: 'm:warehousing:other:list:2',
@@ -790,9 +801,7 @@ export const asyncRouterMap = [
           },
           {
             path: 'status3',
-            component: _import(
-                'warehousing/mgt/other/list/status3'
-            ),
+            component: _import('warehousing/mgt/other/list/status3'),
             name: 'warehousing-mgt-other-list-status3',
             meta: {
               perm: 'm:warehousing:other:list:3',
@@ -802,52 +811,44 @@ export const asyncRouterMap = [
             },
           },
           {
-            path: 'status5',
-            component: _import(
-                'warehousing/mgt/other/list/status5'
-            ),
-            name: 'warehousing-mgt-other-list-status5',
+            path: 'status4',
+            component: _import('warehousing/mgt/other/list/status4'),
+            name: 'warehousing-mgt-other-list-status4',
             meta: {
-              perm: 'm:warehousing:other:list:5',
+              perm: 'm:warehousing:other:list:4',
               title: '待上架',
               icon: 'chart',
               noCache: true,
             },
           },
           {
-            path: 'status6',
-            component: _import(
-                'warehousing/mgt/other/list/status6'
-            ),
-            name: 'warehousing-mgt-other-list-status6',
+            path: 'status5',
+            component: _import('warehousing/mgt/other/list/status5'),
+            name: 'warehousing-mgt-other-list-status5',
             meta: {
-              perm: 'm:warehousing:other:list:6',
+              perm: 'm:warehousing:other:list:5',
               title: '已上架',
               icon: 'chart',
               noCache: true,
             },
           },
           {
-            path: 'status7',
-            component: _import(
-                'warehousing/mgt/other/list/status7'
-            ),
-            name: 'warehousing-mgt-other-list-status7',
+            path: 'status88',
+            component: _import('warehousing/mgt/other/list/status88'),
+            name: 'warehousing-mgt-other-list-status88',
             meta: {
-              perm: 'm:warehousing:other:list:7',
+              perm: 'm:warehousing:other:list:88',
               title: '废弃',
               icon: 'chart',
               noCache: true,
             },
           },
           {
-            path: 'status8',
-            component: _import(
-                'warehousing/mgt/other/list/status8'
-            ),
-            name: 'warehousing-mgt-other-list-status8',
+            path: 'status99',
+            component: _import('warehousing/mgt/other/list/status99'),
+            name: 'warehousing-mgt-other-list-status99',
             meta: {
-              perm: 'm:warehousing:other:list:8',
+              perm: 'm:warehousing:other:list:99',
               title: '异常',
               icon: 'chart',
               noCache: true,
@@ -867,12 +868,23 @@ export const asyncRouterMap = [
     },
     children: [
       {
+        path: 'status4user',
+        name: 'status4user',
+        component: _import('product/mgt/status4user'),
+        meta: {
+          perm: 'm:product:mgt:status4user',
+          title: '待审核商品',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
+      {
         path: 'status0',
         name: 'status0',
         component: _import('product/mgt/status0'),
         meta: {
           perm: 'm:product:mgt:1',
-          title: '待审核商品',
+          title: '待审核商品-管理',
           icon: 'chart',
           noCache: true,
         },
@@ -895,6 +907,17 @@ export const asyncRouterMap = [
         meta: {
           perm: 'm:product:mgt:3',
           title: '商品统计',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
+      {
+        path: 'product-in-warehouse',
+        name: 'product-in-warehouse',
+        component: _import('product/product-in-warehouse'),
+        meta: {
+          perm: 'm:product:mgt:4',
+          title: '在库商品',
           icon: 'chart',
           noCache: true,
         },

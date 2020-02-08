@@ -1,66 +1,69 @@
 <template>
-    <div class="login-container">
-        <el-col :offset="2" :span="18" style="margin-top: 20px">
-            <el-input
-                placeholder="请输入订单号"
-                v-model="search"
-                class="input-with-select"
-            >
-                <el-button
-                    slot="append"
-                    icon="el-icon-search"
-                    @click="searchOrdContent()"
-                ></el-button>
-            </el-input>
-        </el-col>
-        <el-col :offset="1" :span="22" style="margin-top: 10px">
-            <el-table
-                :data="content"
-                border
-                @row-click="handleCurrentChange"
-                :row-class-name="tableRowClassName"
-            >
-                <el-table-column prop="sku" label="sku/东岳Sku" width="200">
-                </el-table-column>
-                <el-table-column prop="name" label="商品名称">
-                </el-table-column>
-                <el-table-column prop="price" label="商品价格JPY" width="180">
-                </el-table-column>
-                <el-table-column prop="num" label="商品数量" width="180">
-                </el-table-column>
-                <el-table-column label="拣货数量">
-                    <template slot-scope="content">
-                        <el-input-number
-                            size="small"
-                            v-model="content.row.picked"
-                            placeholder="请输入内容"
-                            @change="handleEdit(content.$index, content.row)"
-                        ></el-input-number>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-col>
-        <el-col>
-            <el-button
-                @click="pickupSubmit()"
-                type="primary"
-                style="margin-left: 90%;margin-top: 10px"
-                >拣货完成</el-button
-            >
-        </el-col>
-        <el-dialog title="标记异常" :visible.sync="dialogVisible" width="30%">
-            <el-input
-                v-model="abnormalReason"
-                placeholder="请填写未拣货完全的原因"
-            ></el-input>
-            <span slot="footer" class="dialog-footer">
+  <div class="login-container">
+    <el-col :offset="2" :span="18" style="margin-top: 20px">
+      <el-input
+          placeholder="请输入订单号"
+          v-model="search"
+          class="input-with-select"
+      >
+        <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="searchOrdContent()"
+        ></el-button>
+      </el-input>
+    </el-col>
+    <el-col :offset="1" :span="22" style="margin-top: 10px">
+      <el-table
+          :data="content"
+          border
+          @row-click="handleCurrentChange"
+          :row-class-name="tableRowClassName"
+      >
+        <el-table-column prop="sku" label="东岳Sku" width="200">
+        </el-table-column>
+        <el-table-column prop="name" label="商品名称">
+        </el-table-column>
+        <el-table-column prop="price" label="商品价格JPY" width="180">
+        </el-table-column>
+        <el-table-column prop="num" label="商品数量" width="180">
+        </el-table-column>
+        <el-table-column prop="shelfNo" label="货架号" width="180">
+        </el-table-column>
+        <el-table-column label="拣货数量">
+          <template slot-scope="content">
+            <el-input-number
+                size="small"
+                v-model="content.row.picked"
+                placeholder="请输入内容"
+                @change="handleEdit(content.$index, content.row)"
+            ></el-input-number>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-col>
+    <el-col>
+      <el-button
+          @click="pickupSubmit()"
+          type="primary"
+          style="margin-left: 90%;margin-top: 10px"
+      >拣货完成
+      </el-button
+      >
+    </el-col>
+    <el-dialog title="标记异常" :visible.sync="dialogVisible" width="30%">
+      <el-input
+          v-model="abnormalReason"
+          placeholder="请填写未拣货完全的原因"
+      ></el-input>
+      <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="abnormalUpdate"
-                    >确 定</el-button
+                >确 定</el-button
                 >
             </span>
-        </el-dialog>
-    </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -78,6 +81,7 @@ export default {
   },
   methods: {
     searchOrdContent() {
+      this.search= this.$route.query.orderNo;
       if (this.search.length <= 0) {
         this.$message.warning('请填写订单号');
         return;
@@ -172,15 +176,20 @@ export default {
       });
     },
   },
+  watch: {
+    $route() {
+      this.searchOrdContent();
+    },
+  },
 };
 </script>
 
 <style>
-.el-table .success-row {
+  .el-table .success-row {
     background: rgba(103, 194, 58, 0.1);
-}
+  }
 
-.el-table .danger-row {
+  .el-table .danger-row {
     background: rgb(253, 226, 226);
-}
+  }
 </style>

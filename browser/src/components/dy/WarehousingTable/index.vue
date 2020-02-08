@@ -50,7 +50,7 @@
           </el-col>
           <el-col :span="1">
             <el-form-item label>
-              <el-button icon="el-icon-search" @click="searchOrd()" />
+              <el-button icon="el-icon-search" @click="fetchData()" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -102,23 +102,25 @@
             <el-table-column prop="boxSeq" label="箱号" width="150" />
             <el-table-column prop="totalNum" label="数量" width="200" />
             <el-table-column prop="wrapType" label="包装方式" width="250" />
+            <el-table-column prop="actual" label="实际收货数量" width="250" />
           </el-table>
         </template>
       </el-table-column>
       <el-table-column width="200" prop="warehousingNo" label="入库单号" />
+      <el-table-column width="150" prop="fromAddress" label="发货地址" />
       <el-table-column width="150" prop="target" label="仓库地址" />
       <el-table-column width="100" prop="statusDesc" label="状态" />
       <el-table-column width="150" prop="method" label="头程方式" />
       <el-table-column width="150" label="头程渠道">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" v-if="scope.row.channelFlag">
-            <p>渠道名称: {{ scope.row['channelDesc'] }}</p>
-            <p>渠道编码: {{ scope.row['channel'] }}</p>
+            <p>渠道名称: {{ scope.row["channelDesc"] }}</p>
+            <p>渠道编码: {{ scope.row["channel"] }}</p>
             <p>
               <el-button type="text" v-on:click="route2ChannelPage(scope.$index, scope.row)">查看详情</el-button>
             </p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row['channelDesc'] }}</el-tag>
+              <el-tag size="medium">{{ scope.row["channelDesc"] }}</el-tag>
             </div>
           </el-popover>
           <el-popover trigger="hover" placement="top" v-if="!scope.row.channelFlag">
@@ -142,12 +144,7 @@
           <el-popover trigger="hover" placement="top">
             <p>点击按钮下载文件</p>
             <p>
-              <el-button
-                type="text"
-                v-on:click="
-                                    handleSystemFile(scope.$index, scope.row)
-                                "
-              >下载</el-button>
+              <el-button type="text" v-on:click="handleSystemFile(scope.$index, scope.row)">下载</el-button>
             </p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">
@@ -171,12 +168,7 @@
             <p>
               <el-button
                 type="text"
-                v-on:click="
-                                    handleUserWarehousingFile(
-                                        scope.$index,
-                                        scope.row
-                                    )
-                                "
+                v-on:click="handleUserWarehousingFile(scope.$index, scope.row)"
               >下载</el-button>
             </p>
             <div slot="reference" class="name-wrapper">
@@ -230,9 +222,9 @@
               plain
             />
           </el-tooltip>
-          <el-tooltip content="东岳国内前置海外仓已收货，发往头程校验" placement="top" v-if="msgData.buttonVisible8">
+          <el-tooltip content="东岳国内前置海外仓已收货，记录整体体积重量" placement="top" v-if="msgData.buttonVisible8">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 3)"
+              @click="toggleHeadCheckDialog(scope.$index, scope.row)"
               size="mini"
               type="info"
               icon="el-icon-check"
@@ -242,7 +234,7 @@
           </el-tooltip>
           <el-tooltip content="头程校验完成，发往日本" placement="top" v-if="msgData.buttonVisible9">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 4)"
+              @click="confirmTrackNo(scope.$index,scope.row)"
               size="mini"
               type="info"
               icon="el-icon-check"
@@ -320,6 +312,26 @@
               plain
             />
           </el-tooltip>
+          <el-tooltip content="货物清点" placement="top" v-if="msgData.buttonVisible13">
+            <el-button
+              @click="handleDialogVisible6(scope.$index, scope.row)"
+              size="mini"
+              type="info"
+              icon="el-icon-check"
+              circle
+              plain
+            />
+          </el-tooltip>
+          <el-tooltip content="货物上架" placement="top" v-if="msgData.buttonVisible14">
+            <el-button
+              @click="handleDialogVisible7(scope.$index, scope.row)"
+              size="mini"
+              type="info"
+              icon="el-icon-check"
+              circle
+              plain
+            />
+          </el-tooltip>
           <el-tooltip content="编辑" placement="top" v-if="msgData.buttonVisible5">
             <el-button
               @click="handleUpdate(scope.$index, scope.row)"
@@ -363,7 +375,7 @@
       :page-size="tablePage.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="tablePage.total"
-    ></el-pagination>
+    />
     <el-dialog title="申请单号" :visible.sync="dialogVisible1" width="30%">
       <el-form :model="dialog">
         <el-form-item label="承运人">
@@ -380,6 +392,24 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible1 = false">取 消</el-button>
         <el-button type="primary" @click="fillInTrackNo">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="确认单号" :visible.sync="dialogVisible1Sub" width="30%">
+      <el-form :model="dialog">
+        <el-form-item label="承运人">
+          <el-tooltip content="东岳头程默认承运人为东岳" placement="top">
+            <el-input v-model="dialog.carrier"></el-input>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item label="追踪单号">
+          <el-tooltip content="东岳头程默认追踪单号为订单号" placement="top">
+            <el-input v-model="dialog.trackNo"></el-input>
+          </el-tooltip>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible1Sub = false">取 消</el-button>
+        <el-button type="primary" @click="submitTrackNo(4)">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="申请报关单" :visible.sync="dialogVisible2" width="40%">
@@ -471,23 +501,76 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4" width="20%">
-      <div id="pdfDom">
-        <custom-syncfusion-barcode v-bind:barcode="this.barcode"></custom-syncfusion-barcode>
+    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4Main" width="20%">
+      <div>
+        <el-radio v-model="dialog4.radio" label="3*8">3*8</el-radio>
+        <el-radio v-model="dialog4.radio" label="4*10">4*10</el-radio>
+        <el-radio v-model="dialog4.radio" label="2*2">2*2</el-radio>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Main = false">取 消</el-button>
+        <el-button type="primary" @click="getBarcode()">确定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4" width="40%">
+      <div id="pdfDom" class="a4-pdf">
+        <div v-for="item in dialog4.barcodeLength8" v-bind:key="item.item">
+          <div
+            v-for="item in dialog4.barcodeLength3"
+            v-bind:key="item.item"
+            style="display:inline-block;margin:1%"
+          >
+            <custom-syncfusion-barcode v-bind:barcode="barcode1"></custom-syncfusion-barcode>
+          </div>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible4 = false">取 消</el-button>
         <el-button type="primary" @click="getPdf('#pdfDom')">下载</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4Sub" width="40%">
+      <div id="pdfDom" class="a4-pdf-v2">
+        <div v-for="item in dialog4.barcodeLength10" v-bind:key="item.item">
+          <div
+            v-for="item in dialog4.barcodeLength4"
+            v-bind:key="item.item"
+            style="display:inline-block;margin:1%"
+          >
+            <custom-syncfusion-barcode v-bind:barcode="barcode2"></custom-syncfusion-barcode>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Sub = false">取 消</el-button>
+        <el-button type="primary" @click="getPdf('#pdfDom')">下载</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="获取入库单标签" :visible.sync="dialogVisible4Sub2" width="40%">
+      <div id="pdfDom" class="a4-pdf-v2">
+        <div v-for="item in dialog4.barcodeLength2" v-bind:key="item.item">
+          <div
+            v-for="item in dialog4.barcodeLength2"
+            v-bind:key="item.item"
+            style="display:inline-block;margin:1%"
+          >
+            <custom-syncfusion-barcode-detail v-bind:barcode="barcode2"></custom-syncfusion-barcode-detail>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Sub2 = false">取 消</el-button>
+        <el-button type="primary" @click="getPdf('#pdfDom')">下载</el-button>
+      </span>
+    </el-dialog>
     <el-dialog title="入库单预审" :visible.sync="dialogVisible5" width="20%">
-      <p>入库单号:{{dialogForm5.warehousingNo}}</p>
+      <p>入库单号:{{ dialogForm5.warehousingNo }}</p>
       <div
         v-for="warehousingContent in dialogForm5.warehousingContentList"
-        v-bind:key="warehousingContent.boxSeq"
+        v-bind:key="warehousingContent.uuid"
         style="margin:2%"
       >
-        箱号:{{warehousingContent.boxSeq}}
+        箱号:{{ warehousingContent.boxSeq }}
         <span style="margin-left:5px">
           是否收货
           <el-switch
@@ -503,23 +586,162 @@
         <el-button type="primary" @click="updateWarehousingContent()">确定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="货物清点" :visible.sync="dialogVisible6" width="40%">
+      <el-row>
+        <el-col :span="14">
+          <p>入库单号:{{ dialogForm6.warehousingNo }}</p>
+        </el-col>
+        <el-col :span="10">
+          <el-input
+            v-model="dialogForm6.skuFromScanner"
+            @change="searchWarehousingContentList()"
+            placeholder="请扫描商品sku"
+          />
+        </el-col>
+      </el-row>
+      <div
+        v-for="warehousingContent in dialogForm6.warehousingContentList"
+        v-bind:key="warehousingContent.uuid"
+        style="margin:2%"
+      >
+        箱号:
+        <b style="margin-left:4px">{{ warehousingContent.boxSeq }}</b>
+        sku:
+        <b style="margin-left:4px">{{ warehousingContent.sku }}</b>
+        名称:
+        <b style="margin-left:4px">{{ warehousingContent.name }}</b>
+        <el-row style="margin-top:1%">
+          发货数量:
+          <b style="margin-left:4px">{{ warehousingContent.totalNum }}</b>
+          收货数量:
+          <el-input-number
+            style="margin-left:4px"
+            v-model="warehousingContent.actual"
+            placeholder="收货数量"
+          ></el-input-number>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible6 = false">取 消</el-button>
+        <el-button type="primary" @click="updateWarehousingContent2nd()">确定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="货物上架" :visible.sync="dialogVisible7" width="40%">
+      <el-row>
+        <el-col :span="14">
+          <p>入库单号:{{ dialogForm7.warehousingNo }}</p>
+        </el-col>
+        <el-col :span="10">
+          <el-input
+            v-model="dialogForm7.skuFromScanner"
+            @change="searchWarehousingContentList7()"
+            placeholder="请扫描商品sku"
+          />
+        </el-col>
+      </el-row>
+      <div
+        v-for="warehousingContent in dialogForm7.warehousingContentList"
+        v-bind:key="warehousingContent.uuid"
+        style="margin:2%"
+      >
+        <el-row>
+          箱号:
+          <b style="margin-left:4px">{{ warehousingContent.boxSeq }}</b>
+          sku:
+          <b style="margin-left:4px">{{ warehousingContent.sku }}</b>
+        </el-row>
+        <el-row style="margin-top:1%">
+          名称:
+          <b style="margin-left:4px">{{ warehousingContent.name }}</b>
+          收货数量:
+          <b style="margin-left:4px">{{ warehousingContent.actual }}</b>
+        </el-row>
+        <el-row style="margin-top: 1%">
+          上架数量:
+          <el-input-number v-model="upshelfNum" clearable placeholder="上架数量" />上架货架:
+          <el-select v-model="shelfNo" filterable placeholder="上架货架">
+            <el-option
+              v-for="item in options"
+              :key="item.shelfNo"
+              :label="item.shelfNo"
+              :value="item.shelfNo"
+            >
+              <span>
+                货架号 {{ item.shelfNo }} 货架区域 {{ item.area }} 货架行数
+                {{ item.layer }} 货架层数 {{ item.rowNo }}
+              </span>
+            </el-option>
+          </el-select>
+          <el-button
+            icon="el-icon-circle-plus-outline"
+            circle
+            @click="addUpShelf(warehousingContent)"
+          />
+        </el-row>
+        <el-table
+          style="margin-top:1%;width: 100%"
+          :data="warehousingContent['upshelfData']"
+          v-loading.body="tableLoading"
+          element-loading-text="加载中"
+          stripe
+          highlight-current-row
+        >
+          <el-table-column width="200" prop="sku" label="sku" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible7 = false">取 消</el-button>
+        <el-button type="primary" @click="up2shelf()">确定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="头程校验" :visible.sync="dialogVisible8" width="40%">
+      <div v-for="box in dialogForm8.boxList" v-bind:key="box.boxSeq" style="margin:2%">
+        <el-row>
+          箱号:
+          <b>{{box.boxSeq}}</b>
+        </el-row>
+        <el-row style="margin-top:2%">
+          <el-col :span="8">
+            长(cm):
+            <el-input-number v-model="box.length"></el-input-number>
+          </el-col>
+          <el-col :span="8">
+            宽(cm):
+            <el-input-number v-model="box.width"></el-input-number>
+          </el-col>
+          <el-col :span="8">
+            高(cm):
+            <el-input-number v-model="box.height"></el-input-number>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:2%">
+          重量(kg):
+          <el-input-number v-model="box.weight"></el-input-number>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible8 = false">取消</el-button>
+        <el-button type="primary" @click="headCheck()">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import request from "../../../utils/service";
-import CustomSyncfusionBarcode from "../../@syncfusion/custom-syncfusion-barcode";
+import request from '../../../utils/service';
+import CustomSyncfusionBarcode from '../../@syncfusion/custom-syncfusion-barcode';
+import CustomSyncfusionBarcodeDetail from '../../@syncfusion/custom-syncfusion-barcode-detail';
 
 export default {
-  name: "warehousingTable",
-  components: { CustomSyncfusionBarcode },
+  name: 'warehousingTable',
+  components: {CustomSyncfusionBarcode, CustomSyncfusionBarcodeDetail},
   data() {
     return {
-      width: "200px",
-      height: "150px",
-      mode: "SVG",
-      type: "Code128",
-      value: "Code128",
+      width: '200px',
+      height: '150px',
+      mode: 'SVG',
+      type: 'Code128',
+      value: 'Code128',
       msgData: {
         status: this.msg.status,
         category: this.msg.category,
@@ -537,91 +759,146 @@ export default {
         buttonVisibleC: this.msg.buttonVisibleC === true,
         buttonVisible10: this.msg.buttonVisible10 === true,
         buttonVisible11: this.msg.buttonVisible11 === true,
-        buttonVisible12: this.msg.buttonVisible12 === true
+        buttonVisible12: this.msg.buttonVisible12 === true,
+        buttonVisible13: this.msg.buttonVisible13 === true,
+        buttonVisible14: this.msg.buttonVisible14 === true,
       },
       // page data
       tablePage: {
         current: 1,
         pages: null,
         size: null,
-        total: null
+        total: null,
       },
       tableLoading: false,
       tableData: [],
       daterange: null,
       dialogVisible1: false,
+      dialogVisible1Sub: false,
       dialogVisible2: false,
       dialogVisible3: false,
       dialogVisible4: false,
+      dialogVisible4Main: false,
+      dialogVisible4Sub: false,
+      dialogVisible4Sub2: false,
+      dialog4: {
+        radio: '3*8',
+        barcodeLength2: [{item: 1}, {item: 2}],
+        barcodeLength3: [{item: 1}, {item: 2}, {item: 3}],
+        barcodeLength4: [{item: 1}, {item: 2}, {item: 3}, {item: 4}],
+        barcodeLength8: [
+          {item: 1},
+          {item: 2},
+          {item: 3},
+          {item: 4},
+          {item: 5},
+          {item: 6},
+          {item: 7},
+          {item: 8},
+        ],
+        barcodeLength10: [
+          {item: 1},
+          {item: 2},
+          {item: 3},
+          {item: 4},
+          {item: 5},
+          {item: 6},
+          {item: 7},
+          {item: 8},
+          {item: 9},
+          {item: 10},
+        ],
+      },
       dialogVisible5: false,
+      dialogVisible6: false,
+      dialogVisible7: false,
+      dialogVisible8: false,
       pickerOptions2: {
         shortcuts: [
           {
-            text: "最近一周",
+            text: '最近一周',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            }
+              picker.$emit('pick', [start, end]);
+            },
           },
           {
-            text: "最近一个月",
+            text: '最近一个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
+              picker.$emit('pick', [start, end]);
+            },
           },
           {
-            text: "最近三个月",
+            text: '最近三个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
+              picker.$emit('pick', [start, end]);
+            },
+          },
+        ],
       },
       users: [],
       channels: [],
       search: {
-        warehousingNo: "",
-        creator: "",
-        channelCode: ""
+        warehousingNo: '',
+        creator: '',
+        channelCode: '',
       },
       dialog: {
-        carrier: "",
-        trackNo: "",
-        warehousingNo: ""
+        carrier: '',
+        trackNo: '',
+        warehousingNo: '',
       },
       print: {},
       profile: {
-        chineseName: "",
-        englishName: "",
-        chineseAddr: "",
-        englishAddr: "",
-        zipCode: "",
-        contactEnglishName: "",
-        contactChineseName: "",
-        phone: "",
-        deliverDate: "",
-        trackNo: "",
-        warehousingNo: ""
+        chineseName: '',
+        englishName: '',
+        chineseAddr: '',
+        englishAddr: '',
+        zipCode: '',
+        contactEnglishName: '',
+        contactChineseName: '',
+        phone: '',
+        deliverDate: '',
+        trackNo: '',
+        warehousingNo: '',
       },
       dialogForm3: {},
-      uploadLink: process.env.BASE_API + "/warehousing/userFile",
-      barcode: "",
+      uploadLink: process.env.BASE_API + '/warehousing/userFile',
+      barcode1: {},
+      barcode2: {},
+      barcode3: {},
       dialogForm5: {
-        warehousingNo: "",
+        warehousingNo: '',
         warehousingContentList: [],
-        warehousing: {}
-      }
+        warehousing: {},
+      },
+      dialogForm6: {
+        warehousingNo: '',
+        warehousingContentList: '',
+        warehousing: '',
+        skuFromScanner: '',
+      },
+      dialogForm7: {
+        warehousingNo: '',
+        warehousingContentList: '',
+        warehousing: '',
+        skuFromScanner: '',
+      },
+      dialogForm8: {},
+      options: [],
+      upshelfNum: 0,
+      shelfNo: '',
     };
   },
-  props: ["msg"],
+  props: ['msg'],
   created() {
     this.fetchData();
     this.initUserList();
@@ -631,13 +908,13 @@ export default {
       this.tableLoading = true;
       request({
         url:
-          "warehousing/list/" +
+          'warehousing/list/' +
           this.msgData.category +
-          "/" +
+          '/' +
           this.msgData.status,
-        method: "post",
-        data: this.tablePage
-      }).then(res => {
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
         const tableRecords = res.data.page.records;
         for (let i = 0; i < tableRecords.length; i++) {
           const record = tableRecords[i];
@@ -649,85 +926,84 @@ export default {
         this.tablePage.size = res.data.page.size;
         this.tablePage.total = res.data.page.total;
         this.tableLoading = false;
-        console.log(this.tableData);
       });
     },
     handleUpdate(index, row) {
       this.$router.push({
         path:
-          "/new-warehousing/new-warehousing?warehousingNo=" + row.warehousingNo
+          '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo,
       });
     },
     statusUpdate(index, row, statusUpdateTo) {
-      this.$confirm("您确定要提交该订单？", "提示", confirm)
-        .then(() => {
-          request({
-            url: "warehousing/status",
-            method: "post",
-            data: {
-              to: statusUpdateTo,
-              warehousingNo: row.warehousingNo
-            }
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("提交成功");
+      this.$confirm('您确定要提交该订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: statusUpdateTo,
+                warehousingNo: row.warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消提交");
-        });
     },
     route2NewWarehousing() {
       this.$router.push({
-        path: "/new-warehousing/new-warehousing"
+        path: '/new-warehousing/new-warehousing',
       });
     },
     hold(index, row) {
       const warehousingNo = row.warehousingNo;
       this.$confirm(
-        "您确定要暂存该入库单？（该订单可在暂存页面查看）",
-        "提示",
-        confirm
+          '您确定要暂存该入库单？（该订单可在暂存页面查看）',
+          '提示',
+          confirm
       )
-        .then(() => {
-          request({
-            url: "warehousing/status",
-            method: "post",
-            data: {
-              to: "8",
-              warehousingNo: warehousingNo
-            }
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("暂存成功");
+          .then(() => {
+            request({
+              url: 'warehousing/status',
+              method: 'post',
+              data: {
+                to: '8',
+                warehousingNo: warehousingNo,
+              },
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('暂存成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消提交");
-        });
     },
     handleDelete(index, row) {
-      this.$confirm("您确定要删除该入库单？(该订单将无法恢复)", "提示", confirm)
-        .then(() => {
-          request({
-            url: "warehousing/drop?warehousingNo=" + row.warehousingNo,
-            method: "get"
-          }).then(() => {
-            this.fetchData();
-            this.$message.success("删除成功");
+      this.$confirm('您确定要删除该入库单？(该订单将无法恢复)', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'warehousing/drop?warehousingNo=' + row.warehousingNo,
+              method: 'get',
+            }).then(() => {
+              this.fetchData();
+              this.$message.success('删除成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消");
-        });
     },
     handlePrint(index, row) {
       this.profile.trackNo = row.trackNo;
       this.profile.warehousingNo = row.warehousingNo;
       request({
-        url: "/profile/init",
-        method: "get"
-      }).then(res => {
+        url: '/profile/init',
+        method: 'get',
+      }).then((res) => {
         const profile = res.data.data;
         this.profile.chineseName = profile.chineseName;
         this.profile.englishName = profile.englishName;
@@ -750,22 +1026,22 @@ export default {
     },
     route2ChannelPage(index, row) {
       this.$router.push({
-        path: "/system/channel?filter=" + row.channel
+        path: '/system/channel?filter=' + row.channel,
       });
     },
     exportExcel() {
-      const link = document.createElement("a");
-      link.style.display = "none";
+      const link = document.createElement('a');
+      link.style.display = 'none';
       if (this.search.creator.length > 0) {
         link.href =
           process.env.BASE_API +
-          "/warehousing/excel/1?method=东岳头程&creator=" +
+          '/warehousing/excel/1?method=东岳头程&creator=' +
           this.search.creator;
       } else {
         link.href =
-          process.env.BASE_API + "/warehousing/excel/1?method=东岳头程";
+          process.env.BASE_API + '/warehousing/excel/1?method=东岳头程';
       }
-      link.target = "_blank";
+      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
     },
@@ -777,9 +1053,9 @@ export default {
     },
     fillInTrackNo() {
       request({
-        url: "warehousing/trackno",
-        method: "post",
-        data: this.dialog
+        url: 'warehousing/trackno',
+        method: 'post',
+        data: this.dialog,
       }).then(() => {
         this.dialogVisible1 = false;
         this.fetchData();
@@ -787,15 +1063,15 @@ export default {
     },
     printAndSave() {
       request({
-        url: "/warehousing/printCustomsDeclaration",
-        method: "post",
-        data: this.profile
-      }).then(res => {
+        url: '/warehousing/printCustomsDeclaration',
+        method: 'post',
+        data: this.profile,
+      }).then((res) => {
         const uuid = res.data.data;
-        const link = document.createElement("a");
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
         this.dialogVisible2 = false;
@@ -803,56 +1079,73 @@ export default {
     },
     handleUploadFile(index, row) {
       this.dialogVisible3 = true;
-      this.uploadLink = this.uploadLink + "?warehousingNo=" + row.warehousingNo;
+      this.uploadLink = this.uploadLink + '?warehousingNo=' + row.warehousingNo;
     },
     submitUpload() {
       this.$refs.upload.submit();
-      this.$message.success("上传成功");
+      this.$message.success('上传成功');
     },
     handleError(err) {
-      this.$message.error(JSON.parse(err.message)["message"]);
+      this.$message.error(JSON.parse(err.message)['message']);
     },
     handleSystemFile(index, row) {
-      if (row["systemFileUuid"] == null) {
-        this.$message.warning("报关单未生成，请点击获取报关单生成报关单");
+      if (row['systemFileUuid'] == null) {
+        this.$message.warning('报关单未生成，请点击获取报关单生成报关单');
       } else {
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         const uuid = row.systemFileUuid;
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
       }
     },
     handleUserWarehousingFile(index, row) {
       if (row.userWarehousingFileUuid == null) {
-        this.$message.warning("报关单未上传，请点击上传报关单进行上传");
+        this.$message.warning('报关单未上传，请点击上传报关单进行上传');
       } else {
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         const uuid = row.userWarehousingFileUuid;
-        link.style.display = "none";
-        link.href = process.env.BASE_API + "/file/" + uuid;
-        link.target = "_blank";
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
       }
     },
     initUserList() {
       request({
-        url: "/sys_user/query4Option",
-        method: "post",
+        url: '/sys_user/query4Option',
+        method: 'post',
         data: {
           current: null,
-          size: "all"
-        }
-      }).then(res => {
+          size: 'all',
+        },
+      }).then((res) => {
         this.users = res.data.page.records;
       });
     },
     printWarehousingBarcode(index, row) {
-      this.dialogVisible4 = true;
-      this.barcode = row.warehousingNo;
+      this.dialogVisible4Main = true;
+      console.log(row);
+      this.barcode1 = {
+        value: row.warehousingNo,
+        width: 185,
+        height: 93,
+      };
+      this.barcode2 = {
+        value: row.warehousingNo,
+        width: 130,
+        height: 72,
+        textSize: 13,
+      };
+      this.barcode3 = {
+        value: row.warehousingNo,
+        width: 130,
+        height: 72,
+        textSize: 13,
+      };
     },
     handleDialogVisible5(index, row) {
       this.dialogVisible5 = true;
@@ -860,20 +1153,200 @@ export default {
       this.dialogForm5.warehousingContentList = row.warehousingContentList;
       this.dialogForm5.warehousing = row;
     },
+    handleDialogVisible6(index, row) {
+      this.dialogVisible6 = true;
+      this.dialogForm6.warehousingNo = row.warehousingNo;
+      this.dialogForm6.warehousingContentList = row.warehousingContentList;
+      this.dialogForm6.warehousing = row;
+    },
+    handleDialogVisible7(index, row) {
+      this.$router.push({
+        path: '/warehousing/upshelf/upshelf?warehousingNo=' + row.warehousingNo,
+      });
+    },
+    fetchShelves() {
+      request({
+        url: '/shelf/list/enable',
+        method: 'get',
+      }).then((res) => {
+        this.options = res.data.data;
+      });
+    },
+    up2shelf() {
+      this.$message.success('上架成功');
+      this.dialogVisible7 = false;
+    },
     updateWarehousingContent() {
       this.dialogForm5.warehousing.warehousingContentList = this.dialogForm5.warehousingContentList;
-      this.dialogForm5.warehousing.status = "3";
+      this.dialogForm5.warehousing.status = '3';
+      const method = this.dialogForm5.warehousing.method;
+      if ('东岳头程' === method) {
+        this.dialogForm5.warehousing.status = '5';
+      }
       request({
-        url: "/warehousing/update",
-        method: "post",
-        data: this.dialogForm5.warehousing
+        url: '/warehousing/update',
+        method: 'post',
+        data: this.dialogForm5.warehousing,
       }).then(() => {
-        this.$message.success("预审完成，准备上架清点");
+        this.$message.success('预审完成，准备上架清点');
+        this.dialogVisible5 = false;
         this.fetchData();
       });
-    }
+    },
+    updateWarehousingContent2nd() {
+      let flag = true;
+      for (const i in this.dialogForm6.warehousingContentList) {
+        if (this.dialogForm6.warehousingContentList.hasOwnProperty(i)) {
+          const element = this.dialogForm6.warehousingContentList[i];
+          if (element['actual'] != element['totalNum']) {
+            this.$message.warning(element['sku'] + '到货数量与预期不符');
+            flag = false;
+            break;
+          }
+        }
+      }
+      if (flag) {
+        this.dialogForm6.warehousing.warehousingContentList = this.dialogForm6.warehousingContentList;
+        this.dialogForm6.warehousing.status = '4';
+        const method = this.dialogForm6.warehousing.method;
+        if ('东岳头程' === method) {
+          this.dialogForm6.warehousing.status = '6';
+        }
+        request({
+          url: '/warehousing/update',
+          method: 'post',
+          data: this.dialogForm6.warehousing,
+        }).then(() => {
+          this.dialogVisible6 = false;
+          this.$message.success('上架清点完成');
+          this.fetchData();
+        });
+      }
+    },
+    getBarcode() {
+      if (this.dialog4['radio'] === '3*8') {
+        this.dialogVisible4Main = false;
+        this.dialogVisible4Sub = false;
+        this.dialogVisible4Sub2 = false;
+        this.dialogVisible4 = true;
+      } else if (this.dialog4['radio'] === '4*10') {
+        this.dialogVisible4 = false;
+        this.dialogVisible4Main = false;
+        this.dialogVisible4Sub2 = false;
+        this.dialogVisible4Sub = true;
+      } else if (this.dialog4['radio'] === '2*2') {
+        this.dialogVisible4 = false;
+        this.dialogVisible4Main = false;
+        this.dialogVisible4Sub = false;
+        this.dialogVisible4Sub2 = true;
+      }
+    },
+    customBarcodeSize(val) {
+      if (val === '3*8') {
+        this.dialogVisible4 = false;
+        this.dialogVisible4Sub = true;
+        this.dialog4['radio'] = '3*8';
+      } else if (val === '4*10') {
+        this.dialogVisible4 = true;
+        this.dialogVisible4Sub = false;
+        this.dialog4['radio'] = '4*10';
+      }
+    },
+    searchWarehousingContentList() {
+      const sku = this.dialogForm6.skuFromScanner.trim();
+      const contentList = this.dialogForm6.warehousingContentList;
+      for (const i in contentList) {
+        if (contentList.hasOwnProperty(i)) {
+          const element = contentList[i];
+          if (element['sku'] === sku) {
+            if (
+              element.hasOwnProperty('actualNum') &&
+              element['actualNum'] >= 0
+            ) {
+              element['actualNum'] += 1;
+            } else {
+              element['actualNum'] = 1;
+            }
+            break;
+          }
+        }
+      }
+    },
+    addUpShelf(warehousingContent) {
+      if (this.shelfNo.length <= 0 || this.upshelfNum <= 0) {
+        this.$message.warning('请选择货架和上架数量');
+        return;
+      }
+      let upshelfData = warehousingContent['upshelfData'];
+      if (upshelfData === undefined || upshelfData.length <= 0) {
+        upshelfData = [];
+      }
+      upshelfData.push({
+        shelfNo: this.shelfNo,
+        upshelfNum: this.upshelfNum,
+        sku: warehousingContent.sku,
+      });
+      warehousingContent['upshelfData'] = upshelfData;
+      console.log(warehousingContent);
+      console.log(this.dialogForm7.warehousingContentList);
+    },
+    removeUpShelf(item, all) {
+      console.log(item);
+      console.log(all);
+    },
+    toggleHeadCheckDialog(index, row) {
+      this.dialogVisible8 = true;
+      this.dialogForm8.ori = row;
+      const warehousingContentList = row.warehousingContentList;
+      const distinctSeqList = new Set();
+      for (const warehousingContent of warehousingContentList) {
+        distinctSeqList.add(warehousingContent.boxSeq);
+      }
+      this.dialogForm8.boxList = [];
+      for (const seq of distinctSeqList) {
+        const tmp = {
+          boxSeq: seq,
+          warehousingNo: row.warehousingNo,
+        };
+        this.dialogForm8.boxList.push(tmp);
+      }
+    },
+    headCheck() {
+      const warehousingNo = this.dialogForm8.ori.warehousingNo;
+      request({
+        url: '/warehousing/content/headCheck?warehousingNo=' + warehousingNo,
+        method: 'post',
+        data: this.dialogForm8.boxList,
+      }).then(() => {
+        this.$message.success(
+            '入库单' + warehousingNo + '头程检查结束，等待发货'
+        );
+        this.dialogVisible8 = false;
+        this.fetchData();
+      });
+    },
+    confirmTrackNo(index, row) {
+      this.dialog.warehousingNo = row.warehousingNo;
+      this.dialog.carrier = row.carrier;
+      this.dialog.trackNo = row.trackNo;
+      this.dialogVisible1Sub = true;
+    },
+    submitTrackNo(statusUpdateTo) {
+      request({
+        url: 'warehousing/status',
+        method: 'post',
+        data: {
+          to: statusUpdateTo,
+          warehousingNo: this.dialog.warehousingNo,
+        },
+      }).then(() => {
+        this.fetchData();
+        this.$message.success('更新成功');
+        this.dialogVisible1Sub = false;
+      });
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -887,5 +1360,23 @@ export default {
   border: 2px solid lightgray;
   min-height: 40%;
   padding-top: 35px;
+}
+
+.a4-pdf {
+  height: 842px;
+  width: 595px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.a4-pdf-v2 {
+  height: 842px;
+  width: 595px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.a4-pdf-v2 text {
+  font-size: 14px;
 }
 </style>

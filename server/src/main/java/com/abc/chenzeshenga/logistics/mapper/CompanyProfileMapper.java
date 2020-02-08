@@ -8,12 +8,12 @@ import org.apache.ibatis.annotations.Mapper;
  * @version 1.0
  * @date 20190614
  */
-@Mapper public interface CompanyProfileMapper {
+@Mapper
+public interface CompanyProfileMapper {
 
-    CompanyProfile init(String userId);
+  CompanyProfile init(String userId);
 
-    int insertSelective(CompanyProfile companyProfile);
+  int insertSelective(CompanyProfile companyProfile);
 
-    int updateByPrimaryKeySelective(CompanyProfile companyProfile);
-
+  int updateByPrimaryKeySelective(CompanyProfile companyProfile);
 }

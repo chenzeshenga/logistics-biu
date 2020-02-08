@@ -8,41 +8,43 @@ import lombok.Data;
  * @author chenzeshenga
  * @version 1.0
  */
-@Data public class CustomsDeclarationData {
+@Data
+public class CustomsDeclarationData {
 
-    private MiniTableRenderData order;
-    private String NO;
-    private String ID;
-    private String taitou;
-    private String consignee;
+  private MiniTableRenderData order;
+  private String NO;
+  private String ID;
+  private String taitou;
+  private String consignee;
 
-    private String subtotal;
-    private String tax;
-    private String transform;
-    private String other;
-    private String unpay;
-    private String total;
+  private String subtotal;
+  private String tax;
+  private String transform;
+  private String other;
+  private String unpay;
+  private String total;
 
-    /**
-     * true data
-     */
-    private String deliverDate;
-    private String trackNo;
+  /** true data */
+  private String deliverDate;
 
-    private String companyName;
-    private String companyAddr;
-    private String companyContact;
-    private String phone;
-    private String zipCode;
+  private String trackNo;
 
-    private String toCompanyName;
-    private String toCompanyAddr;
-    private String toCompanyContact;
-    private String toPhone;
-    private String toZipCode;
+  private String companyName;
+  private String companyAddr;
+  private String companyContact;
+  private String phone;
+  private String zipCode;
 
-    @Name("detailTable") private DetailData detailTable;
-    private String totalPrice;
+  private String toCompanyName;
+  private String toCompanyAddr;
+  private String toCompanyContact;
+  private String toPhone;
+  private String toZipCode;
 
-    private String date;
+  @Name("detailTable")
+  private DetailData detailTable;
+
+  private String totalPrice;
+
+  private String date;
 }

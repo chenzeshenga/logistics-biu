@@ -1,23 +1,23 @@
 package com.abc.chenzeshenga.logistics.model;
 
-import jdk.nashorn.internal.objects.annotations.Constructor;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.ConstructorArgs;
-
-import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * l_img
  *
  * @author
  */
-@Data @AllArgsConstructor @NoArgsConstructor public class Img implements Serializable {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Img implements Serializable {
 
-    private String uuid;
+  private static final long serialVersionUID = -2428746817170082687L;
 
-    private byte[] img;
+  private String uuid;
 
+  private byte[] img;
 }

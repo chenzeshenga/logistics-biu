@@ -7,4 +7,10 @@
         select id, `key`, `value` from l_label order by id
     </select>
 
+    <select id="listCarrier" resultType="com.abc.chenzeshenga.logistics.model.Label">
+        select id, `key`, `value` from l_label
+        where id in (42,43,44,45,85,86)
+        order by id
+    </select>
+
 </mapper>

@@ -4,74 +4,85 @@ import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * created by CaiBaoHong at 2018/4/17 14:55<br>
- */
+/** created by CaiBaoHong at 2018/4/17 14:55<br> */
 @TableName("sys_role")
 public class SysRole extends Model<SysRole> {
 
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String rid;       // 角色id
-    private String rname;   // 角色名，用于显示
-    private String rdesc;   // 角色描述
-    private String rval;    // 角色值，用于权限判断
-    private Date created;   // 创建时间
-    private Date updated;   // 修改时间
+  private static final long serialVersionUID = -1147802580300641865L;
 
-    @Override
-    protected Serializable pkVal() {
-        return rid;
-    }
+  @TableId(type = IdType.ID_WORKER_STR)
+  private String rid; // 角色id
 
-    public String getRid() {
-        return rid;
-    }
+  private String rname; // 角色名，用于显示
+  private String rdesc; // 角色描述
+  private String rval; // 角色值，用于权限判断
+  private boolean manager;
+  private Date created; // 创建时间
+  private Date updated; // 修改时间
 
-    public void setRid(String rid) {
-        this.rid = rid;
-    }
+  @Override
+  protected Serializable pkVal() {
+    return rid;
+  }
 
-    public String getRname() {
-        return rname;
-    }
+  public String getRid() {
+    return rid;
+  }
 
-    public void setRname(String rname) {
-        this.rname = rname;
-    }
+  public void setRid(String rid) {
+    this.rid = rid;
+  }
 
-    public String getRdesc() {
-        return rdesc;
-    }
+  public String getRname() {
+    return rname;
+  }
 
-    public void setRdesc(String rdesc) {
-        this.rdesc = rdesc;
-    }
+  public void setRname(String rname) {
+    this.rname = rname;
+  }
 
-    public String getRval() {
-        return rval;
-    }
+  public String getRdesc() {
+    return rdesc;
+  }
 
-    public void setRval(String rval) {
-        this.rval = rval;
-    }
+  public void setRdesc(String rdesc) {
+    this.rdesc = rdesc;
+  }
 
-    public Date getCreated() {
-        return created;
-    }
+  public String getRval() {
+    return rval;
+  }
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+  public void setRval(String rval) {
+    this.rval = rval;
+  }
 
-    public Date getUpdated() {
-        return updated;
-    }
+  public Date getCreated() {
+    return created;
+  }
 
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  public Date getUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(Date updated) {
+    this.updated = updated;
+  }
+
+  /** @return boolean return the manager */
+  public boolean isManager() {
+    return manager;
+  }
+
+  /** @param manager the manager to set */
+  public void setManager(boolean manager) {
+    this.manager = manager;
+  }
 }

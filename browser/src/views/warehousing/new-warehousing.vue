@@ -11,7 +11,7 @@
                   clearable
                   v-model="form.creator"
                   placeholder="请选择所属用户"
-                  @change="filterProduct"
+                  @change="filterProductAndUserAddress"
                 >
                   <el-option
                     v-for="creator in users"
@@ -22,6 +22,13 @@
                   />
                 </el-select>
               </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="发货地址">
+          <el-col :span="12">
+            <el-form-item label="发货地址">
+              <el-input v-model="form.fromAddress" />
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -226,6 +233,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       form: {
+        fromAddress: "",
         target: "岡山县岡山市中区新京橋3丁目4-26",
         warehousingNo: "",
         method: "东岳头程",
@@ -318,7 +326,7 @@ export default {
     },
     hasAdminRole() {
       request({
-        url: "/sys_user//info",
+        url: "/sys_user/info",
         method: "get"
       }).then(res => {
         const roles = res.data["userInfo"].roles;
@@ -329,9 +337,12 @@ export default {
             this.adminRole = true;
           }
         }
+        if (!this.adminRole) {
+          this.filterProductAndUserAddress(res.data.userInfo.uname);
+        }
       });
     },
-    filterProduct(val) {
+    filterProductAndUserAddress(val) {
       request({
         url: "/product/listAllByUser",
         method: "post",
@@ -348,7 +359,6 @@ export default {
             const subUser = this.users[i];
             if (subUser["uname"] === val) {
               subUser["disabled"] = true;
-              console.log(subUser);
               this.users[i] = subUser;
               break;
             }
@@ -360,8 +370,15 @@ export default {
           const subProduct = myProduct;
           this.productMap[subProduct["value"]] = subProduct;
         }
-        console.log(this.products);
-        console.log(this.productMap);
+      });
+      request({
+        url: "/user/info/get",
+        method: "post",
+        data: {
+          userId: val
+        }
+      }).then(ret => {
+        this.form.fromAddress = ret.data.data.userAddress;
       });
     },
     initPage() {
@@ -485,8 +502,8 @@ export default {
         url: "/warehousing/add",
         method: "post",
         data: this.form
-      }).then(() => {
-        this.$message.success("成功新建订单");
+      }).then(ret => {
+        this.$message.success("成功新建入库订单" + ret.data.warehousingNo);
         this.reload();
       });
     },

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import OrderType1 from '../../../../components/dy/orderTable/Type1/index';
+import OrderType1 from '../../../../components/dy/orderTable/index';
 export default {
   name: 'order-list-mgt-type1-status7',
   components: {OrderType1},
