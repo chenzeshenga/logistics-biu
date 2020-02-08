@@ -401,7 +401,7 @@ public class CommonController {
     List<Object> productList = EasyExcelFactory.read(inputStream, new Sheet(1, 0, Product.class));
     //  ignore the first item since it's the Excel head
     for (int i = 1; i < productList.size(); i++) {
-      Product product = (Product)productList.get(i);
+      Product product = (Product) productList.get(i);
       try {
         product.setCategory(switchFromCategoryName(product.getCategoryName()));
         product.setDySku(SkuUtil.generateDySku());

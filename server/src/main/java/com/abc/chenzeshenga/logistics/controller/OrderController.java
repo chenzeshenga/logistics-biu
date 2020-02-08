@@ -577,5 +577,4 @@ public class OrderController {
     List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordNo);
     return Json.succ().data(manualOrderContentList);
   }
-
 }
