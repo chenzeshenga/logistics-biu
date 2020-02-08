@@ -1,17 +1,14 @@
-/*******************************************************************************
- * Copyright 2009-2018 Amazon Services. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
+/**
+ * ***************************************************************************** Copyright 2009-2018
+ * Amazon Services. All Rights Reserved. Licensed under the Apache License, Version 2.0 (the
+ * "License");
  *
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at: http://aws.amazon.com/apache2.0
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *******************************************************************************
- * Response Metadata
- * API Version: 2013-09-01
- * Library Version: 2018-08-01
- * Generated: Wed Aug 29 10:45:06 PDT 2018
+ * <p>You may not use this file except in compliance with the License. You may obtain a copy of the
+ * License at: http://aws.amazon.com/apache2.0 This file is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ * ****************************************************************************** Response Metadata
+ * API Version: 2013-09-01 Library Version: 2018-08-01 Generated: Wed Aug 29 10:45:06 PDT 2018
  */
 package com.abc.chenzeshenga.logistics.model.amazon;
 
@@ -21,8 +18,8 @@ import com.amazonservices.mws.client.MwsWriter;
 
 /**
  * ResponseMetadata complex type.
- * <p>
- * XML schema:
+ *
+ * <p>XML schema:
  *
  * <pre>
  * &lt;complexType name="ResponseMetadata"&gt;
@@ -46,78 +43,78 @@ import com.amazonservices.mws.client.MwsWriter;
  */
 public class ResponseMetadata extends AbstractMwsObject {
 
-    private String requestId;
+  private String requestId;
 
-    /**
-     * Get the value of RequestId.
-     *
-     * @return The value of RequestId.
-     */
-    public String getRequestId() {
-        return requestId;
-    }
+  /**
+   * Get the value of RequestId.
+   *
+   * @return The value of RequestId.
+   */
+  public String getRequestId() {
+    return requestId;
+  }
 
-    /**
-     * Set the value of RequestId.
-     *
-     * @param requestId The new value to set.
-     */
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
+  /**
+   * Set the value of RequestId.
+   *
+   * @param requestId The new value to set.
+   */
+  public void setRequestId(String requestId) {
+    this.requestId = requestId;
+  }
 
-    /**
-     * Check to see if RequestId is set.
-     *
-     * @return true if RequestId is set.
-     */
-    public boolean isSetRequestId() {
-        return requestId != null;
-    }
+  /**
+   * Check to see if RequestId is set.
+   *
+   * @return true if RequestId is set.
+   */
+  public boolean isSetRequestId() {
+    return requestId != null;
+  }
 
-    /**
-     * Set the value of RequestId, return this.
-     *
-     * @param requestId The new value to set.
-     * @return This instance.
-     */
-    public ResponseMetadata withRequestId(String requestId) {
-        this.requestId = requestId;
-        return this;
-    }
+  /**
+   * Set the value of RequestId, return this.
+   *
+   * @param requestId The new value to set.
+   * @return This instance.
+   */
+  public ResponseMetadata withRequestId(String requestId) {
+    this.requestId = requestId;
+    return this;
+  }
 
-    /**
-     * Read members from a MwsReader.
-     *
-     * @param r The reader to read from.
-     */
-    @Override public void readFragmentFrom(MwsReader r) {
-        requestId = r.read("RequestId", String.class);
-    }
+  /**
+   * Read members from a MwsReader.
+   *
+   * @param r The reader to read from.
+   */
+  @Override
+  public void readFragmentFrom(MwsReader r) {
+    requestId = r.read("RequestId", String.class);
+  }
 
-    /**
-     * Write members to a MwsWriter.
-     *
-     * @param w The writer to write to.
-     */
-    @Override public void writeFragmentTo(MwsWriter w) {
-        w.write("RequestId", requestId);
-    }
+  /**
+   * Write members to a MwsWriter.
+   *
+   * @param w The writer to write to.
+   */
+  @Override
+  public void writeFragmentTo(MwsWriter w) {
+    w.write("RequestId", requestId);
+  }
 
-    /**
-     * Write tag, xmlns and members to a MwsWriter.
-     *
-     * @param w The Writer to write to.
-     */
-    @Override public void writeTo(MwsWriter w) {
-        w.write("https://mws.amazonservices.com/Orders/2013-09-01", "ResponseMetadata", this);
-    }
+  /**
+   * Write tag, xmlns and members to a MwsWriter.
+   *
+   * @param w The Writer to write to.
+   */
+  @Override
+  public void writeTo(MwsWriter w) {
+    w.write("https://mws.amazonservices.com/Orders/2013-09-01", "ResponseMetadata", this);
+  }
 
-    /**
-     * Default constructor.
-     */
-    public ResponseMetadata() {
-        super();
-    }
-
+  /** Default constructor. */
+  public ResponseMetadata() {
+    super();
+  }
 }

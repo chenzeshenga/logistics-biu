@@ -15,14 +15,12 @@ import java.util.Date;
  */
 public class MyDateUtils {
 
-    private final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
-    public static Calendar getCalendarFromStr(String dateString) throws ParseException {
-        Date date = SIMPLE_DATE_FORMAT.parse(dateString);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
-
-    }
-
+  public static Calendar getCalendarFromStr(String dateString) throws ParseException {
+    Date date = SIMPLE_DATE_FORMAT.parse(dateString);
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    return calendar;
+  }
 }

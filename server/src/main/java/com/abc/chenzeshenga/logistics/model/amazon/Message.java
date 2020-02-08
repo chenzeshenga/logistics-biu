@@ -1,17 +1,14 @@
-/*******************************************************************************
- * Copyright 2009-2018 Amazon Services. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
+/**
+ * ***************************************************************************** Copyright 2009-2018
+ * Amazon Services. All Rights Reserved. Licensed under the Apache License, Version 2.0 (the
+ * "License");
  *
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at: http://aws.amazon.com/apache2.0
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *******************************************************************************
- * Message
- * API Version: 2013-09-01
- * Library Version: 2018-08-01
- * Generated: Wed Aug 29 10:45:06 PDT 2018
+ * <p>You may not use this file except in compliance with the License. You may obtain a copy of the
+ * License at: http://aws.amazon.com/apache2.0 This file is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ * ****************************************************************************** Message API
+ * Version: 2013-09-01 Library Version: 2018-08-01 Generated: Wed Aug 29 10:45:06 PDT 2018
  */
 package com.abc.chenzeshenga.logistics.model.amazon;
 
@@ -21,8 +18,8 @@ import com.amazonservices.mws.client.MwsWriter;
 
 /**
  * Message complex type.
- * <p>
- * XML schema:
+ *
+ * <p>XML schema:
  *
  * <pre>
  * &lt;complexType name="Message"&gt;
@@ -48,127 +45,120 @@ import com.amazonservices.mws.client.MwsWriter;
  */
 public class Message extends AbstractMwsObject {
 
-    private String locale;
+  private String locale;
 
-    private String text;
+  private String text;
 
-    /**
-     * Get the value of Locale.
-     *
-     * @return The value of Locale.
-     */
-    public String getLocale() {
-        return locale;
-    }
+  /**
+   * Get the value of Locale.
+   *
+   * @return The value of Locale.
+   */
+  public String getLocale() {
+    return locale;
+  }
 
-    /**
-     * Set the value of Locale.
-     *
-     * @param locale
-     *            The new value to set.
-     */
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
+  /**
+   * Set the value of Locale.
+   *
+   * @param locale The new value to set.
+   */
+  public void setLocale(String locale) {
+    this.locale = locale;
+  }
 
-    /**
-     * Check to see if Locale is set.
-     *
-     * @return true if Locale is set.
-     */
-    public boolean isSetLocale() {
-        return locale != null;
-    }
+  /**
+   * Check to see if Locale is set.
+   *
+   * @return true if Locale is set.
+   */
+  public boolean isSetLocale() {
+    return locale != null;
+  }
 
-    /**
-     * Set the value of Locale, return this.
-     *
-     * @param locale
-     *             The new value to set.
-     *
-     * @return This instance.
-     */
-    public Message withLocale(String locale) {
-        this.locale = locale;
-        return this;
-    }
+  /**
+   * Set the value of Locale, return this.
+   *
+   * @param locale The new value to set.
+   * @return This instance.
+   */
+  public Message withLocale(String locale) {
+    this.locale = locale;
+    return this;
+  }
 
-    /**
-     * Get the value of Text.
-     *
-     * @return The value of Text.
-     */
-    public String getText() {
-        return text;
-    }
+  /**
+   * Get the value of Text.
+   *
+   * @return The value of Text.
+   */
+  public String getText() {
+    return text;
+  }
 
-    /**
-     * Set the value of Text.
-     *
-     * @param text
-     *            The new value to set.
-     */
-    public void setText(String text) {
-        this.text = text;
-    }
+  /**
+   * Set the value of Text.
+   *
+   * @param text The new value to set.
+   */
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    /**
-     * Check to see if Text is set.
-     *
-     * @return true if Text is set.
-     */
-    public boolean isSetText() {
-        return text != null;
-    }
+  /**
+   * Check to see if Text is set.
+   *
+   * @return true if Text is set.
+   */
+  public boolean isSetText() {
+    return text != null;
+  }
 
-    /**
-     * Set the value of Text, return this.
-     *
-     * @param text
-     *             The new value to set.
-     *
-     * @return This instance.
-     */
-    public Message withText(String text) {
-        this.text = text;
-        return this;
-    }
+  /**
+   * Set the value of Text, return this.
+   *
+   * @param text The new value to set.
+   * @return This instance.
+   */
+  public Message withText(String text) {
+    this.text = text;
+    return this;
+  }
 
-    /**
-     * Read members from a MwsReader.
-     *
-     * @param r
-     *      The reader to read from.
-     */
-    @Override public void readFragmentFrom(MwsReader r) {
-        locale = r.read("Locale", String.class);
-        text = r.read("Text", String.class);
-    }
+  /**
+   * Read members from a MwsReader.
+   *
+   * @param r The reader to read from.
+   */
+  @Override
+  public void readFragmentFrom(MwsReader r) {
+    locale = r.read("Locale", String.class);
+    text = r.read("Text", String.class);
+  }
 
-    /**
-     * Write members to a MwsWriter.
-     *
-     * @param w
-     *      The writer to write to.
-     */
-    @Override public void writeFragmentTo(MwsWriter w) {
-        w.write("Locale", locale);
-        w.write("Text", text);
-    }
+  /**
+   * Write members to a MwsWriter.
+   *
+   * @param w The writer to write to.
+   */
+  @Override
+  public void writeFragmentTo(MwsWriter w) {
+    w.write("Locale", locale);
+    w.write("Text", text);
+  }
 
-    /**
-     * Write tag, xmlns and members to a MwsWriter.
-     *
-     * @param w
-     *         The Writer to write to.
-     */
-    @Override public void writeTo(MwsWriter w) {
-        w.write("https://mws.amazonservices.com/Orders/2013-09-01", "Message", this);
-    }
+  /**
+   * Write tag, xmlns and members to a MwsWriter.
+   *
+   * @param w The Writer to write to.
+   */
+  @Override
+  public void writeTo(MwsWriter w) {
+    w.write("https://mws.amazonservices.com/Orders/2013-09-01", "Message", this);
+  }
 
-    /** Default constructor. */
-    public Message() {
-        super();
-    }
-
+  /** Default constructor. */
+  public Message() {
+    super();
+  }
 }

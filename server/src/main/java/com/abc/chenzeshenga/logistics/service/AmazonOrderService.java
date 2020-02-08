@@ -15,7 +15,8 @@ public interface AmazonOrderService {
    * @param createBeforeStr
    * @throws MarketplaceWebServiceOrdersException
    */
-  void syncOrders(String createAfterStr, String createBeforeStr) throws MarketplaceWebServiceOrdersException;
+  void syncOrders(String createAfterStr, String createBeforeStr)
+      throws MarketplaceWebServiceOrdersException;
 
   /**
    * 自动同步来自亚马逊的订单信息
@@ -23,5 +24,4 @@ public interface AmazonOrderService {
    * @throws MarketplaceWebServiceOrdersException
    */
   void syncOrdersAuto() throws MarketplaceWebServiceOrdersException;
-
 }

@@ -8,11 +8,11 @@
  */
 package com.abc.chenzeshenga.logistics.model.amazon;
 
+import java.io.Serializable;
 import lombok.Data;
 
-import java.io.Serializable;
-
-@Data public class StoreInfoReq implements Serializable {
+@Data
+public class StoreInfoReq implements Serializable {
 
   private int id;
 
@@ -33,5 +33,4 @@ import java.io.Serializable;
   private String enable;
 
   private String awsAccessKey;
-
 }

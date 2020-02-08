@@ -5,37 +5,31 @@ import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
 import com.abc.chenzeshenga.logistics.service.client.MarketplaceWebServiceOrdersClient;
 import com.abc.chenzeshenga.logistics.service.client.MarketplaceWebServiceOrdersException;
 import com.abc.chenzeshenga.logistics.service.client.MwsOrdersConfig;
-import com.abc.chenzeshenga.logistics.util.MyDateUtils;
 import com.amazonservices.mws.client.MwsUtl;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author chenzeshenga
  * @since 2020-02-07 23:30:00
  */
-//@Service
-//@EnableScheduling
+// @Service
+// @EnableScheduling
 @Slf4j
 public class AmazonOrderServiceImpl implements AmazonOrderService {
 
-  @Override public void syncOrders(String createAfterStr, String createBeforeStr)
-    throws MarketplaceWebServiceOrdersException {
+  @Override
+  public void syncOrders(String createAfterStr, String createBeforeStr)
+      throws MarketplaceWebServiceOrdersException {
     return;
   }
 
   @Override
-//  @PostConstruct
+  //  @PostConstruct
   public void syncOrdersAuto() throws MarketplaceWebServiceOrdersException {
     StoreInfoReq infoReq = new StoreInfoReq();
     infoReq.setSellerId("AOYEK60LBAPEN");
@@ -82,7 +76,10 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
           List<Order> temp = getNextOrderList(client, nextToken, storeInfoReq);
           orders.addAll(temp);
         }
-        log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(), rhmd.getTimestamp());
+        log.info(
+            "list order RequestId --> {}, Timestamp --> {}",
+            rhmd.getRequestId(),
+            rhmd.getTimestamp());
         log.info("response original msg as \r\n {}", response.toXMLFragment());
 
         for (Order order : orders) {
@@ -130,7 +127,10 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
           List<Order> temp = getNextOrderList(client, nextToken, storeInfoReq);
           orders.addAll(temp);
         }
-        log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(), rhmd.getTimestamp());
+        log.info(
+            "list order RequestId --> {}, Timestamp --> {}",
+            rhmd.getRequestId(),
+            rhmd.getTimestamp());
         log.info("response original msg as \r\n {}", response.toXMLFragment());
 
         for (Order order : orders) {
@@ -142,19 +142,25 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     }
   }
 
-  private void storeSaleRecord(String username, StoreInfoReq storeInfoReq, MarketplaceWebServiceOrdersClient client,
-    Order order) {
+  private void storeSaleRecord(
+      String username,
+      StoreInfoReq storeInfoReq,
+      MarketplaceWebServiceOrdersClient client,
+      Order order) {
     ListOrderItemsRequest listOrderItemsRequest = new ListOrderItemsRequest();
     listOrderItemsRequest.setSellerId(storeInfoReq.getSellerId());
     listOrderItemsRequest.setMWSAuthToken(storeInfoReq.getMwsAuthToken());
     listOrderItemsRequest.setAmazonOrderId(order.getAmazonOrderId());
 
     ListOrderItemsResponse listOrderItemsResponse = client.listOrderItems(listOrderItemsRequest);
-    ResponseHeaderMetadata responseHeaderMetadata = listOrderItemsResponse.getResponseHeaderMetadata();
+    ResponseHeaderMetadata responseHeaderMetadata =
+        listOrderItemsResponse.getResponseHeaderMetadata();
 
-    log.info("list order item RequestId --> {}, Timestamp --> {}, AmazonOrderId --> {}",
-      responseHeaderMetadata.getRequestId(), responseHeaderMetadata.getTimestamp(),
-      listOrderItemsRequest.getAmazonOrderId());
+    log.info(
+        "list order item RequestId --> {}, Timestamp --> {}, AmazonOrderId --> {}",
+        responseHeaderMetadata.getRequestId(),
+        responseHeaderMetadata.getTimestamp(),
+        listOrderItemsRequest.getAmazonOrderId());
     log.info("list order item original msg as \r\n {}", listOrderItemsResponse.toXMLFragment());
     OrderItem orderItem = listOrderItemsResponse.getListOrderItemsResult().getOrderItems().get(0);
     //    SaleRecord saleRecord = new SaleRecord();
@@ -164,16 +170,21 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     //    saleRecord.setFromUserId(username);
     //    Address address = order.getShippingAddress();
     //    if (address != null) {
-    //      saleRecord.setToContact(StringUtils.isEmpty(address.getPhone()) ? "" : address.getPhone());
-    //      saleRecord.setToPostCode(StringUtils.isEmpty(address.getPostalCode()) ? "" : address.getPostalCode());
-    //      String stateOrRegion = StringUtils.isEmpty(address.getStateOrRegion()) ? "" : address.getStateOrRegion();
-    //      String addressLine1 = StringUtils.isEmpty(address.getAddressLine1()) ? "" : address.getAddressLine1();
+    //      saleRecord.setToContact(StringUtils.isEmpty(address.getPhone()) ? "" :
+    // address.getPhone());
+    //      saleRecord.setToPostCode(StringUtils.isEmpty(address.getPostalCode()) ? "" :
+    // address.getPostalCode());
+    //      String stateOrRegion = StringUtils.isEmpty(address.getStateOrRegion()) ? "" :
+    // address.getStateOrRegion();
+    //      String addressLine1 = StringUtils.isEmpty(address.getAddressLine1()) ? "" :
+    // address.getAddressLine1();
     //      saleRecord.setToWhere(stateOrRegion + "--" + addressLine1);
     //      saleRecord.setToWho(address.getName());
     //    }
     //    Money money = order.getOrderTotal();
     //    if (money != null) {
-    //      saleRecord.setAmountOnbehalf(order.getOrderTotal().getCurrencyCode() + "--" + order.getOrderTotal().getAmount());
+    //      saleRecord.setAmountOnbehalf(order.getOrderTotal().getCurrencyCode() + "--" +
+    // order.getOrderTotal().getAmount());
     //    }
     //    saleRecord.setName(orderItem.getTitle());
     //    saleRecord.setNum(String.valueOf(order.getNumberOfItemsUnshipped()));
@@ -184,7 +195,8 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     //    log.info("order {} was synchronized", saleRecord);
   }
 
-  //  private void syncOrderManual(AtomicReference<ListOrdersResponse> response, String username, String createAfterStr,
+  //  private void syncOrderManual(AtomicReference<ListOrdersResponse> response, String username,
+  // String createAfterStr,
   //    String createBeforeStr) throws ParseException {
   //    StoreInfoReq info = userService.getStoreInfoByUsername(username);
   //    MwsOrdersConfig config = new MwsOrdersConfig();
@@ -217,7 +229,8 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   //        List<Order> temp = getNextOrderList(client, nextToken, info);
   //        orders.addAll(temp);
   //      }
-  //      log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(), rhmd.getTimestamp());
+  //      log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(),
+  // rhmd.getTimestamp());
   //      log.info("response original msg as \r\n {}", response.get().toXMLFragment());
   //
   //      for (Order order : orders) {
@@ -228,16 +241,17 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   //    }
   //  }
 
-  private static List<Order> getNextOrderList(MarketplaceWebServiceOrdersClient client, String nextToken,
-    StoreInfoReq info) {
+  private static List<Order> getNextOrderList(
+      MarketplaceWebServiceOrdersClient client, String nextToken, StoreInfoReq info) {
     ListOrdersByNextTokenRequest listOrdersRequest = new ListOrdersByNextTokenRequest();
     listOrdersRequest.setMWSAuthToken(info.getMwsAuthToken());
     listOrdersRequest.setSellerId(info.getSellerId());
     listOrdersRequest.setNextToken(nextToken);
 
-    ListOrdersByNextTokenResponse listOrdersByNextTokenResponse = client.listOrdersByNextToken(listOrdersRequest);
-    List<Order> nextOrders = listOrdersByNextTokenResponse.getListOrdersByNextTokenResult().getOrders();
+    ListOrdersByNextTokenResponse listOrdersByNextTokenResponse =
+        client.listOrdersByNextToken(listOrdersRequest);
+    List<Order> nextOrders =
+        listOrdersByNextTokenResponse.getListOrdersByNextTokenResult().getOrders();
     return nextOrders;
   }
-
 }
