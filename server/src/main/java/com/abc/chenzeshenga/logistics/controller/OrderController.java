@@ -281,73 +281,64 @@ public class OrderController {
   private void enrichOrd(Page<ManualOrder> manualOrderPage) {
     List<ManualOrder> manualOrderList = manualOrderPage.getRecords();
     for (ManualOrder manualOrder : manualOrderList) {
-      if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
-        manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-      } else {
-        String fromKenId = manualOrder.getFromKenId();
-        String fromCityId = manualOrder.getFromCityId();
-        String fromTownId = manualOrder.getFromTownId();
-        if (StringUtils.isBlank(fromKenId)
-            || StringUtils.isBlank(fromCityId)
-            || StringUtils.isBlank(fromTownId)) {
-          continue;
-        }
-        JpDetailAddress from =
-            japanAddressCache.getJpDetailAddress(
-                Integer.valueOf(fromKenId),
-                Integer.valueOf(fromCityId),
-                Integer.valueOf(fromTownId));
-        manualOrder.setFromKenName(from.getKenName());
-        manualOrder.setFromCityName(from.getCityName());
-        manualOrder.setFromTownName(from.getTownName());
-        manualOrder.setFromAddressDesc(
-            from.getKenName()
-                + from.getCityName()
-                + from.getTownName()
-                + manualOrder.getFromDetailAddress());
-      }
-      String toKenId = manualOrder.getToKenId();
-      String toCityId = manualOrder.getToCityId();
-      String toTownId = manualOrder.getToTownId();
-      if (StringUtils.isBlank(toKenId)
-          || StringUtils.isBlank(toCityId)
-          || StringUtils.isBlank(toTownId)) {
-        continue;
-      }
-      JpDetailAddress to =
-          japanAddressCache.getJpDetailAddress(
-              Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
+      enrichSingleOrd(manualOrder);
+    }
+  }
+
+  private void enrichSingleOrd(ManualOrder manualOrder) {
+    String fromKenId = manualOrder.getFromKenId();
+    String fromCityId = manualOrder.getFromCityId();
+    String fromTownId = manualOrder.getFromTownId();
+    if (StringUtils.isBlank(fromKenId) || StringUtils.isBlank(fromCityId) || StringUtils.isBlank(fromTownId)) {
+      log.debug("ord from address is empty, ord data is {}", manualOrder);
+    } else {
+      JpDetailAddress from = japanAddressCache
+        .getJpDetailAddress(Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
+      manualOrder.setFromKenName(from.getKenName());
+      manualOrder.setFromCityName(from.getCityName());
+      manualOrder.setFromTownName(from.getTownName());
+      manualOrder.setFromAddressDesc(
+        from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
+    }
+    String toKenId = manualOrder.getToKenId();
+    String toCityId = manualOrder.getToCityId();
+    String toTownId = manualOrder.getToTownId();
+    if (StringUtils.isBlank(toKenId) || StringUtils.isBlank(toCityId) || StringUtils.isBlank(toTownId)) {
+      log.debug("ord to address is empty, ord data is {}", manualOrder);
+    } else {
+      JpDetailAddress to = japanAddressCache
+        .getJpDetailAddress(Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
       manualOrder.setToKenName(to.getKenName());
       manualOrder.setToCityName(to.getCityName());
       manualOrder.setToTownName(to.getTownName());
-      manualOrder.setToAddressDesc(
-          to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
-      manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
-      manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
-      manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
-      String channelDesc = channelCache.channelLabel(manualOrder.getChannel());
-      if (StringUtils.isNotBlank(channelDesc)) {
-        manualOrder.setChannelDesc(channelDesc);
+      manualOrder
+        .setToAddressDesc(to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
+    }
+    manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
+    manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
+    manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+    String channelDesc = channelCache.channelLabel(manualOrder.getChannel());
+    if (StringUtils.isNotBlank(channelDesc)) {
+      manualOrder.setChannelDesc(channelDesc);
+    }
+    List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
+    double totalPrice = 0.0;
+    for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+      String num = manualOrderContent.getNum();
+      String price = manualOrderContent.getPrice();
+      if (StringUtils.isBlank(num) || StringUtils.isBlank(price)) {
+        continue;
       }
-      List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
-      double totalPrice = 0.0;
-      for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-        String num = manualOrderContent.getNum();
-        String price = manualOrderContent.getPrice();
-        if (StringUtils.isBlank(num) || StringUtils.isBlank(price)) {
-          continue;
-        }
-        totalPrice += Double.valueOf(num) * Double.valueOf(price);
-      }
-      Double finalPrice = totalPrice;
-      for (ManualOrderContent content : manualOrderContentList) {
-        content.setTotalPrice(finalPrice);
-        String total = content.getNum();
-        String picked = content.getPicked();
-        if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
-          manualOrder.setSatisfied(false);
-          break;
-        }
+      totalPrice += Double.parseDouble(num) * Double.parseDouble(price);
+    }
+    Double finalPrice = totalPrice;
+    for (ManualOrderContent content : manualOrderContentList) {
+      content.setTotalPrice(finalPrice);
+      String total = content.getNum();
+      String picked = content.getPicked();
+      if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
+        manualOrder.setSatisfied(false);
+        break;
       }
     }
   }
@@ -574,7 +565,9 @@ public class OrderController {
 
   @GetMapping("/ordContent")
   public Json getOrdContentByOrdNo(@RequestParam String ordNo) {
-    List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordNo);
-    return Json.succ().data(manualOrderContentList);
+    ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
+    enrichSingleOrd(manualOrder);
+    return Json.succ().data(manualOrder);
   }
+
 }

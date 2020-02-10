@@ -57,9 +57,34 @@
               <el-input
                   placeholder="请输入订单号"
                   v-model="form.orderNo"
-                  @change="initOrderContent"
-              ></el-input>
+              >
+                <el-button slot="append" icon="el-icon-search" @click="initOrderContent">订单内容填充</el-button>
+              </el-input>
             </el-form-item>
+          </el-col>
+          <el-col :span="24" v-if="oriOrd.showFlag">
+            <el-col :span="6">订单号:{{oriOrd.orderNo}}</el-col>
+            <el-col :span="6">订单类型:{{oriOrd.categoryName}}</el-col>
+            <el-col :span="6">订单当前状态:{{oriOrd.statusDesc}}</el-col>
+            <el-col :span="24">订单发货信息:</el-col>
+            <el-col :span="6">道/府/县:{{oriOrd.fromKenName}}</el-col>
+            <el-col :span="6">城市:{{oriOrd.fromCityName}}</el-col>
+            <el-col :span="6">乡:{{oriOrd.fromTownName}}</el-col>
+            <el-col :span="6">邮编:{{oriOrd.fromZipCode}}</el-col>
+            <el-col :span="6">详细地址:{{oriOrd.fromDetailAddress}}</el-col>
+            <el-col :span="6">发货人:{{oriOrd.fromName}}</el-col>
+            <el-col :span="6">发货人联系方式:{{oriOrd.fromContact}}</el-col>
+            <el-col :span="24">订单收货信息:</el-col>
+            <el-col :span="6">道/府/县:{{oriOrd.toKenName}}</el-col>
+            <el-col :span="6">城市:{{oriOrd.toCityName}}</el-col>
+            <el-col :span="6">乡:{{oriOrd.toTownName}}</el-col>
+            <el-col :span="6">邮编:{{oriOrd.toZipCode}}</el-col>
+            <el-col :span="6">详细地址:{{oriOrd.toDetailAddress}}</el-col>
+            <el-col :span="6">发货人:{{oriOrd.toName}}</el-col>
+            <el-col :span="6">发货人联系方式:{{oriOrd.toContact}}</el-col>
+            <el-col :span="6">订单内容:</el-col>
+            <!--TODO 循环显示订单内容-->
+            <el-divider/>
           </el-col>
         </el-form-item>
         <el-form-item label="">
@@ -353,6 +378,7 @@ export default {
         selectedProductMaxNum: 20,
       },
       contentMap: {},
+      oriOrd: {},
     };
   },
   created() {
@@ -376,7 +402,7 @@ export default {
       });
     },
     trimInput() {
-      this.form.orderNo = this.form.orderNo.trim();
+      this.form.returnNo = this.form.returnNo.trim();
     },
     getAddress() {
       request({
@@ -423,8 +449,14 @@ export default {
       this.form.toAddress.city = value[1];
       this.form.toAddress.town = value[2];
     },
-    initOrderContent(val) {
-      console.log(val);
+    initOrderContent() {
+      request({
+        url: '/ord/ordContent?ordNo=' + this.form.orderNo,
+        method: 'get',
+      }).then((ret) => {
+        this.oriOrd = ret.data.data;
+        this.oriOrd.showFlag = true;
+      });
     },
     add2Cart() {
       const sku = this.content.sku;
