@@ -190,8 +190,8 @@ export const asyncRouterMap = [
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'menu1',
+        path: 'new-order',
+        name: 'new-order',
         component: _import('menu/new-order'),
         meta: {
           perm: 'm:order',

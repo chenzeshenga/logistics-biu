@@ -389,7 +389,7 @@ export default {
   inject: ['reload'],
   watch: {
     $route() {
-      this.initPage();
+      // this.initPage();
     },
   },
   methods: {

@@ -11,6 +11,7 @@ import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.chenzeshenga.logistics.util.UuidUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
 import com.alibaba.excel.EasyExcelFactory;
@@ -49,11 +50,7 @@ public class OrderController {
 
   @Resource private OrderMapper orderMapper;
 
-  @Resource private TrackNoMapper trackNoMapper;
-
   @Resource private LabelMapper labelMapper;
-
-  @Resource private ProductMapper productMapper;
 
   @Resource private UpShelfProductMapper upShelfProductMapper;
 
@@ -77,8 +74,7 @@ public class OrderController {
     this.channelCache = channelCache;
   }
 
-  @PostMapping
-  @RequestMapping("/detail")
+  @PostMapping("/detail")
   public Json getOrdDetail(@RequestBody Map<String, String> request) {
     ManualOrder manualOrder = orderMapper.getOrdDetail(request.get("ordNo"));
     return Json.succ().data(manualOrder);
@@ -117,8 +113,10 @@ public class OrderController {
     int result = orderMapper.add(manualOrder);
     List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
     if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-      manualOrderContents.forEach(
-          manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
+      manualOrderContents.forEach(manualOrderContent -> {
+        manualOrderContent.setOrdno(manualOrder.getOrderNo());
+        manualOrderContent.setUuid(UuidUtils.uuid());
+      });
       orderMapper.insertContent(manualOrderContents);
     }
     return Json.succ().data(result);
@@ -192,8 +190,7 @@ public class OrderController {
     return Json.succ();
   }
 
-  @PostMapping
-  @RequestMapping("/trackno")
+  @PostMapping("/trackno")
   public Json fillInTrackNo(@RequestBody ManualOrder manualOrder) {
     log.info(manualOrder.toString());
     Date curr = new Date();
