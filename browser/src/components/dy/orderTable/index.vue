@@ -1103,14 +1103,16 @@ export default {
     getSummary(param) {
       const {columns, data} = param;
       const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总价';
-        } else {
-          sums[index] = '';
-        }
-      });
-      sums[3] = data[0].totalPrice;
+      if (columns.length > 0 && data.length > 0) {
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总价';
+          } else {
+            sums[index] = '';
+          }
+        });
+        sums[3] = data[0]['totalPrice'];
+      }
       return sums;
     },
     print(index, row) {
