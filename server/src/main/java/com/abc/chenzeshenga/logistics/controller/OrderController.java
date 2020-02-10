@@ -289,30 +289,39 @@ public class OrderController {
     String fromKenId = manualOrder.getFromKenId();
     String fromCityId = manualOrder.getFromCityId();
     String fromTownId = manualOrder.getFromTownId();
-    if (StringUtils.isBlank(fromKenId) || StringUtils.isBlank(fromCityId) || StringUtils.isBlank(fromTownId)) {
+    if (StringUtils.isBlank(fromKenId)
+        || StringUtils.isBlank(fromCityId)
+        || StringUtils.isBlank(fromTownId)) {
       log.debug("ord from address is empty, ord data is {}", manualOrder);
     } else {
-      JpDetailAddress from = japanAddressCache
-        .getJpDetailAddress(Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
+      JpDetailAddress from =
+          japanAddressCache.getJpDetailAddress(
+              Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
       manualOrder.setFromKenName(from.getKenName());
       manualOrder.setFromCityName(from.getCityName());
       manualOrder.setFromTownName(from.getTownName());
       manualOrder.setFromAddressDesc(
-        from.getKenName() + from.getCityName() + from.getTownName() + manualOrder.getFromDetailAddress());
+          from.getKenName()
+              + from.getCityName()
+              + from.getTownName()
+              + manualOrder.getFromDetailAddress());
     }
     String toKenId = manualOrder.getToKenId();
     String toCityId = manualOrder.getToCityId();
     String toTownId = manualOrder.getToTownId();
-    if (StringUtils.isBlank(toKenId) || StringUtils.isBlank(toCityId) || StringUtils.isBlank(toTownId)) {
+    if (StringUtils.isBlank(toKenId)
+        || StringUtils.isBlank(toCityId)
+        || StringUtils.isBlank(toTownId)) {
       log.debug("ord to address is empty, ord data is {}", manualOrder);
     } else {
-      JpDetailAddress to = japanAddressCache
-        .getJpDetailAddress(Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
+      JpDetailAddress to =
+          japanAddressCache.getJpDetailAddress(
+              Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
       manualOrder.setToKenName(to.getKenName());
       manualOrder.setToCityName(to.getCityName());
       manualOrder.setToTownName(to.getTownName());
-      manualOrder
-        .setToAddressDesc(to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
+      manualOrder.setToAddressDesc(
+          to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
     }
     manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
     manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
@@ -569,5 +578,4 @@ public class OrderController {
     enrichSingleOrd(manualOrder);
     return Json.succ().data(manualOrder);
   }
-
 }

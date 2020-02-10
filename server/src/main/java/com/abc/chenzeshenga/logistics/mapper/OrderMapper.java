@@ -83,5 +83,4 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
   int updateTrackNo(OrdTrackNoMapping ordTrackNoMapping);
 
   List<ManualOrderContent> listContentByOrdNo(String ordNo);
-
 }
