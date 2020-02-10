@@ -35,5 +35,4 @@ public class ManualOrderContent implements Serializable {
   private String shelfNo;
 
   private String uuid;
-
 }

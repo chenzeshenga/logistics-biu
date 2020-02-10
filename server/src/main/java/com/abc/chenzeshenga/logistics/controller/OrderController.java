@@ -113,10 +113,11 @@ public class OrderController {
     int result = orderMapper.add(manualOrder);
     List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
     if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-      manualOrderContents.forEach(manualOrderContent -> {
-        manualOrderContent.setOrdno(manualOrder.getOrderNo());
-        manualOrderContent.setUuid(UuidUtils.uuid());
-      });
+      manualOrderContents.forEach(
+          manualOrderContent -> {
+            manualOrderContent.setOrdno(manualOrder.getOrderNo());
+            manualOrderContent.setUuid(UuidUtils.uuid());
+          });
       orderMapper.insertContent(manualOrderContents);
     }
     return Json.succ().data(result);
