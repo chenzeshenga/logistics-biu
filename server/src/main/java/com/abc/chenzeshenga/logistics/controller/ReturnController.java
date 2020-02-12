@@ -212,11 +212,14 @@ public class ReturnController {
     returnList.forEach(
         returning -> {
           try {
-            JpDetailAddress jpDetailAddress = japanAddressCache
-              .getJpDetailAddress(Integer.parseInt(returning.getFromKenId()),
-                Integer.parseInt(returning.getFromCityId()), Integer.parseInt(returning.getFromTownId()));
+            JpDetailAddress jpDetailAddress =
+                japanAddressCache.getJpDetailAddress(
+                    Integer.parseInt(returning.getFromKenId()),
+                    Integer.parseInt(returning.getFromCityId()),
+                    Integer.parseInt(returning.getFromTownId()));
             if (jpDetailAddress != null) {
-              returning.setFromDetailAddress(jpDetailAddress.toString() + returning.getFromDetailAddress());
+              returning.setFromDetailAddress(
+                  jpDetailAddress.toString() + returning.getFromDetailAddress());
             }
           } catch (Exception e) {
             log.error("error");
@@ -228,11 +231,14 @@ public class ReturnController {
             returning.setToName("东岳物流");
           } else {
             try {
-              JpDetailAddress fromJpDetailAddress = japanAddressCache
-                .getJpDetailAddress(Integer.parseInt(returning.getToKenId()), Integer.parseInt(returning.getToCityId()),
-                  Integer.parseInt(returning.getToTownId()));
+              JpDetailAddress fromJpDetailAddress =
+                  japanAddressCache.getJpDetailAddress(
+                      Integer.parseInt(returning.getToKenId()),
+                      Integer.parseInt(returning.getToCityId()),
+                      Integer.parseInt(returning.getToTownId()));
               if (fromJpDetailAddress != null) {
-                returning.setToDetailAddress(fromJpDetailAddress.toString() + returning.getToDetailAddress());
+                returning.setToDetailAddress(
+                    fromJpDetailAddress.toString() + returning.getToDetailAddress());
               }
             } catch (Exception e) {
               log.error("error");
