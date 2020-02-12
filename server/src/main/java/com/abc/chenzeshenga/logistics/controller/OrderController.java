@@ -262,7 +262,9 @@ public class OrderController {
       @PathVariable String toDate,
       @RequestParam(required = false) String ordno,
       @RequestParam(required = false) String creator,
-      @RequestParam(required = false) String channelCode)
+      @RequestParam(required = false) String channelCode,
+      @RequestParam(required = false) String trackNo
+    )
       throws ParseException {
     String cname = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);
@@ -270,8 +272,7 @@ public class OrderController {
     Date fromDate1 = DateUtil.getDateFromStr(fromDate);
     Date toDate1 = DateUtil.getDateFromStr(toDate);
     Page<ManualOrder> manualOrderPage =
-        orderService.listByRange(
-            page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode);
+        orderService.listByRange(page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode, trackNo);
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }

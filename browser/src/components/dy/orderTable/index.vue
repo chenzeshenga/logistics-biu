@@ -19,7 +19,7 @@
               </el-date-picker>
             </el-tooltip>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-tooltip content="订单号" placement="top">
               <el-input
                   v-model="search.ordno"
@@ -28,7 +28,16 @@
               ></el-input>
             </el-tooltip>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
+            <el-tooltip content="追踪单号" placement="top">
+              <el-input
+                  v-model="search.trackNo"
+                  clearable="clearable"
+                  placeholder="请输入追踪单号"
+              ></el-input>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="3">
             <el-tooltip content="创建人" placement="top">
               <el-select
                   filterable
@@ -46,7 +55,7 @@
               </el-select>
             </el-tooltip>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-tooltip content="相关渠道" placement="top">
               <el-select
                   value=""
@@ -849,6 +858,7 @@ export default {
         ordno: '',
         creator: '',
         channelCode: '',
+        trackNo:''
       },
       users: [],
       channels: [],
@@ -1001,7 +1011,9 @@ export default {
             '&creator=' +
             this.search.creator +
             '&channelCode=' +
-            this.search.channelCode;
+            this.search.channelCode +
+            '&trackNo=' +
+            this.search.trackNo;
       } else {
         url =
             'ord/list/' +
@@ -1016,7 +1028,9 @@ export default {
             '&creator=' +
             this.search.creator +
             '&channelCode=' +
-            this.search.channelCode;
+            this.search.channelCode +
+            '&trackNo=' +
+            this.search.trackNo;
       }
       this.tableLoading = true;
       request({

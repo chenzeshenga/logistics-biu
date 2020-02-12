@@ -42,7 +42,8 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("to") Date to,
       @Param("ordno") String ordno,
       @Param("creator") String creator,
-      @Param("channelCode") String channelCode);
+      @Param("channelCode") String channelCode,
+      @Param("trackNo") String trackNo);
 
   int delete(String ordNo);
 

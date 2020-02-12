@@ -211,14 +211,15 @@ public class ReturnController {
     List<Return> returnList = returnPage.getRecords();
     returnList.forEach(
         returning -> {
-          JpDetailAddress jpDetailAddress =
-              japanAddressCache.getJpDetailAddress(
-                  Integer.parseInt(returning.getFromKenId()),
-                  Integer.parseInt(returning.getFromCityId()),
-                  Integer.parseInt(returning.getFromTownId()));
-          if (jpDetailAddress != null) {
-            returning.setFromDetailAddress(
-                jpDetailAddress.toString() + returning.getFromDetailAddress());
+          try {
+            JpDetailAddress jpDetailAddress = japanAddressCache
+              .getJpDetailAddress(Integer.parseInt(returning.getFromKenId()),
+                Integer.parseInt(returning.getFromCityId()), Integer.parseInt(returning.getFromTownId()));
+            if (jpDetailAddress != null) {
+              returning.setFromDetailAddress(jpDetailAddress.toString() + returning.getFromDetailAddress());
+            }
+          } catch (Exception e) {
+            log.error("error");
           }
           if (StringUtils.isBlank(returning.getToKenId())
               || StringUtils.isBlank(returning.getToCityId())
@@ -226,14 +227,15 @@ public class ReturnController {
             returning.setToDetailAddress("日本岡山仓(okayama)");
             returning.setToName("东岳物流");
           } else {
-            JpDetailAddress fromJpDetailAddress =
-                japanAddressCache.getJpDetailAddress(
-                    Integer.parseInt(returning.getToKenId()),
-                    Integer.parseInt(returning.getToCityId()),
-                    Integer.parseInt(returning.getToTownId()));
-            if (jpDetailAddress != null) {
-              returning.setToDetailAddress(
-                  fromJpDetailAddress.toString() + returning.getToDetailAddress());
+            try {
+              JpDetailAddress fromJpDetailAddress = japanAddressCache
+                .getJpDetailAddress(Integer.parseInt(returning.getToKenId()), Integer.parseInt(returning.getToCityId()),
+                  Integer.parseInt(returning.getToTownId()));
+              if (fromJpDetailAddress != null) {
+                returning.setToDetailAddress(fromJpDetailAddress.toString() + returning.getToDetailAddress());
+              }
+            } catch (Exception e) {
+              log.error("error");
             }
           }
         });

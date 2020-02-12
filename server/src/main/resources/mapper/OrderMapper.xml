@@ -254,6 +254,9 @@
             <if test="channelCode != null and channelCode != ''">
                 and ord.channel=#{channelCode}
             </if>
+            <if test="trackNo != null and trackNo != ''">
+                and ord.track_no=#{trackNo}
+            </if>
             <if test="from != null">
                 and ord.create_on >= #{from}
             </if>

@@ -27,8 +27,9 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
       Date to,
       String ordno,
       String creator,
-      String channelCode) {
+      String channelCode,
+      String trackNo) {
     return page.setRecords(
-        baseMapper.listByRange(page, cname, type, status, from, to, ordno, creator, channelCode));
+      baseMapper.listByRange(page, cname, type, status, from, to, ordno, creator, channelCode, trackNo));
   }
 }
