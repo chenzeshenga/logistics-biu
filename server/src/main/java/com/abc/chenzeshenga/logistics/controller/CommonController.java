@@ -61,7 +61,10 @@ public class CommonController {
   private UserCommonService userCommonService;
 
   @Autowired
-  public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache,UserCommonService userCommonService) {
+  public CommonController(
+      JapanAddressCache japanAddressCache,
+      LabelCache labelCache,
+      UserCommonService userCommonService) {
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.userCommonService = userCommonService;
@@ -131,8 +134,11 @@ public class CommonController {
   }
 
   @GetMapping("/ord/excel/{category}/{status}")
-  public void getOrdExcel(HttpServletResponse httpServletResponse, @PathVariable String category,
-    @PathVariable String status) throws IOException {
+  public void getOrdExcel(
+      HttpServletResponse httpServletResponse,
+      @PathVariable String category,
+      @PathVariable String status)
+      throws IOException {
     String fileName = "订单状态.xlsx";
     httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
     httpServletResponse.setHeader(
@@ -144,7 +150,7 @@ public class CommonController {
     List<ManualOrder> manualOrderList;
     if (userCommonService.isManagerRole(UserUtils.getUserName())) {
       manualOrderList = orderMapper.listAllByStatus(category, status);
-    }else {
+    } else {
       manualOrderList = orderMapper.listAllByUsername(request);
     }
     manualOrderList.forEach(
