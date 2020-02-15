@@ -67,7 +67,7 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
   Product getProduct(String sku);
 
-  // List<ManualOrder> listAll(String status);
+  List<ManualOrder> listAllByStatus(String category, String status);
 
   List<ManualOrder> listAllByUsername(Map<String, String> request);
 

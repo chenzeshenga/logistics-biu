@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
+import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -57,10 +58,13 @@ public class CommonController {
 
   private LabelCache labelCache;
 
+  private UserCommonService userCommonService;
+
   @Autowired
-  public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache) {
+  public CommonController(JapanAddressCache japanAddressCache, LabelCache labelCache,UserCommonService userCommonService) {
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
+    this.userCommonService = userCommonService;
   }
 
   @GetMapping("/generate/pk")
@@ -126,9 +130,9 @@ public class CommonController {
     return Json.succ();
   }
 
-  @GetMapping("/ord/excel/{status}")
-  public void getOrdExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
-      throws IOException {
+  @GetMapping("/ord/excel/{category}/{status}")
+  public void getOrdExcel(HttpServletResponse httpServletResponse, @PathVariable String category,
+    @PathVariable String status) throws IOException {
     String fileName = "订单状态.xlsx";
     httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
     httpServletResponse.setHeader(
@@ -136,7 +140,13 @@ public class CommonController {
     Map<String, String> request = new HashMap<>(2);
     request.put("cname", UserUtils.getUserName());
     request.put("status", status);
-    List<ManualOrder> manualOrderList = orderMapper.listAllByUsername(request);
+    request.put("category", category);
+    List<ManualOrder> manualOrderList;
+    if (userCommonService.isManagerRole(UserUtils.getUserName())) {
+      manualOrderList = orderMapper.listAllByStatus(category, status);
+    }else {
+      manualOrderList = orderMapper.listAllByUsername(request);
+    }
     manualOrderList.forEach(
         manualOrder -> {
           log.info(manualOrder.toString());
@@ -165,35 +175,29 @@ public class CommonController {
           manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
           manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "否" : "是");
           List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
-          try {
+          if (!manualOrderContents.isEmpty()) {
             ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
             if (ObjectUtils.anyNotNull(manualOrderContent1)) {
               manualOrder.setSku1(manualOrderContent1.getSku());
               manualOrder.setName1(manualOrderContent1.getName());
               manualOrder.setNum1(manualOrderContent1.getNum());
             }
-          } catch (IndexOutOfBoundsException e) {
-            log.error("error stack info ", e);
           }
-          try {
+          if (manualOrderContents.size() >= 2) {
             ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
             if (ObjectUtils.anyNotNull(manualOrderContent2)) {
               manualOrder.setSku2(manualOrderContent2.getSku());
               manualOrder.setName2(manualOrderContent2.getName());
               manualOrder.setNum2(manualOrderContent2.getNum());
             }
-          } catch (IndexOutOfBoundsException e) {
-            log.error("error stack info ", e);
           }
-          try {
+          if (manualOrderContents.size() >= 3) {
             ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
             if (ObjectUtils.anyNotNull(manualOrderContent3)) {
               manualOrder.setSku3(manualOrderContent3.getSku());
               manualOrder.setName3(manualOrderContent3.getName());
               manualOrder.setNum3(manualOrderContent3.getNum());
             }
-          } catch (IndexOutOfBoundsException e) {
-            log.error("error stack info ", e);
           }
         });
     writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);

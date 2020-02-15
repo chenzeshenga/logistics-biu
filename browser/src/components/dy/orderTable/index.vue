@@ -108,12 +108,13 @@
             >
           </el-col>
           <el-col :span="2">
-            <el-button
-                type="primary"
-                @click="exportExcel()"
-                icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang"
-            >导出excel
-            </el-button>
+            <el-tooltip effect="dark" content="导出当前状态下未筛选情况下所有订单，订单内容仅提供前3项" placement="top">
+              <el-button
+                  type="primary"
+                  @click="exportExcel()"
+              >导出excel
+              </el-button>
+            </el-tooltip>
           </el-col>
         </el-row>
       </el-form-item>
@@ -858,7 +859,7 @@ export default {
         ordno: '',
         creator: '',
         channelCode: '',
-        trackNo:''
+        trackNo: '',
       },
       users: [],
       channels: [],
@@ -1173,7 +1174,7 @@ export default {
     exportExcel() {
       const link = document.createElement('a');
       link.style.display = 'none';
-      link.href = process.env.BASE_API + '/ord/excel/1';
+      link.href = process.env.BASE_API + '/ord/excel/' + this.msgData.category + "/" + this.msgData.status;
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();

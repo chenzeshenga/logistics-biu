@@ -209,10 +209,12 @@
         order by ord.update_on desc
     </select>
 
-    <select id="listAll" resultMap="result">
+    <select id="listAllByStatus" resultMap="result">
         select *
         from l_manual_order ord
                  left join l_manual_order_content content on (ord.ord_no = content.ordno)
+        where ord.status = #{status}
+          and ord.category = #{category}
         order by ord.update_on desc
     </select>
 
@@ -221,11 +223,14 @@
         from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
         <where>
             1=1
-            <if test="cname != null and cname != 'admin' and cname != 'operator'">
+            <if test="cname != null and cname != ''">
                 and ord.create_by=#{cname}
             </if>
             <if test="status != null and status != ''">
                 and ord.status=#{status}
+            </if>
+            <if test="category != null and category != ''">
+                and ord.category=#{category}
             </if>
         </where>
         order by ord.update_on desc
