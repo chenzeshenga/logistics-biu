@@ -8,10 +8,21 @@ module.exports = {
       {text: '用户指南', link: '/'},
       {text: '主页', link: 'http://47.105.33.48/'},
     ],
-    sidebar: [
-      '/',
-      '/page-a',
-      ['/page-b', 'Explicit link text']
-    ]
+    sidebar: {
+      '/user/': [
+        '',     /* /foo/ */
+        'One',     /* /foo/ */
+        'Two',     /* /foo/ */
+      ],
+      '/manager/': [
+        '',      /* /bar/ */
+      ],
+      // fallback
+      '/': [
+        '',        /* / */
+      ]
+    },
+    search: true,
+    searchMaxSuggestions: 10
   }
 }
