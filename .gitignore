@@ -16,3 +16,4 @@ package-lock.json
 /server/target
 server/bin/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 /server/applog
+docs/.vuepress/dist/
