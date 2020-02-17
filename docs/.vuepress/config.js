@@ -13,6 +13,15 @@ module.exports = {
         '',     /* /foo/ */
         'One',     /* /foo/ */
         'Two',     /* /foo/ */
+        {
+          title: '你好',   // 必要的
+          path: '/One/',      // 可选的, 应该是一个绝对路径
+          collapsable: false, // 可选的, 默认值是 true,
+          sidebarDepth: 1,    // 可选的, 默认值是 1
+          children: [
+            '/'
+          ]
+        },
       ],
       '/manager/': [
         '',      /* /bar/ */
