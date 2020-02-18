@@ -12,16 +12,15 @@ import com.amazonservices.mws.client.MwsEndpoints;
 
 public class MwsOrdersConfig {
 
-//  AKIAIBNSITOXC4E6G4SQ
-//
-//  Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9
-//
-//    A2SNP3C6E0J094
-//
-//#   A1VC38T7YXB528
-//
-//  amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262
-
+  //  AKIAIBNSITOXC4E6G4SQ
+  //
+  //  Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9
+  //
+  //    A2SNP3C6E0J094
+  //
+  // #   A1VC38T7YXB528
+  //
+  //  amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262
 
   private String accessKey;
 
