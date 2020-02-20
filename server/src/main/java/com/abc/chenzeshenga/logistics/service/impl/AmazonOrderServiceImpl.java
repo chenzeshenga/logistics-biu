@@ -31,7 +31,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   }
 
   @Override
-  @PostConstruct
+//  @PostConstruct
   public void syncOrdersAuto() throws MarketplaceWebServiceOrdersException {
     StoreInfoReq infoReq = new StoreInfoReq();
     infoReq.setSellerId("A2SNP3C6E0J094");
