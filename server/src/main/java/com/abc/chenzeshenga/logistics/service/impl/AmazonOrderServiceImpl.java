@@ -9,7 +9,6 @@ import com.amazonservices.mws.client.MwsUtl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +30,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   }
 
   @Override
-//  @PostConstruct
+  //  @PostConstruct
   public void syncOrdersAuto() throws MarketplaceWebServiceOrdersException {
     StoreInfoReq infoReq = new StoreInfoReq();
     infoReq.setSellerId("A2SNP3C6E0J094");
