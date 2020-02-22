@@ -1,15 +1,18 @@
 package com.abc.chenzeshenga.logistics.service.impl;
 
-import com.abc.chenzeshenga.logistics.model.amazon.*;
+import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
+import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
-import com.abc.chenzeshenga.logistics.service.client.MarketplaceWebServiceOrdersClient;
-import com.abc.chenzeshenga.logistics.service.client.MarketplaceWebServiceOrdersException;
-import com.abc.chenzeshenga.logistics.service.client.MwsOrdersConfig;
 import com.amazonservices.mws.client.MwsUtl;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
+import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
+import com.amazonservices.mws.orders._2013_09_01.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -20,33 +23,29 @@ import org.springframework.stereotype.Service;
  */
 @Service
 // @EnableScheduling
-@Slf4j
-public class AmazonOrderServiceImpl implements AmazonOrderService {
+@Slf4j public class AmazonOrderServiceImpl implements AmazonOrderService {
 
-  @Override
-  public void syncOrders(String createAfterStr, String createBeforeStr)
-      throws MarketplaceWebServiceOrdersException {
+  @Override public void syncOrders(String createAfterStr, String createBeforeStr)
+    throws MarketplaceWebServiceOrdersException {
     return;
   }
 
   @Override
   //  @PostConstruct
   public void syncOrdersAuto() throws MarketplaceWebServiceOrdersException {
-    StoreInfoReq infoReq = new StoreInfoReq();
-    infoReq.setSellerId("A2SNP3C6E0J094");
-    infoReq.setMwsAuthToken("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262");
-    infoReq.setSecretKey("Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9");
-    infoReq.setAwsAccessKey("AKIAIBNSITOXC4E6G4SQ");
-    List<StoreInfoReq> storeInfoReqList = new ArrayList<>();
-    storeInfoReqList.add(infoReq);
-    for (StoreInfoReq storeInfoReq : storeInfoReqList) {
-      MwsOrdersConfig config = new MwsOrdersConfig();
+    //todo logic impl
+    UserAmazonInfo infoReq = new UserAmazonInfo();
+    AmazonDevInfo amazonDevInfo = new AmazonDevInfo();
+    //    infoReq.setSellerId("A2SNP3C6E0J094");
+    //    infoReq.setAwsAccessKeyId("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262");
+    //    infoReq.setSecretKey("Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9");
+    //    infoReq.setAwsAccessKey("AKIAIBNSITOXC4E6G4SQ");
+    List<UserAmazonInfo> storeInfoReqList = new ArrayList<>();
+    for (UserAmazonInfo storeInfoReq : storeInfoReqList) {
       String userId = storeInfoReq.getUserId();
       //      String username = userService.getUsernameByUserId(userId);
       String username = "";
-      config.setSecretKey(storeInfoReq.getSecretKey());
-      config.setAccessKey(storeInfoReq.getMwsAuthToken());
-      MarketplaceWebServiceOrdersClient client = config.getClient();
+      MarketplaceWebServiceOrdersClient client = new MarketplaceWebServiceOrdersClient("", "", "", "");
 
       ListOrdersRequest listOrdersRequest = new ListOrdersRequest();
       listOrdersRequest.setSellerId(storeInfoReq.getSellerId());
@@ -74,30 +73,24 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
         List<Order> orders = new ArrayList<Order>();
         orders.addAll(response.getListOrdersResult().getOrders());
         if (!StringUtils.isEmpty(nextToken)) {
-          List<Order> temp = getNextOrderList(client, nextToken, storeInfoReq);
+          List<Order> temp = getNextOrderList(client, nextToken, infoReq);
           orders.addAll(temp);
         }
-        log.info(
-            "list order RequestId --> {}, Timestamp --> {}",
-            rhmd.getRequestId(),
-            rhmd.getTimestamp());
+        log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(), rhmd.getTimestamp());
         log.info("response original msg as \r\n {}", response.toXMLFragment());
 
         for (Order order : orders) {
-          storeSaleRecord(username, storeInfoReq, client, order);
+          storeSaleRecord(username, infoReq, client, order);
         }
       } catch (MarketplaceWebServiceOrdersException ex) {
         log.error("error stack info ", ex);
       }
     }
-    for (StoreInfoReq storeInfoReq : storeInfoReqList) {
-      MwsOrdersConfig config = new MwsOrdersConfig();
+    for (UserAmazonInfo storeInfoReq : storeInfoReqList) {
       String userId = storeInfoReq.getUserId();
       //      String username = userService.getUsernameByUserId(userId);
       String username = "";
-      config.setSecretKey(storeInfoReq.getSecretKey());
-      config.setAccessKey(storeInfoReq.getAwsAccessKey());
-      MarketplaceWebServiceOrdersClient client = config.getClient();
+      MarketplaceWebServiceOrdersClient client = new MarketplaceWebServiceOrdersClient("", "", "", "");
 
       ListOrdersRequest listOrdersRequest = new ListOrdersRequest();
       listOrdersRequest.setSellerId(storeInfoReq.getSellerId());
@@ -125,17 +118,14 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
         List<Order> orders = new ArrayList<Order>();
         orders.addAll(response.getListOrdersResult().getOrders());
         if (!StringUtils.isEmpty(nextToken)) {
-          List<Order> temp = getNextOrderList(client, nextToken, storeInfoReq);
+          List<Order> temp = getNextOrderList(client, nextToken, infoReq);
           orders.addAll(temp);
         }
-        log.info(
-            "list order RequestId --> {}, Timestamp --> {}",
-            rhmd.getRequestId(),
-            rhmd.getTimestamp());
+        log.info("list order RequestId --> {}, Timestamp --> {}", rhmd.getRequestId(), rhmd.getTimestamp());
         log.info("response original msg as \r\n {}", response.toXMLFragment());
 
         for (Order order : orders) {
-          storeSaleRecord(username, storeInfoReq, client, order);
+          storeSaleRecord(username, infoReq, client, order);
         }
       } catch (MarketplaceWebServiceOrdersException ex) {
         log.error("error stack info ", ex);
@@ -143,25 +133,19 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     }
   }
 
-  private void storeSaleRecord(
-      String username,
-      StoreInfoReq storeInfoReq,
-      MarketplaceWebServiceOrdersClient client,
-      Order order) {
+  private void storeSaleRecord(String username, UserAmazonInfo storeInfoReq, MarketplaceWebServiceOrdersClient client,
+    Order order) {
     ListOrderItemsRequest listOrderItemsRequest = new ListOrderItemsRequest();
     listOrderItemsRequest.setSellerId(storeInfoReq.getSellerId());
     listOrderItemsRequest.setMWSAuthToken(storeInfoReq.getMwsAuthToken());
     listOrderItemsRequest.setAmazonOrderId(order.getAmazonOrderId());
 
     ListOrderItemsResponse listOrderItemsResponse = client.listOrderItems(listOrderItemsRequest);
-    ResponseHeaderMetadata responseHeaderMetadata =
-        listOrderItemsResponse.getResponseHeaderMetadata();
+    ResponseHeaderMetadata responseHeaderMetadata = listOrderItemsResponse.getResponseHeaderMetadata();
 
-    log.info(
-        "list order item RequestId --> {}, Timestamp --> {}, AmazonOrderId --> {}",
-        responseHeaderMetadata.getRequestId(),
-        responseHeaderMetadata.getTimestamp(),
-        listOrderItemsRequest.getAmazonOrderId());
+    log.info("list order item RequestId --> {}, Timestamp --> {}, AmazonOrderId --> {}",
+      responseHeaderMetadata.getRequestId(), responseHeaderMetadata.getTimestamp(),
+      listOrderItemsRequest.getAmazonOrderId());
     log.info("list order item original msg as \r\n {}", listOrderItemsResponse.toXMLFragment());
     OrderItem orderItem = listOrderItemsResponse.getListOrderItemsResult().getOrderItems().get(0);
     //    SaleRecord saleRecord = new SaleRecord();
@@ -242,17 +226,15 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   //    }
   //  }
 
-  private static List<Order> getNextOrderList(
-      MarketplaceWebServiceOrdersClient client, String nextToken, StoreInfoReq info) {
+  private static List<Order> getNextOrderList(MarketplaceWebServiceOrdersClient client, String nextToken,
+    UserAmazonInfo info) {
     ListOrdersByNextTokenRequest listOrdersRequest = new ListOrdersByNextTokenRequest();
     listOrdersRequest.setMWSAuthToken(info.getMwsAuthToken());
     listOrdersRequest.setSellerId(info.getSellerId());
     listOrdersRequest.setNextToken(nextToken);
 
-    ListOrdersByNextTokenResponse listOrdersByNextTokenResponse =
-        client.listOrdersByNextToken(listOrdersRequest);
-    List<Order> nextOrders =
-        listOrdersByNextTokenResponse.getListOrdersByNextTokenResult().getOrders();
+    ListOrdersByNextTokenResponse listOrdersByNextTokenResponse = client.listOrdersByNextToken(listOrdersRequest);
+    List<Order> nextOrders = listOrdersByNextTokenResponse.getListOrdersByNextTokenResult().getOrders();
     return nextOrders;
   }
 }
