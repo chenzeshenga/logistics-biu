@@ -11,11 +11,16 @@ import lombok.ToString;
  * @author chenzeshenga
  * @since 2020-02-22 21:56
  */
-@Data @AllArgsConstructor @NoArgsConstructor @ToString public class UserAmazonInfo {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class UserAmazonInfo {
 
-  @TableId(type = IdType.ID_WORKER_STR) private String userId;
+  @TableId(type = IdType.ID_WORKER_STR)
+  private String userId;
+
   private String sellerId;
   private String marketplaceId;
   private String mwsAuthToken;
-
 }

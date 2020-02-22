@@ -11,9 +11,14 @@ import lombok.ToString;
  * @author chenzeshenga
  * @since 2020-02-22 21:59
  */
-@Data @AllArgsConstructor @NoArgsConstructor @ToString public class AmazonDevInfo {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class AmazonDevInfo {
 
-  @TableId(type = IdType.ID_WORKER_STR) private String awsAccessKeyId;
+  @TableId(type = IdType.ID_WORKER_STR)
+  private String awsAccessKeyId;
+
   private String secretKey;
-
 }
