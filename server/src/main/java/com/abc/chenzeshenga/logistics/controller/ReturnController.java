@@ -103,12 +103,13 @@ public class ReturnController {
       returnMapper.insertReturnOrder(returnOrder);
       List<ReturnContent> returnContentList = returnOrder.getContentList();
       if (returnContentList != null && !returnContentList.isEmpty()) {
-        returnContentList.forEach(returnContent -> {
-          String returnNoInContent = returnContent.getReturnNo();
-          if (StringUtils.isBlank(returnNoInContent)) {
-            returnContent.setReturnNo(returnNo);
-          }
-        });
+        returnContentList.forEach(
+            returnContent -> {
+              String returnNoInContent = returnContent.getReturnNo();
+              if (StringUtils.isBlank(returnNoInContent)) {
+                returnContent.setReturnNo(returnNo);
+              }
+            });
         returnMapper.insertContent(returnContentList);
       }
     } else {
