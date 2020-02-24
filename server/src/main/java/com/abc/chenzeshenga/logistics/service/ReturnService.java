@@ -22,4 +22,9 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
   public Page<Return> listAll(Page page, String status, Date from, Date to) {
     return page.setRecords(baseMapper.listAll(page, status, from, to));
   }
+
+  public Return getReturnOrdDetail(String returnNo){
+    Return returnOrd = selectById(returnNo);
+    return returnOrd;
+  }
 }

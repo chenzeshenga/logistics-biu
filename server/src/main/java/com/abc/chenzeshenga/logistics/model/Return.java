@@ -1,5 +1,7 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +22,7 @@ public class Return implements Serializable {
 
   private static final long serialVersionUID = -6249013466703476021L;
 
+  @TableId(type = IdType.ID_WORKER_STR)
   private String returnNo;
 
   private boolean withoutOrderNoFlag;

@@ -442,10 +442,20 @@ export default {
   inject: ['reload'],
   watch: {
     $route() {
-      // this.initPage();
+      this.initPage();
     },
   },
   methods: {
+    initPage() {
+      const returnNo = this.$route.query.returnNo;
+      console.log(returnNo);
+      if (returnNo) {
+        this.getReturnOrdDetail(returnNo);
+      }
+    },
+    getReturnOrdDetail(returnNo) {
+
+    },
     getOrdNo() {
       request({
         url: '/generate/pk/returning',

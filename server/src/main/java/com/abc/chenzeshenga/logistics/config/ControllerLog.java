@@ -54,6 +54,9 @@ public class ControllerLog {
 
   @AfterReturning(pointcut = "executionMethod()", returning = "rtn")
   public Object doAfter(Object rtn) {
+    if (rtn instanceof byte[]) {
+      return rtn;
+    }
     if (START_TIME_THREAD_LOCAL == null) {
       START_TIME_THREAD_LOCAL = new NamedThreadLocal<>("ThreadLocalStartTime");
     }
