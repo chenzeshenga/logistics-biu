@@ -68,9 +68,9 @@ public class ReturnController {
     commonController.putImg(multipartFile, uuid);
     String uuid4Imgs = returnOrder.getImgs();
     if (StringUtils.isBlank(uuid4Imgs)) {
-      uuid4Imgs += uuid;
+      uuid4Imgs = uuid;
     } else {
-      uuid4Imgs += ";" + uuid;
+      uuid4Imgs = uuid4Imgs + ";" + uuid;
     }
     returnOrder.setImgs(uuid4Imgs);
     returnOrder.setUpdateOn(new Date());
