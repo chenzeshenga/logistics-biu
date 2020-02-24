@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * main class to start server
+ *
  * @author CaiBaoHong
  */
 @SpringBootApplication(scanBasePackages = {"com.abc"})
