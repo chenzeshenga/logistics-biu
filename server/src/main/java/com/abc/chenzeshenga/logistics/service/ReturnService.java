@@ -6,10 +6,8 @@ import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.returning.ReturnOrdContentService;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +16,13 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  * @since 2019.7.20
  */
-@Service public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
+@Service
+public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
 
   private ReturnOrdContentService returnOrdContentService;
 
-  @Autowired public ReturnService(ReturnOrdContentService returnOrdContentService) {
+  @Autowired
+  public ReturnService(ReturnOrdContentService returnOrdContentService) {
     this.returnOrdContentService = returnOrdContentService;
   }
 

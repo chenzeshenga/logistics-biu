@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.model;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
