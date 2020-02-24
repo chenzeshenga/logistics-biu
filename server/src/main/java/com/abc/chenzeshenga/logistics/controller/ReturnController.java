@@ -256,7 +256,7 @@ public class ReturnController {
   }
 
   @GetMapping("/returnOrdDetail")
-  public Json getReturnOrdDetail(@RequestParam String returnNo){
+  public Json getReturnOrdDetail(@RequestParam String returnNo) {
 
     return Json.succ();
   }
