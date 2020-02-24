@@ -255,9 +255,7 @@ public class ReturnController {
     return Json.succ().data("page", returnPage);
   }
 
-  @GetMapping("/returnOrdDetail")
-  public Json getReturnOrdDetail(@RequestParam String returnNo) {
-
-    return Json.succ();
+  @GetMapping("/returnOrdDetail") public Json getReturnOrdDetail(@RequestParam String returnNo) {
+    return Json.succ().data("returnOrd", returnService.getReturnOrdDetail(returnNo));
   }
 }

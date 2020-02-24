@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.returning.ReturnContentMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+
+    <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+        select *
+        from l_returning_content
+        where return_no = #{returnNo}
+    </select>
+
+</mapper>

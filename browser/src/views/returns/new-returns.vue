@@ -438,6 +438,7 @@ export default {
     this.initUserList();
     this.getAddress();
     this.getKenAddress();
+    this.initPage();
   },
   inject: ['reload'],
   watch: {
@@ -448,13 +449,18 @@ export default {
   methods: {
     initPage() {
       const returnNo = this.$route.query.returnNo;
-      console.log(returnNo);
       if (returnNo) {
         this.getReturnOrdDetail(returnNo);
       }
     },
     getReturnOrdDetail(returnNo) {
-
+      // todo more specific
+      request({
+        url: '/return/returnOrdDetail?returnNo=' + returnNo,
+        method: 'get',
+      }).then((ret) => {
+        this.form = ret.data.returnOrd;
+      });
     },
     getOrdNo() {
       request({
