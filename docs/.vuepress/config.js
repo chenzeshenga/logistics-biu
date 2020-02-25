@@ -10,6 +10,15 @@ module.exports = {
     ],
     sidebar: {
       '/user/': [
+        {
+          title: "退货单",
+          path: '/user/returnOrd/',      // 可选的, 应该是一个绝对路径
+          collapsable: false, // 可选的, 默认值是 true,
+          sidebarDepth: 1,    // 可选的, 默认值是 1
+          children: [
+            '/'
+          ]
+        },
         '',     /* /foo/ */
         'One',     /* /foo/ */
         'Two',     /* /foo/ */
