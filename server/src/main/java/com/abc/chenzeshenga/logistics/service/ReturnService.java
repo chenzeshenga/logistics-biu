@@ -4,8 +4,6 @@ import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.returning.ReturnOrdContentService;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.util.Date;
@@ -45,7 +43,7 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
     return returnOrd;
   }
 
-  public void updatePkgInfo(Return returnOrd){
+  public void updatePkgInfo(Return returnOrd) {
     baseMapper.updatePkgInfo(returnOrd);
   }
 }

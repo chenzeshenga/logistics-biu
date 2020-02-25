@@ -190,7 +190,7 @@ public class ReturnController {
   }
 
   @PostMapping("/updatePkgInfo")
-  public Json updatePkgInfo(@RequestBody Return returnOrd){
+  public Json updatePkgInfo(@RequestBody Return returnOrd) {
     returnOrd.setStatus("已收货");
     returnService.updatePkgInfo(returnOrd);
     return Json.succ();
