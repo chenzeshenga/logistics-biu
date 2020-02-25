@@ -40,4 +40,6 @@ public interface ReturnMapper extends BaseMapper<Return> {
       @Param("status") String status,
       @Param("from") Date from,
       @Param("to") Date to);
+
+  int updatePkgInfo(Return returnOrd);
 }

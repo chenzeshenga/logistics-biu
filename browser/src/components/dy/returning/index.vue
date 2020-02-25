@@ -364,13 +364,27 @@
         :total="tablePage.total"
     >
     </el-pagination>
-    <el-dialog title="确认" :visible.sync="dialogVisible" width="30%">
-      <span>需要注意的是内容是默认不居中的</span>
+    <el-dialog title="确认收货" :visible.sync="dialogVisible" width="20%">
+      <el-form :ref="formInDialog1" :model="formInDialog1" label-width="80px">
+        <el-col :span="24">
+          <el-form-item label="退货单号">{{formInDialog1.returnNo}}</el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="长(cm)"><el-input-number v-model="formInDialog1.length"/></el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="宽(cm)"><el-input-number v-model="formInDialog1.width"/></el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="高(cm)"><el-input-number v-model="formInDialog1.height"/></el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="重(kg)"><el-input-number v-model="formInDialog1.height"/></el-form-item>
+        </el-col>
+      </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false"
-                >确 定</el-button
-                >
+                <el-button type="primary" @click="returnPkgInfoUpdate">确 定</el-button>
             </span>
     </el-dialog>
   </div>
@@ -471,6 +485,13 @@ export default {
       noteTxt:
           '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
       dialogVisible: false,
+      formInDialog1: {
+        returnNo: '',
+        height: '',
+        width: '',
+        length: '',
+        weight: '',
+      },
     };
   },
   props: ['msg'],
@@ -571,8 +592,18 @@ export default {
       });
     },
     accept(index, row) {
-      console.log(index, row);
       this.dialogVisible = true;
+      this.formInDialog1.returnNo = row.returnNo;
+    },
+    returnPkgInfoUpdate() {
+      request({
+        url: '/return/updatePkgInfo',
+        method: 'post',
+        data: this.formInDialog1,
+      }).then(() => {
+        this.$message.success('退货单收货成功');
+        this.fetchData();
+      });
     },
   },
 };

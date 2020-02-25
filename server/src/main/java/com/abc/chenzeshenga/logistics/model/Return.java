@@ -64,6 +64,14 @@ public class Return implements Serializable {
 
   private String orderNo;
 
+  private Double length;
+
+  private Double width;
+
+  private Double height;
+
+  private Double weight;
+
   @TableField(exist = false)
   private List<ReturnContent> contentList;
 }

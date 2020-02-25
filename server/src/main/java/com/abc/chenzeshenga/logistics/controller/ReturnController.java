@@ -189,6 +189,13 @@ public class ReturnController {
     return Json.succ();
   }
 
+  @PostMapping("/updatePkgInfo")
+  public Json updatePkgInfo(@RequestBody Return returnOrd){
+    returnOrd.setStatus("已收货");
+    returnService.updatePkgInfo(returnOrd);
+    return Json.succ();
+  }
+
   @PostMapping("/list")
   public Json list(
       @RequestBody String body,

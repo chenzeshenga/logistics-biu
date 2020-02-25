@@ -147,4 +147,13 @@
           and create_on between #{from} and #{to}
     </select>
 
+    <update id="updatePkgInfo" parameterType="com.abc.chenzeshenga.logistics.model.Return">
+        update l_returning
+        set length=#{length},
+            width=#{width},
+            height=#{height},
+            status=#{status}
+        where return_no = #{returnNo}
+    </update>
+
 </mapper>
