@@ -189,12 +189,10 @@
       <el-table-column width="200" label="图片">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <el-image
-                style="width: 100px; height: 100px"
-                :src="scope.row.imgsLinks[0]"
-                :preview-src-list="scope.row.imgsLinks"
-            >
-            </el-image>
+            <div style="height: 100px;width: 200px;overflow: auto">
+              <el-image v-for="link in scope.row.imgsLinks" :key="link" :src="link"
+                        :preview-src-list="scope.row.imgsLinks"></el-image>
+            </div>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">图片</el-tag>
             </div>
@@ -239,62 +237,6 @@
             </el-button>
           </el-tooltip>
           <el-tooltip
-              content="头程校验完成，发往日本"
-              placement="top"
-              v-if="msgData.buttonVisible9"
-          >
-            <el-button
-                @click="statusUpdate(scope.$index, scope.row, 4)"
-                size="mini"
-                type="info"
-                icon="el-icon-check"
-                circle
-                plain
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip
-              content="日本仓库已收货，发往入库清点"
-              placement="top"
-              v-if="msgData.buttonVisibleA"
-          >
-            <el-button
-                @click="statusUpdate(scope.$index, scope.row, 5)"
-                size="mini"
-                type="info"
-                icon="el-icon-check"
-                circle
-                plain
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip
-              content="入库清点完成，发往仓库上架"
-              placement="top"
-              v-if="msgData.buttonVisibleB"
-          >
-            <el-button
-                @click="statusUpdate(scope.$index, scope.row, 6)"
-                size="mini"
-                type="info"
-                icon="el-icon-check"
-                circle
-                plain
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip
-              content="上架完成，开始计仓储费"
-              placement="top"
-              v-if="msgData.buttonVisibleC"
-          >
-            <el-button
-                @click="statusUpdate(scope.$index, scope.row, 7)"
-                size="mini"
-                type="info"
-                icon="el-icon-check"
-                circle
-                plain
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip
               content="编辑"
               placement="top"
               v-if="msgData.buttonVisible5"
@@ -323,20 +265,6 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip
-              content="废弃"
-              placement="top"
-              v-if="msgData.buttonVisible7"
-          >
-            <el-button
-                @click="hold(scope.$index, scope.row)"
-                size="mini"
-                type="danger"
-                icon="el-icon-remove-outline"
-                circle
-                plain
-            ></el-button>
-          </el-tooltip>
-          <el-tooltip
               content="确认收货"
               placement="top"
               v-if="msgData.buttonVisible8"
@@ -347,6 +275,19 @@
                 plain
             >
               <svg-icon icon-class="receiving"></svg-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
+            content="退货品处理"
+            placement="top"
+            v-if="msgData.dealWithReturnContent"
+          >
+            <el-button
+              @click="dealWithReturnContent(scope.$index, scope.row)"
+              circle
+              plain
+            >
+              <svg-icon icon-class="dealWithReturnContent"></svg-icon>
             </el-button>
           </el-tooltip>
         </template>
@@ -387,6 +328,16 @@
                 <el-button type="primary" @click="returnPkgInfoUpdate">确 定</el-button>
             </span>
     </el-dialog>
+    <el-dialog title="退货品处理" :visible.sync="dealWithReturnContentDlg" width="40%">
+      <div v-for="returnContent in returnContentList" v-bind:key="content.uuid">
+        <span>{{returnContent}}</span>
+        <span>{{returnContent.uuid}}</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dealWithReturnContentDlg = false">取 消</el-button>
+                <el-button type="primary" @click="dealWithReturnContentDlgSubmit">确 定</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -412,6 +363,7 @@ export default {
         buttonVisibleA: this.msg.buttonVisibleA === true,
         buttonVisibleB: this.msg.buttonVisibleB === true,
         buttonVisibleC: this.msg.buttonVisibleC === true,
+        dealWithReturnContent: this.msg.dealWithReturnContent === true,
       },
       // page data
       tablePage: {
@@ -492,6 +444,8 @@ export default {
         length: '',
         weight: '',
       },
+      dealWithReturnContentDlg: false,
+      returnContentList: [],
     };
   },
   props: ['msg'],
@@ -504,7 +458,7 @@ export default {
     fetchData() {
       this.tableLoading = true;
       request({
-        url: 'return/list?type=' + this.msgData.type + '&status=新建',
+        url: 'return/list?type=' + this.msgData.type + '&status=' + this.msgData.status,
         method: 'post',
         data: this.tablePage,
       }).then((res) => {
@@ -529,6 +483,7 @@ export default {
             imgsLinks.push(sublink);
           }
           subRecords['imgsLinks'] = imgsLinks;
+          console.log(imgsLinks);
         }
         this.tableData = res.data.page.records;
         this.tablePage.current = res.data.page.current;
@@ -604,6 +559,16 @@ export default {
         this.$message.success('退货单收货成功');
         this.fetchData();
       });
+    },
+    handleDelete(index, row) {
+      console.log(index);
+      console.log(row);
+    },
+    dealWithReturnContent(index, row) {
+      console.log(index, row);
+    },
+    dealWithReturnContentDlgSubmit() {
+
     },
   },
 };

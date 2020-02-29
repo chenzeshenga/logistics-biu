@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       msg: {
-        status: '1',
+        status: '新建',
         type: 'withUser',
         buttonVisible8: true,
         buttonVisible5: true,

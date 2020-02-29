@@ -637,7 +637,18 @@ export const asyncRouterMap = [
             name: 'returns-list-mgt-withUser-status2',
             meta: {
               perm: 'm:returns2:list:2',
-              title: '历史退货单',
+              title: '收货处理',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'status3',
+            component: _import('returns/withUser/list/status3'),
+            name: 'returns-list-mgt-withUser-status3',
+            meta: {
+              perm: 'm:returns2:list:3',
+              title: '历史',
               icon: 'chart',
               noCache: true,
             },

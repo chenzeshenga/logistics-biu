@@ -22,6 +22,8 @@ public class ReturnContent implements Serializable {
   private static final long serialVersionUID = 999405990725459271L;
 
   @TableId(type = IdType.ID_WORKER_STR)
+  private String uuid;
+
   private String returnNo;
 
   private String sku;

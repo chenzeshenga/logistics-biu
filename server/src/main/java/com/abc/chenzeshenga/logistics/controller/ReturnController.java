@@ -139,6 +139,8 @@ public class ReturnController {
       returnMapper.updateByPk(ori);
       List<ReturnContent> returnContentList = returnOrder.getContentList();
       if (returnContentList != null && !returnContentList.isEmpty()) {
+        returnContentList.forEach(
+            returnContent -> returnContent.setUuid(SnowflakeIdWorker.generateStrId()));
         returnMapper.insertContent(returnContentList);
       }
     }

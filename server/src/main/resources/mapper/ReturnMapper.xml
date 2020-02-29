@@ -117,10 +117,10 @@
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
-        insert into l_returning_content(return_no, sku, name, deal_with, num)
+        insert into l_returning_content(uuid,return_no, sku, name, deal_with, num)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.returnNo}, #{item.sku}, #{item.name}, #{item.dealWith}, #{item.num})
+            (#{item.uuid},#{item.returnNo}, #{item.sku}, #{item.name}, #{item.dealWith}, #{item.num})
         </foreach>
     </insert>
 

@@ -15,9 +15,8 @@ export default {
   data() {
     return {
       msg: {
-        status: '已收货',
+        status: '历史',
         type: 'withUser',
-        dealWithReturnContent: true,
       },
     };
   },
