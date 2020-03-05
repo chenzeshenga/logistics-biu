@@ -987,6 +987,7 @@ export default {
         this.dialogVisible4StandFor = true;
       } else {
         this.dialogVisible4Excel = true;
+        this.actionLink += '?user=' + this.standFor;
       }
     },
     downloadTemplate() {
@@ -1022,6 +1023,9 @@ export default {
             this.adminRole = true;
           }
         }
+        if (!this.adminRole) {
+          this.standFor = res.data.userInfo.uname
+        }
       });
     },
     filterProduct(val) {
@@ -1053,7 +1057,6 @@ export default {
     },
     changeUpdateLink(val) {
       this.actionLink += '?user=' + val;
-      console.log(this.standFor);
       this.standFor = val;
     },
     triggerUploadDialog() {

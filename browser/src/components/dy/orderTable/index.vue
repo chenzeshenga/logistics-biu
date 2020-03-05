@@ -777,7 +777,7 @@
     </el-dialog>
     <el-dialog title="配货单-条形码" :visible.sync="dialogVisible4Barcode" width="20%">
       <div id="pdfDom">
-        <custom-barcode4-order v-bind:barcode="barcodeSetting"></custom-barcode4-order>
+        <custom-barcode4-order v-bind:barcode="barcodeSetting" :key="timestamp"></custom-barcode4-order>
       </div>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible4Barcode = false">取 消</el-button>
@@ -813,6 +813,7 @@ export default {
         buttonVisible10: this.msg.buttonVisible10,
         buttonVisible11: this.msg.buttonVisible11,
       },
+      timestamp: '',
       tablePage: {
         current: 1,
         pages: null,
@@ -1318,6 +1319,7 @@ export default {
     },
     printBarcode(index, row) {
       this.barcodeSetting.value = row.orderNo;
+      this.timestamp = new Date().getTime();
       this.dialogVisible4Barcode = true;
     },
   },
