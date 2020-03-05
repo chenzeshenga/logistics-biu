@@ -271,7 +271,7 @@ public class CommonController {
               manualOrder4Input = (ManualOrder4Input) manualOrder;
               log.info(manualOrder4Input.toString());
               ManualOrder manualOrder4Database = new ManualOrder();
-              String orderno = String.valueOf(getOrderNo().getData());
+              String orderno = SnowflakeIdWorker.generateStrId();
               manualOrder4Database.setOrderNo(orderno);
               manualOrder4Database.setCreator(user);
               manualOrder4Database.setUpdator(UserUtils.getUserName());
@@ -356,6 +356,7 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getSku1())
                   && StringUtils.isNotBlank(manualOrder4Input.getNum1())) {
                 ManualOrderContent manualOrderContent1 = new ManualOrderContent();
+                manualOrderContent1.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent1.setOrdno(orderno);
                 manualOrderContent1.setSku(manualOrder4Input.getSku1());
                 manualOrderContent1.setName(manualOrder4Input.getName1());
@@ -365,6 +366,7 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getSku2())
                   && StringUtils.isNotBlank(manualOrder4Input.getNum2())) {
                 ManualOrderContent manualOrderContent2 = new ManualOrderContent();
+                manualOrderContent2.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent2.setOrdno(orderno);
                 manualOrderContent2.setSku(manualOrder4Input.getSku2());
                 manualOrderContent2.setName(manualOrder4Input.getName2());
@@ -374,6 +376,7 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getSku3())
                   && StringUtils.isNotBlank(manualOrder4Input.getNum3())) {
                 ManualOrderContent manualOrderContent3 = new ManualOrderContent();
+                manualOrderContent3.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent3.setOrdno(orderno);
                 manualOrderContent3.setSku(manualOrder4Input.getSku3());
                 manualOrderContent3.setName(manualOrder4Input.getName3());

@@ -424,6 +424,20 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip
+            content="打印配货单-条形码"
+            placement="top"
+            v-if="msgData.buttonVisible4"
+          >
+            <el-button
+              @click="printBarcode(scope.$index, scope.row)"
+              size="mini"
+              type="info"
+              icon="el-icon-printer"
+              circle
+              plain
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip
               content="废弃"
               placement="top"
               v-if="msgData.buttonVisible5"
@@ -761,14 +775,25 @@
                 >
             </span>
     </el-dialog>
+    <el-dialog title="配货单-条形码" :visible.sync="dialogVisible4Barcode" width="20%">
+      <div id="pdfDom">
+        <custom-barcode4-order v-bind:barcode="barcodeSetting"></custom-barcode4-order>
+      </div>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible4Barcode = false">取 消</el-button>
+          <el-button type="primary" @click="getPdfWithSetting(barcodeSetting.value,'#barcode',setting)">下 载</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import request from '../../../utils/service';
+import CustomBarcode4Order from '../../@syncfusion/order/customBarcode4Order';
 
 export default {
   name: 'orderTable',
+  components: {CustomBarcode4Order},
   data() {
     return {
       msgData: {
@@ -864,6 +889,17 @@ export default {
       users: [],
       channels: [],
       actionLink1: process.env.BASE_API + '/ord/trackno/list',
+      dialogVisible4Barcode: false,
+      barcodeSetting: {
+        width: 200,
+        height: 150,
+        value: '',
+        textSize: 12,
+      },
+      setting: {
+        width: 270,
+        length: 200,
+      },
     };
   },
   props: ['msg'],
@@ -1048,7 +1084,7 @@ export default {
     },
     route2NewOrd() {
       this.$router.push({
-        path: '/new-order/index',
+        path: '/new-order/new-order',
       });
     },
     initTrackno() {
@@ -1279,6 +1315,10 @@ export default {
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
+    },
+    printBarcode(index, row) {
+      this.barcodeSetting.value = row.orderNo;
+      this.dialogVisible4Barcode = true;
     },
   },
 };
