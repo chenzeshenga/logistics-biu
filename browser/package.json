@@ -50,6 +50,7 @@
         "normalize.css": "7.0.0",
         "npm": "^6.10.3",
         "nprogress": "0.2.0",
+        "print-js": "^1.0.63",
         "screenfull": "3.3.2",
         "showdown": "1.8.5",
         "simplemde": "1.11.2",
