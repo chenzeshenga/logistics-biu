@@ -12,7 +12,14 @@ public class PageUtils {
   private PageUtils() {}
 
   public static Pagination getPageParam(JsonNode jsonNode) {
-
-    return new Pagination();
+    long curr = 1;
+    if (jsonNode.hasNonNull("curr")) {
+      curr = jsonNode.get("curr").asLong();
+    }
+    int size = 10;
+    if (jsonNode.hasNonNull("size")) {
+      size = jsonNode.get("size").asInt();
+    }
+    return new Pagination(curr, size);
   }
 }

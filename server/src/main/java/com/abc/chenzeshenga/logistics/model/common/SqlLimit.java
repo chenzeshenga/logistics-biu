@@ -7,20 +7,14 @@ import lombok.ToString;
 
 /**
  * @author chenzeshenga
- * @since 2020-03-08 22:38
+ * @since 2020-03-8 23:25
  */
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @ToString
-public class Pagination {
+public class SqlLimit {
 
-  private long total;
-  private long curr;
-  private int size;
-
-  public Pagination(long curr, int size) {
-    this.curr = curr;
-    this.size = size;
-  }
+  private long from;
+  private long to;
 }
