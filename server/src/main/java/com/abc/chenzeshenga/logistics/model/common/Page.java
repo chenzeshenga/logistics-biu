@@ -1,8 +1,7 @@
 package com.abc.chenzeshenga.logistics.model.common;
 
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 /**
  * @author chenzeshenga

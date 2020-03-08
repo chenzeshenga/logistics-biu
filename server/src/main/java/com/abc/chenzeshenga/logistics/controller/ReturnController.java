@@ -271,7 +271,8 @@ public class ReturnController {
 
   @PostMapping("/common/list")
   public Json listReturnOrd(
-      @RequestBody String req, @RequestParam String type, @RequestParam String status) throws IOException {
+      @RequestBody String req, @RequestParam String type, @RequestParam String status)
+      throws IOException {
     com.abc.chenzeshenga.logistics.model.common.Page<Return> returnPage =
         returnCommonService.list(req, type, status);
     List<Return> returnList = returnPage.getData();
