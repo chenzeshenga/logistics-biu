@@ -186,6 +186,26 @@
           prop="trackNo"
           label="承认人追踪单号"
       ></el-table-column>
+      <el-table-column
+        width="200"
+        prop="length"
+        label="长(cm)"
+      ></el-table-column>
+      <el-table-column
+        width="200"
+        prop="width"
+        label="宽(cm)"
+      ></el-table-column>
+      <el-table-column
+        width="200"
+        prop="height"
+        label="高(cm)"
+      ></el-table-column>
+      <el-table-column
+        width="200"
+        prop="weight"
+        label="重(kg)"
+      ></el-table-column>
       <el-table-column width="200" label="图片">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -483,7 +503,6 @@ export default {
             imgsLinks.push(sublink);
           }
           subRecords['imgsLinks'] = imgsLinks;
-          console.log(imgsLinks);
         }
         this.tableData = res.data.page.records;
         this.tablePage.current = res.data.page.current;

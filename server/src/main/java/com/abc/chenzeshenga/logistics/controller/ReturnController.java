@@ -6,6 +6,7 @@ import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
+import com.abc.chenzeshenga.logistics.service.returning.ReturnCommonService;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
@@ -37,6 +38,8 @@ public class ReturnController {
 
   private ReturnService returnService;
 
+  private ReturnCommonService returnCommonService;
+
   private CommonController commonController;
 
   private JapanAddressCache japanAddressCache;
@@ -45,10 +48,12 @@ public class ReturnController {
   public ReturnController(
       CommonController commonController,
       ReturnService returnService,
-      JapanAddressCache japanAddressCache) {
+      JapanAddressCache japanAddressCache,
+      ReturnCommonService returnCommonService) {
     this.commonController = commonController;
     this.returnService = returnService;
     this.japanAddressCache = japanAddressCache;
+    this.returnCommonService = returnCommonService;
   }
 
   @PostMapping(value = "/img/put")
@@ -225,6 +230,51 @@ public class ReturnController {
       return Json.succ().data("page", new Page<Return>());
     }
     List<Return> returnList = returnPage.getRecords();
+    returnList.forEach(
+        returning -> {
+          try {
+            JpDetailAddress jpDetailAddress =
+                japanAddressCache.getJpDetailAddress(
+                    Integer.parseInt(returning.getFromKenId()),
+                    Integer.parseInt(returning.getFromCityId()),
+                    Integer.parseInt(returning.getFromTownId()));
+            if (jpDetailAddress != null) {
+              returning.setFromDetailAddress(
+                  jpDetailAddress.toString() + returning.getFromDetailAddress());
+            }
+          } catch (Exception e) {
+            log.error("error");
+          }
+          if (StringUtils.isBlank(returning.getToKenId())
+              || StringUtils.isBlank(returning.getToCityId())
+              || StringUtils.isBlank(returning.getToTownId())) {
+            returning.setToDetailAddress("日本岡山仓(okayama)");
+            returning.setToName("东岳物流");
+          } else {
+            try {
+              JpDetailAddress fromJpDetailAddress =
+                  japanAddressCache.getJpDetailAddress(
+                      Integer.parseInt(returning.getToKenId()),
+                      Integer.parseInt(returning.getToCityId()),
+                      Integer.parseInt(returning.getToTownId()));
+              if (fromJpDetailAddress != null) {
+                returning.setToDetailAddress(
+                    fromJpDetailAddress.toString() + returning.getToDetailAddress());
+              }
+            } catch (Exception e) {
+              log.error("error");
+            }
+          }
+        });
+    return Json.succ().data("page", returnPage);
+  }
+
+  @PostMapping("/common/list")
+  public Json listReturnOrd(
+      @RequestBody String req, @RequestParam String type, @RequestParam String status) throws IOException {
+    com.abc.chenzeshenga.logistics.model.common.Page<Return> returnPage =
+        returnCommonService.list(req, type, status);
+    List<Return> returnList = returnPage.getData();
     returnList.forEach(
         returning -> {
           try {
