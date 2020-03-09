@@ -168,14 +168,18 @@ public class CommonController {
             manualOrder.setFromCityName(from.getCityName());
             manualOrder.setFromTownName(from.getTownName());
           }
-          JpDetailAddress to =
-              japanAddressCache.getJpDetailAddress(
-                  Integer.valueOf(manualOrder.getToKenId()),
-                  Integer.valueOf(manualOrder.getToCityId()),
-                  Integer.valueOf(manualOrder.getToTownId()));
-          manualOrder.setToKenName(to.getKenName());
-          manualOrder.setToCityName(to.getCityName());
-          manualOrder.setToTownName(to.getTownName());
+          if (StringUtils.isEmpty(manualOrder.getToKenId())) {
+            manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
+          } else {
+            JpDetailAddress to =
+                japanAddressCache.getJpDetailAddress(
+                    Integer.valueOf(manualOrder.getToKenId()),
+                    Integer.valueOf(manualOrder.getToCityId()),
+                    Integer.valueOf(manualOrder.getToTownId()));
+            manualOrder.setToKenName(to.getKenName());
+            manualOrder.setToCityName(to.getCityName());
+            manualOrder.setToTownName(to.getTownName());
+          }
           manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
           manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
           manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));

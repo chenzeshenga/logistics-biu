@@ -340,7 +340,7 @@
           <el-form-item label="高(cm)"><el-input-number v-model="formInDialog1.height"/></el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="重(kg)"><el-input-number v-model="formInDialog1.height"/></el-form-item>
+          <el-form-item label="重(kg)"><el-input-number v-model="formInDialog1.weight"/></el-form-item>
         </el-col>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -349,9 +349,9 @@
             </span>
     </el-dialog>
     <el-dialog title="退货品处理" :visible.sync="dealWithReturnContentDlg" width="40%">
-      <div v-for="returnContent in returnContentList" v-bind:key="content.uuid">
-        <span>{{returnContent}}</span>
-        <span>{{returnContent.uuid}}</span>
+      <span>当前退货单内容如下:</span>
+      <div v-for="returnContent in returnContentList" v-bind:key="returnContent.uuid">
+
       </div>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dealWithReturnContentDlg = false">取 消</el-button>
@@ -576,6 +576,7 @@ export default {
         data: this.formInDialog1,
       }).then(() => {
         this.$message.success('退货单收货成功');
+        this.dialogVisible = false;
         this.fetchData();
       });
     },
