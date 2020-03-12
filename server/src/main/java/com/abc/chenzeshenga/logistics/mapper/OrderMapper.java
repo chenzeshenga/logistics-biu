@@ -44,8 +44,7 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("creator") String creator,
       @Param("channelCode") String channelCode,
       @Param("trackNo") String trackNo,
-      @Param("userCustomOrderNo") String userCustomOrderNo
-  );
+      @Param("userCustomOrderNo") String userCustomOrderNo);
 
   int delete(String ordNo);
 
