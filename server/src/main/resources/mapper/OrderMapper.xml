@@ -4,6 +4,7 @@
 
     <resultMap id="result" type="com.abc.chenzeshenga.logistics.model.ManualOrder">
         <result property="orderNo" column="ord_no"/>
+        <result property="userCustomOrderNo" column="user_custom_order_no"/>
         <result property="category" column="category"/>
         <result property="carrierNo" column="carrier_no"/>
         <result property="chinaCarrier" column="china_carrier"/>
@@ -167,13 +168,15 @@
     </update>
 
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
-        insert into l_manual_order(ord_no, category, carrier_no, track_no, owner, status, update_on, create_on,
+        insert into l_manual_order(ord_no, user_custom_order_no, category, carrier_no, track_no, owner, status,
+                                   update_on, create_on,
                                    create_by, update_by, from_ken_id,
                                    from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id,
                                    to_town_id, to_where, to_zipcode,
                                    on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel,
                                    china_carrier, collect_num)
-        values (#{orderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status}, #{updateOn}, #{createOn},
+        values (#{orderNo}, #{userCustomOrderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status},
+                #{updateOn}, #{createOn},
                 #{creator}, #{updator},
                 #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId},
                 #{toCityId}, #{toTownId},
@@ -261,6 +264,9 @@
             </if>
             <if test="trackNo != null and trackNo != ''">
                 and ord.track_no=#{trackNo}
+            </if>
+            <if test="userCustomOrderNo != null and userCustomOrderNo != ''">
+                and ord.user_custom_order_no=#{userCustomOrderNo}
             </if>
             <if test="from != null">
                 and ord.create_on >= #{from}

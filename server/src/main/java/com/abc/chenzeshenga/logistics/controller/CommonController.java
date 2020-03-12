@@ -275,6 +275,9 @@ public class CommonController {
               manualOrder4Input = (ManualOrder4Input) manualOrder;
               log.info(manualOrder4Input.toString());
               ManualOrder manualOrder4Database = new ManualOrder();
+              if (!StringUtils.isBlank(manualOrder4Input.getUserCustomOrderNo())) {
+                manualOrder4Database.setUserCustomOrderNo(manualOrder4Input.getUserCustomOrderNo());
+              }
               String orderno = SnowflakeIdWorker.generateStrId();
               manualOrder4Database.setOrderNo(orderno);
               manualOrder4Database.setCreator(user);

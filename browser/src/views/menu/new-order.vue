@@ -47,7 +47,19 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
+            <el-form-item label="用户定义订单号">
+              <el-input
+                v-model="form.userCustomerOrderNo"
+                v-bind:disabled="onUpdate"
+                placeholder="请输入用户自定义订单号"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="12">
             <el-form-item label="订单类型">
               <el-select
                   filterable
@@ -61,7 +73,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item label="运送渠道">
               <el-cascader
                   :options="channels"
@@ -551,6 +563,7 @@ export default {
       form: {
         creator: '',
         orderNo: '',
+        userCustomerOrderNo: '',
         category: '',
         channel: '',
         carrier: '',

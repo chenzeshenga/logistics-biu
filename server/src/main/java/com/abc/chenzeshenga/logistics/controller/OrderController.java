@@ -263,7 +263,8 @@ public class OrderController {
       @RequestParam(required = false) String ordno,
       @RequestParam(required = false) String creator,
       @RequestParam(required = false) String channelCode,
-      @RequestParam(required = false) String trackNo)
+      @RequestParam(required = false) String trackNo,
+      @RequestParam(required = false) String userCustomOrderNo)
       throws ParseException {
     String cname = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);
@@ -272,7 +273,17 @@ public class OrderController {
     Date toDate1 = DateUtil.getDateFromStr(toDate);
     Page<ManualOrder> manualOrderPage =
         orderService.listByRange(
-            page, cname, type, status, fromDate1, toDate1, ordno, creator, channelCode, trackNo);
+            page,
+            cname,
+            type,
+            status,
+            fromDate1,
+            toDate1,
+            ordno,
+            creator,
+            channelCode,
+            trackNo,
+            userCustomOrderNo);
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }

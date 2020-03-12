@@ -28,6 +28,8 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 0, value = "订单号")
   private String orderNo;
 
+  private String userCustomOrderNo;
+
   @ExcelProperty(index = 1, value = "当前状态")
   private String statusDesc;
 

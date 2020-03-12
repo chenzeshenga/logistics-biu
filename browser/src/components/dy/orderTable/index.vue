@@ -29,6 +29,15 @@
             </el-tooltip>
           </el-col>
           <el-col :span="3">
+            <el-tooltip content="用户定义订单号" placement="top">
+              <el-input
+                v-model="search.userCustomOrderNo"
+                clearable="clearable"
+                placeholder="请输入用户定义订单号"
+              ></el-input>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="3">
             <el-tooltip content="追踪单号" placement="top">
               <el-input
                   v-model="search.trackNo"
@@ -164,6 +173,11 @@
           width="180"
           prop="orderNo"
           label="订单号"
+      ></el-table-column>
+      <el-table-column
+        width="180"
+        prop="userCustomOrderNo"
+        label="用户定义订单号"
       ></el-table-column>
       <el-table-column
           width="150"
@@ -886,6 +900,7 @@ export default {
         creator: '',
         channelCode: '',
         trackNo: '',
+        userCustomOrderNo: '',
       },
       users: [],
       channels: [],
@@ -1051,7 +1066,9 @@ export default {
             '&channelCode=' +
             this.search.channelCode +
             '&trackNo=' +
-            this.search.trackNo;
+            this.search.trackNo +
+            '&userCustomOrderNo=' +
+            this.search.userCustomOrderNo;
       } else {
         url =
             'ord/list/' +
