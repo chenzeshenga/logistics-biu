@@ -3,10 +3,10 @@ package com.abc.chenzeshenga.logistics.constant;
 /** @author chenz */
 public class AdapterConstant {
 
-  private static final String ADAPTER_1 = "入库单";
+  private static final String ADAPTER_1 = "海外仓代发";
   private static final String ADAPTER_2 = "单票单清";
   private static final String ADAPTER_3 = "虚拟海外仓";
-  private static final String ADAPTER_4 = "海外仓代发";
+  private static final String ADAPTER_4 = "入库单";
 
   public static String getAdapter(String adapterId) {
     switch (adapterId) {

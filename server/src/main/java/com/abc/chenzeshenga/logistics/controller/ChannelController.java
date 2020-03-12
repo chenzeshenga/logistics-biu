@@ -59,7 +59,10 @@ public class ChannelController {
   @RequestMapping("/list/{where}")
   public Json listByWhere(@PathVariable String where) {
     /*
-     * 1 入库单 2 单票单清 3 虚拟海外仓 4 海外仓代发
+     * 4 入库单
+     * 2 单票单清
+     * 3 虚拟海外仓
+     * 1 海外仓代发
      */
     List<ChannelLabel> channelList = channelMapper.listByWhere(where);
     return Json.succ().data(channelList);
