@@ -248,7 +248,7 @@ public class WarehousingController {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     CompanyProfile dyCompanyProfile = companyProfileMapper.init("dy");
     File file = fileMapper.selectByPrimaryKey("COMMERCIAL_INVOICE_TEMPLATE");
-    InputStream templateInputStream = new ByteArrayInputStream(file.getFile());
+    InputStream templateInputStream = new ByteArrayInputStream(file.getUserFile());
     List<WarehousingContent> warehousingContentList =
         warehousingContentMapper.listContent(companyProfile.getWarehousingNo());
     customsDeclarationUtil.print(

@@ -16,30 +16,12 @@ import lombok.NoArgsConstructor;
 public class File implements Serializable {
   private String uuid;
 
-  private byte[] file;
+  private byte[] userFile;
 
   private String fileName;
 
-  public File(String uuid, byte[] file) {
+  public File(String uuid, byte[] userFile) {
     this.uuid = uuid;
-    this.file = file;
-  }
-
-  private static final long serialVersionUID = 1L;
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
-
-  public byte[] getFile() {
-    return file;
-  }
-
-  public void setFile(byte[] file) {
-    this.file = file;
+    this.userFile = userFile;
   }
 }

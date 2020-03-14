@@ -107,7 +107,7 @@ public class CommonController {
     httpServletResponse.setHeader(
         "Content-Disposition",
         "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
-    httpServletResponse.getOutputStream().write(file.getFile());
+    httpServletResponse.getOutputStream().write(file.getUserFile());
     httpServletResponse.flushBuffer();
   }
 
@@ -120,7 +120,7 @@ public class CommonController {
     httpServletResponse.setHeader(
         "Content-Disposition",
         "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
-    httpServletResponse.getOutputStream().write(file.getFile());
+    httpServletResponse.getOutputStream().write(file.getUserFile());
     httpServletResponse.flushBuffer();
   }
 

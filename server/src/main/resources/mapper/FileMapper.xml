@@ -10,13 +10,13 @@
     </resultMap>
     <resultMap id="ResultMapWithBLOBs2" type="com.abc.chenzeshenga.logistics.model.File">
         <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
-        <result column="file" jdbcType="LONGVARBINARY" property="file"/>
+        <result column="file" jdbcType="LONGVARBINARY" property="userFile"/>
         <result column="fileName" jdbcType="VARCHAR" property="fileName"/>
     </resultMap>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select file.uuid,
-               `file`,
+               `file` as userFile,
                template.file_name
         from l_file file
                  left join l_template template on (file.uuid = template.uuid)
@@ -25,7 +25,7 @@
 
     <select id="selectByPrimaryKeyWithName" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs2">
         select file.uuid,
-               `file`,
+               `file` as userFile,
                name as fileName
         from l_file file
         where file.uuid = #{uuid,jdbcType=VARCHAR}
@@ -36,11 +36,11 @@
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.File">
-        insert into l_file (uuid, `file`)
+        insert into l_file (uuid, userFile)
         values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY})
     </insert>
     <insert id="insertWithName" parameterType="com.abc.chenzeshenga.logistics.model.File">
-        insert into l_file (uuid, `file`, name)
+        insert into l_file (uuid, userFile, name)
         values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY}, #{fileName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
@@ -50,7 +50,7 @@
                 uuid,
             </if>
             <if test="file != null">
-                `file`,
+                userFile,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -73,7 +73,7 @@
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.abc.chenzeshenga.logistics.model.File">
         update l_file
-        set `file` = #{file,jdbcType=LONGVARBINARY}
+        set userFile = #{file,jdbcType=LONGVARBINARY}
         where uuid = #{uuid,jdbcType=VARCHAR}
     </update>
 </mapper>
