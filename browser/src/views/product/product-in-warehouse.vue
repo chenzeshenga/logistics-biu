@@ -147,10 +147,14 @@
           </el-col>
         </el-row>
         <div v-for="(shelfSubContent,index) in shelfContent.content" :key="index" style="margin-top: 2%">
-          商品sku:{{shelfSubContent.sku}} 商品数量:{{shelfSubContent.name}} 上架货架:{{shelfSubContent.shelfNo}}
+          商品sku:{{shelfSubContent.sku}} 商品数量:{{shelfSubContent.num}} 上架货架:{{shelfSubContent.shelfNo}}
           上架时间:{{shelfSubContent.uptime}} 入库单号:{{shelfSubContent.warehousingNo}}
           <el-button style="margin-left: 2%" type="danger" @click="removeSubContent(index)">删除</el-button>
         </div>
+        <el-row style="margin-top: 5%">
+          <el-button type="primary" @click="shelfContent2Backend">更新</el-button>
+          <el-button @click="this.dialogVisible4ShelfContent=false">取消</el-button>
+        </el-row>
       </el-dialog>
     </div>
   </div>
@@ -252,7 +256,7 @@ export default {
       this.shelfContent.content.splice(index, 1);
     },
     add2Shelf() {
-      console.log(moment(this.currContent.uptime).format('YYYY-MM-DD'));
+      this.currContent.uptime = moment(this.currContent.uptime).format('YYYY-MM-DD');
       this.shelfContent.content.push(this.currContent);
       this.currContent = {
         sku: '',
@@ -262,6 +266,23 @@ export default {
         uptime: new Date(),
         warehousingNo: '',
       };
+    },
+    shelfContent2Backend() {
+      for (let i = 0; i < this.shelfContent.content; i++) {
+        const sub = this.shelfContent.content[i];
+        const uptime = sub.uptime + ' 00:00:00';
+        sub.uptime = uptime;
+        console.log(sub);
+        this.shelfContent.content[i] = sub;
+      }
+      console.log(this.shelfContent);
+      request({
+        url: 'product/shelf/addShelfContent',
+        method: 'post',
+        data: this.shelfContent,
+      }).then((ret) => {
+        console.log(ret);
+      });
     },
     hasAdminRole() {
       request({

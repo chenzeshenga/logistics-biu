@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
+import com.abc.chenzeshenga.logistics.model.shelf.ShelfContent;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -48,6 +49,13 @@ public class ProductShelfController {
     } else {
       warehousingMapper.statusUpdate(warehousingNo, "4", "5", UserUtils.getUserName(), new Date());
     }
+    return Json.succ();
+  }
+
+  @PostMapping("/addShelfContent")
+  public Json addShelfContent(
+    @RequestBody ShelfContent shelfContent) {
+
     return Json.succ();
   }
 }
