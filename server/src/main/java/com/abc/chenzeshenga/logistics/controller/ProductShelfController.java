@@ -53,8 +53,7 @@ public class ProductShelfController {
   }
 
   @PostMapping("/addShelfContent")
-  public Json addShelfContent(
-    @RequestBody ShelfContent shelfContent) {
+  public Json addShelfContent(@RequestBody ShelfContent shelfContent) {
 
     return Json.succ();
   }
