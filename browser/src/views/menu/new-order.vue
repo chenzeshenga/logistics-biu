@@ -1025,7 +1025,7 @@ export default {
     },
     hasAdminRole() {
       request({
-        url: '/sys_user//info',
+        url: '/sys_user/info',
         method: 'get',
       }).then((res) => {
         const roles = res.data.userInfo.roles;
@@ -1037,7 +1037,7 @@ export default {
           }
         }
         if (!this.adminRole) {
-          this.standFor = res.data.userInfo.uname
+          this.standFor = res.data.userInfo.uname;
         }
       });
     },

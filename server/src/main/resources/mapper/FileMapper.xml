@@ -6,7 +6,7 @@
         <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.File">
-        <result column="file" jdbcType="LONGVARBINARY" property="file"/>
+        <result column="file" jdbcType="LONGVARBINARY" property="userFile"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs2" type="com.abc.chenzeshenga.logistics.model.File">
         <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
@@ -36,11 +36,11 @@
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.File">
-        insert into l_file (uuid, userFile)
-        values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY})
+        insert into l_file (uuid, file)
+        values (#{uuid,jdbcType=VARCHAR}, #{userFile,jdbcType=LONGVARBINARY})
     </insert>
     <insert id="insertWithName" parameterType="com.abc.chenzeshenga.logistics.model.File">
-        insert into l_file (uuid, userFile, name)
+        insert into l_file (uuid, file, name)
         values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY}, #{fileName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
@@ -73,7 +73,7 @@
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.abc.chenzeshenga.logistics.model.File">
         update l_file
-        set userFile = #{file,jdbcType=LONGVARBINARY}
+        set file = #{file,jdbcType=LONGVARBINARY}
         where uuid = #{uuid,jdbcType=VARCHAR}
     </update>
 </mapper>

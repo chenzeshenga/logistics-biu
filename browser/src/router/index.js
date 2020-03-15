@@ -928,7 +928,7 @@ export const asyncRouterMap = [
         component: _import('product/product-in-warehouse'),
         meta: {
           perm: 'm:product:mgt:4',
-          title: '在库商品',
+          title: '在库商品-统计',
           icon: 'chart',
           noCache: true,
         },

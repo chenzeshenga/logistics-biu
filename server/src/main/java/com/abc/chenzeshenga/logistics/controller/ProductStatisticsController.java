@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,8 +101,13 @@ public class ProductStatisticsController {
     boolean isManager = userCommonService.isManagerRole(username);
     List<ProductInWarehouseSummary> productInWarehouseSummaries = new ArrayList<>();
     if (isManager) {
-      productInWarehouseSummaries =
-          productInWarehouseService.fetchProductInWarehouseWithManagerRole(page, sku, name, owner);
+      if (StringUtils.isEmpty(owner)) {
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
+                page, sku, name, owner);
+      } else {
+        productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
+      }
     } else {
       productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
     }

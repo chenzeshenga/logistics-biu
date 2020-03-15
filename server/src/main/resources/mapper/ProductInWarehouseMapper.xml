@@ -3,7 +3,7 @@
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.statistics.ProductInWarehouseMapper">
 
     <select id="fetchProductInWarehouseWithManagerRole" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
-        select 
+        select
         shelf.sku, shelf.name, shelf.owner, sum(shelf.num) as num
         from l_up_shelf_product shelf
         <trim prefix="where" prefixOverrides="or">
@@ -21,12 +21,12 @@
         shelf.sku, shelf.name, shelf.owner
     </select>
 
-    <select id="fetchProductInWarehouseWithManagerRole" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
-        select 
+    <select id="fetchProductInWarehouseWithUserRole" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
+        select
         shelf.sku, shelf.name, shelf.owner, sum(shelf.num) as num
         from l_up_shelf_product shelf
         where
-        shelf.owner = #{owner}
+        shelf.owner = #{username}
         <if test="sku!=null">
             or shelf.sku like CONCAT('%', #{sku}, '%')
         </if>

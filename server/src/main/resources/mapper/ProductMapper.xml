@@ -449,4 +449,13 @@
         </foreach>
     </update>
 
+    <select id="listUserOwnProduct" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
+        select
+            sku,
+            dy_sku as dySku,
+            product_name as name
+        from l_productions
+        where createdBy=#{username}
+    </select>
+
 </mapper>
