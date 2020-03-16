@@ -124,7 +124,9 @@ public class ProductStatisticsController {
           Product subProduct = new Product();
           if (StringUtils.isEmpty(productName)) {
             subProduct = productMapper.selectProductBySku(subSku);
-            productInWarehouseSummary.setName(subProduct.getProductName());
+            if (subProduct != null) {
+              productInWarehouseSummary.setName(subProduct.getProductName());
+            }
           }
           Map<String, Object> columnMap = new HashMap<>(2);
           columnMap.put("sku", subSku);
@@ -134,7 +136,7 @@ public class ProductStatisticsController {
           for (UpShelfProduct product : upShelfProducts) {
             Date uptime = product.getUptime();
             product.setDatePoor(DateUtil.getDatePoor(curr, uptime));
-            if (StringUtils.isEmpty(productName)) {
+            if (StringUtils.isEmpty(productName) && subProduct != null) {
               product.setName(subProduct.getProductName());
             }
           }

@@ -10,6 +10,7 @@ import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.chenzeshenga.logistics.util.UuidUtils;
 import com.abc.util.PageUtils;
@@ -431,7 +432,9 @@ public class OrderController {
           ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
           UpShelfProduct upShelfProduct =
               upShelfProductMapper.selectOneBySku(sku, manualOrder.getCreator());
-          manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
+          if (upShelfProduct != null) {
+            manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
+          }
         });
     if (contentList.isEmpty()) {
       return Json.fail().msg("该订单无法拣货");
@@ -446,6 +449,8 @@ public class OrderController {
     if (!manualOrderContentList.isEmpty()) {
       ordno = manualOrderContentList.get(0).getOrdno();
       orderMapper.deleteContent(ordno);
+      manualOrderContentList.forEach(
+          manualOrderContent -> manualOrderContent.setUuid(SnowflakeIdWorker.generateStrId()));
       orderMapper.insertContent(manualOrderContentList);
       ManualOrder manualOrder = orderMapper.getOrdDetail(ordno);
       String category = manualOrder.getCategory();

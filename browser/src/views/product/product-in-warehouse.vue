@@ -100,9 +100,9 @@
               <el-select filterable clearable v-model="currContent.sku" placeholder="商品sku">
                 <el-option
                   v-for="product in userProduct"
-                  :key="product.sku"
+                  :key="product.dySku"
                   :label="product.name"
-                  :value="product.sku"
+                  :value="product.dySku"
                 ></el-option>
               </el-select>
             </el-tooltip>
@@ -282,7 +282,8 @@ export default {
           'content': subContent,
         },
       }).then((ret) => {
-        console.log(ret);
+        this.dialogVisible4ShelfContent = false;
+        this.$message.success('库存补录成功');
       });
     },
     hasAdminRole() {

@@ -81,8 +81,11 @@ export default {
   },
   methods: {
     searchOrdContent() {
-      this.search= this.$route.query.orderNo;
-      if (this.search.length <= 0) {
+      console.log(this.$route.query.orderNo);
+      if (this.$route.query.orderNo !== undefined && this.$route.query.orderNo.length > 0) {
+        this.search = this.$route.query.orderNo;
+      }
+      if (this.search === undefined || this.search.length <= 0) {
         this.$message.warning('请填写订单号');
         return;
       }
@@ -90,7 +93,6 @@ export default {
         url: 'ord/pickup/' + this.search,
         type: 'get',
       }).then((res) => {
-        console.log(res);
         this.content = res.data.data;
       });
     },

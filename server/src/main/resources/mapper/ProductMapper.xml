@@ -461,7 +461,7 @@
     <select id="selectProductBySku" resultType="com.abc.chenzeshenga.logistics.model.Product">
         select sku, product_name as productName
         from l_productions
-        where sku = #{sku}
+        where dy_sku = #{sku}
         limit 1
     </select>
 
