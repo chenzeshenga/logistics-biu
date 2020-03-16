@@ -54,7 +54,13 @@ public class ProductShelfController {
 
   @PostMapping("/addShelfContent")
   public Json addShelfContent(@RequestBody ShelfContent shelfContent) {
-
+    List<UpShelfProduct> upShelfProductList = shelfContent.getContent();
+    upShelfProductList.forEach(
+        upshelfProduct -> {
+          upshelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
+          upshelfProduct.setOwner(shelfContent.getOwner());
+          upShelfProductMapper.insert(upshelfProduct);
+        });
     return Json.succ();
   }
 }

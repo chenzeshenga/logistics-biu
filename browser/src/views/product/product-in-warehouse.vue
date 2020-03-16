@@ -268,18 +268,19 @@ export default {
       };
     },
     shelfContent2Backend() {
-      for (let i = 0; i < this.shelfContent.content; i++) {
+      const subContent = [];
+      for (let i = 0; i < this.shelfContent.content.length; i++) {
         const sub = this.shelfContent.content[i];
-        const uptime = sub.uptime + ' 00:00:00';
-        sub.uptime = uptime;
-        console.log(sub);
-        this.shelfContent.content[i] = sub;
+        sub.uptime = sub.uptime + ' 00:00:00';
+        subContent.push(sub);
       }
-      console.log(this.shelfContent);
       request({
         url: 'product/shelf/addShelfContent',
         method: 'post',
-        data: this.shelfContent,
+        data: {
+          'owner': this.shelfContent.owner,
+          'content': subContent,
+        },
       }).then((ret) => {
         console.log(ret);
       });

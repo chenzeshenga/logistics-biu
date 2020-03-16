@@ -50,4 +50,6 @@ public interface ProductMapper extends BaseMapper<Product> {
   int batchUpdate(List<String> skus);
 
   List<SkuLabel> listUserOwnProduct(String username);
+
+  Product selectProductBySku(String sku);
 }

@@ -458,4 +458,11 @@
         where createdBy=#{username}
     </select>
 
+    <select id="selectProductBySku" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select sku, product_name as productName
+        from l_productions
+        where sku = #{sku}
+        limit 1
+    </select>
+
 </mapper>

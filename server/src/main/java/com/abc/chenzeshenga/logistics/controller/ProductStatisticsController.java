@@ -1,7 +1,9 @@
 package com.abc.chenzeshenga.logistics.controller;
 
+import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
+import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
@@ -37,6 +39,8 @@ public class ProductStatisticsController {
   @Resource private ProductStatisticsMapper productStatisticsMapper;
 
   @Resource private UpShelfProductMapper upShelfProductMapper;
+
+  @Resource private ProductMapper productMapper;
 
   private ProductStatisticsService productStatisticsService;
 
@@ -98,32 +102,42 @@ public class ProductStatisticsController {
     Page page = PageUtils.getPageParam(jsonObject);
     String username = UserUtils.getUserName();
     boolean isManager = userCommonService.isManagerRole(username);
-    List<ProductInWarehouseSummary> productInWarehouseSummaries = new ArrayList<>();
+    List<ProductInWarehouseSummary> productInWarehouseSummaries;
     if (isManager) {
       if (StringUtils.isEmpty(owner)) {
         productInWarehouseSummaries =
             productInWarehouseService.fetchProductInWarehouseWithManagerRole(
                 page, sku, name, owner);
       } else {
-        productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
       }
     } else {
-      productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
+      productInWarehouseSummaries =
+          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
     }
     productInWarehouseSummaries.forEach(
         productInWarehouseSummary -> {
           String subSku = productInWarehouseSummary.getSku();
           String subOwner = productInWarehouseSummary.getOwner();
+          String productName = productInWarehouseSummary.getName();
+          Product subProduct = new Product();
+          if (StringUtils.isEmpty(productName)) {
+            subProduct = productMapper.selectProductBySku(subSku);
+            productInWarehouseSummary.setName(subProduct.getProductName());
+          }
           Map<String, Object> columnMap = new HashMap<>(2);
           columnMap.put("sku", subSku);
           columnMap.put("owner", subOwner);
           List<UpShelfProduct> upShelfProducts = upShelfProductMapper.selectByMap(columnMap);
           Date curr = new Date();
-          upShelfProducts.forEach(
-              product -> {
-                Date uptime = product.getUptime();
-                product.setDatePoor(DateUtil.getDatePoor(curr, uptime));
-              });
+          for (UpShelfProduct product : upShelfProducts) {
+            Date uptime = product.getUptime();
+            product.setDatePoor(DateUtil.getDatePoor(curr, uptime));
+            if (StringUtils.isEmpty(productName)) {
+              product.setName(subProduct.getProductName());
+            }
+          }
           productInWarehouseSummary.setChildren(upShelfProducts);
         });
 

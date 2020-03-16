@@ -27,11 +27,11 @@
         from l_up_shelf_product shelf
         where
         shelf.owner = #{username}
-        <if test="sku!=null">
-            or shelf.sku like CONCAT('%', #{sku}, '%')
+        <if test="sku != null and sku != ''">
+            and shelf.sku like CONCAT('%', #{sku}, '%')
         </if>
-        <if test="name!=null">
-            or shelf.name like CONCAT('%', #{name}, '%')
+        <if test="name != null and name != ''">
+            and shelf.name like CONCAT('%', #{name}, '%')
         </if>
         group by
         shelf.sku, shelf.name, shelf.owner
