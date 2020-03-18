@@ -34,6 +34,13 @@
             <el-button icon="el-icon-refresh" @click="searchProductInWarehouse()"></el-button>
           </el-tooltip>
         </el-col>
+        <el-col :span="1">
+          <el-tooltip content="查询出库记录" placement="top">
+            <el-button @click="searchProductOutWarehouseRecord()">
+              <svg-icon icon-class="outWarehouse"></svg-icon>
+            </el-button>
+          </el-tooltip>
+        </el-col>
         <el-col :span="1" v-if="adminRole">
           <el-tooltip content="库存补录" placement="top">
             <el-button @click="adjustShelfContent()">
@@ -41,7 +48,7 @@
             </el-button>
           </el-tooltip>
         </el-col>
-        <el-col :span="6">刷新时间： {{tip.timestamp}}</el-col>
+        <el-col :span="5">刷新时间： {{tip.timestamp}}</el-col>
       </el-row>
       <el-alert title="当前页面显示的在库时间仅做参考，实际在库时间以账单为准" type="info"></el-alert>
       <el-table
@@ -55,6 +62,18 @@
         <el-table-column type="expand">
           <template slot-scope="tableData">
             <el-table :data="tableData.row.children">
+              <el-table-column prop="sku" label="sku"/>
+              <el-table-column prop="name" label="商品名称"/>
+              <el-table-column prop="shelfNo" label="货架号"/>
+              <el-table-column prop="num" label="数量"/>
+              <el-table-column prop="owner" label="属主"/>
+              <el-table-column prop="warehousingNo" label="入库单号"/>
+              <el-table-column prop="uptime" label="上架时间"/>
+              <el-table-column prop="datePoor" label="在库时间"/>
+            </el-table>
+          </template>
+          <template slot-scope="tableData">
+            <el-table :data="tableData.row.productOutWarehouseList">
               <el-table-column prop="sku" label="sku"/>
               <el-table-column prop="name" label="商品名称"/>
               <el-table-column prop="shelfNo" label="货架号"/>
@@ -320,6 +339,26 @@ export default {
     handleCurrentChange(val) {
       this.tablePage.current = val;
       this.searchProductInWarehouse();
+    },
+    searchProductOutWarehouseRecord() {
+      const postData = {
+        current: this.tablePage.current,
+        pages: this.tablePage.pages,
+        size: this.tablePage.size,
+        total: this.tablePage.total,
+        sku: this.search.sku,
+        name: this.search.name,
+        owner: this.search.owner,
+      };
+      this.tableLoading = true;
+      request({
+        url: '/statistics/productOutWarehouse',
+        method: 'post',
+        data: postData,
+      }).then((ret) => {
+        this.tableData = ret.data.data;
+        this.tableLoading = false;
+      });
     },
   },
 };

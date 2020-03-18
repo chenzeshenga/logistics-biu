@@ -3,10 +3,12 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
+import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.statistics.ProductInWarehouseService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
@@ -40,6 +42,8 @@ public class ProductStatisticsController {
   @Resource private UpShelfProductMapper upShelfProductMapper;
 
   @Resource private ProductMapper productMapper;
+
+  @Resource private ProductOutWarehouseMapper productOutWarehouseMapper;
 
   private ProductStatisticsService productStatisticsService;
 
@@ -144,4 +148,40 @@ public class ProductStatisticsController {
 
     return Json.succ().data("data", productInWarehouseSummaries);
   }
+
+  @PostMapping("/productOutWarehouse")
+  @SuppressWarnings("rawtypes")
+  public Json searchProductOutWarehouse(@RequestBody String body) {
+    JSONObject jsonObject = JSON.parseObject(body);
+    String sku = jsonObject.getString("sku");
+    String name = jsonObject.getString("name");
+    String owner = jsonObject.getString("owner");
+    Page page = PageUtils.getPageParam(jsonObject);
+    String username = UserUtils.getUserName();
+    boolean isManager = userCommonService.isManagerRole(username);
+    List<ProductInWarehouseSummary> productInWarehouseSummaries;
+    if (isManager) {
+      if (StringUtils.isEmpty(owner)) {
+        productInWarehouseSummaries =
+          productInWarehouseService.fetchProductInWarehouseWithManagerRole(
+            page, sku, name, owner);
+      } else {
+        productInWarehouseSummaries =
+          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
+      }
+    } else {
+      productInWarehouseSummaries =
+        productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
+    }
+    productInWarehouseSummaries.forEach(
+        productInWarehouseSummary -> {
+          String subSku = productInWarehouseSummary.getSku();
+          String subOwner = productInWarehouseSummary.getOwner();
+          List<ProductOutWarehouse> productOutWarehouseList =
+              productOutWarehouseMapper.list(subOwner, subSku);
+          productInWarehouseSummary.setProductOutWarehouseList(productOutWarehouseList);
+        });
+    return Json.succ().data("data", productInWarehouseSummaries);
+  }
+
 }

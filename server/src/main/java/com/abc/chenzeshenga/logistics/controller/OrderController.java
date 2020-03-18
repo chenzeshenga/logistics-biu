@@ -5,9 +5,11 @@ import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
+import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.OrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
@@ -54,6 +56,8 @@ public class OrderController {
   @Resource private LabelMapper labelMapper;
 
   @Resource private UpShelfProductMapper upShelfProductMapper;
+
+  @Resource private ProductOutWarehouseMapper productOutWarehouseMapper;
 
   private OrderService orderService;
 
@@ -467,6 +471,14 @@ public class OrderController {
               upShelfProduct.setNum(
                   String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
               upShelfProductMapper.updateAllColumnById(upShelfProduct);
+              ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
+              productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
+              productOutWarehouse.setSku(sku);
+              productOutWarehouse.setNum(String.valueOf(num));
+              productOutWarehouse.setOwner(owner);
+              productOutWarehouse.setOrderNo(ordno);
+              productOutWarehouse.setOutTime(new Date());
+              productOutWarehouseMapper.insert(productOutWarehouse);
             });
       }
     } else {

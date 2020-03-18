@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper">
+
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse">
+        insert into l_product_out_warehouse_record(uuid, sku, num, `owner`, order_no, track_no, out_time)
+        values (#{uuid}, #{sku}, #{num}, #{owner}, #{orderNo}, #{trackNo}, #{outTime})
+    </insert>
+
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse">
+        select
+        uuid as uuid,
+        sku as sku,
+        num as num,
+        owner as owner,
+        order_no as orderNo,
+        track_no as trackNo,
+        out_time as outTime
+        from l_product_out_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="owner !=null and owner != ''">
+                and owner=#{owner}
+            </if>
+            <if test="sku !=null and sku != ''">
+                and sku=#{sku}
+            </if>
+        </trim>
+    </select>
+
+</mapper>

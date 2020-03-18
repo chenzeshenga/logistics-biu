@@ -22,4 +22,5 @@ public class ProductInWarehouseSummary {
   private String warehousingNo;
   private String totalWarehousingTime;
   private List<UpShelfProduct> children = new ArrayList<>();
+  private List<ProductOutWarehouse> productOutWarehouseList = new ArrayList<>();
 }
