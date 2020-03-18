@@ -1,11 +1,10 @@
 package com.abc.chenzeshenga.logistics.model.warehouse;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.Date;
 
 /**
  * @author chenzeshenga

@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.mapper.warehouse;
 
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author chenzeshenga
@@ -14,6 +13,5 @@ public interface ProductOutWarehouseMapper {
 
   int insert(ProductOutWarehouse productOutWarehouse);
 
-  List<ProductOutWarehouse> list(String owner,String sku);
-
+  List<ProductOutWarehouse> list(String owner, String sku);
 }
