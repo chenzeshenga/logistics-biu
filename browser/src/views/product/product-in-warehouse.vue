@@ -59,7 +59,7 @@
         stripe
         highlight-current-row
       >
-        <el-table-column type="expand">
+        <el-table-column type="expand" v-if="outSide">
           <template slot-scope="tableData">
             <el-table :data="tableData.row.children">
               <el-table-column prop="sku" label="sku"/>
@@ -72,16 +72,17 @@
               <el-table-column prop="datePoor" label="在库时间"/>
             </el-table>
           </template>
+        </el-table-column>
+        <el-table-column type="expand" v-if="inSide">
           <template slot-scope="tableData">
             <el-table :data="tableData.row.productOutWarehouseList">
+              <el-table-column prop="uuid" label="uuid"/>
               <el-table-column prop="sku" label="sku"/>
-              <el-table-column prop="name" label="商品名称"/>
-              <el-table-column prop="shelfNo" label="货架号"/>
               <el-table-column prop="num" label="数量"/>
               <el-table-column prop="owner" label="属主"/>
-              <el-table-column prop="warehousingNo" label="入库单号"/>
-              <el-table-column prop="uptime" label="上架时间"/>
-              <el-table-column prop="datePoor" label="在库时间"/>
+              <el-table-column prop="orderNo" label="订单号"/>
+              <el-table-column prop="trackNo" label="追踪单号"/>
+              <el-table-column prop="outTime" label="出库时间"/>
             </el-table>
           </template>
         </el-table-column>
@@ -195,6 +196,8 @@ export default {
       options: {
         owners: [],
       },
+      outSide: true,
+      inSide: false,
       tableLoading: false,
       tableData: [],
       tablePage: {
@@ -350,6 +353,8 @@ export default {
         name: this.search.name,
         owner: this.search.owner,
       };
+      this.outSide = false;
+      this.inSide = true;
       this.tableLoading = true;
       request({
         url: '/statistics/productOutWarehouse',
