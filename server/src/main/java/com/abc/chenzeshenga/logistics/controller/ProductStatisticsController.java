@@ -163,15 +163,15 @@ public class ProductStatisticsController {
     if (isManager) {
       if (StringUtils.isEmpty(owner)) {
         productInWarehouseSummaries =
-          productInWarehouseService.fetchProductInWarehouseWithManagerRole(
-            page, sku, name, owner);
+            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
+                page, sku, name, owner);
       } else {
         productInWarehouseSummaries =
-          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
+            productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
       }
     } else {
       productInWarehouseSummaries =
-        productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
+          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
     }
     productInWarehouseSummaries.forEach(
         productInWarehouseSummary -> {
@@ -183,5 +183,4 @@ public class ProductStatisticsController {
         });
     return Json.succ().data("data", productInWarehouseSummaries);
   }
-
 }
