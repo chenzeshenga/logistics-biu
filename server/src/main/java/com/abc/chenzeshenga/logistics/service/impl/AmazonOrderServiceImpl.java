@@ -4,16 +4,38 @@ import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
 import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
 import com.amazonservices.mws.client.MwsUtl;
+import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrders;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
 import com.amazonservices.mws.orders._2013_09_01.model.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.util.*;
+import javax.crypto.Mac;
 import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author chenzeshenga
@@ -23,7 +45,8 @@ import org.springframework.stereotype.Service;
 // @EnableScheduling
 @Slf4j
 public class AmazonOrderServiceImpl implements AmazonOrderService {
-
+  private static final String CHARACTER_ENCODING = "UTF-8";
+  final static String ALGORITHM = "HmacSHA256";
   @Override
   public void syncOrders(String createAfterStr, String createBeforeStr)
       throws MarketplaceWebServiceOrdersException {
@@ -33,6 +56,9 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   @Override
   //  @PostConstruct
   public void syncOrdersAuto() throws MarketplaceWebServiceOrdersException {
+//    MarketplaceWebServiceOrdersClient marketplaceWebServiceOrdersClient=new MarketplaceWebServiceOrdersClient()
+
+
     // todo logic impl
     UserAmazonInfo infoReq = new UserAmazonInfo();
     AmazonDevInfo amazonDevInfo = new AmazonDevInfo();
@@ -252,5 +278,96 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     List<Order> nextOrders =
         listOrdersByNextTokenResponse.getListOrdersByNextTokenResult().getOrders();
     return nextOrders;
+  }
+
+  /* If Signature Version is 2, string to sign is based on following:
+   *
+   *    1. The HTTP Request Method followed by an ASCII newline (%0A)
+   *
+   *    2. The HTTP Host header in the form of lowercase host,
+   *       followed by an ASCII newline.
+   *
+   *    3. The URL encoded HTTP absolute path component of the URI
+   *       (up to but not including the query string parameters);
+   *       if this is empty use a forward '/'. This parameter is followed
+   *       by an ASCII newline.
+   *
+   *    4. The concatenation of all query string components (names and
+   *       values) as UTF-8 characters which are URL encoded as per RFC
+   *       3986 (hex characters MUST be uppercase), sorted using
+   *       lexicographic byte ordering. Parameter names are separated from
+   *       their values by the '=' character (ASCII character 61), even if
+   *       the value is empty. Pairs of parameter and values are separated
+   *       by the '&' character (ASCII code 38).
+   *
+   */
+  private static String calculateStringToSignV2(
+    Map<String, String> parameters, String serviceUrl)
+    throws SignatureException, URISyntaxException {
+    // Sort the parameters alphabetically by storing
+    // in TreeMap structure
+    Map<String, String> sorted = new TreeMap<String, String>();
+    sorted.putAll(parameters);
+
+    // Set endpoint value
+    URI endpoint = new URI(serviceUrl.toLowerCase());
+
+    // Create flattened (String) representation
+    StringBuilder data = new StringBuilder();
+    data.append("POST\n");
+    data.append(endpoint.getHost());
+    data.append("\n/");
+    data.append("\n");
+
+    Iterator<Map.Entry<String, String>> pairs =
+      sorted.entrySet().iterator();
+    while (pairs.hasNext()) {
+      Map.Entry<String, String> pair = pairs.next();
+      if (pair.getValue() != null) {
+        data.append( pair.getKey() + "=" + pair.getValue());
+      }
+      else {
+        data.append( pair.getKey() + "=");
+      }
+
+      // Delimit parameters with ampersand (&)
+      if (pairs.hasNext()) {
+        data.append( "&");
+      }
+    }
+
+    return data.toString();
+  }
+
+  /*
+   * Sign the text with the given secret key and convert to base64
+   */
+  private static String sign(String data, String secretKey)
+    throws NoSuchAlgorithmException, InvalidKeyException,
+    IllegalStateException, UnsupportedEncodingException {
+    Mac mac = Mac.getInstance(ALGORITHM);
+    mac.init(new SecretKeySpec(secretKey.getBytes(CHARACTER_ENCODING),
+      ALGORITHM));
+    byte[] signature = mac.doFinal(data.getBytes(CHARACTER_ENCODING));
+    String signatureBase64 = new String(Base64.encodeBase64(signature),
+      CHARACTER_ENCODING);
+    return new String(signatureBase64);
+  }
+
+  private static String urlEncode(String rawValue) {
+    String value = (rawValue == null) ? "" : rawValue;
+    String encoded = null;
+
+    try {
+      encoded = URLEncoder.encode(value, CHARACTER_ENCODING)
+        .replace("+", "%20")
+        .replace("*", "%2A")
+        .replace("%7E","~");
+    } catch (UnsupportedEncodingException e) {
+      System.err.println("Unknown encoding: " + CHARACTER_ENCODING);
+      e.printStackTrace();
+    }
+
+    return encoded;
   }
 }
