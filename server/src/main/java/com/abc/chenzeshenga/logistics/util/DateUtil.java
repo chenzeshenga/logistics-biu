@@ -2,7 +2,6 @@ package com.abc.chenzeshenga.logistics.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -45,5 +44,4 @@ public class DateUtil {
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));
     return simpleDateFormat.format(date);
   }
-
 }
