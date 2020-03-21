@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.service.impl;
 import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
 import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
+import com.amazonservices.mws.client.MwsEndpoints;
 import com.amazonservices.mws.client.MwsUtl;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
@@ -24,7 +25,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author chenzeshenga
@@ -34,8 +37,21 @@ import org.springframework.stereotype.Service;
 // @EnableScheduling
 @Slf4j
 public class AmazonOrderServiceImpl implements AmazonOrderService {
+
   private static final String CHARACTER_ENCODING = "UTF-8";
-  static final String ALGORITHM = "HmacSHA256";
+
+  private static final String ALGORITHM = "HmacSHA256";
+
+  private static final String SECRET_KEY = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
+
+  private static final String AWS_ACCESS_KEY_ID = "AKIAIBNSITOXC4E6G4SQ";
+
+  private RestTemplate restTemplate;
+
+  @Autowired
+  public AmazonOrderServiceImpl(RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+  }
 
   @Override
   public void syncOrders(String createAfterStr, String createBeforeStr)
@@ -155,6 +171,40 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
         log.error("error stack info ", ex);
       }
     }
+  }
+
+  private String getSignature()
+      throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
+          UnsupportedEncodingException {
+    // Use the endpoint for your marketplace
+    String serviceUrl = MwsEndpoints.JP_PROD.toString();
+    // Create set of parameters needed and store in a map
+    HashMap<String, String> parameters = new HashMap<>(12);
+    // Add required parameters. Change these as needed.
+    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
+    parameters.put("Action", urlEncode("ListOrders"));
+    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
+    parameters.put("SignatureVersion", urlEncode("2"));
+    parameters.put("Timestamp", urlEncode(new Date().toString()));
+    parameters.put("Version", urlEncode("2013-09-01"));
+    parameters.put("Signature", urlEncode(ALGORITHM));
+    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
+    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
+    parameters.put("CreatedAfter", urlEncode("2020-02-29T16%3A00%3A00Z"));
+    parameters.put("CreatedBefore", urlEncode("2020-03-09T16%3A00%3A00Z"));
+    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
+    //   &CreatedAfter=2020-02-29T16%3A00%3A00Z
+    //      &CreatedBefore=2020-03-09T16%3A00%3A00Z
+    //      &MarketplaceId.Id.1=A1VC38T7YXB528
+
+    // Format the parameters as they will appear in final format
+    // (without the signature parameter)
+    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
+    String signature = sign(formattedParameters, "test");
+
+    // Add signature to the parameters and display final results
+    parameters.put("Signature", urlEncode(signature));
+    return "";
   }
 
   private void storeSaleRecord(
@@ -305,8 +355,8 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     StringBuilder data = new StringBuilder();
     data.append("POST\n");
     data.append(endpoint.getHost());
-    data.append("\n/");
     data.append("\n");
+    data.append("/Orders/2013-09-01\n");
 
     Iterator<Map.Entry<String, String>> pairs = sorted.entrySet().iterator();
     while (pairs.hasNext()) {
@@ -355,5 +405,42 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     }
 
     return encoded;
+  }
+
+  public static void main(String[] args)
+      throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException,
+          SignatureException, URISyntaxException {
+    // Change this secret key to yours
+    String secretKey = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
+    // Use the endpoint for your marketplace
+    String serviceUrl = "https://mws.amazonservices.jp";
+    // Create set of parameters needed and store in a map
+    HashMap<String, String> parameters = new HashMap<>();
+    // Add required parameters. Change these as needed.
+    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
+    parameters.put("Action", urlEncode("ListOrders"));
+    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
+    parameters.put("SignatureVersion", urlEncode("2"));
+    parameters.put("Timestamp", "2020-03-21T14%3A43%3A39Z");
+    parameters.put("Version", urlEncode("2013-09-01"));
+    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
+    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
+    parameters.put("CreatedAfter", "2020-02-29T16%3A00%3A00Z");
+    parameters.put("CreatedBefore", "2020-03-09T16%3A00%3A00Z");
+    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
+    //   &CreatedAfter=2020-02-29T16%3A00%3A00Z
+    //      &CreatedBefore=2020-03-09T16%3A00%3A00Z
+    //      &MarketplaceId.Id.1=A1VC38T7YXB528
+
+    // Format the parameters as they will appear in final format
+    // (without the signature parameter)
+    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
+    String signature = sign(formattedParameters, secretKey);
+
+    // Add signature to the parameters and display final results
+    parameters.put("Signature", urlEncode(signature));
+    System.out.println(urlEncode(signature));
+
+    System.out.println(new Date().toGMTString());
   }
 }

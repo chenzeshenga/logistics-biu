@@ -2,7 +2,9 @@ package com.abc.chenzeshenga.logistics.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author chenzeshenga
@@ -37,4 +39,11 @@ public class DateUtil {
     long min = diff % nd % nh / nm;
     return day + "天" + hour + "小时" + min + "分钟";
   }
+
+  public static String generateDatePattern4Amazon(Date date) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));
+    return simpleDateFormat.format(date);
+  }
+
 }

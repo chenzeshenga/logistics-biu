@@ -23,6 +23,6 @@ public class AmazonOrderController {
 
   @GetMapping("/sync")
   public void orderSync() {
-    amazonOrderService.syncOrdersAuto();
+    amazonOrderService.syncOrders("2020-02-29T16:00:00Z", "2020-03-09T16:00:00Z");
   }
 }
