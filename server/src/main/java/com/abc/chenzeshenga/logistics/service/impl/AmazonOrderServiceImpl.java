@@ -1,13 +1,19 @@
 package com.abc.chenzeshenga.logistics.service.impl;
 
+import com.abc.chenzeshenga.logistics.mapper.amazon.AmazonStoreInfoMapper;
+import com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo;
 import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
 import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.amazonservices.mws.client.MwsEndpoints;
 import com.amazonservices.mws.client.MwsUtl;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
+import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersConfig;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
 import com.amazonservices.mws.orders._2013_09_01.model.*;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,13 +25,22 @@ import java.util.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,6 +61,8 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   private static final String AWS_ACCESS_KEY_ID = "AKIAIBNSITOXC4E6G4SQ";
 
+  @Resource private AmazonStoreInfoMapper amazonStoreInfoMapper;
+
   private RestTemplate restTemplate;
 
   @Autowired
@@ -57,6 +74,68 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   public void syncOrders(String createAfterStr, String createBeforeStr)
       throws MarketplaceWebServiceOrdersException {
     return;
+  }
+
+  @PostConstruct
+  public void syncOrdersByUserId()
+      throws NoSuchAlgorithmException, SignatureException, IOException, InvalidKeyException,
+          URISyntaxException {
+    AmazonStoreInfo amazonStoreInfo = amazonStoreInfoMapper.getAmazonStoreInfoByUserId("admin");
+
+    //    MarketplaceWebServiceOrdersConfig marketplaceWebServiceOrdersConfig=new
+    // MarketplaceWebServiceOrdersConfig();
+    //    marketplaceWebServiceOrdersConfig.setServiceURL(
+    //        MwsEndpoints.JP_PROD.toString() + "/Orders/2013-09-01");
+    //
+    //    MarketplaceWebServiceOrdersClient marketplaceWebServiceOrdersClient=new
+    // MarketplaceWebServiceOrdersClient(amazonStoreInfo.getMwsAuthToken(),SECRET_KEY,marketplaceWebServiceOrdersConfig);
+    //
+    //    ListOrdersRequest listOrdersRequest=new ListOrdersRequest();
+    //    marketplaceWebServiceOrdersClient.listOrders(listOrdersRequest);
+
+    if (amazonStoreInfo != null) {
+      Map<String, String> requestParam = generateRequestParam(amazonStoreInfo);
+      String url = "https://mws.amazonservices.jp/Orders/2013-09-01?";
+      for (Map.Entry<String, String> entry : requestParam.entrySet()) {
+        String k = entry.getKey();
+        String v = entry.getValue();
+        url = (url + "&" + k + "=" + v);
+      }
+      url = url.replaceFirst("&", "");
+
+      Map<String, String> request = new HashMap<>();
+      request.put("demo", "demo");
+
+      ResponseEntity<String> object =
+          restTemplate.postForEntity(url, request, String.class, urlEncode(""));
+
+      System.out.println(object);
+    }
+  }
+
+  private Map<String, String> generateRequestParam(AmazonStoreInfo amazonStoreInfo)
+      throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
+          UnsupportedEncodingException {
+    String secretKey = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
+    // Use the endpoint for your marketplace
+    String serviceUrl = MwsEndpoints.JP_PROD.toString();
+    // Create set of parameters needed and store in a map
+    Map<String, String> parameters = new HashMap<>();
+    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
+    parameters.put("Action", urlEncode("ListOrders"));
+    parameters.put("MWSAuthToken", urlEncode(amazonStoreInfo.getMwsAuthToken()));
+    parameters.put("SignatureVersion", urlEncode("2"));
+    parameters.put("Timestamp", urlEncode(DateUtil.generateDatePattern4Amazon(new Date())));
+    parameters.put("Version", urlEncode("2013-09-01"));
+    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
+    parameters.put("SellerId", urlEncode(amazonStoreInfo.getSellerId()));
+    parameters.put("MarketplaceId.Id.1", urlEncode(amazonStoreInfo.getMarketplaceId()));
+    parameters.put("CreatedAfter", urlEncode("2020-02-29T16:00:00Z"));
+    parameters.put("CreatedBefore", urlEncode("2020-03-09T16:00:00Z"));
+    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
+    String signature = sign(formattedParameters, secretKey);
+    parameters.put("Signature", urlEncode(signature));
+    return parameters;
   }
 
   @Override

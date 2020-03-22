@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.amazon.AmazonStoreInfoMapper">
+
+    <select id="getAmazonStoreInfoByUserId" parameterType="java.lang.String"
+            resultType="com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo">
+        select uuid,
+               user_id        as userId,
+               seller_id      as sellerId,
+               mws_auth_token as mwsAuthToken,
+               marketplace_id as marketplaceId,
+               enable
+        from l_amazon_store_info
+        where user_id = #{userId}
+          and enable = '1'
+    </select>
+
+</mapper>

@@ -183,6 +183,16 @@ export const asyncRouterMap = [
           icon: 'chart',
         },
       },
+      {
+        path: 'amazonStore',
+        name: 'amazonStore',
+        component: _import('_system/config/amazonStore'),
+        meta: {
+          perm: 'm:amazon:store',
+          title: '亚马逊店铺维护',
+          icon: 'chart',
+        },
+      },
     ],
   },
   {
