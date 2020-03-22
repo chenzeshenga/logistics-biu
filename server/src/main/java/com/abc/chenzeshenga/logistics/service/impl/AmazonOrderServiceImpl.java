@@ -43,6 +43,7 @@ import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import sun.net.www.http.HttpClient;
 
 /**
  * @author chenzeshenga
@@ -107,7 +108,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       request.put("demo", "demo");
 
       ResponseEntity<String> object =
-          restTemplate.postForEntity(url, request, String.class, urlEncode(""));
+          restTemplate.exchange(new URI(url), HttpMethod.POST, null, String.class);
 
       System.out.println(object);
     }
