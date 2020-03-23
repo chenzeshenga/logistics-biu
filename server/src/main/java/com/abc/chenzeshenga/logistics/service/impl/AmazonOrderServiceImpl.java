@@ -28,11 +28,14 @@ import javax.annotation.Resource;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -58,9 +61,12 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   private RestTemplate restTemplate;
 
+  private ObjectMapper objectMapper;
+
   @Autowired
-  public AmazonOrderServiceImpl(RestTemplate restTemplate) {
+  public AmazonOrderServiceImpl(RestTemplate restTemplate, ObjectMapper objectMapper) {
     this.restTemplate = restTemplate;
+    this.objectMapper = objectMapper;
   }
 
   @Override
@@ -102,7 +108,9 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       ResponseEntity<String> object =
           restTemplate.exchange(new URI(url), HttpMethod.POST, null, String.class);
 
-      System.out.println(object);
+      System.out.println(object.getBody());
+      String test = objectMapper.readValue(object.getBody(), String.class);
+      System.out.println(test);
     }
   }
 
