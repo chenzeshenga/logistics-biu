@@ -6,17 +6,17 @@
         <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.abc.chenzeshenga.logistics.model.File">
-        <result column="file" jdbcType="LONGVARBINARY" property="userFile"/>
+        <result column="userFile" jdbcType="LONGVARBINARY" property="userFile"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs2" type="com.abc.chenzeshenga.logistics.model.File">
         <id column="uuid" jdbcType="VARCHAR" property="uuid"/>
-        <result column="file" jdbcType="LONGVARBINARY" property="userFile"/>
+        <result column="userFile" jdbcType="LONGVARBINARY" property="userFile"/>
         <result column="fileName" jdbcType="VARCHAR" property="fileName"/>
     </resultMap>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select file.uuid,
-               `file` as userFile,
+               file.file as userFile,
                template.file_name
         from l_file file
                  left join l_template template on (file.uuid = template.uuid)
@@ -26,7 +26,7 @@
     <select id="selectByPrimaryKeyWithName" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs2">
         select file.uuid,
                `file` as userFile,
-               name as fileName
+               name   as fileName
         from l_file file
         where file.uuid = #{uuid,jdbcType=VARCHAR}
     </select>

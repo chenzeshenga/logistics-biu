@@ -308,18 +308,23 @@ public class OrderController {
         || StringUtils.isBlank(fromCityId)
         || StringUtils.isBlank(fromTownId)) {
       log.debug("ord from address is empty, ord data is {}", manualOrder);
+      manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
     } else {
       JpDetailAddress from =
           japanAddressCache.getJpDetailAddress(
               Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
-      manualOrder.setFromKenName(from.getKenName());
-      manualOrder.setFromCityName(from.getCityName());
-      manualOrder.setFromTownName(from.getTownName());
-      manualOrder.setFromAddressDesc(
-          from.getKenName()
-              + from.getCityName()
-              + from.getTownName()
-              + manualOrder.getFromDetailAddress());
+      if (from != null) {
+        manualOrder.setFromKenName(from.getKenName());
+        manualOrder.setFromCityName(from.getCityName());
+        manualOrder.setFromTownName(from.getTownName());
+        manualOrder.setFromAddressDesc(
+            from.getKenName()
+                + from.getCityName()
+                + from.getTownName()
+                + manualOrder.getFromDetailAddress());
+      } else {
+        manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
+      }
     }
     String toKenId = manualOrder.getToKenId();
     String toCityId = manualOrder.getToCityId();
@@ -328,15 +333,23 @@ public class OrderController {
         || StringUtils.isBlank(toCityId)
         || StringUtils.isBlank(toTownId)) {
       log.debug("ord to address is empty, ord data is {}", manualOrder);
+      manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
     } else {
       JpDetailAddress to =
           japanAddressCache.getJpDetailAddress(
               Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
-      manualOrder.setToKenName(to.getKenName());
-      manualOrder.setToCityName(to.getCityName());
-      manualOrder.setToTownName(to.getTownName());
-      manualOrder.setToAddressDesc(
-          to.getKenName() + to.getCityName() + to.getTownName() + manualOrder.getToDetailAddress());
+      if (to != null) {
+        manualOrder.setToKenName(to.getKenName());
+        manualOrder.setToCityName(to.getCityName());
+        manualOrder.setToTownName(to.getTownName());
+        manualOrder.setToAddressDesc(
+            to.getKenName()
+                + to.getCityName()
+                + to.getTownName()
+                + manualOrder.getToDetailAddress());
+      } else {
+        manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
+      }
     }
     manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
     manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));

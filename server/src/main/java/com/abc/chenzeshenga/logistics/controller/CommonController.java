@@ -303,6 +303,12 @@ public class CommonController {
                   manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
                   manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
                   manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
+                } else {
+                  manualOrder4Database.setFromDetailAddress(
+                      manualOrder4Input.getFromKenName()
+                          + manualOrder4Input.getFromCityName()
+                          + manualOrder4Input.getFromTownName()
+                          + manualOrder4Input.getFromDetailAddress());
                 }
               } else {
                 String kenName = manualOrder4Input.getFromKenName();
@@ -336,6 +342,12 @@ public class CommonController {
                   manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
                   manualOrder4Database.setToCityId(jpDetailAddress.getCityId());
                   manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
+                } else {
+                  manualOrder4Database.setToDetailAddress(
+                      manualOrder4Input.getToKenName()
+                          + manualOrder4Input.getToCityName()
+                          + manualOrder4Input.getToTownName()
+                          + manualOrder4Input.getToDetailAddress());
                 }
               } else {
                 String kenName = manualOrder4Input.getToKenName();
