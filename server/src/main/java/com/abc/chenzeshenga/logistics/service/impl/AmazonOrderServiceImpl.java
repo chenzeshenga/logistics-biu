@@ -12,7 +12,6 @@ import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClie
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
 import com.amazonservices.mws.orders._2013_09_01.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.*;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.annotation.PostConstruct;
@@ -31,22 +31,20 @@ import javax.annotation.Resource;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.datatype.XMLGregorianCalendar;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
 
-import java.util.List;
 /**
  * @author chenzeshenga
  * @since 2020-02-07 23:30:00
