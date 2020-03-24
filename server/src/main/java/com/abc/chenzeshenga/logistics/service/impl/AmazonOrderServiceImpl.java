@@ -12,6 +12,8 @@ import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClie
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersException;
 import com.amazonservices.mws.orders._2013_09_01.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -29,16 +31,22 @@ import javax.annotation.Resource;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.dom4j.Attribute;
+import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
 
+import java.util.List;
 /**
  * @author chenzeshenga
  * @since 2020-02-07 23:30:00
@@ -77,7 +85,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   @PostConstruct
   public void syncOrdersByUserId()
       throws NoSuchAlgorithmException, SignatureException, IOException, InvalidKeyException,
-          URISyntaxException {
+          URISyntaxException, DocumentException {
     AmazonStoreInfo amazonStoreInfo = amazonStoreInfoMapper.getAmazonStoreInfoByUserId("admin");
 
     //    MarketplaceWebServiceOrdersConfig marketplaceWebServiceOrdersConfig=new
@@ -108,10 +116,44 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
           restTemplate.exchange(new URI(url), HttpMethod.POST, null, String.class);
 
       System.out.println(object.getBody());
-      String test = objectMapper.readValue(object.getBody(), String.class);
-      System.out.println(test);
+
+      String xml = object.getBody();
+      // 1.创建Reader对象
+      SAXReader reader = new SAXReader();
+      // 2.加载xml
+      Document document = reader.read(new ByteArrayInputStream(xml.getBytes()));
+      // 3.获取根节点
+      Element rootElement = document.getRootElement();
+      Iterator iterator = rootElement.elementIterator();
+      while (iterator.hasNext()) {
+        Element stu = (Element) iterator.next();
+        List<Attribute> attributes = stu.attributes();
+        System.out.println("======获取属性值======");
+        for (Attribute attribute : attributes) {
+          System.out.println(attribute.getValue());
+        }
+        System.out.println("======遍历子节点======");
+        Iterator iterator1 = stu.elementIterator();
+        while (iterator1.hasNext()) {
+          Element stuChild = (Element) iterator1.next();
+          System.out.println("节点名：" + stuChild.getName() + "---节点值：" + stuChild.getStringValue());
+        }
+      }
     }
   }
+
+  //  public static void node(NodeList list) {
+  //    for (int i = 0; i < list.getLength(); i++) {
+  //      Node node = list.item(i);
+  //      NodeList childNodes = node.getChildNodes();
+  //      for (int j = 0; j < childNodes.getLength(); j++) {
+  //        if (childNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
+  //          System.out.print(childNodes.item(j).getNodeName() + ":");
+  //          System.out.println(childNodes.item(j).getFirstChild().getNodeValue());
+  //        }
+  //      }
+  //    }
+  //  }
 
   private Map<String, String> generateRequestParam(AmazonStoreInfo amazonStoreInfo)
       throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,

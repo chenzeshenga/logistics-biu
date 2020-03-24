@@ -314,6 +314,9 @@ public class CommonController {
                   manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
                   manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
                   manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
+                } else {
+                  manualOrder4Database.setFromDetailAddress(
+                      kenName + cityName + townName + manualOrder4Input.getFromDetailAddress());
                 }
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromName())) {
