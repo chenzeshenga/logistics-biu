@@ -1,11 +1,15 @@
 package com.abc.chenzeshenga.logistics.service.impl;
 
+import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.mapper.amazon.AmazonStoreInfoMapper;
+import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo;
 import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
 import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
+import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.amazonservices.mws.client.MwsEndpoints;
 import com.amazonservices.mws.client.MwsUtl;
 import com.amazonservices.mws.orders._2013_09_01.MarketplaceWebServiceOrdersClient;
@@ -66,12 +70,12 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   private RestTemplate restTemplate;
 
-  private ObjectMapper objectMapper;
+  private OrderMapper orderMapper;
 
   @Autowired
-  public AmazonOrderServiceImpl(RestTemplate restTemplate, ObjectMapper objectMapper) {
+  public AmazonOrderServiceImpl(RestTemplate restTemplate, OrderMapper orderMapper) {
     this.restTemplate = restTemplate;
-    this.objectMapper = objectMapper;
+    this.orderMapper = orderMapper;
   }
 
   @Override
@@ -80,23 +84,12 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     return;
   }
 
-//  @PostConstruct
+  //  @PostConstruct
   public void syncOrdersByUserId()
       throws NoSuchAlgorithmException, SignatureException, IOException, InvalidKeyException,
           URISyntaxException, DocumentException {
-    AmazonStoreInfo amazonStoreInfo = amazonStoreInfoMapper.getAmazonStoreInfoByUserId("admin");
-
-    //    MarketplaceWebServiceOrdersConfig marketplaceWebServiceOrdersConfig=new
-    // MarketplaceWebServiceOrdersConfig();
-    //    marketplaceWebServiceOrdersConfig.setServiceURL(
-    //        MwsEndpoints.JP_PROD.toString() + "/Orders/2013-09-01");
-    //
-    //    MarketplaceWebServiceOrdersClient marketplaceWebServiceOrdersClient=new
-    // MarketplaceWebServiceOrdersClient(amazonStoreInfo.getMwsAuthToken(),SECRET_KEY,marketplaceWebServiceOrdersConfig);
-    //
-    //    ListOrdersRequest listOrdersRequest=new ListOrdersRequest();
-    //    marketplaceWebServiceOrdersClient.listOrders(listOrdersRequest);
-
+    String username = UserUtils.getUserName();
+    AmazonStoreInfo amazonStoreInfo = amazonStoreInfoMapper.getAmazonStoreInfoByUserId(username);
     if (amazonStoreInfo != null) {
       Map<String, String> requestParam = generateRequestParam(amazonStoreInfo);
       String url = "https://mws.amazonservices.jp/Orders/2013-09-01?";
@@ -106,15 +99,8 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
         url = (url + "&" + k + "=" + v);
       }
       url = url.replaceFirst("&", "");
-
-      Map<String, String> request = new HashMap<>();
-      request.put("demo", "demo");
-
       ResponseEntity<String> object =
           restTemplate.exchange(new URI(url), HttpMethod.POST, null, String.class);
-
-      System.out.println(object.getBody());
-
       String xml = object.getBody();
       // 1.创建Reader对象
       SAXReader reader = new SAXReader();
@@ -122,36 +108,32 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       Document document = reader.read(new ByteArrayInputStream(xml.getBytes()));
       // 3.获取根节点
       Element rootElement = document.getRootElement();
-      Iterator iterator = rootElement.elementIterator();
-      while (iterator.hasNext()) {
-        Element stu = (Element) iterator.next();
-        List<Attribute> attributes = stu.attributes();
-        System.out.println("======获取属性值======");
-        for (Attribute attribute : attributes) {
-          System.out.println(attribute.getValue());
-        }
-        System.out.println("======遍历子节点======");
-        Iterator iterator1 = stu.elementIterator();
-        while (iterator1.hasNext()) {
-          Element stuChild = (Element) iterator1.next();
-          System.out.println("节点名：" + stuChild.getName() + "---节点值：" + stuChild.getStringValue());
-        }
-      }
+      // 子节点
+      List<Element> childElements = rootElement.elements();
+      Map<String, Object> mapEle = new HashMap<>();
+      // 遍历子节点
+      mapEle = getAllElements(childElements, mapEle);
+      System.out.println(mapEle);
+      ManualOrder manualOrder = new ManualOrder();
+      manualOrder.setOrderNo(SnowflakeIdWorker.generateStrId());
+      manualOrder.setUserCustomOrderNo((String) mapEle.get("AmazonOrderId"));
+      manualOrder.setToZipCode(String.valueOf(mapEle.get("PostalCode")));
+      manualOrder.setCategory("1");
+      manualOrder.setStatus("1");
+      orderMapper.add(manualOrder);
     }
   }
 
-  //  public static void node(NodeList list) {
-  //    for (int i = 0; i < list.getLength(); i++) {
-  //      Node node = list.item(i);
-  //      NodeList childNodes = node.getChildNodes();
-  //      for (int j = 0; j < childNodes.getLength(); j++) {
-  //        if (childNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
-  //          System.out.print(childNodes.item(j).getNodeName() + ":");
-  //          System.out.println(childNodes.item(j).getFirstChild().getNodeValue());
-  //        }
-  //      }
-  //    }
-  //  }
+  private Map<String, Object> getAllElements(
+      List<Element> childElements, Map<String, Object> mapEle) {
+    for (Element ele : childElements) {
+      mapEle.put(ele.getName(), ele.getText());
+      if (ele.elements().size() > 0) {
+        mapEle = getAllElements(ele.elements(), mapEle);
+      }
+    }
+    return mapEle;
+  }
 
   private Map<String, String> generateRequestParam(AmazonStoreInfo amazonStoreInfo)
       throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
@@ -171,7 +153,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     parameters.put("SellerId", urlEncode(amazonStoreInfo.getSellerId()));
     parameters.put("MarketplaceId.Id.1", urlEncode(amazonStoreInfo.getMarketplaceId()));
     parameters.put("CreatedAfter", urlEncode("2020-02-29T16:00:00Z"));
-    parameters.put("CreatedBefore", urlEncode("2020-03-09T16:00:00Z"));
+    parameters.put("CreatedBefore", urlEncode("2020-03-20T16:00:00Z"));
     String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
     String signature = sign(formattedParameters, secretKey);
     parameters.put("Signature", urlEncode(signature));
