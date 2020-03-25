@@ -2,17 +2,16 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.service.impl.AmazonOrderServiceImpl;
 import com.abc.vo.Json;
-import org.dom4j.DocumentException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author chenzesheng
