@@ -80,7 +80,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     return;
   }
 
-  @PostConstruct
+//  @PostConstruct
   public void syncOrdersByUserId()
       throws NoSuchAlgorithmException, SignatureException, IOException, InvalidKeyException,
           URISyntaxException, DocumentException {

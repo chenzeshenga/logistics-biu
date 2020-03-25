@@ -21,19 +21,19 @@ public class RestTemplateConfig {
   @Bean
   public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
     RestTemplate restTemplate = new RestTemplate(factory);
-    List<HttpMessageConverter<?>> converters = restTemplate.getMessageConverters();
-    for (HttpMessageConverter<?> converter : converters) {
-      if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
-        try {
-          List<MediaType> mediaTypeList = new ArrayList<>(converter.getSupportedMediaTypes());
-          mediaTypeList.add(MediaType.TEXT_XML);
-          ((MappingJackson2XmlHttpMessageConverter) converter)
-              .setSupportedMediaTypes(mediaTypeList);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    }
+//    List<HttpMessageConverter<?>> converters = restTemplate.getMessageConverters();
+//    for (HttpMessageConverter<?> converter : converters) {
+//      if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
+//        try {
+//          List<MediaType> mediaTypeList = new ArrayList<>(converter.getSupportedMediaTypes());
+//          mediaTypeList.add(MediaType.TEXT_XML);
+//          ((MappingJackson2XmlHttpMessageConverter) converter)
+//              .setSupportedMediaTypes(mediaTypeList);
+//        } catch (Exception e) {
+//          e.printStackTrace();
+//        }
+//      }
+//    }
     return restTemplate;
   }
 
