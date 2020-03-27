@@ -232,7 +232,8 @@
       >
       </el-pagination>
       <el-dialog title="test" :visible.sync="dialogTableVisible" width="80%">
-        <syncfusion-barcode-product v-bind:barcode="barcode"></syncfusion-barcode-product>
+        <syncfusion-barcode-product ref="barcode" v-bind:barcode="barcode"></syncfusion-barcode-product>
+        <el-button @click="printBarcode">打印</el-button>
       </el-dialog>
     </div>
   </div>
@@ -241,6 +242,8 @@
 <script>
 import request from '../../../utils/service';
 import SyncfusionBarcodeProduct from '../../../components/@syncfusion/syncfusion-barcode-product';
+import JsPDF from 'jspdf';
+import html2canvas from "html2canvas";
 
 export default {
   name: 'status1',
@@ -377,6 +380,12 @@ export default {
         this.tablePage.size = res.data.page.size;
         this.tablePage.total = res.data.page.total;
         this.tableLoading = false;
+      });
+    },
+    printBarcode: function () {
+      const doc = new JsPDF();
+      html2canvas(this.$refs.barcode.innerHTML, {allowTaint: true}).then(function (canvas) {
+        doc.save('123.pdf');
       });
     },
   },
