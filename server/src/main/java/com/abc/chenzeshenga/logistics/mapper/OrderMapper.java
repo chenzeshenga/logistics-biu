@@ -33,6 +33,13 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("type") String type,
       @Param("status") String status);
 
+  List<ManualOrder> listV2(
+      @Param("cname") String cname,
+      @Param("type") String type,
+      @Param("status") String status,
+      @Param("from") long from,
+      @Param("to") long to);
+
   List<ManualOrder> listByRange(
       Pagination pagination,
       @Param("cname") String cname,

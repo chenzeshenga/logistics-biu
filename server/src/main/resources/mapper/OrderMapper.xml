@@ -415,4 +415,20 @@
         where ordno = #{ordNo}
     </select>
 
+    <select id="listV2" resultMap="result">
+        select * from l_manual_order ord
+        <trim prefix="where" prefixOverrides="and">
+            <if test="cname != null and cname != 'admin' and cname != 'operator'">
+                and ord.create_by=#{cname}
+            </if>
+            <if test="type != null and type != ''">
+                and ord.category=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and ord.status=#{status}
+            </if>
+        </trim>
+        limit #{from},#{to}
+    </select>
+
 </mapper>

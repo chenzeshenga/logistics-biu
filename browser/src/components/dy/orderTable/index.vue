@@ -166,6 +166,11 @@
                 label="商品数量"
                 width="180"
             ></el-table-column>
+            <el-table-column
+                prop="picked"
+                label="已拣货"
+                width="180"
+            ></el-table-column>
           </el-table>
         </template>
       </el-table-column>

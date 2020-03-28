@@ -18,6 +18,12 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
     return page.setRecords(baseMapper.list(page, cname, type, status));
   }
 
+  public Page<ManualOrder> listV2(Page page, String cname, String type, String status) {
+    long from = (page.getCurrent() - 1) * (long) page.getSize();
+    long to = page.getCurrent() * (long) page.getSize();
+    return page.setRecords(baseMapper.listV2(cname, type, status, from, to));
+  }
+
   public Page<ManualOrder> listByRange(
       Page page,
       String cname,

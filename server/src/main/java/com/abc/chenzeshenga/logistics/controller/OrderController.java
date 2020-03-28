@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.cache.ChannelCache;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
+import com.abc.chenzeshenga.logistics.mapper.order.ManualOrderContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.*;
@@ -28,6 +29,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Resource;
 import javax.validation.Valid;
+
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,8 @@ public class OrderController {
   private static final String THREE = "3";
 
   @Resource private OrderMapper orderMapper;
+
+  @Resource private ManualOrderContentMapper manualOrderContentMapper;
 
   @Resource private LabelMapper labelMapper;
 
@@ -252,7 +257,7 @@ public class OrderController {
     String cname = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);
     Page page = PageUtils.getPageParam(jsonObject);
-    Page<ManualOrder> manualOrderPage = orderService.list(page, cname, type, status);
+    Page<ManualOrder> manualOrderPage = orderService.listV2(page, cname, type, status);
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }
@@ -465,6 +470,23 @@ public class OrderController {
     String ordno;
     if (!manualOrderContentList.isEmpty()) {
       ordno = manualOrderContentList.get(0).getOrdno();
+      List<ManualOrderContent> currContentList =
+          manualOrderContentMapper.getManualOrderContent(ordno);
+      boolean satisfiedFlag = true;
+      if (currContentList != null && !currContentList.isEmpty()) {
+        for (int i = 0; i < currContentList.size(); i++) {
+          ManualOrderContent manualOrderContent = currContentList.get(i);
+          String num = manualOrderContent.getNum();
+          String picked = manualOrderContent.getPicked();
+          if (Integer.valueOf(num) > Integer.valueOf(picked)) {
+            satisfiedFlag = false;
+            break;
+          }
+        }
+      }
+      if (satisfiedFlag) {
+        return Json.fail("pickup", "上一次拣货已将所有货物配齐，请勿重复拣货");
+      }
       orderMapper.deleteContent(ordno);
       manualOrderContentList.forEach(
           manualOrderContent -> manualOrderContent.setUuid(SnowflakeIdWorker.generateStrId()));
