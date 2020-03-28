@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.mapper.order;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author chenzeshenga

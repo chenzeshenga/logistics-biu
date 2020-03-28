@@ -29,8 +29,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Resource;
 import javax.validation.Valid;
-
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
