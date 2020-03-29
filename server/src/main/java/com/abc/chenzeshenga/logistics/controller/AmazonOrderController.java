@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class AmazonOrderController {
     if (!StringUtils.isEmpty(sellerId)) {
       AmazonStoreInfo oriAmazonStoreInfo =
           amazonOrderService.getAmazonOrderInfoBySellerId(sellerId);
-      if(oriAmazonStoreInfo!=null){
+      if (oriAmazonStoreInfo != null) {
         return Json.fail("addStoreInfo", "sellerId对应店铺已存在，请修改原店铺");
       }
     }
@@ -57,9 +56,5 @@ public class AmazonOrderController {
   }
 
   @PostMapping("/list")
-  public void list(){
-
-  }
-
-
+  public void list() {}
 }
