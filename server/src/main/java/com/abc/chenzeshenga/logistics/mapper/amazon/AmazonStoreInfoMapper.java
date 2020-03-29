@@ -11,4 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AmazonStoreInfoMapper {
 
   AmazonStoreInfo getAmazonStoreInfoByUserId(String userId);
+
+  AmazonStoreInfo getAmazonOrderInfoBySellerId(String sellerId);
+
+  int addStoreInfo(AmazonStoreInfo amazonStoreInfo);
 }

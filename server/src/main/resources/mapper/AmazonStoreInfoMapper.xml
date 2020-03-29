@@ -9,10 +9,29 @@
                seller_id      as sellerId,
                mws_auth_token as mwsAuthToken,
                marketplace_id as marketplaceId,
+               store_name     as storeName,
                enable
         from l_amazon_store_info
         where user_id = #{userId}
           and enable = '1'
+    </select>
+
+    <insert id="addStoreInfo" parameterType="com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo">
+        insert into l_amazon_store_info(uuid, user_id, seller_id, mws_auth_token, marketplace_id, enable, store_name)
+        values (#{uuid}, #{userId}, #{sellerId}, #{mwsAuthToken}, #{marketplaceId}, #{enable}, #{storeName})
+    </insert>
+
+    <select id="getAmazonOrderInfoBySellerId"
+            resultType="com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo">
+        select uuid,
+               user_id        as userId,
+               seller_id      as sellerId,
+               mws_auth_token as mwsAuthToken,
+               marketplace_id as marketplaceId,
+               store_name     as storeName,
+               enable
+        from l_amazon_store_info
+        where seller_id = #{sellerId}
     </select>
 
 </mapper>

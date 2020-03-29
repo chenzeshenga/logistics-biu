@@ -17,6 +17,7 @@ public class AmazonStoreInfo {
 
   private String uuid;
   private String userId;
+  private String storeName;
   private String sellerId;
   private String mwsAuthToken;
   private String marketplaceId;

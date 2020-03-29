@@ -505,40 +505,11 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     return encoded;
   }
 
-  public static void main(String[] args)
-      throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException,
-          SignatureException, URISyntaxException {
-    // Change this secret key to yours
-    String secretKey = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
-    // Use the endpoint for your marketplace
-    String serviceUrl = "https://mws.amazonservices.jp";
-    // Create set of parameters needed and store in a map
-    HashMap<String, String> parameters = new HashMap<>();
-    // Add required parameters. Change these as needed.
-    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
-    parameters.put("Action", urlEncode("ListOrders"));
-    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
-    parameters.put("SignatureVersion", urlEncode("2"));
-    parameters.put("Timestamp", "2020-03-21T14%3A43%3A39Z");
-    parameters.put("Version", urlEncode("2013-09-01"));
-    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
-    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
-    parameters.put("CreatedAfter", "2020-02-29T16%3A00%3A00Z");
-    parameters.put("CreatedBefore", "2020-03-09T16%3A00%3A00Z");
-    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
-    //   &CreatedAfter=2020-02-29T16%3A00%3A00Z
-    //      &CreatedBefore=2020-03-09T16%3A00%3A00Z
-    //      &MarketplaceId.Id.1=A1VC38T7YXB528
+  public void addStoreInfo(AmazonStoreInfo amazonStoreInfo) {
+    amazonStoreInfoMapper.addStoreInfo(amazonStoreInfo);
+  }
 
-    // Format the parameters as they will appear in final format
-    // (without the signature parameter)
-    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
-    String signature = sign(formattedParameters, secretKey);
-
-    // Add signature to the parameters and display final results
-    parameters.put("Signature", urlEncode(signature));
-    System.out.println(urlEncode(signature));
-
-    System.out.println(new Date().toGMTString());
+  public AmazonStoreInfo getAmazonOrderInfoBySellerId(String sellerId) {
+    return amazonStoreInfoMapper.getAmazonOrderInfoBySellerId(sellerId);
   }
 }
