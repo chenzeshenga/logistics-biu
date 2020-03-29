@@ -1,9 +1,8 @@
 package com.abc.chenzeshenga.logistics.mapper.amazon;
 
 import com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author chenzesheng
@@ -21,6 +20,4 @@ public interface AmazonStoreInfoMapper {
   List<AmazonStoreInfo> listAll(String regTxt, long from, long to);
 
   List<AmazonStoreInfo> listAllByUserName(String username, String regTxt, long from, long to);
-
-
 }

@@ -12,10 +12,7 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
