@@ -155,7 +155,7 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tableLoading: false,
@@ -171,6 +171,7 @@ export default {
     };
   },
   created() {
+    this.fetch();
   },
   watch: {
     $route() {
@@ -195,7 +196,16 @@ export default {
       this.fetch();
     },
     fetch() {
-
+      request({
+        url: '/amazon/list',
+        method: 'post',
+        data: {
+          'regTxt': this.regTxt,
+          'page': this.tablePage,
+        },
+      }).then((ret) => {
+        this.tableData = ret.data.data;
+      });
     },
     triggerNewStore() {
       this.dialogVisible = true;

@@ -11,7 +11,7 @@ public class SqlUtils {
 
   public SqlLimit generateSqlLimit(Pagination pagination) {
     int size = pagination.getSize();
-    long curr = pagination.getCurr();
+    long curr = pagination.getCurrent();
     return new SqlLimit((curr - 1) * size, curr * size);
   }
 }

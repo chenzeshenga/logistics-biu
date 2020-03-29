@@ -34,4 +34,65 @@
         where seller_id = #{sellerId}
     </select>
 
+    <select id="listAll" resultType="com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo">
+        select uuid,
+        user_id as userId,
+        seller_id as sellerId,
+        mws_auth_token as mwsAuthToken,
+        marketplace_id as marketplaceId,
+        store_name as storeName,
+        enable
+        from l_amazon_store_info
+        <trim prefixOverrides="and" prefix="where">
+            <if test="regTxt != null and regTxt != ''">
+                and uuid like CONCAT('%', #{regTxt}, '%')
+            </if>
+            <if test="regTxt != null and regTxt != ''">
+                and user_id like CONCAT('%', #{regTxt}, '%')
+            </if>
+            <if test="regTxt != null and regTxt != ''">
+                and seller_id like CONCAT('%', #{regTxt}, '%')
+            </if>
+            <if test="regTxt != null and regTxt != ''">
+                and mws_auth_token like CONCAT('%', #{regTxt}, '%')
+            </if>
+            <if test="regTxt != null and regTxt != ''">
+                and marketplace_id like CONCAT('%', #{regTxt}, '%')
+            </if>
+            <if test="regTxt != null and regTxt != ''">
+                and store_name like CONCAT('%', #{regTxt}, '%')
+            </if>
+        </trim>
+        limit #{from},#{to}
+    </select>
+
+    <select id="listAllByUserName" resultType="com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo">
+        select uuid,
+        user_id as userId,
+        seller_id as sellerId,
+        mws_auth_token as mwsAuthToken,
+        marketplace_id as marketplaceId,
+        store_name as storeName,
+        enable
+        from l_amazon_store_info
+        where
+        user_id = #{username}
+        <if test="regTxt != null and regTxt != ''">
+            and uuid like CONCAT('%', #{regTxt}, '%')
+        </if>
+        <if test="regTxt != null and regTxt != ''">
+            and seller_id like CONCAT('%', #{regTxt}, '%')
+        </if>
+        <if test="regTxt != null and regTxt != ''">
+            and mws_auth_token like CONCAT('%', #{regTxt}, '%')
+        </if>
+        <if test="regTxt != null and regTxt != ''">
+            and marketplace_id like CONCAT('%', #{regTxt}, '%')
+        </if>
+        <if test="regTxt != null and regTxt != ''">
+            and store_name like CONCAT('%', #{regTxt}, '%')
+        </if>
+        limit #{from},#{to}
+    </select>
+
 </mapper>

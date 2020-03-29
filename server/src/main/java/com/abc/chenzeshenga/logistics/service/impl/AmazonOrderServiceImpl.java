@@ -4,6 +4,8 @@ import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.mapper.amazon.AmazonStoreInfoMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo;
+import com.abc.chenzeshenga.logistics.model.common.PageQuery;
+import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.model.dev.AmazonDevInfo;
 import com.abc.chenzeshenga.logistics.model.user.UserAmazonInfo;
 import com.abc.chenzeshenga.logistics.service.AmazonOrderService;
@@ -511,5 +513,21 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   public AmazonStoreInfo getAmazonOrderInfoBySellerId(String sellerId) {
     return amazonStoreInfoMapper.getAmazonOrderInfoBySellerId(sellerId);
+  }
+
+  public List<AmazonStoreInfo> listAll(PageQuery pageQuery) {
+    String regTxt = pageQuery.getRegTxt();
+    Pagination pagination = pageQuery.getPagination();
+    long from = (pagination.getCurrent() - 1) * pagination.getSize();
+    long to = pagination.getCurrent() * pagination.getSize();
+    return amazonStoreInfoMapper.listAll(regTxt, from, to);
+  }
+
+  public List<AmazonStoreInfo> listAllByUserName(PageQuery pageQuery, String username) {
+    String regTxt = pageQuery.getRegTxt();
+    Pagination pagination = pageQuery.getPagination();
+    long from = (pagination.getCurrent() - 1) * pagination.getSize();
+    long to = pagination.getCurrent() * pagination.getSize();
+    return amazonStoreInfoMapper.listAllByUserName(username, regTxt, from, to);
   }
 }

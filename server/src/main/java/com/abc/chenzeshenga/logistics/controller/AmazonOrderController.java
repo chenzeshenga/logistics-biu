@@ -1,7 +1,9 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.model.amazon.AmazonStoreInfo;
+import com.abc.chenzeshenga.logistics.model.common.PageQuery;
 import com.abc.chenzeshenga.logistics.service.impl.AmazonOrderServiceImpl;
+import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
@@ -10,6 +12,10 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +31,13 @@ public class AmazonOrderController {
 
   private AmazonOrderServiceImpl amazonOrderService;
 
+  private UserCommonService userCommonService;
+
   @Autowired
-  public AmazonOrderController(AmazonOrderServiceImpl amazonOrderService) {
+  public AmazonOrderController(
+      AmazonOrderServiceImpl amazonOrderService, UserCommonService userCommonService) {
     this.amazonOrderService = amazonOrderService;
+    this.userCommonService = userCommonService;
   }
 
   @GetMapping("/sync")
@@ -56,5 +66,14 @@ public class AmazonOrderController {
   }
 
   @PostMapping("/list")
-  public void list() {}
+  public Json list(@RequestBody PageQuery pageQuery) {
+    List<AmazonStoreInfo> amazonStoreInfoList;
+    if (userCommonService.isManagerRole(UserUtils.getUserName())) {
+      amazonStoreInfoList = amazonOrderService.listAll(pageQuery);
+    } else {
+      amazonStoreInfoList =
+          amazonOrderService.listAllByUserName(pageQuery, UserUtils.getUserName());
+    }
+    return Json.succ("data", amazonStoreInfoList).data("page", "");
+  }
 }
