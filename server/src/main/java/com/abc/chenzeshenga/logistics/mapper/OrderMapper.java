@@ -40,6 +40,9 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("from") long from,
       @Param("to") long to);
 
+  Integer countList(
+      @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
+
   List<ManualOrder> listByRange(
       Pagination pagination,
       @Param("cname") String cname,

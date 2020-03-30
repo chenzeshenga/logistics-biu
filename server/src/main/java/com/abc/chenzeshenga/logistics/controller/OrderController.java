@@ -361,7 +361,9 @@ public class OrderController {
     if (StringUtils.isNotBlank(channelDesc)) {
       manualOrder.setChannelDesc(channelDesc);
     }
-    List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
+    String orderNo = manualOrder.getOrderNo();
+    List<ManualOrderContent> manualOrderContentList =
+        manualOrderContentMapper.getManualOrderContent(orderNo);
     double totalPrice = 0.0;
     for (ManualOrderContent manualOrderContent : manualOrderContentList) {
       String num = manualOrderContent.getNum();
@@ -381,6 +383,7 @@ public class OrderController {
         break;
       }
     }
+    manualOrder.setManualOrderContents(manualOrderContentList);
   }
 
   @GetMapping("/delete/{ordNo}")

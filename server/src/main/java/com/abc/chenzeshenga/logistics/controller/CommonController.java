@@ -438,6 +438,9 @@ public class CommonController {
     for (int i = 1; i < productList.size(); i++) {
       Product product = (Product) productList.get(i);
       try {
+        if (StringUtils.isBlank(product.getSku())) {
+          product.setSku(SkuUtil.generateDySku());
+        }
         product.setCategory(switchFromCategoryName(product.getCategoryName()));
         product.setDySku(SkuUtil.generateDySku());
         product.setStatus("0");
