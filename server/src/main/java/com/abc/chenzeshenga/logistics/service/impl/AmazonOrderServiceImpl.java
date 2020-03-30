@@ -109,7 +109,11 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       Element rootElement = document.getRootElement();
       // 子节点
       List<Element> childElements = rootElement.elements();
+      Element listOrdersResultEle = rootElement.element("ListOrdersResult");
+      Element ordersEle = listOrdersResultEle.element("Orders");
+      List<Element> orderListEle = ordersEle.elements();
       Map<String, Object> mapEle = new HashMap<>();
+      List<ManualOrder> manualOrderList = new ArrayList<>();
       // 遍历子节点
       mapEle = getAllElements(childElements, mapEle);
       System.out.println(mapEle);
@@ -125,7 +129,10 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   private Map<String, Object> getAllElements(
       List<Element> childElements, Map<String, Object> mapEle) {
+
     for (Element ele : childElements) {
+      List<Element> orderEle = ele.elements();
+      ele.element("Orders");
       mapEle.put(ele.getName(), ele.getText());
       if (ele.elements().size() > 0) {
         mapEle = getAllElements(ele.elements(), mapEle);
