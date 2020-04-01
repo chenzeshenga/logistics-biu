@@ -90,7 +90,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     String username = UserUtils.getUserName();
     AmazonStoreInfo amazonStoreInfo = amazonStoreInfoMapper.getAmazonStoreInfoByUserId(username);
     if (amazonStoreInfo != null) {
-      Map<String, String> requestParam = generateRequestParam(amazonStoreInfo);
+      Map<String, String> requestParam = generateRequestParam(amazonStoreInfo, "ListOrders");
       String url = "https://mws.amazonservices.jp/Orders/2013-09-01?";
       for (Map.Entry<String, String> entry : requestParam.entrySet()) {
         String k = entry.getKey();
@@ -101,29 +101,57 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       ResponseEntity<String> object =
           restTemplate.exchange(new URI(url), HttpMethod.POST, null, String.class);
       String xml = object.getBody();
-      // 1.创建Reader对象
       SAXReader reader = new SAXReader();
-      // 2.加载xml
       Document document = reader.read(new ByteArrayInputStream(xml.getBytes()));
-      // 3.获取根节点
       Element rootElement = document.getRootElement();
-      // 子节点
       List<Element> childElements = rootElement.elements();
       Element listOrdersResultEle = rootElement.element("ListOrdersResult");
-      Element ordersEle = listOrdersResultEle.element("Orders");
-      List<Element> orderListEle = ordersEle.elements();
-      Map<String, Object> mapEle = new HashMap<>();
-      List<ManualOrder> manualOrderList = new ArrayList<>();
-      // 遍历子节点
-      mapEle = getAllElements(childElements, mapEle);
-      System.out.println(mapEle);
-      ManualOrder manualOrder = new ManualOrder();
-      manualOrder.setOrderNo(SnowflakeIdWorker.generateStrId());
-      manualOrder.setUserCustomOrderNo((String) mapEle.get("AmazonOrderId"));
-      manualOrder.setToZipCode(String.valueOf(mapEle.get("PostalCode")));
-      manualOrder.setCategory("1");
-      manualOrder.setStatus("1");
-      orderMapper.add(manualOrder);
+      if (listOrdersResultEle != null) {
+        Element ordersEle = listOrdersResultEle.element("Orders");
+        if (ordersEle != null) {
+          List<Element> orderListEle = ordersEle.elements();
+          for (Element orderEle : orderListEle) {
+            Element orderStatusEle = orderEle.element("OrderStatus");
+            Element amazonOrderIdEle = orderEle.element("AmazonOrderId");
+            Element purchaseDateEle = orderEle.element("PurchaseDate");
+            if (orderStatusEle != null && amazonOrderIdEle != null && purchaseDateEle != null) {
+              String orderStatus = orderStatusEle.getText();
+              String amazonOrderId = amazonOrderIdEle.getText();
+              String purchaseDate = purchaseDateEle.getText();
+              // 获取订单内容
+              Map<String, String> getOrderrequestParam =
+                  generateRequestParam4GetOrder(amazonStoreInfo, "GetOrder", amazonOrderId);
+              String getOrderUrl = "https://mws.amazonservices.jp/Orders/2013-09-01?";
+              for (Map.Entry<String, String> entry : getOrderrequestParam.entrySet()) {
+                String k = entry.getKey();
+                String v = entry.getValue();
+                getOrderUrl = (getOrderUrl + "&" + k + "=" + v);
+              }
+              getOrderUrl = getOrderUrl.replaceFirst("&", "");
+              ResponseEntity<String> getOrderResp =
+                  restTemplate.exchange(new URI(getOrderUrl), HttpMethod.POST, null, String.class);
+              // 获取订单信息
+              if ("Unshipped".equals(orderStatus) || "PartiallyShipped".equals(orderStatus)) {
+              } else if ("Shipped".equals(orderStatus)) {
+
+              }
+            }
+          }
+
+          Map<String, Object> mapEle = new HashMap<>();
+          List<ManualOrder> manualOrderList = new ArrayList<>();
+          // 遍历子节点
+          mapEle = getAllElements(childElements, mapEle);
+          System.out.println(mapEle);
+          ManualOrder manualOrder = new ManualOrder();
+          manualOrder.setOrderNo(SnowflakeIdWorker.generateStrId());
+          manualOrder.setUserCustomOrderNo((String) mapEle.get("AmazonOrderId"));
+          manualOrder.setToZipCode(String.valueOf(mapEle.get("PostalCode")));
+          manualOrder.setCategory("1");
+          manualOrder.setStatus("1");
+          orderMapper.add(manualOrder);
+        }
+      }
     }
   }
 
@@ -141,7 +169,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     return mapEle;
   }
 
-  private Map<String, String> generateRequestParam(AmazonStoreInfo amazonStoreInfo)
+  private Map<String, String> generateRequestParam(AmazonStoreInfo amazonStoreInfo, String action)
       throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
           UnsupportedEncodingException {
     String secretKey = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
@@ -150,7 +178,7 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     // Create set of parameters needed and store in a map
     Map<String, String> parameters = new HashMap<>();
     parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
-    parameters.put("Action", urlEncode("ListOrders"));
+    parameters.put("Action", urlEncode(action));
     parameters.put("MWSAuthToken", urlEncode(amazonStoreInfo.getMwsAuthToken()));
     parameters.put("SignatureVersion", urlEncode("2"));
     parameters.put("Timestamp", urlEncode(DateUtil.generateDatePattern4Amazon(new Date())));
@@ -160,6 +188,30 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     parameters.put("MarketplaceId.Id.1", urlEncode(amazonStoreInfo.getMarketplaceId()));
     parameters.put("CreatedAfter", urlEncode("2020-02-29T16:00:00Z"));
     parameters.put("CreatedBefore", urlEncode("2020-03-20T16:00:00Z"));
+    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
+    String signature = sign(formattedParameters, secretKey);
+    parameters.put("Signature", urlEncode(signature));
+    return parameters;
+  }
+
+  private Map<String, String> generateRequestParam4GetOrder(
+      AmazonStoreInfo amazonStoreInfo, String action, String amazonOrderId)
+      throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
+          UnsupportedEncodingException {
+    String secretKey = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
+    // Use the endpoint for your marketplace
+    String serviceUrl = MwsEndpoints.JP_PROD.toString();
+    // Create set of parameters needed and store in a map
+    Map<String, String> parameters = new HashMap<>();
+    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
+    parameters.put("Action", urlEncode(action));
+    parameters.put("MWSAuthToken", urlEncode(amazonStoreInfo.getMwsAuthToken()));
+    parameters.put("SignatureVersion", urlEncode("2"));
+    parameters.put("Timestamp", urlEncode(DateUtil.generateDatePattern4Amazon(new Date())));
+    parameters.put("Version", urlEncode("2013-09-01"));
+    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
+    parameters.put("SellerId", urlEncode(amazonStoreInfo.getSellerId()));
+    parameters.put("AmazonOrderId.Id.1", urlEncode(amazonOrderId));
     String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
     String signature = sign(formattedParameters, secretKey);
     parameters.put("Signature", urlEncode(signature));
@@ -280,39 +332,40 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     }
   }
 
-  private String getSignature()
-      throws SignatureException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException,
-          UnsupportedEncodingException {
-    // Use the endpoint for your marketplace
-    String serviceUrl = MwsEndpoints.JP_PROD.toString();
-    // Create set of parameters needed and store in a map
-    HashMap<String, String> parameters = new HashMap<>(12);
-    // Add required parameters. Change these as needed.
-    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
-    parameters.put("Action", urlEncode("ListOrders"));
-    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
-    parameters.put("SignatureVersion", urlEncode("2"));
-    parameters.put("Timestamp", urlEncode(new Date().toString()));
-    parameters.put("Version", urlEncode("2013-09-01"));
-    parameters.put("Signature", urlEncode(ALGORITHM));
-    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
-    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
-    parameters.put("CreatedAfter", urlEncode("2020-02-29T16%3A00%3A00Z"));
-    parameters.put("CreatedBefore", urlEncode("2020-03-09T16%3A00%3A00Z"));
-    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
-    //   &CreatedAfter=2020-02-29T16%3A00%3A00Z
-    //      &CreatedBefore=2020-03-09T16%3A00%3A00Z
-    //      &MarketplaceId.Id.1=A1VC38T7YXB528
-
-    // Format the parameters as they will appear in final format
-    // (without the signature parameter)
-    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
-    String signature = sign(formattedParameters, "test");
-
-    // Add signature to the parameters and display final results
-    parameters.put("Signature", urlEncode(signature));
-    return "";
-  }
+  //  private String getSignature()
+  //      throws SignatureException, URISyntaxException, NoSuchAlgorithmException,
+  // InvalidKeyException,
+  //          UnsupportedEncodingException {
+  //    // Use the endpoint for your marketplace
+  //    String serviceUrl = MwsEndpoints.JP_PROD.toString();
+  //    // Create set of parameters needed and store in a map
+  //    HashMap<String, String> parameters = new HashMap<>(12);
+  //    // Add required parameters. Change these as needed.
+  //    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
+  //    parameters.put("Action", urlEncode("ListOrders"));
+  //    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
+  //    parameters.put("SignatureVersion", urlEncode("2"));
+  //    parameters.put("Timestamp", urlEncode(new Date().toString()));
+  //    parameters.put("Version", urlEncode("2013-09-01"));
+  //    parameters.put("Signature", urlEncode(ALGORITHM));
+  //    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
+  //    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
+  //    parameters.put("CreatedAfter", urlEncode("2020-02-29T16%3A00%3A00Z"));
+  //    parameters.put("CreatedBefore", urlEncode("2020-03-09T16%3A00%3A00Z"));
+  //    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
+  //    //   &CreatedAfter=2020-02-29T16%3A00%3A00Z
+  //    //      &CreatedBefore=2020-03-09T16%3A00%3A00Z
+  //    //      &MarketplaceId.Id.1=A1VC38T7YXB528
+  //
+  //    // Format the parameters as they will appear in final format
+  //    // (without the signature parameter)
+  //    String formattedParameters = calculateStringToSignV2(parameters, serviceUrl);
+  //    String signature = sign(formattedParameters, "test");
+  //
+  //    // Add signature to the parameters and display final results
+  //    parameters.put("Signature", urlEncode(signature));
+  //    return "";
+  //  }
 
   private void storeSaleRecord(
       String username,
@@ -454,17 +507,14 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
     // in TreeMap structure
     Map<String, String> sorted = new TreeMap<String, String>();
     sorted.putAll(parameters);
-
     // Set endpoint value
     URI endpoint = new URI(serviceUrl.toLowerCase());
-
     // Create flattened (String) representation
     StringBuilder data = new StringBuilder();
     data.append("POST\n");
     data.append(endpoint.getHost());
     data.append("\n");
     data.append("/Orders/2013-09-01\n");
-
     Iterator<Map.Entry<String, String>> pairs = sorted.entrySet().iterator();
     while (pairs.hasNext()) {
       Map.Entry<String, String> pair = pairs.next();
@@ -473,7 +523,6 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
       } else {
         data.append(pair.getKey() + "=");
       }
-
       // Delimit parameters with ampersand (&)
       if (pairs.hasNext()) {
         data.append("&");
