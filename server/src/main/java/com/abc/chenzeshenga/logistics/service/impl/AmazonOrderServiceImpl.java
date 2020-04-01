@@ -131,6 +131,18 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
               ResponseEntity<String> getOrderResp =
                   restTemplate.exchange(new URI(getOrderUrl), HttpMethod.POST, null, String.class);
               // 获取订单信息
+              Map<String, String> listOrderItemsrequestParam =
+                  generateRequestParam4GetOrder(amazonStoreInfo, "ListOrderItems", amazonOrderId);
+              String listOrderItemsUrl = "https://mws.amazonservices.jp/Orders/2013-09-01?";
+              for (Map.Entry<String, String> entry : listOrderItemsrequestParam.entrySet()) {
+                String k = entry.getKey();
+                String v = entry.getValue();
+                listOrderItemsUrl = (listOrderItemsUrl + "&" + k + "=" + v);
+              }
+              listOrderItemsUrl = listOrderItemsUrl.replaceFirst("&", "");
+              ResponseEntity<String> listOrderItemsResp =
+                  restTemplate.exchange(
+                      new URI(listOrderItemsUrl), HttpMethod.POST, null, String.class);
               if ("Unshipped".equals(orderStatus) || "PartiallyShipped".equals(orderStatus)) {
               } else if ("Shipped".equals(orderStatus)) {
 
