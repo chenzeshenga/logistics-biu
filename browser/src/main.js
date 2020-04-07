@@ -22,9 +22,13 @@ import * as filters from './filters'; // global filters
 import hasPerm from '@/directive/permission/hasPerm';
 import perm from '@/directive/permission/perm';
 
-import htmlToPdf from './utils/htmlToPdf'
+import htmlToPdf from './utils/htmlToPdf';
+import downloadPDF from './utils/pdf';
+import previewImg from './utils/pdf';
 // 使用Vue.use()方法就会调用工具方法中的install方法
-Vue.use(htmlToPdf)
+Vue.use(htmlToPdf);
+Vue.use(downloadPDF);
+Vue.use(previewImg);
 
 // 注册全局的权限判断方法和指令
 Vue.prototype.$hasPerm = hasPerm;

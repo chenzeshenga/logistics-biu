@@ -208,152 +208,152 @@
 </template>
 
 <script>
-  import request from '../../../utils/service';
-  import CustomSyncfusionBarcode4ShelfNo from '../../@syncfusion/customSyncfusionBarcode4ShelfNo';
+import request from '../../../utils/service';
+import CustomSyncfusionBarcode4ShelfNo from '../../@syncfusion/customSyncfusionBarcode4ShelfNo';
 
-  export default {
-    name: 'shelfTable',
-    components: {CustomSyncfusionBarcode4ShelfNo},
-    data() {
-      return {
-        tablePage: {
-          current: 1,
-          pages: null,
-          size: null,
-          total: null,
-        },
-        tableLoading: false,
-        tableData: [],
-        regTxt: '',
-        dialogVisible: false,
-        dialogVisible2: false,
-        form: {
-          shelfNo: '',
-          area: '',
-          rowNo: '',
-          layer: '',
-          enable: true,
-        },
-        barcodeSetting: {
-          width: 200,
-          height: 150,
-          value: '',
-          textSize: 12,
-        },
-        dialogVisible4PrintOption: false,
-        radioOption: '1',
-        dialogVisible2_detail: false,
-        selectedShelf: {
-          shelfNo: '',
-          area: '',
-          rowNo: '',
-          layer: '',
-        },
-        setting: {
-          width: 340,
-          length: 420,
-        },
-      };
-    },
-    props: ['msg'],
-    created() {
+export default {
+  name: 'shelfTable',
+  components: {CustomSyncfusionBarcode4ShelfNo},
+  data() {
+    return {
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: null,
+        total: null,
+      },
+      tableLoading: false,
+      tableData: [],
+      regTxt: '',
+      dialogVisible: false,
+      dialogVisible2: false,
+      form: {
+        shelfNo: '',
+        area: '',
+        rowNo: '',
+        layer: '',
+        enable: true,
+      },
+      barcodeSetting: {
+        width: 200,
+        height: 150,
+        value: '',
+        textSize: 12,
+      },
+      dialogVisible4PrintOption: false,
+      radioOption: '1',
+      dialogVisible2_detail: false,
+      selectedShelf: {
+        shelfNo: '',
+        area: '',
+        rowNo: '',
+        layer: '',
+      },
+      setting: {
+        width: 340,
+        length: 420,
+      },
+    };
+  },
+  props: ['msg'],
+  created() {
+    this.fetch();
+  },
+  watch: {
+    $route() {
       this.fetch();
     },
-    watch: {
-      $route() {
-        this.fetch();
-      },
+  },
+  methods: {
+    fetch() {
+      const filter = this.$route.query.filter;
+      if (filter !== undefined && filter.length > 0) {
+        this.regTxt = filter;
+      }
+      this.tableLoading = true;
+      request({
+        url: '/shelf/list?reg=' + this.regTxt,
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
+        this.tableData = res.data.page.records;
+        this.tablePage.current = res.data.page.current;
+        this.tablePage.pages = res.data.page.pages;
+        this.tablePage.size = res.data.page.size;
+        this.tablePage.total = res.data.page.total;
+        this.tableLoading = false;
+      });
     },
-    methods: {
-      fetch() {
-        const filter = this.$route.query.filter;
-        if (filter !== undefined && filter.length > 0) {
-          this.regTxt = filter;
-        }
-        this.tableLoading = true;
-        request({
-          url: '/shelf/list?reg=' + this.regTxt,
-          method: 'post',
-          data: this.tablePage,
-        }).then((res) => {
-          this.tableData = res.data.page.records;
-          this.tablePage.current = res.data.page.current;
-          this.tablePage.pages = res.data.page.pages;
-          this.tablePage.size = res.data.page.size;
-          this.tablePage.total = res.data.page.total;
-          this.tableLoading = false;
-        });
-      },
-      handleSizeChange(val) {
-        this.tablePage.size = val;
-        this.fetch();
-      },
-      handleCurrentChange(val) {
-        this.tablePage.current = val;
-        this.fetch();
-      },
-      enable(index, row) {
-        const shelfNo = row.shelfNo;
-        request({
-          url: '/shelf/enable?shelfNo=' + shelfNo,
-          method: 'get',
-        }).then(() => {
-          this.$message.success('启用成功');
-          this.fetch();
-        });
-      },
-      disable(index, row) {
-        const shelfNo = row.shelfNo;
-        request({
-          url: '/shelf/disable?shelfNo=' + shelfNo,
-          method: 'get',
-        }).then(() => {
-          this.$message.success('禁用成功');
-          this.fetch();
-        });
-      },
-      drop(index, row) {
-        const shelfNo = row.shelfNo;
-        request({
-          url: '/shelf/drop?shelfNo=' + shelfNo,
-          method: 'get',
-        }).then(() => {
-          this.$message.success('删除成功');
-          this.fetch();
-        });
-      },
-      createShelf() {
-        request({
-          url: '/shelf/add',
-          method: 'post',
-          data: this.form,
-        }).then(() => {
-          this.$message.success('添加成功');
-          this.dialogVisible = false;
-          this.fetch();
-        });
-      },
-      generateShelfNo() {
-        request({
-          url: '/generate/pk',
-          method: 'get',
-        }).then((res) => {
-          this.form.shelfNo = res.data.data;
-        });
-      },
-      togglePrintShelfNo() {
-        this.dialogVisible4PrintOption = false;
-        if (this.radioOption === '1') {
-          this.dialogVisible2 = true;
-        } else if (this.radioOption === '2') {
-          this.dialogVisible2_detail = true;
-        }
-      },
-      printShelfNo(index, row) {
-        this.barcodeSetting.value = row.shelfNo;
-        this.dialogVisible4PrintOption = true;
-        this.selectedShelf = row;
-      },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetch();
     },
-  };
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetch();
+    },
+    enable(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: '/shelf/enable?shelfNo=' + shelfNo,
+        method: 'get',
+      }).then(() => {
+        this.$message.success('启用成功');
+        this.fetch();
+      });
+    },
+    disable(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: '/shelf/disable?shelfNo=' + shelfNo,
+        method: 'get',
+      }).then(() => {
+        this.$message.success('禁用成功');
+        this.fetch();
+      });
+    },
+    drop(index, row) {
+      const shelfNo = row.shelfNo;
+      request({
+        url: '/shelf/drop?shelfNo=' + shelfNo,
+        method: 'get',
+      }).then(() => {
+        this.$message.success('删除成功');
+        this.fetch();
+      });
+    },
+    createShelf() {
+      request({
+        url: '/shelf/add',
+        method: 'post',
+        data: this.form,
+      }).then(() => {
+        this.$message.success('添加成功');
+        this.dialogVisible = false;
+        this.fetch();
+      });
+    },
+    generateShelfNo() {
+      request({
+        url: '/generate/pk',
+        method: 'get',
+      }).then((res) => {
+        this.form.shelfNo = res.data.data;
+      });
+    },
+    togglePrintShelfNo() {
+      this.dialogVisible4PrintOption = false;
+      if (this.radioOption === '1') {
+        this.dialogVisible2 = true;
+      } else if (this.radioOption === '2') {
+        this.dialogVisible2_detail = true;
+      }
+    },
+    printShelfNo(index, row) {
+      this.barcodeSetting.value = row.shelfNo;
+      this.dialogVisible4PrintOption = true;
+      this.selectedShelf = row;
+    },
+  },
+};
 </script>

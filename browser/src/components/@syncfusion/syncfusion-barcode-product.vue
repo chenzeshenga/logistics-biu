@@ -1,6 +1,7 @@
 <template>
   <div style="width: 145px;height: 80px">
-    <span>{{name}}</span>
+    <span
+      style="margin-left:3%;margin-right:3%;text-align: center;display: block;font-size:10px;width:70%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{name}}</span>
     <ejs-barcodegenerator
       id="barcode4product"
       ref="barcodeControl"
@@ -27,20 +28,21 @@ export default {
     return {
       mode: 'SVG',
       type: 'Code128',
-      width: 145,
-      height: 60,
+      width: 120,
+      height: 50,
       value: this.barcode.value,
       fontcolorvalue: '#000',
-      textPositionwidth: '100%',
+      textPositionwidth: '80%',
       ftextPositionfields: {value: 'type', text: 'text'},
       textPositiondataSource: {type: 'Bottom', text: 'Bottom'},
       textAlignmentdataSource: {type: 'Center', text: 'Center'},
-      name: '我我我',
+      name: this.barcode.name,
     };
   },
   mounted() {
     barCodeInstance = this.$refs.barcodeControl.ej2Instances;
     if (this.barcode.value) {
+      barCodeInstance.value = this.barcode.value;
       barCodeInstance.displayText.text = this.barcode.value;
       barCodeInstance.margin.top = 2;
       barCodeInstance.margin.bottom = 2;

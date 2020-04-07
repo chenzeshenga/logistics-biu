@@ -231,9 +231,15 @@
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
-      <el-dialog title="test" :visible.sync="dialogTableVisible" width="80%">
-        <syncfusion-barcode-product ref="barcode" v-bind:barcode="barcode"></syncfusion-barcode-product>
-        <el-button @click="printBarcode">打印</el-button>
+      <el-dialog title="商品标签" :visible.sync="dialogTableVisible" width="35%">
+        <div id="productBarcode" style="border-style: solid;border-width:1px;height:841.89px;width:595.28px  ">
+          <div v-for="i in 10" v-bind:key="i" style="margin-top: 5px;margin-left: 9px">
+            <div v-for="j in 4" v-bind:key="j" style="display: inline-block;">
+              <syncfusion-barcode-product ref="barcode" v-bind:barcode="barcode" :key="timer"></syncfusion-barcode-product>
+            </div>
+          </div>
+        </div>
+        <el-button @click="downloadPDF('#productBarcode','test')">打印</el-button>
       </el-dialog>
     </div>
   </div>
@@ -242,14 +248,14 @@
 <script>
 import request from '../../../utils/service';
 import SyncfusionBarcodeProduct from '../../../components/@syncfusion/syncfusion-barcode-product';
-import JsPDF from 'jspdf';
-import html2canvas from "html2canvas";
+
 
 export default {
   name: 'status1',
   components: {SyncfusionBarcodeProduct},
   data() {
     return {
+      timer: new Date().getTime(),
       tablePage: {
         current: null,
         pages: null,
@@ -352,7 +358,10 @@ export default {
       });
     },
     handlePrint(index, row) {
-      this.dialogTableVisible=true;
+      this.dialogTableVisible = true;
+      this.barcode.value = row.dySku;
+      this.barcode.name = row.productName;
+      this.timer = new Date().getTime();
       // const link = document.createElement('a');
       // link.style.display = 'none';
       // link.href = process.env.BASE_API + '/pdf/sku/' + row.dySku;
@@ -380,12 +389,6 @@ export default {
         this.tablePage.size = res.data.page.size;
         this.tablePage.total = res.data.page.total;
         this.tableLoading = false;
-      });
-    },
-    printBarcode: function () {
-      const doc = new JsPDF();
-      html2canvas(this.$refs.barcode.innerHTML, {allowTaint: true}).then(function (canvas) {
-        doc.save('123.pdf');
       });
     },
   },
