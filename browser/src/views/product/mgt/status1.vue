@@ -232,9 +232,15 @@
       >
       </el-pagination>
       <el-dialog title="商品标签" :visible.sync="dialogTableVisible" width="35%">
+        <div style="margin-bottom: 2%;padding: 3%">
+          <el-radio v-model="radio" label="1">备选项</el-radio>
+          <el-radio v-model="radio" label="2">备选项</el-radio>
+          <el-radio v-model="radio" label="2">备选项</el-radio>
+        </div>
         <div id="productBarcode" style="border-style: solid;border-width:1px;height:841.89px;width:595.28px  ">
-          <div v-for="i in 10" v-bind:key="i" style="margin-top: 5px;margin-left: 9px">
-            <div v-for="j in 4" v-bind:key="j" style="display: inline-block;">
+          <div v-for="i in 10" v-bind:key="i" style="margin-top: 1px;margin-left: 9px">
+            <div v-for="j in 4" v-bind:key="j"
+                 style="display: table-cell;vertical-align:middle;border-style: dashed;border-width:0.5px">
               <syncfusion-barcode-product ref="barcode" v-bind:barcode="barcode" :key="timer"></syncfusion-barcode-product>
             </div>
           </div>
@@ -395,4 +401,17 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.div-center{
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-pack: center;
+  -moz-box-align: center;
+
+}
+</style>
