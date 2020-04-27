@@ -152,46 +152,51 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12" style="margin-top: 1%">
-            <el-form-item label="道/府/县-城市-乡">
-              <el-select v-model="form.fromKenId" filterable
-                         clearable placeholder="请选择:道/府/县" :span="4"
-                         @change="getFromCityAddress()">
-                <el-option v-for="item in fromKenAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-              <el-select v-model="form.fromCityId" filterable
-                         clearable placeholder="请选择:城市" :span="4"
-                         @change="getFromTownAddress">
-                <el-option v-for="item in fromCityAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-              <el-select v-model="form.fromTownId" filterable
-                         clearable placeholder="请选择:乡" :span="4"
-                         @change="fillFromZipCode"
-              >
-                <el-option v-for="item in fromTownAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
+          <el-col :span="24" style="margin-top: 1%">
+<!--            <el-form-item label="道/府/县-城市-乡">-->
+<!--              <el-select v-model="form.fromKenId" filterable-->
+<!--                         clearable placeholder="请选择:道/府/县" :span="4"-->
+<!--                         @change="getFromCityAddress()">-->
+<!--                <el-option v-for="item in fromKenAddress"-->
+<!--                           :key="item.value"-->
+<!--                           :label="item.label"-->
+<!--                           :value="item.value">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+<!--              <el-select v-model="form.fromCityId" filterable-->
+<!--                         clearable placeholder="请选择:城市" :span="4"-->
+<!--                         @change="getFromTownAddress">-->
+<!--                <el-option v-for="item in fromCityAddress"-->
+<!--                           :key="item.value"-->
+<!--                           :label="item.label"-->
+<!--                           :value="item.value">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+<!--              <el-select v-model="form.fromTownId" filterable-->
+<!--                         clearable placeholder="请选择:乡" :span="4"-->
+<!--                         @change="fillFromZipCode"-->
+<!--              >-->
+<!--                <el-option v-for="item in fromTownAddress"-->
+<!--                           :key="item.value"-->
+<!--                           :label="item.label"-->
+<!--                           :value="item.value">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+            <el-form-item label="地址">
+              <el-input v-model="form.fromAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
+              <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12" style="margin-top: 1%">
-            <el-form-item label="发件人详细地址">
-              <el-input
-                  v-model="form.fromDetailAddress"
-                  placeholder="发件人详细地址"
-              />
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="24" style="margin-top: 1%">-->
+<!--            <el-form-item label="发件人详细地址">-->
+<!--              <el-input-->
+<!--                  v-model="form.fromDetailAddress"-->
+<!--                  placeholder="发件人详细地址"-->
+<!--              />-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
         </el-form-item>
         <el-form-item label="收件人信息">
           <el-col :span="8">
@@ -573,6 +578,9 @@ export default {
         fromName: '',
         fromContact: '',
         chinaCarrier: '',
+        fromAddressLine1: '',
+        fromAddressLine2: '',
+        fromAddressLine3: '',
         fromZipCode: '',
         fromDetailAddress: '',
         toName: '',
