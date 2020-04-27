@@ -36,26 +36,6 @@
                         >{{ r.name }}</el-tag
                     >
                 </div>
-                <!--                <div>-->
-                <!--                    <span-->
-                <!--                        style="font-size:20px;padding-top:20px;display:inline-block;"-->
-                <!--                        >权限：</span-->
-                <!--                    >-->
-                <!--                    <el-tag-->
-                <!--                        style="margin-right: 5px;"-->
-                <!--                        type="danger"-->
-                <!--                        v-if="perms.length == 0"-->
-                <!--                        >未配置任何权限</el-tag-->
-                <!--                    >-->
-                <!--                    <el-tag-->
-                <!--                        style="margin: 5px;"-->
-                <!--                        type="info"-->
-                <!--                        v-else-->
-                <!--                        v-for="r in perms"-->
-                <!--                        :key="r.val"-->
-                <!--                        >{{ r.name }}</el-tag-->
-                <!--                    >-->
-                <!--                </div>-->
             </div>
         </div>
         <el-col :span="24" style="margin-top: 3%">
@@ -115,36 +95,36 @@ export default {
       tableData: [
         {
           col1: '账户持有人',
-          col2: 'チョウ ガ',
-          col3: 'ZHANG HE',
+          col2: '日本東岳商事株式会社',
+          // col3: 'ZHANG HE',
         },
         {
           col1: '店番号/口座番号',
-          col2: '651 /7068647',
-          col3: '651 /7068647',
+          col2: '7261964',
+          // col3: '651 /7068647',
         },
         {
           col1: '支店名称',
           col2: '岡山支店',
-          col3: 'OKAYAMA',
+          // col3: 'OKAYAMA',
         },
-        {
-          col1: 'SWIFT代码',
-          col2: 'SMBCJPJTXXX',
-          col3: 'SMBCJPJTXXX',
-        },
+        // {
+        //   col1: 'SWIFT代码',
+        //   col2: 'SMBCJPJTXXX',
+        //   col3: 'SMBCJPJTXXX',
+        // },
         {
           col1: '收款银行全称',
           col2: '三井住友銀行株式会社',
-          col3: 'SUMITOMO MITSUI BANKING CORPORATI',
+          // col3: 'SUMITOMO MITSUI BANKING CORPORATI',
         },
-        {
-          col1: '详细地址',
-          col2:
-                        '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
-          col3:
-                        '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
-        },
+        // {
+        //   col1: '详细地址',
+        //   col2:
+        //                 '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
+        //   col3:
+        //                 '3-4-26 shinkyobashi ,Naka Ku,OKAYAMA-SHI,OKAYAMA 700-0014 JAPAN',
+        // },
       ],
       tableData2: [
         {
@@ -155,13 +135,13 @@ export default {
         },
         {
           col1: '账号',
-          col2: '6013826109007228222',
+          col2: '6217560800008209461',
           col3: '18052128972',
           col4: 'zhouyy19930814',
         },
         {
           col1: '开户支行',
-          col2: '中国银行徐州分行',
+          col2: '中国银行上海嘉定支行',
         },
       ],
     };

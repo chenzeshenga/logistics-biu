@@ -221,41 +221,41 @@
 </template>
 
 <script>
-import request from "../../utils/service";
+import request from '../../utils/service';
 
 export default {
-  name: "new-warehousing",
+  name: 'new-warehousing',
   data() {
     return {
       adminRole: false,
       onUpdate: false,
       onCreate: true,
-      dialogImageUrl: "",
+      dialogImageUrl: '',
       dialogVisible: false,
       form: {
-        fromAddress: "",
-        target: "岡山县岡山市中区新京橋3丁目4-26",
-        warehousingNo: "",
-        method: "东岳头程",
-        creator: "",
-        carrier: "",
-        trackNo: "",
-        deliverMethod: "",
-        clearanceType: "",
-        taxType: "",
+        fromAddress: '',
+        target: '岡山县岡山市中区新京橋3丁目4-26',
+        warehousingNo: '',
+        method: '东岳头程',
+        creator: '',
+        carrier: '',
+        trackNo: '',
+        deliverMethod: '',
+        clearanceType: '',
+        taxType: '',
         insurance: false,
         insuranceNum: 0,
-        channel: "",
+        channel: '',
         estimatedDate: new Date(),
-        warehousingContentList: []
+        warehousingContentList: [],
       },
       currContent: {
-        warehousingNo: "",
-        sku: "",
-        name: "",
-        boxSeq: "",
-        totalNum: "",
-        wrapType: ""
+        warehousingNo: '',
+        sku: '',
+        name: '',
+        boxSeq: '',
+        totalNum: '',
+        wrapType: '',
       },
       contentMap: {},
       checkRules: {},
@@ -265,7 +265,7 @@ export default {
       selectedProductMap: {},
       tableLoading: false,
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      wrapTypeArr: ["自带包装", "非自带包装"],
+      wrapTypeArr: ['自带包装', '非自带包装'],
       users: [],
       pickerOptions1: {
         disabledDate(time) {
@@ -273,31 +273,31 @@ export default {
         },
         shortcuts: [
           {
-            text: "明天",
+            text: '明天',
             onClick(picker) {
               const date = new Date();
               date.setTime(date.getTime() + 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
+              picker.$emit('pick', date);
+            },
           },
           {
-            text: "一周后",
+            text: '一周后',
             onClick(picker) {
               const date = new Date();
               date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
+              picker.$emit('pick', date);
+            },
           },
           {
-            text: "两周后",
+            text: '两周后',
             onClick(picker) {
               const date = new Date();
               date.setTime(date.getTime() + 3600 * 1000 * 24 * 7 * 2);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      }
+              picker.$emit('pick', date);
+            },
+          },
+        ],
+      },
     };
   },
   created() {
@@ -305,35 +305,35 @@ export default {
     this.initUserList();
     this.hasAdminRole();
   },
-  inject: ["reload"],
+  inject: ['reload'],
   watch: {
     $route() {
       this.initPage();
-    }
+    },
   },
   methods: {
     initUserList: function() {
       request({
-        url: "/sys_user/query4Option",
-        method: "post",
+        url: '/sys_user/query4Option',
+        method: 'post',
         data: {
           current: null,
-          size: "all"
-        }
-      }).then(res => {
-        this.users = res.data["page"].records;
+          size: 'all',
+        },
+      }).then((res) => {
+        this.users = res.data['page'].records;
       });
     },
     hasAdminRole() {
       request({
-        url: "/sys_user/info",
-        method: "get"
-      }).then(res => {
-        const roles = res.data["userInfo"].roles;
+        url: '/sys_user/info',
+        method: 'get',
+      }).then((res) => {
+        const roles = res.data['userInfo'].roles;
         for (let i = 0; i < roles.length; i++) {
           const role = roles[i];
-          const val = role["val"];
-          if (val === "root" || val === "operator") {
+          const val = role['val'];
+          if (val === 'root' || val === 'operator') {
             this.adminRole = true;
           }
         }
@@ -344,48 +344,48 @@ export default {
     },
     filterProductAndUserAddress(val) {
       request({
-        url: "/product/listAllByUser",
-        method: "post",
+        url: '/product/listAllByUser',
+        method: 'post',
         data: {
-          user: val
-        }
-      }).then(res => {
+          user: val,
+        },
+      }).then((res) => {
         this.products = res.data.data;
         if (this.products == null || this.products.length <= 0) {
           this.$message.error(
-            "当前用户未配置商品，请重新选择用户或者去为该用户添加商品"
+              '当前用户未配置商品，请重新选择用户或者去为该用户添加商品'
           );
           for (let i = 0; i < this.users.length; i++) {
             const subUser = this.users[i];
-            if (subUser["uname"] === val) {
-              subUser["disabled"] = true;
+            if (subUser['uname'] === val) {
+              subUser['disabled'] = true;
               this.users[i] = subUser;
               break;
             }
           }
-          this.form.creator = "";
+          this.form.creator = '';
           return;
         }
         for (const myProduct of this.products) {
           const subProduct = myProduct;
-          this.productMap[subProduct["value"]] = subProduct;
+          this.productMap[subProduct['value']] = subProduct;
         }
       });
       request({
-        url: "/user/info/get",
-        method: "post",
+        url: '/user/info/get',
+        method: 'post',
         data: {
-          userId: val
-        }
-      }).then(ret => {
+          userId: val,
+        },
+      }).then((ret) => {
         this.form.fromAddress = ret.data.data.userAddress;
       });
     },
     initPage() {
       request({
-        url: "/channel/list/1",
-        method: "get"
-      }).then(res => {
+        url: '/channel/list/4',
+        method: 'get',
+      }).then((res) => {
         this.channels = res.data.data;
       });
       const warehousingNo = this.$route.query.warehousingNo;
@@ -393,9 +393,9 @@ export default {
         this.onUpdate = true;
         this.onCreate = false;
         request({
-          url: "/warehousing/info?warehousingNo=" + warehousingNo,
-          method: "get"
-        }).then(res => {
+          url: '/warehousing/info?warehousingNo=' + warehousingNo,
+          method: 'get',
+        }).then((res) => {
           const warehousing = res.data.data;
           this.form.warehousingNo = warehousing.warehousingNo;
           this.form.method = warehousing.method;
@@ -404,7 +404,7 @@ export default {
           this.form.deliverMethod = warehousing.deliverMethod;
           this.form.clearanceType = warehousing.clearanceType;
           this.form.taxType = warehousing.taxType;
-          if (this.form.insurance === "Y") {
+          if (this.form.insurance === 'Y') {
             this.form.insurance = true;
             this.form.insuranceNum = warehousing.insuranceNum;
           }
@@ -416,24 +416,24 @@ export default {
     },
     initChannel() {
       request({
-        url: "/channel/list/1",
-        method: "get"
-      }).then(res => {
+        url: '/channel/list/1',
+        method: 'get',
+      }).then((res) => {
         this.channels = res.data.data;
       });
     },
     getOrdNo() {
       request({
-        url: "/generate/pk/warehousing",
-        method: "get"
-      }).then(res => {
+        url: '/generate/pk/warehousing',
+        method: 'get',
+      }).then((res) => {
         this.form.warehousingNo = res.data.data;
         this.currContent.warehousingNo = res.data.data;
       });
     },
     add2Cart() {
       if (!this.currContent.sku || this.currContent.totalNum === 0) {
-        this.$message.warning("请选择入库商品或者调整数量");
+        this.$message.warning('请选择入库商品或者调整数量');
         return;
       }
       this.currContent.warehousingNo = this.form.warehousingNo;
@@ -446,15 +446,15 @@ export default {
         this.pushData2Table();
       } else {
         if (boxContentMap.hasOwnProperty(sku)) {
-          this.$confirm("相同箱号中的相同sku产品将合并", "提示", confirm)
-            .then(() => {
-              const oriContent = boxContentMap[sku];
-              oriContent.totalNum += this.currContent.totalNum;
-              this.pushData2Table();
-            })
-            .catch(() => {
-              this.$message.info("请重新选择箱号");
-            });
+          this.$confirm('相同箱号中的相同sku产品将合并', '提示', confirm)
+              .then(() => {
+                const oriContent = boxContentMap[sku];
+                oriContent.totalNum += this.currContent.totalNum;
+                this.pushData2Table();
+              })
+              .catch(() => {
+                this.$message.info('请重新选择箱号');
+              });
         } else {
           this.selectedProductMap[boxSeq][sku] = this.currContent;
           this.pushData2Table();
@@ -473,16 +473,16 @@ export default {
         }
       }
       this.currContent = {
-        warehousingNo: "",
-        sku: "",
-        name: "",
-        boxSeq: "",
-        totalNum: "",
-        wrapType: ""
+        warehousingNo: '',
+        sku: '',
+        name: '',
+        boxSeq: '',
+        totalNum: '',
+        wrapType: '',
       };
     },
     handleValueChange(value) {
-      this.currContent.name = this.productMap[value]["name"];
+      this.currContent.name = this.productMap[value]['name'];
     },
     handleDelete(index, row) {
       this.form.warehousingContentList.splice(index, 1);
@@ -490,40 +490,40 @@ export default {
     },
     submitForm() {
       if (this.adminRole && this.form.creator.length <= 0) {
-        this.$message.warning("请选择入库单所属人");
+        this.$message.warning('请选择入库单所属人');
         return;
       }
       if (this.form.insurance) {
-        this.form.insurance = "Y";
+        this.form.insurance = 'Y';
       } else {
-        this.form.insurance = "N";
+        this.form.insurance = 'N';
       }
       request({
-        url: "/warehousing/add",
-        method: "post",
-        data: this.form
-      }).then(ret => {
-        this.$message.success("成功新建入库订单" + ret.data.warehousingNo);
+        url: '/warehousing/add',
+        method: 'post',
+        data: this.form,
+      }).then((ret) => {
+        this.$message.success('成功新建入库订单' + ret.data.warehousingNo);
         this.reload();
       });
     },
     updateForm() {
       if (this.form.insurance) {
-        this.form.insurance = "Y";
+        this.form.insurance = 'Y';
       } else {
-        this.form.insurance = "N";
+        this.form.insurance = 'N';
       }
       request({
-        url: "/warehousing/update",
-        method: "post",
-        data: this.form
+        url: '/warehousing/update',
+        method: 'post',
+        data: this.form,
       }).then(() => {
-        this.$message.success("更新订单");
-        this.$router.push({ path: "/new-warehousing/new-warehousing" });
+        this.$message.success('更新订单');
+        this.$router.push({path: '/new-warehousing/new-warehousing'});
         this.initPage();
         this.reload();
       });
-    }
-  }
+    },
+  },
 };
 </script>

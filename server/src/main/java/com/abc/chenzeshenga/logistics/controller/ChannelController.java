@@ -141,7 +141,7 @@ public class ChannelController {
       channel.setRuleDesc(stringBuilder.toString().replaceFirst(";", ""));
       channel.setPartnerDesc(labelCache.getLabel("carrier_" + channel.getPartner()));
       channel.setCalculateRuleDesc(labelCache.getLabel("rule_" + channel.getRule()));
-      channel.setAdapterDesc(labelCache.getLabel("adapter_" + channel.getAdapter()));
+      channel.setAdapterDesc(AdapterConstant.getAdapter(channel.getAdapter()));
     }
     return Json.succ().data("page", channelPage);
   }
