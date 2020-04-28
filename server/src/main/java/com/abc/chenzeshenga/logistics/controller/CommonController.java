@@ -156,30 +156,30 @@ public class CommonController {
     manualOrderList.forEach(
         manualOrder -> {
           log.info(manualOrder.toString());
-//          if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
-//            manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-//          } else {
-//            JpDetailAddress from =
-//                japanAddressCache.getJpDetailAddress(
-//                    Integer.valueOf(manualOrder.getFromKenId()),
-//                    Integer.valueOf(manualOrder.getFromCityId()),
-//                    Integer.valueOf(manualOrder.getFromTownId()));
-//            manualOrder.setFromKenName(from.getKenName());
-//            manualOrder.setFromCityName(from.getCityName());
-//            manualOrder.setFromTownName(from.getTownName());
-//          }
-//          if (StringUtils.isEmpty(manualOrder.getToKenId())) {
-//            manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-//          } else {
-//            JpDetailAddress to =
-//                japanAddressCache.getJpDetailAddress(
-//                    Integer.valueOf(manualOrder.getToKenId()),
-//                    Integer.valueOf(manualOrder.getToCityId()),
-//                    Integer.valueOf(manualOrder.getToTownId()));
-//            manualOrder.setToKenName(to.getKenName());
-//            manualOrder.setToCityName(to.getCityName());
-//            manualOrder.setToTownName(to.getTownName());
-//          }
+          //          if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
+          //            manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
+          //          } else {
+          //            JpDetailAddress from =
+          //                japanAddressCache.getJpDetailAddress(
+          //                    Integer.valueOf(manualOrder.getFromKenId()),
+          //                    Integer.valueOf(manualOrder.getFromCityId()),
+          //                    Integer.valueOf(manualOrder.getFromTownId()));
+          //            manualOrder.setFromKenName(from.getKenName());
+          //            manualOrder.setFromCityName(from.getCityName());
+          //            manualOrder.setFromTownName(from.getTownName());
+          //          }
+          //          if (StringUtils.isEmpty(manualOrder.getToKenId())) {
+          //            manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
+          //          } else {
+          //            JpDetailAddress to =
+          //                japanAddressCache.getJpDetailAddress(
+          //                    Integer.valueOf(manualOrder.getToKenId()),
+          //                    Integer.valueOf(manualOrder.getToCityId()),
+          //                    Integer.valueOf(manualOrder.getToTownId()));
+          //            manualOrder.setToKenName(to.getKenName());
+          //            manualOrder.setToCityName(to.getCityName());
+          //            manualOrder.setToTownName(to.getTownName());
+          //          }
           manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
           manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
           manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
