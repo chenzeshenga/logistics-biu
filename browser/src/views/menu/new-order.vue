@@ -153,50 +153,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" style="margin-top: 1%">
-<!--            <el-form-item label="道/府/县-城市-乡">-->
-<!--              <el-select v-model="form.fromKenId" filterable-->
-<!--                         clearable placeholder="请选择:道/府/县" :span="4"-->
-<!--                         @change="getFromCityAddress()">-->
-<!--                <el-option v-for="item in fromKenAddress"-->
-<!--                           :key="item.value"-->
-<!--                           :label="item.label"-->
-<!--                           :value="item.value">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--              <el-select v-model="form.fromCityId" filterable-->
-<!--                         clearable placeholder="请选择:城市" :span="4"-->
-<!--                         @change="getFromTownAddress">-->
-<!--                <el-option v-for="item in fromCityAddress"-->
-<!--                           :key="item.value"-->
-<!--                           :label="item.label"-->
-<!--                           :value="item.value">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--              <el-select v-model="form.fromTownId" filterable-->
-<!--                         clearable placeholder="请选择:乡" :span="4"-->
-<!--                         @change="fillFromZipCode"-->
-<!--              >-->
-<!--                <el-option v-for="item in fromTownAddress"-->
-<!--                           :key="item.value"-->
-<!--                           :label="item.label"-->
-<!--                           :value="item.value">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-            <el-form-item label="地址">
+            <el-form-item label="发件地址">
               <el-input v-model="form.fromAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
               <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
               <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
-<!--          <el-col :span="24" style="margin-top: 1%">-->
-<!--            <el-form-item label="发件人详细地址">-->
-<!--              <el-input-->
-<!--                  v-model="form.fromDetailAddress"-->
-<!--                  placeholder="发件人详细地址"-->
-<!--              />-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
         </el-form-item>
         <el-form-item label="收件人信息">
           <el-col :span="8">
@@ -223,44 +185,11 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12" style="margin-top: 1%">
-            <el-form-item label="道/府/县-城市-乡">
-              <el-select v-model="form.toKenId" filterable
-                         clearable placeholder="请选择:道/府/县" :span="4"
-                         @change="getToCityAddress()">
-                <el-option v-for="item in toKenAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-              <el-select v-model="form.toCityId" filterable
-                         clearable placeholder="请选择:城市" :span="4"
-                         @change="getToTownAddress">
-                <el-option v-for="item in toCityAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-              <el-select v-model="form.toTownId" filterable
-                         clearable placeholder="请选择:乡" :span="4"
-                         @change="fillToZipCode"
-              >
-                <el-option v-for="item in toTownAddress"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" style="margin-top: 1%">
-            <el-form-item label="收件人详细地址">
-              <el-input
-                  v-model="form.toDetailAddress"
-                  placeholder="收件人详细地址"
-              ></el-input>
+          <el-col :span="24" style="margin-top: 1%">
+            <el-form-item label="收件地址">
+              <el-input v-model="form.toAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
+              <el-input v-model="form.toAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.toAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -515,49 +444,6 @@ export default {
   components: {loading},
   data() {
     return {
-      props: {
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const level = node.level;
-          switch (level) {
-            case 1:
-              const kenId = node.data.value;
-              request({
-                url: '/address/getCity?kenId=' + kenId,
-                method: 'get',
-              }).then((ret) => {
-                resolve(ret.data.data);
-              });
-              break;
-            case 2:
-              const cityId = node.data.value;
-              request({
-                url: '/address/getTown?cityId=' + cityId,
-                method: 'get',
-              }).then((ret) => {
-                const townList = ret.data.data;
-                const results = [];
-                for (let i = 0; i < townList.length; i++) {
-                  const sub = townList[i];
-                  const result = {
-                    label: sub.label,
-                    value: sub.value,
-                    leaf: true,
-                  };
-                  results.push(result);
-                }
-                console.log(results);
-                resolve(results);
-              });
-              break;
-            case 3:
-              resolve(node);
-              break;
-            default:
-              break;
-          }
-        },
-      },
       isLoading: false,
       fullPage: true,
       actionLink: process.env.BASE_API + '/ord/excel',
@@ -582,11 +468,12 @@ export default {
         fromAddressLine2: '',
         fromAddressLine3: '',
         fromZipCode: '',
-        fromDetailAddress: '',
         toName: '',
         toContact: '',
         toZipCode: '',
-        toDetailAddress: '',
+        toAddressLine1: '',
+        toAddressLine2: '',
+        toAddressLine3: '',
         address: {},
         toAddress: {},
         collect: false,
@@ -702,28 +589,6 @@ export default {
             this.listChannel(ord.category);
             this.selectedChannels.push(ord.channel);
           }
-          if (ord.fromKenId) {
-            this.form.fromKenId = ord.fromKenId;
-            this.form.fromCityId = ord.fromCityId;
-            this.getFromCityAddress();
-            if (ord.fromCityId) {
-              this.form.fromCityId = ord.fromCityId;
-              this.form.fromTownId = ord.fromTownId;
-              this.getFromTownAddress();
-              this.form.fromTownId = ord.fromTownId;
-            }
-          }
-          if (ord.toKenId) {
-            this.form.toKenId = ord.toKenId;
-            this.form.toCityId = ord.toCityId;
-            this.getToCityAddress();
-            if (ord.toCityId) {
-              this.form.toCityId = ord.toCityId;
-              this.form.toTownId = ord.toTownId;
-              this.getToTownAddress();
-              this.form.toTownId = ord.toTownId;
-            }
-          }
           setTimeout(() => {
             this.form = ord;
             const contentList = ord.contentList;
@@ -734,153 +599,6 @@ export default {
             }
           }, 1000);
         });
-      }
-    },
-    getKenAddress() {
-      request({
-        url: '/address/getKen',
-        method: 'get',
-      }).then((res) => {
-        this.toKenAddress = res.data.data;
-        this.fromKenAddress = res.data.data;
-      });
-    },
-    getFromCityAddress() {
-      if (this.form.fromKenId) {
-        request({
-          url: '/address/getCity?kenId=' + this.form.fromKenId,
-          method: 'get',
-        }).then((ret) => {
-          this.fromCityAddress = ret.data.data;
-        });
-        this.form.fromCityId = '';
-        this.form.fromTownId = '';
-      } else {
-        this.$message.warning('请选择 道/府/县');
-        this.form.fromCityId = '';
-        this.form.fromTownId = '';
-        this.fromCityAddress = [];
-        this.fromTownAddress = [];
-      }
-    },
-    getToCityAddress() {
-      if (this.form.toKenId) {
-        request({
-          url: '/address/getCity?kenId=' + this.form.toKenId,
-          method: 'get',
-        }).then((ret) => {
-          this.toCityAddress = ret.data.data;
-        });
-        this.form.toCityId = '';
-        this.form.toTownId = '';
-      } else {
-        this.$message.warning('请选择 道/府/县');
-        this.form.toCityId = '';
-        this.form.toTownId = '';
-        this.toCityAddress = [];
-        this.toTownAddress = [];
-      }
-    },
-    getToTownAddress() {
-      if (this.form.toCityId) {
-        request({
-          url: '/address/getTown?cityId=' + this.form.toCityId,
-          method: 'get',
-        }).then((ret) => {
-          this.toTownAddress = ret.data.data;
-          for (let i = 0; i < this.toTownAddress.length; i++) {
-            const town = this.toTownAddress[i];
-            if (!this.toTownAddressMap.hasOwnProperty(town.value)) {
-              this.toTownAddressMap[town.value] = {
-                'value': town.value,
-                'label': town.label,
-                'zip': town.zip,
-              };
-            }
-          }
-        });
-        this.form.toTownId = '';
-      } else {
-        this.$message.warning('请选择 城市');
-        this.form.toTownId = '';
-        this.toTownAddress = [];
-      }
-    },
-    getFromTownAddress() {
-      if (this.form.fromCityId) {
-        request({
-          url: '/address/getTown?cityId=' + this.form.fromCityId,
-          method: 'get',
-        }).then((ret) => {
-          this.fromTownAddress = ret.data.data;
-          for (let i = 0; i < this.fromTownAddress.length; i++) {
-            const town = this.fromTownAddress[i];
-            if (!this.fromTownAddressMap.hasOwnProperty(town.value)) {
-              this.fromTownAddressMap[town.value] = {
-                'value': town.value,
-                'label': town.label,
-                'zip': town.zip,
-              };
-            }
-          }
-        });
-        this.form.fromTownId = '';
-      } else {
-        this.$message.warning('请选择 城市');
-        this.form.fromTownId = '';
-        this.fromTownAddress = [];
-      }
-    },
-    fillFromZipCode() {
-      if (this.form.fromTownId) {
-        const town = this.fromTownAddressMap[this.form.fromTownId];
-        const zip = town.zip;
-        if (zip !== this.form.fromZipCode) {
-          this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }).then(() => {
-            this.form.fromZipCode = zip;
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消修改',
-            });
-          });
-        }
-      } else {
-        this.$message.warning('请选择乡镇');
-      }
-    },
-    fillToZipCode() {
-      if (this.form.toTownId) {
-        const town = this.toTownAddressMap[this.form.toTownId];
-        const zip = town.zip;
-        if (zip !== this.form.toZipCode) {
-          this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }).then(() => {
-            this.form.toZipCode = zip;
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消修改',
-            });
-          });
-        }
-      } else {
-        this.$message.warning('请选择乡镇');
       }
     },
     getMyProducts() {
