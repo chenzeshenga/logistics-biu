@@ -522,7 +522,6 @@ export default {
     this.initUserList();
     this.hasAdminRole();
     this.initPage();
-    this.getKenAddress();
   },
   watch: {
     $route() {

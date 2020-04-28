@@ -170,17 +170,18 @@
     <insert id="add" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         insert into l_manual_order(ord_no, user_custom_order_no, category, carrier_no, track_no, owner, status,
                                    update_on, create_on,
-                                   create_by, update_by, from_ken_id,
-                                   from_city_id, from_town_id, from_where, from_zipcode, to_ken_id, to_city_id,
-                                   to_town_id, to_where, to_zipcode,
+                                   create_by, update_by, from_address_line1,
+                                   from_address_line2, from_address_line3, from_zipcode, to_address_line1,
+                                   to_address_line2,
+                                   to_address_line3, to_zipcode,
                                    on_behalf, amount, china_no, from_contact, to_contact, from_whom, to_whom, channel,
                                    china_carrier, collect_num)
         values (#{orderNo}, #{userCustomOrderNo}, #{category}, #{orderNo}, #{trackNo}, #{creator}, #{status},
                 #{updateOn}, #{createOn},
                 #{creator}, #{updator},
-                #{fromKenId}, #{fromCityId}, #{fromTownId}, #{fromDetailAddress}, #{fromZipCode}, #{toKenId},
-                #{toCityId}, #{toTownId},
-                #{toDetailAddress}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact}, #{toContact},
+                #{fromAddressLine1}, #{fromAddressLine2}, #{fromAddressLine3}, #{fromZipCode}, #{toAddressLine1},
+                #{toAddressLine2}, #{toAddressLine3}, #{toZipCode}, #{collect}, #{orderNo}, #{chinaNo}, #{fromContact},
+                #{toContact},
                 #{fromName},
                 #{toName}, #{channel}, #{chinaCarrier}, #{collectNum})
     </insert>

@@ -12,10 +12,7 @@ import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.OrderService;
-import com.abc.chenzeshenga.logistics.util.DateUtil;
-import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
-import com.abc.chenzeshenga.logistics.util.UserUtils;
-import com.abc.chenzeshenga.logistics.util.UuidUtils;
+import com.abc.chenzeshenga.logistics.util.*;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
 import com.alibaba.excel.EasyExcelFactory;
@@ -109,11 +106,8 @@ public class OrderController {
     } else {
       manualOrder.setUpdator(manualOrder.getCreator());
     }
-    if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
-      manualOrder.setFromKenId("");
-      manualOrder.setFromCityId("");
-      manualOrder.setFromTownId("");
-      manualOrder.setFromDetailAddress("日本岡山仓(okayama)");
+    if (StringUtils.isEmpty(manualOrder.getFromAddressLine1())) {
+      manualOrder.setFromAddressLine3("日本岡山仓(okayama)");
     }
     if (StringUtils.isEmpty(manualOrder.getFromName())) {
       manualOrder.setFromName("东岳物流");
@@ -235,17 +229,17 @@ public class OrderController {
 
   private void setAddress(@RequestBody ManualOrder manualOrder) {
     List<String> fromAddress = manualOrder.getSelectedAddress();
-    if (fromAddress != null && !fromAddress.isEmpty()) {
-      manualOrder.setFromKenId(fromAddress.get(0));
-      manualOrder.setFromCityId(fromAddress.get(1));
-      manualOrder.setFromTownId(fromAddress.get(2));
-    }
-    List<String> toAddress = manualOrder.getSelectedToAddress();
-    if (toAddress != null && !toAddress.isEmpty()) {
-      manualOrder.setToKenId(toAddress.get(0));
-      manualOrder.setToCityId(toAddress.get(1));
-      manualOrder.setToTownId(toAddress.get(2));
-    }
+//    if (fromAddress != null && !fromAddress.isEmpty()) {
+//      manualOrder.setFromKenId(fromAddress.get(0));
+//      manualOrder.setFromCityId(fromAddress.get(1));
+//      manualOrder.setFromTownId(fromAddress.get(2));
+//    }
+//    List<String> toAddress = manualOrder.getSelectedToAddress();
+//    if (toAddress != null && !toAddress.isEmpty()) {
+//      manualOrder.setToKenId(toAddress.get(0));
+//      manualOrder.setToCityId(toAddress.get(1));
+//      manualOrder.setToTownId(toAddress.get(2));
+//    }
   }
 
   @PostMapping("/list/{type}/{status}")
@@ -304,56 +298,56 @@ public class OrderController {
   }
 
   private void enrichSingleOrd(ManualOrder manualOrder) {
-    String fromKenId = manualOrder.getFromKenId();
-    String fromCityId = manualOrder.getFromCityId();
-    String fromTownId = manualOrder.getFromTownId();
-    if (StringUtils.isBlank(fromKenId)
-        || StringUtils.isBlank(fromCityId)
-        || StringUtils.isBlank(fromTownId)) {
-      log.debug("ord from address is empty, ord data is {}", manualOrder);
-      manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-    } else {
-      JpDetailAddress from =
-          japanAddressCache.getJpDetailAddress(
-              Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
-      if (from != null) {
-        manualOrder.setFromKenName(from.getKenName());
-        manualOrder.setFromCityName(from.getCityName());
-        manualOrder.setFromTownName(from.getTownName());
-        manualOrder.setFromAddressDesc(
-            from.getKenName()
-                + from.getCityName()
-                + from.getTownName()
-                + manualOrder.getFromDetailAddress());
-      } else {
-        manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-      }
-    }
-    String toKenId = manualOrder.getToKenId();
-    String toCityId = manualOrder.getToCityId();
-    String toTownId = manualOrder.getToTownId();
-    if (StringUtils.isBlank(toKenId)
-        || StringUtils.isBlank(toCityId)
-        || StringUtils.isBlank(toTownId)) {
-      log.debug("ord to address is empty, ord data is {}", manualOrder);
-      manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-    } else {
-      JpDetailAddress to =
-          japanAddressCache.getJpDetailAddress(
-              Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
-      if (to != null) {
-        manualOrder.setToKenName(to.getKenName());
-        manualOrder.setToCityName(to.getCityName());
-        manualOrder.setToTownName(to.getTownName());
-        manualOrder.setToAddressDesc(
-            to.getKenName()
-                + to.getCityName()
-                + to.getTownName()
-                + manualOrder.getToDetailAddress());
-      } else {
-        manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-      }
-    }
+//    String fromKenId = manualOrder.getFromKenId();
+//    String fromCityId = manualOrder.getFromCityId();
+//    String fromTownId = manualOrder.getFromTownId();
+//    if (StringUtils.isBlank(fromKenId)
+//        || StringUtils.isBlank(fromCityId)
+//        || StringUtils.isBlank(fromTownId)) {
+//      log.debug("ord from address is empty, ord data is {}", manualOrder);
+//      manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
+//    } else {
+//      JpDetailAddress from =
+//          japanAddressCache.getJpDetailAddress(
+//              Integer.valueOf(fromKenId), Integer.valueOf(fromCityId), Integer.valueOf(fromTownId));
+//      if (from != null) {
+//        manualOrder.setFromKenName(from.getKenName());
+//        manualOrder.setFromCityName(from.getCityName());
+//        manualOrder.setFromTownName(from.getTownName());
+//        manualOrder.setFromAddressDesc(
+//            from.getKenName()
+//                + from.getCityName()
+//                + from.getTownName()
+//                + manualOrder.getFromDetailAddress());
+//      } else {
+//        manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
+//      }
+//    }
+//    String toKenId = manualOrder.getToKenId();
+//    String toCityId = manualOrder.getToCityId();
+//    String toTownId = manualOrder.getToTownId();
+//    if (StringUtils.isBlank(toKenId)
+//        || StringUtils.isBlank(toCityId)
+//        || StringUtils.isBlank(toTownId)) {
+//      log.debug("ord to address is empty, ord data is {}", manualOrder);
+//      manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
+//    } else {
+//      JpDetailAddress to =
+//          japanAddressCache.getJpDetailAddress(
+//              Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
+//      if (to != null) {
+//        manualOrder.setToKenName(to.getKenName());
+//        manualOrder.setToCityName(to.getCityName());
+//        manualOrder.setToTownName(to.getTownName());
+//        manualOrder.setToAddressDesc(
+//            to.getKenName()
+//                + to.getCityName()
+//                + to.getTownName()
+//                + manualOrder.getToDetailAddress());
+//      } else {
+//        manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
+//      }
+//    }
     manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
     manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
     manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
@@ -396,52 +390,52 @@ public class OrderController {
   @GetMapping("/get/{ordNo}")
   public Json selectByPk(@PathVariable String ordNo) {
     ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
-    if (StringUtils.isNotEmpty(manualOrder.getFromKenId())
-        && StringUtils.isNotEmpty(manualOrder.getToKenId())) {
-      List<String> selectedAddress = new ArrayList<>();
-      selectedAddress.add(manualOrder.getFromKenId());
-      selectedAddress.add(manualOrder.getFromCityId());
-      selectedAddress.add(manualOrder.getFromTownId());
-      manualOrder.setSelectedAddress(selectedAddress);
-      Map<String, String> address = manualOrder.getAddress();
-      if (address == null || address.isEmpty()) {
-        address = new HashMap<>(3);
-      }
-      address.put("ken", manualOrder.getFromKenId());
-      address.put("city", manualOrder.getFromCityId());
-      address.put("town", manualOrder.getFromTownId());
-      JpDetailAddress jpDetailAddress =
-          japanAddressCache.getJpDetailAddress(
-              Integer.valueOf(manualOrder.getFromKenId()),
-              Integer.valueOf(manualOrder.getFromCityId()),
-              Integer.valueOf(manualOrder.getFromTownId()));
-      manualOrder.setFromKenName(jpDetailAddress.getKenName());
-      manualOrder.setFromCityName(jpDetailAddress.getCityName());
-      manualOrder.setFromTownName(jpDetailAddress.getTownName());
-      List<String> selectedToAddress = new ArrayList<>();
-      selectedToAddress.add(manualOrder.getToKenId());
-      selectedToAddress.add(manualOrder.getToCityId());
-      selectedToAddress.add(manualOrder.getToTownId());
-      manualOrder.setSelectedToAddress(selectedToAddress);
-      Map<String, String> toAddress = manualOrder.getToAddress();
-      if (toAddress == null || toAddress.isEmpty()) {
-        toAddress = new HashMap<>(3);
-      }
-      toAddress.put("ken", manualOrder.getToKenId());
-      toAddress.put("city", manualOrder.getToCityId());
-      toAddress.put("town", manualOrder.getToTownId());
-      JpDetailAddress toJpDetailAddress =
-          japanAddressCache.getJpDetailAddress(
-              Integer.valueOf(manualOrder.getToKenId()),
-              Integer.valueOf(manualOrder.getToCityId()),
-              Integer.valueOf(manualOrder.getToTownId()));
-      manualOrder.setToKenName(toJpDetailAddress.getKenName());
-      manualOrder.setToCityName(toJpDetailAddress.getCityName());
-      manualOrder.setToTownName(toJpDetailAddress.getTownName());
-    } else {
-      manualOrder.setSelectedAddress(new ArrayList<>());
-      manualOrder.setSelectedToAddress(new ArrayList<>());
-    }
+//    if (StringUtils.isNotEmpty(manualOrder.getFromKenId())
+//        && StringUtils.isNotEmpty(manualOrder.getToKenId())) {
+//      List<String> selectedAddress = new ArrayList<>();
+//      selectedAddress.add(manualOrder.getFromKenId());
+//      selectedAddress.add(manualOrder.getFromCityId());
+//      selectedAddress.add(manualOrder.getFromTownId());
+//      manualOrder.setSelectedAddress(selectedAddress);
+//      Map<String, String> address = manualOrder.getAddress();
+//      if (address == null || address.isEmpty()) {
+//        address = new HashMap<>(3);
+//      }
+//      address.put("ken", manualOrder.getFromKenId());
+//      address.put("city", manualOrder.getFromCityId());
+//      address.put("town", manualOrder.getFromTownId());
+//      JpDetailAddress jpDetailAddress =
+//          japanAddressCache.getJpDetailAddress(
+//              Integer.valueOf(manualOrder.getFromKenId()),
+//              Integer.valueOf(manualOrder.getFromCityId()),
+//              Integer.valueOf(manualOrder.getFromTownId()));
+//      manualOrder.setFromKenName(jpDetailAddress.getKenName());
+//      manualOrder.setFromCityName(jpDetailAddress.getCityName());
+//      manualOrder.setFromTownName(jpDetailAddress.getTownName());
+//      List<String> selectedToAddress = new ArrayList<>();
+//      selectedToAddress.add(manualOrder.getToKenId());
+//      selectedToAddress.add(manualOrder.getToCityId());
+//      selectedToAddress.add(manualOrder.getToTownId());
+//      manualOrder.setSelectedToAddress(selectedToAddress);
+//      Map<String, String> toAddress = manualOrder.getToAddress();
+//      if (toAddress == null || toAddress.isEmpty()) {
+//        toAddress = new HashMap<>(3);
+//      }
+//      toAddress.put("ken", manualOrder.getToKenId());
+//      toAddress.put("city", manualOrder.getToCityId());
+//      toAddress.put("town", manualOrder.getToTownId());
+//      JpDetailAddress toJpDetailAddress =
+//          japanAddressCache.getJpDetailAddress(
+//              Integer.valueOf(manualOrder.getToKenId()),
+//              Integer.valueOf(manualOrder.getToCityId()),
+//              Integer.valueOf(manualOrder.getToTownId()));
+//      manualOrder.setToKenName(toJpDetailAddress.getKenName());
+//      manualOrder.setToCityName(toJpDetailAddress.getCityName());
+//      manualOrder.setToTownName(toJpDetailAddress.getTownName());
+//    } else {
+//      manualOrder.setSelectedAddress(new ArrayList<>());
+//      manualOrder.setSelectedToAddress(new ArrayList<>());
+//    }
     return Json.succ().data(manualOrder);
   }
 
