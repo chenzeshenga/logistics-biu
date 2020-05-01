@@ -13,5 +13,5 @@ public interface ProductOutWarehouseMapper {
 
   int insert(ProductOutWarehouse productOutWarehouse);
 
-  List<ProductOutWarehouse> list(String owner, String sku);
+  List<ProductOutWarehouse> list(ProductOutWarehouse productOutWarehouse);
 }

@@ -39,6 +39,15 @@ public class DateUtil {
     return day + "天" + hour + "小时" + min + "分钟";
   }
 
+  public static int getHourPoor(Date endDate, Date startDate) {
+    long nd = 1000 * 24 * 60 * 60;
+    long nh = 1000 * 60 * 60;
+    long diff = endDate.getTime() - startDate.getTime();
+    long day = diff / nd;
+    long hour = diff % nd / nh;
+    return (int) (day * 24 + hour);
+  }
+
   public static String generateDatePattern4Amazon(Date date) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));

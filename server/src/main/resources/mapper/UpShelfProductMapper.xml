@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper">
 
-    <select id="selectOneBySku" resultType="com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct" parameterType="java.lang.String">
+    <select id="selectOneBySku" resultType="com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct"
+            parameterType="java.lang.String">
         select *
         from l_up_shelf_product
         where sku = #{sku}

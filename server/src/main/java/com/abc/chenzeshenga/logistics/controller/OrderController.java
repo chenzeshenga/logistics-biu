@@ -504,11 +504,14 @@ public class OrderController {
               upShelfProductMapper.updateAllColumnById(upShelfProduct);
               ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
               productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
+              productOutWarehouse.setDySku(manualOrderContent.getDySku());
               productOutWarehouse.setSku(sku);
               productOutWarehouse.setNum(String.valueOf(num));
               productOutWarehouse.setOwner(owner);
               productOutWarehouse.setOrderNo(ordno);
               productOutWarehouse.setOutTime(new Date());
+              productOutWarehouse.setHoursInWarehouse(
+                  DateUtil.getHourPoor(new Date(), upShelfProduct.getUptime()));
               productOutWarehouseMapper.insert(productOutWarehouse);
             });
       }

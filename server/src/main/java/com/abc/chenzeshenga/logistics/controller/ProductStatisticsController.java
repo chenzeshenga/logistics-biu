@@ -177,8 +177,11 @@ public class ProductStatisticsController {
         productInWarehouseSummary -> {
           String subSku = productInWarehouseSummary.getSku();
           String subOwner = productInWarehouseSummary.getOwner();
+          ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
+          productOutWarehouse.setDySku(subSku);
+          productOutWarehouse.setOwner(subOwner);
           List<ProductOutWarehouse> productOutWarehouseList =
-              productOutWarehouseMapper.list(subOwner, subSku);
+              productOutWarehouseMapper.list(productOutWarehouse);
           productInWarehouseSummary.setProductOutWarehouseList(productOutWarehouseList);
         });
     return Json.succ().data("data", productInWarehouseSummaries);

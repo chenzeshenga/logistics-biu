@@ -14,4 +14,5 @@ public interface UpShelfProductMapper extends BaseMapper<UpShelfProduct> {
   UpShelfProduct selectOneBySku(String sku, String owner);
 
   int removeWarehouse4PickUp(String sku, Integer num, String owner, String shelfNo);
+
 }
