@@ -52,4 +52,6 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
             trackNo,
             userCustomOrderNo));
   }
+
+  public void pickup() {}
 }
