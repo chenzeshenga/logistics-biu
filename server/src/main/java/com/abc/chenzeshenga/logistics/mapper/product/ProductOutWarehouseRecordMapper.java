@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.mapper.product;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,7 +14,9 @@ import java.util.List;
 @Mapper
 public interface ProductOutWarehouseRecordMapper {
 
-  List<ProductOutWarehouse> list(ProductOutWarehouse productOutWarehouse, SqlLimit sqlLimit);
+  List<ProductOutWarehouse> list(
+      @Param("productOutWarehouseRecord") ProductOutWarehouse productOutWarehouse,
+      @Param("sqlLimit") SqlLimit sqlLimit);
 
   int count(ProductOutWarehouse productOutWarehouse);
 }

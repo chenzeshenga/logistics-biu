@@ -9,7 +9,9 @@ import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
  */
 public class SqlUtils {
 
-  public SqlLimit generateSqlLimit(Pagination pagination) {
+  private SqlUtils() {}
+
+  public static SqlLimit generateSqlLimit(Pagination pagination) {
     int size = pagination.getSize();
     long curr = pagination.getCurrent();
     return new SqlLimit((curr - 1) * size, curr * size);

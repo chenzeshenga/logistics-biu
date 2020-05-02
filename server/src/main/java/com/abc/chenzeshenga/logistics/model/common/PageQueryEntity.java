@@ -1,6 +1,5 @@
 package com.abc.chenzeshenga.logistics.model.common;
 
-import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
