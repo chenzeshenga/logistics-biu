@@ -7,12 +7,13 @@
         <result property="rname" column="rname" />
         <result property="rdesc" column="rdesc" />
         <result property="rval" column="rval" />
+        <result property="manager" column="manager"/>
         <result property="created" column="created" jdbcType="TIMESTAMP" />
         <result property="updated" column="updated" jdbcType="TIMESTAMP" />
     </resultMap>
 
     <select id="getRolesByUserId" resultType="SysRole">
-        SELECT r.rname,r.rval FROM sys_role r, sys_user_role ur
+        SELECT r.rname,r.rval,r.manager FROM sys_role r, sys_user_role ur
         WHERE r.rid = ur.role_id AND ur.user_id = #{userId}
     </select>
 

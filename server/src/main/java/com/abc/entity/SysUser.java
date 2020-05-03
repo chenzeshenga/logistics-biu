@@ -23,13 +23,21 @@ public class SysUser extends Model<SysUser> {
   @TableId(type = IdType.ID_WORKER_STR)
   private String uid;
 
-  private String uname; // 登录名，不可改
-  private String nick; // 用户昵称，可改
-  private String pwd; // 已加密的登录密码
-  private String salt; // 加密盐值
-  private Boolean lock; // 是否锁定
-  private Date created; // 创建时间
-  private Date updated; // 修改时间
+  // 登录名，不可改
+  private String uname;
+  // 用户昵称，可改
+  private String nick;
+  // 已加密的登录密码
+  private String pwd;
+  // 加密盐值
+  private String salt;
+  // 是否锁定
+  private Boolean lock;
+  private Boolean isManagerRole;
+  // 创建时间
+  private Date created;
+  // 修改时间
+  private Date updated;
 
   @TableField(exist = false)
   private List<SysRole> roleList = new ArrayList<>(); // 用户所有角色值，在管理后台显示用户的角色
@@ -43,93 +51,5 @@ public class SysUser extends Model<SysUser> {
   @Override
   protected Serializable pkVal() {
     return uid;
-  }
-
-  public String getUid() {
-    return uid;
-  }
-
-  public void setUid(String uid) {
-    this.uid = uid;
-  }
-
-  public String getUname() {
-    return uname;
-  }
-
-  public void setUname(String uname) {
-    this.uname = uname;
-  }
-
-  public String getNick() {
-    return nick;
-  }
-
-  public void setNick(String nick) {
-    this.nick = nick;
-  }
-
-  public String getPwd() {
-    return pwd;
-  }
-
-  public void setPwd(String pwd) {
-    this.pwd = pwd;
-  }
-
-  public String getSalt() {
-    return salt;
-  }
-
-  public void setSalt(String salt) {
-    this.salt = salt;
-  }
-
-  public Boolean getLock() {
-    return lock;
-  }
-
-  public void setLock(Boolean lock) {
-    this.lock = lock;
-  }
-
-  public Date getCreated() {
-    return created;
-  }
-
-  public void setCreated(Date created) {
-    this.created = created;
-  }
-
-  public Date getUpdated() {
-    return updated;
-  }
-
-  public void setUpdated(Date updated) {
-    this.updated = updated;
-  }
-
-  public List<SysRole> getRoleList() {
-    return roleList;
-  }
-
-  public void setRoleList(List<SysRole> roleList) {
-    this.roleList = roleList;
-  }
-
-  public Set<AuthVo> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<AuthVo> roles) {
-    this.roles = roles;
-  }
-
-  public Set<AuthVo> getPerms() {
-    return perms;
-  }
-
-  public void setPerms(Set<AuthVo> perms) {
-    this.perms = perms;
   }
 }

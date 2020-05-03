@@ -14,4 +14,14 @@
         limit #{sqlLimit.from},#{sqlLimit.to}
     </select>
 
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from logistics.l_product_out_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="productOutWarehouseRecord.dySku != null and productOutWarehouseRecord.dySku != ''">
+                and dySku like CONCAT('%', #{productOutWarehouseRecord.dySku}, '%')
+            </if>
+        </trim>
+    </select>
+
 </mapper>

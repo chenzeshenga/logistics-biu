@@ -39,6 +39,19 @@
         order by u.uid
     </select>
 
+    <select id="selectUserByUserName" resultType="com.abc.entity.SysUser">
+        SELECT uid AS `uid`,
+               uname,
+               nick,
+               pwd,
+               salt,
+               `lock`,
+               created,
+               updated
+        FROM sys_user
+        WHERE uname = #{userName}
+    </select>
+
     <select id="selectUserIncludeRoles4Option" resultMap="userIncludeRolesMap">
         select
         u.*,

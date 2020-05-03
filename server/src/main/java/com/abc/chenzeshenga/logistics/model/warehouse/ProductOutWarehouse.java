@@ -19,15 +19,20 @@ import lombok.ToString;
 public class ProductOutWarehouse {
 
   private String uuid;
+  private int hoursInWarehouse;
+  private String num;
+  private Date outTime;
+
+  // follow properties support search from front end
+
   private String dySku = "";
   private String sku;
-  private String num;
+  /** fk from product table and linked by dySku */
+  private String name;
+
   private String owner;
   private String orderNo;
   private String trackNo;
-  private Date outTime;
-  private int hoursInWarehouse;
-
   /** property for search */
   private Date startDate;
   /** property for search */

@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
+  SysUser selectUserByUserName(String userName);
+
   List<SysUser> selectUserIncludeRoles(Pagination page, @Param("nick") String nick);
 
   List<SysUser> selectUserIncludeRoles4Option(

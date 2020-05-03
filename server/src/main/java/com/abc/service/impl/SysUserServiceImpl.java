@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     implements SysUserService {
 
+  @Override public SysUser selectUserByUserName(String userName) {
+    return baseMapper.selectUserByUserName(userName);
+  }
+
   @Override
   public Page<SysUser> queryUserIncludeRoles(Page page, String nick) {
     return page.setRecords(baseMapper.selectUserIncludeRoles(page, nick));

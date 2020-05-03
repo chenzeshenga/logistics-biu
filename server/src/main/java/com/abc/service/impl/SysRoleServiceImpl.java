@@ -19,7 +19,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
   public Set<AuthVo> getRolesByUserId(String userId) {
     List<SysRole> list = baseMapper.getRolesByUserId(userId);
     return list.stream()
-        .map(r -> new AuthVo(r.getRname(), r.getRval()))
+        .map(r -> new AuthVo(r.getRname(), r.getRval(), r.isManager()))
         .collect(Collectors.toSet());
   }
 

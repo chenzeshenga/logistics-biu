@@ -28,6 +28,8 @@ public class SysRole extends Model<SysRole> {
     return rid;
   }
 
+
+
   public String getRid() {
     return rid;
   }

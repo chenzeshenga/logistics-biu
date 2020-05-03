@@ -62,7 +62,7 @@ public class UserRealm extends AuthorizingRealm {
     if (username == null) {
       throw new AccountException("用户名不能为空");
     }
-    SysUser userDB = userService.selectOne(new EntityWrapper<SysUser>().eq("uname", username));
+    SysUser userDB = userService.selectUserByUserName(username);
     if (userDB == null) {
       throw new UnknownAccountException("找不到用户（" + username + "）的帐号信息");
     }
@@ -72,6 +72,10 @@ public class UserRealm extends AuthorizingRealm {
     Set<AuthVo> perms = permService.getPermsByUserId(userDB.getUid());
     userDB.getRoles().addAll(roles);
     userDB.getPerms().addAll(perms);
+    if (!roles.isEmpty()) {
+      AuthVo authVo = roles.iterator().next();
+      userDB.setIsManagerRole(authVo.isManager());
+    }
     SimpleAuthenticationInfo info =
         new SimpleAuthenticationInfo(userDB, userDB.getPwd(), getName());
     if (userDB.getSalt() != null) {
