@@ -193,6 +193,16 @@ export const asyncRouterMap = [
           icon: 'chart',
         },
       },
+      {
+        path: 'about',
+        name: 'about',
+        component: _import('_system/config/about'),
+        meta: {
+          perm: 'm:sys:about',
+          title: '关于',
+          icon: 'chart',
+        },
+      },
     ],
   },
   {
