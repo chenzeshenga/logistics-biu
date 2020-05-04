@@ -23,6 +23,7 @@
       <el-table-column prop="rname" label="角色名"></el-table-column>
       <el-table-column prop="rdesc" label="角色描述"></el-table-column>
       <el-table-column prop="rval" label="角色值"></el-table-column>
+      <el-table-column prop="manager" label="管理角色"></el-table-column>
       <el-table-column prop="created" label="创建时间">
         <template slot-scope="scope">
           <span>{{parseTime(scope.row.created)}}</span>
@@ -82,6 +83,9 @@
           <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入" v-model="temp.rdesc">
           </el-input>
         </el-form-item>
+        <el-form-item label="管理角色" prop="manager">
+          <el-checkbox v-model="temp.manager">是</el-checkbox>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -124,6 +128,7 @@ export default {
         rval: null,
         created: null,
         updated: null,
+        manager: false,
       },
       textMap: {
         update: '编辑角色',
@@ -132,6 +137,7 @@ export default {
       rules: {
         rname: [{required: true, message: '必填', trigger: 'blur'}],
         rval: [{required: true, message: '必填', trigger: 'blur'}],
+        manager: [{required: true, message: '必填', trigger: 'blur'}],
       },
     };
   },
@@ -168,13 +174,17 @@ export default {
     fetchData() {
       this.tableLoading = true;
       roleApi.queryRole(this.tableQuery, this.tablePage).then((res) => {
+        const result = res.data.page.records;
+        for (const subResult of result) {
+          subResult.manager = subResult.manager ? '是' : '否';
+          this.tableData.push(subResult);
+        }
         this.tableData = res.data.page.records;
         this.tableLoading = false;
         // 设置后台返回的分页参数
         pageParamNames.forEach((name) => this.$set(this.tablePage, name, res.data.page[name]));
       });
     },
-
     // 更新
     handleUpdate(idx, row) {
       this.temp = Object.assign({}, row); // copy obj
@@ -195,12 +205,10 @@ export default {
         });
       });
     },
-
     // 更新用户的角色
     handleUpdateRolePerms(idx, row) {
       this.$router.push({path: '/system/role_manage/' + row.rid + '/assign_perm'});
     },
-
     // 删除
     handleDelete(idx, row) {
       this.$confirm('您确定要永久删除该用户？', '提示', confirm).then(() => {
@@ -214,7 +222,6 @@ export default {
         this.$message.info('已取消删除');
       });
     },
-
     // 新增
     handleCreate() {
       resetTemp(this.temp);
