@@ -15,15 +15,13 @@
         <result property="updateOn" column="update_on" jdbcType="TIMESTAMP"/>
         <result property="creator" column="create_by"/>
         <result property="updator" column="update_by"/>
-        <result property="fromKenId" column="from_ken_id"/>
-        <result property="fromCityId" column="from_city_id"/>
-        <result property="fromTownId" column="from_town_id"/>
-        <result property="fromDetailAddress" column="from_where"/>
+        <result property="fromAddressLine1" column="from_address_line1"/>
+        <result property="fromAddressLine2" column="from_address_line2"/>
+        <result property="fromAddressLine3" column="from_address_line3"/>
         <result property="fromZipCode" column="from_zipcode"/>
-        <result property="toKenId" column="to_ken_id"/>
-        <result property="toCityId" column="to_city_id"/>
-        <result property="toTownId" column="to_town_id"/>
-        <result property="toDetailAddress" column="to_where"/>
+        <result property="toAddressLine1" column="to_address_line1"/>
+        <result property="toAddressLine2" column="to_address_line2"/>
+        <result property="toAddressLine3" column="to_address_line3"/>
         <result property="toZipCode" column="to_zipcode"/>
         <result property="collect" column="on_behalf"/>
         <result property="collectNum" column="collect_num"/>
@@ -77,32 +75,26 @@
             <if test="updator != null and updator != ''">
                 update_by=#{updator},
             </if>
-            <if test="fromKenId != null and fromKenId != ''">
-                from_ken_id=#{fromKenId},
+            <if test="fromAddressLine1 != null and fromAddressLine1 != ''">
+                from_address_line1=#{fromAddressLine1},
             </if>
-            <if test="fromCityId != null and fromCityId != ''">
-                from_city_id=#{fromCityId},
+            <if test="fromAddressLine2 != null and fromAddressLine2 != ''">
+                from_address_line2=#{fromAddressLine2},
             </if>
-            <if test="fromTownId != null and fromTownId != ''">
-                from_town_id=#{fromTownId},
-            </if>
-            <if test="fromDetailAddress != null and fromDetailAddress != ''">
-                from_where=#{fromDetailAddress},
+            <if test="fromAddressLine1 != null and fromAddressLine1 != ''">
+                from_address_line2=#{fromAddressLine2},
             </if>
             <if test="fromZipCode != null and fromZipCode != ''">
                 from_zipcode=#{fromZipCode},
             </if>
-            <if test="toKenId != null and toKenId != ''">
-                to_ken_id=#{toKenId},
+            <if test="toAddressLine1 != null and toAddressLine1 != ''">
+                to_address_line1=#{toAddressLine1},
             </if>
-            <if test="toCityId != null and toCityId != ''">
-                to_city_id=#{toCityId},
+            <if test="toAddressLine2 != null and toAddressLine2 != ''">
+                to_address_line2=#{toAddressLine2},
             </if>
-            <if test="toTownId != null and toTownId != ''">
-                to_town_id=#{toTownId},
-            </if>
-            <if test="toDetailAddress != null and toDetailAddress != ''">
-                to_where=#{toDetailAddress},
+            <if test="toAddressLine3 != null and toAddressLine3 != ''">
+                to_address_line2=#{toAddressLine3},
             </if>
             <if test="toZipCode != null and toZipCode != ''">
                 to_zipcode=#{toZipCode},

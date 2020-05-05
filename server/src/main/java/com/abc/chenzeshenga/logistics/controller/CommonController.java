@@ -295,36 +295,17 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getChannelCode())) {
                 manualOrder4Database.setChannel(manualOrder4Input.getChannelCode());
               }
-              if (StringUtils.isNotBlank(manualOrder4Input.getFromZipCode())) {
-                manualOrder4Database.setFromZipCode(manualOrder4Input.getFromZipCode());
-                JpDetailAddress jpDetailAddress =
-                    addressMapper.selectByPk(manualOrder4Input.getFromZipCode());
-                //                if (jpDetailAddress != null) {
-                //                  manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
-                //                  manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
-                //                  manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
-                //                } else {
-                //                  manualOrder4Database.setFromDetailAddress(
-                //                      manualOrder4Input.getFromKenName()
-                //                          + manualOrder4Input.getFromCityName()
-                //                          + manualOrder4Input.getFromTownName()
-                //                          + manualOrder4Input.getFromDetailAddress());
-                //                }
-              } else {
-                String kenName = manualOrder4Input.getFromKenName();
-                String cityName = manualOrder4Input.getFromCityName();
-                String townName = manualOrder4Input.getFromTownName();
-                JpDetailAddress jpDetailAddress =
-                    addressMapper.selectByName(kenName, cityName, townName);
-                //                if (jpDetailAddress != null) {
-                //                  manualOrder4Database.setFromKenId(jpDetailAddress.getKenId());
-                //                  manualOrder4Database.setFromCityId(jpDetailAddress.getCityId());
-                //                  manualOrder4Database.setFromTownId(jpDetailAddress.getTownId());
-                //                } else {
-                //                  manualOrder4Database.setFromDetailAddress(
-                //                      kenName + cityName + townName +
-                // manualOrder4Input.getFromDetailAddress());
-                //                }
+              if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine1())) {
+                manualOrder4Database.setFromAddressLine1(
+                    manualOrder4Input.getFromAddressLine1());
+              }
+              if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine2())) {
+                manualOrder4Database.setFromAddressLine2(
+                    manualOrder4Input.getFromAddressLine2());
+              }
+              if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine3())) {
+                manualOrder4Database.setFromAddressLine3(
+                    manualOrder4Input.getFromAddressLine3());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromName())) {
                 manualOrder4Database.setFromName(manualOrder4Input.getFromName());
@@ -332,42 +313,20 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getFromContact())) {
                 manualOrder4Database.setFromContact(manualOrder4Input.getFromContact());
               }
-              //              if (StringUtils.isNotBlank(manualOrder4Input.getToDetailAddress())) {
-              //
-              // manualOrder4Database.setToAddressDesc(manualOrder4Input.getToDetailAddress());
-              //              }
-              if (StringUtils.isNotBlank(manualOrder4Input.getToZipCode())) {
-                manualOrder4Database.setToZipCode(manualOrder4Input.getToZipCode());
-                JpDetailAddress jpDetailAddress =
-                    addressMapper.selectByPk(manualOrder4Input.getToZipCode());
-                //                if (jpDetailAddress != null) {
-                //                  manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
-                //                  manualOrder4Database.setToCityId(jpDetailAddress.getCityId());
-                //                  manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
-                //                } else {
-                //                  manualOrder4Database.setToDetailAddress(
-                //                      manualOrder4Input.getToKenName()
-                //                          + manualOrder4Input.getToCityName()
-                //                          + manualOrder4Input.getToTownName()
-                //                          + manualOrder4Input.getToDetailAddress());
-                //                }
-              } else {
-                String kenName = manualOrder4Input.getToKenName();
-                String cityName = manualOrder4Input.getToCityName();
-                String townName = manualOrder4Input.getToTownName();
-                JpDetailAddress jpDetailAddress =
-                    addressMapper.selectByName(kenName, cityName, townName);
-                //                if (jpDetailAddress != null) {
-                //                  manualOrder4Database.setToKenId(jpDetailAddress.getKenId());
-                //                  manualOrder4Database.setToCityId(jpDetailAddress.getCityId());
-                //                  manualOrder4Database.setToTownId(jpDetailAddress.getTownId());
-                //                }
-              }
               if (StringUtils.isNotBlank(manualOrder4Input.getToName())) {
                 manualOrder4Database.setToName(manualOrder4Input.getToName());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getToContact())) {
                 manualOrder4Database.setToContact(manualOrder4Input.getToContact());
+              }
+              if (StringUtils.isNotBlank(manualOrder4Input.getToAddressLine1())) {
+                manualOrder4Database.setToAddressLine1(manualOrder4Input.getToAddressLine1());
+              }
+              if (StringUtils.isNotBlank(manualOrder4Input.getToAddressLine2())) {
+                manualOrder4Database.setToAddressLine2(manualOrder4Input.getToAddressLine2());
+              }
+              if (StringUtils.isNotBlank(manualOrder4Input.getToAddressLine3())) {
+                manualOrder4Database.setToAddressLine3(manualOrder4Input.getToAddressLine3());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getCollectDesc())) {
                 manualOrder4Database.setCollect(
