@@ -49,31 +49,38 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            align="right">
+            align="right"
+            @change="dateTimeRangeChange"
+          >
           </el-date-picker>
         </el-col>
         <el-col :span="1">
           <el-tooltip content="搜索" placement="top">
-            <el-button icon="el-icon-search" @click="searchProductInWarehouse()"></el-button>
+            <el-button icon="el-icon-search" @click="searchProductOutWarehouseRecord()"></el-button>
           </el-tooltip>
         </el-col>
         <el-col :span="1">
           <el-tooltip content="刷新" placement="top">
-            <el-button icon="el-icon-refresh" @click="searchProductInWarehouse()"></el-button>
+            <el-button icon="el-icon-refresh" @click="searchProductOutWarehouseRecord()"></el-button>
           </el-tooltip>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col offset="16" :span="5">刷新时间： {{tip.timestamp}}</el-col>
-      </el-row>
       <el-table
-        style="width: 100%;margin: 10px;margin-left:50px"
+        style="width: 100%;margin: 10px;margin-left:10px"
         :data="tableData"
         v-loading.body="tableLoading"
         element-loading-text="加载中"
         stripe
         highlight-current-row
       >
+        <el-table-column prop="dySku" label="东岳sku"></el-table-column>
+        <el-table-column prop="sku" label="sku"></el-table-column>
+        <el-table-column prop="name" label="商品名称"></el-table-column>
+        <el-table-column prop="owner" label="属主"></el-table-column>
+        <el-table-column prop="orderNo" label="出库订单号"></el-table-column>
+        <el-table-column prop="trackNo" label="出库追踪单号"></el-table-column>
+        <el-table-column prop="outTime" label="出库时间"></el-table-column>
+        <el-table-column prop="hoursInWarehouse" label="在库时长"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -83,7 +90,7 @@
         :page-size="tablePage.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tablePage.total"
-        style="margin-left: 65%;margin-top: 10px"
+        style="margin-left: 60%;margin-top: 10px"
       ></el-pagination>
     </div>
   </div>
@@ -91,7 +98,6 @@
 
 <script>
 import request from '@/utils/service';
-import * as moment from 'moment';
 
 export default {
   name: 'product-out-warehouse-records',
@@ -138,14 +144,12 @@ export default {
       options: {
         owners: [],
       },
-      outSide: true,
-      inSide: false,
       tableLoading: false,
       tableData: [],
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tip: {
@@ -171,7 +175,7 @@ export default {
   },
   created() {
     this.initUserList();
-    this.searchProductInWarehouse();
+    this.searchProductOutWarehouseRecord();
     this.hasAdminRole();
   },
   methods: {
@@ -212,25 +216,25 @@ export default {
     },
     searchProductOutWarehouseRecord() {
       const postData = {
-        current: this.tablePage.current,
-        pages: this.tablePage.pages,
-        size: this.tablePage.size,
-        total: this.tablePage.total,
-        sku: this.search.sku,
-        name: this.search.name,
-        owner: this.search.owner,
+        'entity': this.search,
+        'pagination': this.tablePage,
       };
-      this.outSide = false;
-      this.inSide = true;
       this.tableLoading = true;
       request({
-        url: '/statistics/productOutWarehouse',
+        url: '/product/out/warehouse/records',
         method: 'post',
         data: postData,
       }).then((ret) => {
-        this.tableData = ret.data.data;
+        this.tableData = ret.data.data.data;
+        this.tablePage.current=ret.data.data.current;
+        this.tablePage.total=ret.data.data.total;
+        this.tablePage.size=ret.data.data.size;
         this.tableLoading = false;
       });
+    },
+    dateTimeRangeChange() {
+      this.search.startDate = this.search.dateTimeRange[0];
+      this.search.endDate = this.search.dateTimeRange[1];
     },
   },
 };

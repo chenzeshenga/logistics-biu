@@ -34,6 +34,7 @@ public class ProductOutWarehouseRecordService {
     long total = productOutWarehouseRecordMapper.count(productOutWarehouse);
     result.setCurrent(productOutWarehousePageQueryEntity.getPagination().getCurrent());
     result.setTotal(total);
+    result.setSize(productOutWarehousePageQueryEntity.getPagination().getSize());
     result.setData(productOutWarehouseList);
     return result;
   }

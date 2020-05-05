@@ -18,8 +18,8 @@
         select count(1)
         from logistics.l_product_out_warehouse_record
         <trim prefix="where" prefixOverrides="and">
-            <if test="productOutWarehouseRecord.dySku != null and productOutWarehouseRecord.dySku != ''">
-                and dySku like CONCAT('%', #{productOutWarehouseRecord.dySku}, '%')
+            <if test="dySku != null and dySku != ''">
+                and dySku like CONCAT('%', #{dySku}, '%')
             </if>
         </trim>
     </select>

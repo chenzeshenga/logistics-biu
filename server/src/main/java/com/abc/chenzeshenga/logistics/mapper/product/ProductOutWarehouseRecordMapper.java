@@ -18,5 +18,5 @@ public interface ProductOutWarehouseRecordMapper {
       @Param("productOutWarehouseRecord") ProductOutWarehouse productOutWarehouse,
       @Param("sqlLimit") SqlLimit sqlLimit);
 
-  int count(ProductOutWarehouse productOutWarehouse);
+  long count(ProductOutWarehouse productOutWarehouse);
 }

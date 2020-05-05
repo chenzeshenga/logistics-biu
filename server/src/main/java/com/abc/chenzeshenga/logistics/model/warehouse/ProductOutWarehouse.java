@@ -1,6 +1,8 @@
 package com.abc.chenzeshenga.logistics.model.warehouse;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ public class ProductOutWarehouse {
   private String uuid;
   private int hoursInWarehouse;
   private String num;
+
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
   private Date outTime;
 
   // follow properties support search from front end

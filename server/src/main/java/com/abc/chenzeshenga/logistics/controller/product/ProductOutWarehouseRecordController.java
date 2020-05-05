@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller.product;
 
+import com.abc.chenzeshenga.logistics.model.common.Page;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.product.ProductOutWarehouseRecordService;
@@ -29,7 +30,7 @@ public class ProductOutWarehouseRecordController {
   @PostMapping("/warehouse/records")
   public Json listProductOutWarehouseRecords(
       @RequestBody PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
-    productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
-    return Json.succ();
+    Page<ProductOutWarehouse> productOutWarehousePage= productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
+    return Json.succ("query", "data", productOutWarehousePage);
   }
 }
