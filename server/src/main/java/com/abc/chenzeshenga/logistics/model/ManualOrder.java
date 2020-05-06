@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author chenzeshenga
@@ -19,6 +22,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
 public class ManualOrder extends BaseRowModel implements Serializable {
 
   private static final long serialVersionUID = 6816237345363318514L;
@@ -165,4 +170,10 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   private double totalVolume;
 
   private double totalWeight;
+  private int pickup = 2;
+
+  public ManualOrder(String orderNo, int pickup) {
+    this.orderNo = orderNo;
+    this.pickup = pickup;
+  }
 }

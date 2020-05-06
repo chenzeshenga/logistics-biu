@@ -147,6 +147,9 @@
             <if test="status != null and status != ''">
                 status=#{status},
             </if>
+            <if test="pickup != 2">
+                pickup=#{pickup},
+            </if>
         </trim>
         where ord_no=#{orderNo}
     </update>

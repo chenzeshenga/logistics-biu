@@ -286,7 +286,8 @@ public class OrderController {
             creator,
             channelCode,
             trackNo,
-            userCustomOrderNo,pickup);
+            userCustomOrderNo,
+            pickup);
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }
@@ -482,11 +483,27 @@ public class OrderController {
         }
       }
       if (satisfiedFlag) {
+        orderMapper.update(new ManualOrder(ordno, 1));
         return Json.fail("pickup", "上一次拣货已将所有货物配齐，请勿重复拣货");
       }
       orderMapper.deleteContent(ordno);
       manualOrderContentList.forEach(
           manualOrderContent -> manualOrderContent.setUuid(SnowflakeIdWorker.generateStrId()));
+      boolean satisfiedFlag2 = true;
+      if (manualOrderContentList != null && !manualOrderContentList.isEmpty()) {
+        for (int i = 0; i < manualOrderContentList.size(); i++) {
+          ManualOrderContent manualOrderContent = manualOrderContentList.get(i);
+          String num = manualOrderContent.getNum();
+          String picked = manualOrderContent.getPicked();
+          if (Integer.valueOf(num) > Integer.valueOf(picked)) {
+            satisfiedFlag2 = false;
+            break;
+          }
+        }
+      }
+      if (satisfiedFlag2) {
+        orderMapper.update(new ManualOrder(ordno, 1));
+      }
       orderMapper.insertContent(manualOrderContentList);
       ManualOrder manualOrder = orderMapper.getOrdDetail(ordno);
       String category = manualOrder.getCategory();
