@@ -91,6 +91,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20" style="margin-left: 4%;margin-top: 1%">
+          <el-radio-group v-model="search.pickup">
+            <el-radio :label='1'>拣货完成</el-radio>
+            <el-radio :label="2">未完成</el-radio>
+            <el-radio :label="3">无关</el-radio>
+          </el-radio-group>
+        </el-row>
         <el-row :gutter="20" style="margin-top: 1%;margin-left: 4%">
           <el-col :span="2">
             <el-button
@@ -906,6 +913,7 @@ export default {
         channelCode: '',
         trackNo: '',
         userCustomOrderNo: '',
+        pickup: 3,
       },
       users: [],
       channels: [],
@@ -1073,7 +1081,9 @@ export default {
             '&trackNo=' +
             this.search.trackNo +
             '&userCustomOrderNo=' +
-            this.search.userCustomOrderNo;
+            this.search.userCustomOrderNo +
+            '&pickup=' +
+            this.search.pickup;
       } else {
         url =
             'ord/list/' +
@@ -1089,8 +1099,10 @@ export default {
             this.search.creator +
             '&channelCode=' +
             this.search.channelCode +
-            '&trackNo=' +
-            this.search.trackNo;
+          '&trackNo=' +
+          this.search.trackNo +
+          '&pickup=' +
+          this.search.pickup;
       }
       this.tableLoading = true;
       request({

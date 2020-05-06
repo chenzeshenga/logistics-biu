@@ -261,6 +261,9 @@
             <if test="userCustomOrderNo != null and userCustomOrderNo != ''">
                 and ord.user_custom_order_no=#{userCustomOrderNo}
             </if>
+            <if test="pickup != 3 and pickup != ''">
+                and ord.pickup=#{pickup}
+            </if>
             <if test="from != null">
                 and ord.create_on >= #{from}
             </if>

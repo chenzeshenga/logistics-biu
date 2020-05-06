@@ -37,7 +37,7 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
       String creator,
       String channelCode,
       String trackNo,
-      String userCustomOrderNo) {
+      String userCustomOrderNo,int pickup) {
     return page.setRecords(
         baseMapper.listByRange(
             page,
@@ -50,7 +50,7 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
             creator,
             channelCode,
             trackNo,
-            userCustomOrderNo));
+            userCustomOrderNo,pickup));
   }
 
   public void pickup() {}

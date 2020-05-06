@@ -266,7 +266,8 @@ public class OrderController {
       @RequestParam(required = false) String creator,
       @RequestParam(required = false) String channelCode,
       @RequestParam(required = false) String trackNo,
-      @RequestParam(required = false) String userCustomOrderNo)
+      @RequestParam(required = false) String userCustomOrderNo,
+      @RequestParam(required = false) int pickup)
       throws ParseException {
     String cname = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);
@@ -285,7 +286,7 @@ public class OrderController {
             creator,
             channelCode,
             trackNo,
-            userCustomOrderNo);
+            userCustomOrderNo,pickup);
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }

@@ -10,8 +10,6 @@ function hasPermission(perms, route) {
   if (!route.meta || !route.meta.perm) {
     return true;
   }
-  console.log(perms);
-  console.log(route);
   return perms.some((p) => p.val == route.meta.perm);
 }
 

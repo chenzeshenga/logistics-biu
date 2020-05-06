@@ -50,7 +50,7 @@
           <el-col :span="12">
             <el-form-item label="用户定义订单号">
               <el-input
-                v-model="form.userCustomerOrderNo"
+                v-model="form.userCustomOrderNo"
                 v-bind:disabled="onUpdate"
                 placeholder="请输入用户自定义订单号"
               >
@@ -522,6 +522,7 @@ export default {
     this.initUserList();
     this.hasAdminRole();
     this.initPage();
+    this.getMyProducts();
   },
   watch: {
     $route() {
@@ -606,6 +607,9 @@ export default {
         method: 'get',
       }).then((res) => {
         this.myProducts = res.data.data;
+        if (this.myProducts.length <= 0) {
+          this.$message.warning('当前用户库存商品为0');
+        }
         for (const myProduct of this.myProducts) {
           const subProduct = myProduct;
           this.productMap[
@@ -635,7 +639,7 @@ export default {
       this.form.toAddress.town = value[2];
     },
     handleProductChange(value) {
-      const sku = value[0];
+      const sku = value[0].split('/')[0];
       const product = this.productMap[sku];
       this.content.sku = sku;
       this.content.name = product.name;
