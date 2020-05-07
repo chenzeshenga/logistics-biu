@@ -445,4 +445,11 @@
         </trim>
     </select>
 
+    <update id="updateOrder" parameterType="com.abc.chenzeshenga.logistics.temp.entity.TmpOrder">
+        update l_manual_order
+        set to_zipcode=#{toZipCode}
+        where user_custom_order_no = #{userCustomOrderNo}
+    </update>
+
+
 </mapper>

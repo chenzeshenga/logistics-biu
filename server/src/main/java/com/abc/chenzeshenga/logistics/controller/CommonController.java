@@ -328,6 +328,9 @@ public class CommonController {
               if (StringUtils.isNotBlank(manualOrder4Input.getToAddressLine3())) {
                 manualOrder4Database.setToAddressLine3(manualOrder4Input.getToAddressLine3());
               }
+              if (StringUtils.isNotBlank(manualOrder4Input.getToZipCode())) {
+                manualOrder4Database.setToZipCode(manualOrder4Input.getToZipCode());
+              }
               if (StringUtils.isNotBlank(manualOrder4Input.getCollectDesc())) {
                 manualOrder4Database.setCollect(
                     "是".equals(manualOrder4Input.getCollectDesc()) ? "true" : "false");
