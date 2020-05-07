@@ -58,6 +58,19 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("userCustomOrderNo") String userCustomOrderNo,
       @Param("pickup") int pickup);
 
+  List<ManualOrder> listByRangeWithoutPage(
+    @Param("cname") String cname,
+    @Param("type") String type,
+    @Param("status") String status,
+    @Param("from") Date from,
+    @Param("to") Date to,
+    @Param("ordno") String ordno,
+    @Param("creator") String creator,
+    @Param("channelCode") String channelCode,
+    @Param("trackNo") String trackNo,
+    @Param("userCustomOrderNo") String userCustomOrderNo,
+    @Param("pickup") int pickup);
+
   int delete(String ordNo);
 
   int deleteContent(String ordNo);

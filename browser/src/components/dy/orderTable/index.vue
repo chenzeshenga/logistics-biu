@@ -1245,7 +1245,20 @@ export default {
     exportExcel() {
       const link = document.createElement('a');
       link.style.display = 'none';
-      link.href = process.env.BASE_API + '/ord/excel/' + this.msgData.category + "/" + this.msgData.status;
+      link.href = process.env.BASE_API + '/ord/excel/' + this.msgData.category + '/' + this.msgData.status + '?ordno=' +
+        this.search.ordno +
+        '&creator=' +
+        this.search.creator +
+        '&channelCode=' +
+        this.search.channelCode +
+        '&trackNo=' +
+        this.search.trackNo +
+        '&pickup=' +
+        this.search.pickup +
+        '&fromDate=' +
+        this.daterange[0] +
+        '&toDate=' +
+        this.daterange[1];
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();

@@ -5,6 +5,7 @@ import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
@@ -18,6 +19,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -137,8 +139,16 @@ public class CommonController {
   public void getOrdExcel(
       HttpServletResponse httpServletResponse,
       @PathVariable String category,
-      @PathVariable String status)
-      throws IOException {
+      @PathVariable String status,
+      @RequestParam(required = false) String fromDate,
+      @RequestParam(required = false) String toDate,
+      @RequestParam(required = false) String ordno,
+      @RequestParam(required = false) String creator,
+      @RequestParam(required = false) String channelCode,
+      @RequestParam(required = false) String trackNo,
+      @RequestParam(required = false) String userCustomOrderNo,
+      @RequestParam(required = false) int pickup)
+      throws IOException, ParseException {
     String fileName = "订单状态.xlsx";
     httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
     httpServletResponse.setHeader(
@@ -151,35 +161,24 @@ public class CommonController {
     if (userCommonService.isManagerRole(UserUtils.getUserName())) {
       manualOrderList = orderMapper.listAllByStatus(category, status);
     } else {
-      manualOrderList = orderMapper.listAllByUsername(request);
+      Date fromDate1 = DateUtil.getDateFromStr(fromDate);
+      Date toDate1 = DateUtil.getDateFromStr(toDate);
+      manualOrderList =
+          orderMapper.listByRangeWithoutPage(
+              UserUtils.getUserName(),
+              category,
+              status,
+              fromDate1,
+              toDate1,
+              ordno,
+              creator,
+              channelCode,
+              trackNo,
+              userCustomOrderNo,
+              pickup);
     }
     manualOrderList.forEach(
         manualOrder -> {
-          log.info(manualOrder.toString());
-          //          if (StringUtils.isEmpty(manualOrder.getFromKenId())) {
-          //            manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-          //          } else {
-          //            JpDetailAddress from =
-          //                japanAddressCache.getJpDetailAddress(
-          //                    Integer.valueOf(manualOrder.getFromKenId()),
-          //                    Integer.valueOf(manualOrder.getFromCityId()),
-          //                    Integer.valueOf(manualOrder.getFromTownId()));
-          //            manualOrder.setFromKenName(from.getKenName());
-          //            manualOrder.setFromCityName(from.getCityName());
-          //            manualOrder.setFromTownName(from.getTownName());
-          //          }
-          //          if (StringUtils.isEmpty(manualOrder.getToKenId())) {
-          //            manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-          //          } else {
-          //            JpDetailAddress to =
-          //                japanAddressCache.getJpDetailAddress(
-          //                    Integer.valueOf(manualOrder.getToKenId()),
-          //                    Integer.valueOf(manualOrder.getToCityId()),
-          //                    Integer.valueOf(manualOrder.getToTownId()));
-          //            manualOrder.setToKenName(to.getKenName());
-          //            manualOrder.setToCityName(to.getCityName());
-          //            manualOrder.setToTownName(to.getTownName());
-          //          }
           manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
           manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
           manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
@@ -296,16 +295,13 @@ public class CommonController {
                 manualOrder4Database.setChannel(manualOrder4Input.getChannelCode());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine1())) {
-                manualOrder4Database.setFromAddressLine1(
-                    manualOrder4Input.getFromAddressLine1());
+                manualOrder4Database.setFromAddressLine1(manualOrder4Input.getFromAddressLine1());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine2())) {
-                manualOrder4Database.setFromAddressLine2(
-                    manualOrder4Input.getFromAddressLine2());
+                manualOrder4Database.setFromAddressLine2(manualOrder4Input.getFromAddressLine2());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromAddressLine3())) {
-                manualOrder4Database.setFromAddressLine3(
-                    manualOrder4Input.getFromAddressLine3());
+                manualOrder4Database.setFromAddressLine3(manualOrder4Input.getFromAddressLine3());
               }
               if (StringUtils.isNotBlank(manualOrder4Input.getFromName())) {
                 manualOrder4Database.setFromName(manualOrder4Input.getFromName());
