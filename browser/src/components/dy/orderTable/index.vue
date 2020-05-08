@@ -86,7 +86,7 @@
             <el-form-item label="">
               <el-button
                   icon="el-icon-search"
-                  @click="searchOrd()"
+                  @click="fetchData()"
               ></el-button>
             </el-form-item>
           </el-col>
@@ -961,10 +961,10 @@ export default {
       this.tableLoading = true;
       request({
         url:
-            'ord/list/' +
-            this.msgData.category +
-            '/' +
-            this.msgData.status,
+          'ord/v2/list/' +
+          this.msgData.category +
+          '/' +
+          this.msgData.status + '?' + this.generateUrlParam(),
         method: 'post',
         data: this.tablePage,
       }).then((res) => {
@@ -1058,64 +1058,6 @@ export default {
           .catch(() => {
             this.$message.info('已取消废弃');
           });
-    },
-    searchOrd() {
-      let url = '';
-      if (
-        this.daterange == null ||
-          this.daterange[0] === 0 ||
-          this.daterange[1] === 0
-      ) {
-        this.$message.warning('请选择您想要查询的日期范围');
-        url =
-            'ord/list/' +
-            this.msgData.category +
-            '/' +
-            this.msgData.status +
-            '/2000-01-01/2099-01-01?ordno=' +
-            this.search.ordno +
-            '&creator=' +
-            this.search.creator +
-            '&channelCode=' +
-            this.search.channelCode +
-            '&trackNo=' +
-            this.search.trackNo +
-            '&userCustomOrderNo=' +
-            this.search.userCustomOrderNo +
-            '&pickup=' +
-            this.search.pickup;
-      } else {
-        url =
-            'ord/list/' +
-            this.msgData.category +
-            '/' +
-            this.msgData.status +
-            this.daterange[0] +
-            '/' +
-            this.daterange[1] +
-            '?ordno=' +
-            this.search.ordno +
-            '&creator=' +
-            this.search.creator +
-            '&channelCode=' +
-            this.search.channelCode +
-          '&trackNo=' +
-          this.search.trackNo +
-          '&pickup=' +
-          this.search.pickup;
-      }
-      this.tableLoading = true;
-      request({
-        url: url,
-        method: 'post',
-        data: {
-          current: this.tablePage.current,
-          size: this.tablePage.size,
-        },
-      }).then((res) => {
-        this.tableData = res.data.page.records;
-        this.tableLoading = false;
-      });
     },
     route2NewOrd() {
       this.$router.push({
@@ -1254,11 +1196,14 @@ export default {
         '&trackNo=' +
         this.search.trackNo +
         '&pickup=' +
-        this.search.pickup +
-        '&fromDate=' +
-        this.daterange[0] +
-        '&toDate=' +
-        this.daterange[1];
+        this.search.pickup;
+      if (this.daterange) {
+        link.href = link.href +
+          '&fromDate=' +
+          this.daterange[0] +
+          '&toDate=' +
+          this.daterange[1];
+      }
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
@@ -1368,6 +1313,26 @@ export default {
       this.barcodeSetting.value = row.orderNo;
       this.timestamp = new Date().getTime();
       this.dialogVisible4Barcode = true;
+    },
+    generateUrlParam() {
+      const urlParam = 'ordno=' +
+        this.search.ordno +
+        '&creator=' +
+        this.search.creator +
+        '&channelCode=' +
+        this.search.channelCode +
+        '&trackNo=' +
+        this.search.trackNo +
+        '&pickup=' +
+        this.search.pickup;
+      if (this.daterange) {
+        link.href = link.href +
+          '&fromDate=' +
+          this.daterange[0] +
+          '&toDate=' +
+          this.daterange[1];
+      }
+      return urlParam;
     },
   },
 };

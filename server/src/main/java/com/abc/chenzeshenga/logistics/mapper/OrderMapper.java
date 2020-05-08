@@ -45,8 +45,20 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
 
   List<ManualOrder> listByRange(
-      Pagination pagination,
-      @Param("cname") String cname,
+      @Param("type") String type,
+      @Param("status") String status,
+      @Param("from") Date from,
+      @Param("to") Date to,
+      @Param("ordno") String ordno,
+      @Param("creator") String creator,
+      @Param("channelCode") String channelCode,
+      @Param("trackNo") String trackNo,
+      @Param("userCustomOrderNo") String userCustomOrderNo,
+      @Param("pickup") int pickup,
+      @Param("fromIdx") long fromIdx,
+      @Param("toIdx") long toIdx);
+
+  Integer countByRange(
       @Param("type") String type,
       @Param("status") String status,
       @Param("from") Date from,
@@ -59,17 +71,16 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("pickup") int pickup);
 
   List<ManualOrder> listByRangeWithoutPage(
-    @Param("cname") String cname,
-    @Param("type") String type,
-    @Param("status") String status,
-    @Param("from") Date from,
-    @Param("to") Date to,
-    @Param("ordno") String ordno,
-    @Param("creator") String creator,
-    @Param("channelCode") String channelCode,
-    @Param("trackNo") String trackNo,
-    @Param("userCustomOrderNo") String userCustomOrderNo,
-    @Param("pickup") int pickup);
+      @Param("type") String type,
+      @Param("status") String status,
+      @Param("from") Date from,
+      @Param("to") Date to,
+      @Param("ordno") String ordno,
+      @Param("creator") String creator,
+      @Param("channelCode") String channelCode,
+      @Param("trackNo") String trackNo,
+      @Param("userCustomOrderNo") String userCustomOrderNo,
+      @Param("pickup") int pickup);
 
   int delete(String ordNo);
 

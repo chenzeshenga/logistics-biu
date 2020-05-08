@@ -140,8 +140,8 @@ public class CommonController {
       HttpServletResponse httpServletResponse,
       @PathVariable String category,
       @PathVariable String status,
-      @RequestParam(required = false) String fromDate,
-      @RequestParam(required = false) String toDate,
+      @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
+      @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
       @RequestParam(required = false) String ordno,
       @RequestParam(required = false) String creator,
       @RequestParam(required = false) String channelCode,
@@ -165,13 +165,12 @@ public class CommonController {
       Date toDate1 = DateUtil.getDateFromStr(toDate);
       manualOrderList =
           orderMapper.listByRangeWithoutPage(
-              UserUtils.getUserName(),
               category,
               status,
               fromDate1,
               toDate1,
               ordno,
-              creator,
+              UserUtils.getUserName(),
               channelCode,
               trackNo,
               userCustomOrderNo,

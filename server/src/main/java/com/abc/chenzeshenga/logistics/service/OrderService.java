@@ -28,7 +28,6 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
 
   public Page<ManualOrder> listByRange(
       Page page,
-      String cname,
       String type,
       String status,
       Date from,
@@ -37,11 +36,13 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
       String creator,
       String channelCode,
       String trackNo,
-      String userCustomOrderNo,int pickup) {
-    return page.setRecords(
+      String userCustomOrderNo,
+      int pickup) {
+    Page<ManualOrder> manualOrderPage = new Page<>();
+    long fromIdx = (page.getCurrent() - 1) * (long) page.getSize();
+    long toIdx = page.getCurrent() * (long) page.getSize();
+    manualOrderPage.setRecords(
         baseMapper.listByRange(
-            page,
-            cname,
             type,
             status,
             from,
@@ -50,7 +51,25 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
             creator,
             channelCode,
             trackNo,
-            userCustomOrderNo,pickup));
+            userCustomOrderNo,
+            pickup,
+            fromIdx,
+            toIdx));
+    manualOrderPage.setSize(page.getSize());
+    manualOrderPage.setTotal(
+        baseMapper.countByRange(
+            type,
+            status,
+            from,
+            to,
+            ordno,
+            creator,
+            channelCode,
+            trackNo,
+            userCustomOrderNo,
+            pickup));
+    manualOrderPage.setCurrent(page.getCurrent());
+    return manualOrderPage;
   }
 
   public void pickup() {}

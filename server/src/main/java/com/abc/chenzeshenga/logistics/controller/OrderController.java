@@ -12,6 +12,7 @@ import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.OrderService;
+import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.*;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
@@ -67,16 +68,20 @@ public class OrderController {
 
   private ChannelCache channelCache;
 
+  private UserCommonService userCommonService;
+
   @Autowired
   public OrderController(
       OrderService orderService,
       JapanAddressCache japanAddressCache,
       LabelCache labelCache,
-      ChannelCache channelCache) {
+      ChannelCache channelCache,
+    UserCommonService userCommonService) {
     this.orderService = orderService;
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.channelCache = channelCache;
+    this.userCommonService=userCommonService;
   }
 
   @PostMapping("/detail")
@@ -254,14 +259,14 @@ public class OrderController {
     return Json.succ().data("page", manualOrderPage);
   }
 
-  @PostMapping("/list/{type}/{status}/{fromDate}/{toDate}")
+  @PostMapping("/v2/list/{type}/{status}")
   @SuppressWarnings("rawtypes")
-  public Json listByRange(
+  public Json listV2(
       @RequestBody String body,
       @PathVariable String type,
       @PathVariable String status,
-      @PathVariable String fromDate,
-      @PathVariable String toDate,
+      @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
+      @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
       @RequestParam(required = false) String ordno,
       @RequestParam(required = false) String creator,
       @RequestParam(required = false) String channelCode,
@@ -274,10 +279,11 @@ public class OrderController {
     Page page = PageUtils.getPageParam(jsonObject);
     Date fromDate1 = DateUtil.getDateFromStr(fromDate);
     Date toDate1 = DateUtil.getDateFromStr(toDate);
-    Page<ManualOrder> manualOrderPage =
+    Page<ManualOrder> manualOrderPage;
+    if(userCommonService.isManagerRole(cname)){
+    manualOrderPage =
         orderService.listByRange(
             page,
-            cname,
             type,
             status,
             fromDate1,
@@ -288,6 +294,21 @@ public class OrderController {
             trackNo,
             userCustomOrderNo,
             pickup);
+    }else{
+      manualOrderPage =
+        orderService.listByRange(
+          page,
+          type,
+          status,
+          fromDate1,
+          toDate1,
+          ordno,
+          cname,
+          channelCode,
+          trackNo,
+          userCustomOrderNo,
+          pickup);
+    }
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
   }
@@ -300,57 +321,6 @@ public class OrderController {
   }
 
   private void enrichSingleOrd(ManualOrder manualOrder) {
-    //    String fromKenId = manualOrder.getFromKenId();
-    //    String fromCityId = manualOrder.getFromCityId();
-    //    String fromTownId = manualOrder.getFromTownId();
-    //    if (StringUtils.isBlank(fromKenId)
-    //        || StringUtils.isBlank(fromCityId)
-    //        || StringUtils.isBlank(fromTownId)) {
-    //      log.debug("ord from address is empty, ord data is {}", manualOrder);
-    //      manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-    //    } else {
-    //      JpDetailAddress from =
-    //          japanAddressCache.getJpDetailAddress(
-    //              Integer.valueOf(fromKenId), Integer.valueOf(fromCityId),
-    // Integer.valueOf(fromTownId));
-    //      if (from != null) {
-    //        manualOrder.setFromKenName(from.getKenName());
-    //        manualOrder.setFromCityName(from.getCityName());
-    //        manualOrder.setFromTownName(from.getTownName());
-    //        manualOrder.setFromAddressDesc(
-    //            from.getKenName()
-    //                + from.getCityName()
-    //                + from.getTownName()
-    //                + manualOrder.getFromDetailAddress());
-    //      } else {
-    //        manualOrder.setFromAddressDesc(manualOrder.getFromDetailAddress());
-    //      }
-    //    }
-    //    String toKenId = manualOrder.getToKenId();
-    //    String toCityId = manualOrder.getToCityId();
-    //    String toTownId = manualOrder.getToTownId();
-    //    if (StringUtils.isBlank(toKenId)
-    //        || StringUtils.isBlank(toCityId)
-    //        || StringUtils.isBlank(toTownId)) {
-    //      log.debug("ord to address is empty, ord data is {}", manualOrder);
-    //      manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-    //    } else {
-    //      JpDetailAddress to =
-    //          japanAddressCache.getJpDetailAddress(
-    //              Integer.valueOf(toKenId), Integer.valueOf(toCityId), Integer.valueOf(toTownId));
-    //      if (to != null) {
-    //        manualOrder.setToKenName(to.getKenName());
-    //        manualOrder.setToCityName(to.getCityName());
-    //        manualOrder.setToTownName(to.getTownName());
-    //        manualOrder.setToAddressDesc(
-    //            to.getKenName()
-    //                + to.getCityName()
-    //                + to.getTownName()
-    //                + manualOrder.getToDetailAddress());
-    //      } else {
-    //        manualOrder.setToAddressDesc(manualOrder.getToDetailAddress());
-    //      }
-    //    }
     manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
     manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
     manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
