@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.5 1. 修复新建用户 2. 修复批量提交发货',
+          timestamp: '2020-05-11',
+        },
+        {
           content: 'v1.4 1. 修复订单查询和导出功能',
           timestamp: '2020-05-08',
         },
