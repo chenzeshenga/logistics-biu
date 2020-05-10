@@ -33,98 +33,99 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 0, value = "订单号")
   private String orderNo;
 
+  @ExcelProperty(index = 1, value = "用户定义订单号")
   private String userCustomOrderNo;
 
-  @ExcelProperty(index = 1, value = "当前状态")
+  @ExcelProperty(index = 2, value = "当前状态")
   private String statusDesc;
 
-  @ExcelProperty(index = 2, value = "创建者")
+  @ExcelProperty(index = 3, value = "创建者")
   private String creator;
 
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-  @ExcelProperty(index = 3, value = "创建时间", format = "yyyy-MM-dd HH:mm:ss")
+  @ExcelProperty(index = 4, value = "创建时间", format = "yyyy-MM-dd HH:mm:ss")
   private Date createOn;
 
-  @ExcelProperty(index = 4, value = "承运人")
+  @ExcelProperty(index = 5, value = "承运人")
   private String carrierName;
 
-  @ExcelProperty(index = 5, value = "追踪单号")
+  @ExcelProperty(index = 6, value = "追踪单号")
   private String trackNo;
 
-  @ExcelProperty(index = 6, value = "订单类型")
+  @ExcelProperty(index = 7, value = "订单类型")
   private String categoryName;
 
-  @ExcelProperty(index = 7, value = "发件地址-道/府/县-城市-乡镇")
+  @ExcelProperty(index = 8, value = "发件地址-道/府/县-城市-乡镇")
   private String fromAddressLine1;
 
-  @ExcelProperty(index = 8, value = "发件地址1")
+  @ExcelProperty(index = 9, value = "发件地址1")
   private String fromAddressLine2;
 
-  @ExcelProperty(index = 9, value = "发件地址2")
+  @ExcelProperty(index = 10, value = "发件地址2")
   private String fromAddressLine3;
 
-  @ExcelProperty(index = 10, value = "发件地址邮编")
+  @ExcelProperty(index = 11, value = "发件地址邮编")
   private String fromZipCode;
 
-  @ExcelProperty(index = 11, value = "发件人姓名")
+  @ExcelProperty(index = 12, value = "发件人姓名")
   private String fromName;
 
-  @ExcelProperty(index = 12, value = "发件人联系方式")
+  @ExcelProperty(index = 13, value = "发件人联系方式")
   private String fromContact;
 
-  @ExcelProperty(index = 13, value = "收件地址-道/府/县-城市-乡镇")
+  @ExcelProperty(index = 14, value = "收件地址-道/府/县-城市-乡镇")
   private String toAddressLine1;
 
-  @ExcelProperty(index = 14, value = "收件地址1")
+  @ExcelProperty(index = 15, value = "收件地址1")
   private String toAddressLine2;
 
-  @ExcelProperty(index = 15, value = "收件地址2")
+  @ExcelProperty(index = 16, value = "收件地址2")
   private String toAddressLine3;
 
-  @ExcelProperty(index = 16, value = "收件地址邮编")
+  @ExcelProperty(index = 17, value = "收件地址邮编")
   @NotEmpty(message = "收件人邮编必填")
   private String toZipCode;
 
-  @ExcelProperty(index = 17, value = "收件人姓名")
+  @ExcelProperty(index = 18, value = "收件人姓名")
   @NotEmpty(message = "收件人姓名必填")
   private String toName;
 
-  @ExcelProperty(index = 18, value = "收件人联系方式")
+  @ExcelProperty(index = 19, value = "收件人联系方式")
   private String toContact;
 
   private String collect;
 
-  @ExcelProperty(index = 19, value = "是否代收费用")
+  @ExcelProperty(index = 20, value = "是否代收费用")
   private String collectDesc;
   /** 代收金额 */
-  @ExcelProperty(index = 20, value = "代收费用总额(JPY)")
+  @ExcelProperty(index = 21, value = "代收费用总额(JPY)")
   private String collectNum;
 
-  @ExcelProperty(index = 21, value = "sku")
+  @ExcelProperty(index = 22, value = "sku")
   private String sku1;
 
-  @ExcelProperty(index = 22, value = "名称")
+  @ExcelProperty(index = 23, value = "名称")
   private String name1;
 
-  @ExcelProperty(index = 23, value = "数量")
+  @ExcelProperty(index = 24, value = "数量")
   private String num1;
 
-  @ExcelProperty(index = 24, value = "sku")
+  @ExcelProperty(index = 25, value = "sku")
   private String sku2;
 
-  @ExcelProperty(index = 25, value = "名称")
+  @ExcelProperty(index = 26, value = "名称")
   private String name2;
 
-  @ExcelProperty(index = 26, value = "数量")
+  @ExcelProperty(index = 27, value = "数量")
   private String num2;
 
-  @ExcelProperty(index = 27, value = "sku")
+  @ExcelProperty(index = 28, value = "sku")
   private String sku3;
 
-  @ExcelProperty(index = 28, value = "名称")
+  @ExcelProperty(index = 29, value = "名称")
   private String name3;
 
-  @ExcelProperty(index = 29, value = "数量")
+  @ExcelProperty(index = 30, value = "数量")
   private String num3;
 
   private String status;

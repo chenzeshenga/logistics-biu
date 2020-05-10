@@ -140,9 +140,7 @@
         <el-form-item label="入库商品">
           <el-col :span="4">
             <el-form-item label="箱号">
-              <el-select v-model="currContent.boxSeq" placeholder="请选择箱号">
-                <el-option v-for="item in arr" :key="item" :label="item" :value="item" />
-              </el-select>
+              <el-input-number v-model="currContent.boxSeq"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -378,7 +376,9 @@ export default {
           userId: val,
         },
       }).then((ret) => {
-        this.form.fromAddress = ret.data.data.userAddress;
+        if (ret.data.data != undefined && ret.data.data.hasOwnProperty('userAddress')) {
+          this.form.fromAddress = ret.data.data.userAddress;
+        }
       });
     },
     initPage() {

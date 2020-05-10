@@ -21,7 +21,7 @@ export default {
     return {
       activities: [
         {
-          content: 'v1.5 1. 修复新建用户 2. 修复批量提交发货',
+          content: 'v1.5 1. 修复新建用户 2. 修复批量提交发货 3. 新建入库单取消箱号限制 4. 订单导出增加用户定义订单号',
           timestamp: '2020-05-11',
         },
         {
