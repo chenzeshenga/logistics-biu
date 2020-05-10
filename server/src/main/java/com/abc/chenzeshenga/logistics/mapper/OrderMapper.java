@@ -90,7 +90,7 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
   List<ManualOrder> listAll();
 
-  List<ManualOrderContent> listContentBatch(String ordNo);
+  List<ManualOrderContent> listContentBatch(List<String> ordNoList);
 
   List<ManualOrderContent> listContent2(String ordNo);
 

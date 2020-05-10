@@ -1,6 +1,7 @@
 package com.abc.controller;
 
 import com.abc.chenzeshenga.logistics.annotation.PermInfo;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.constant.Root;
 import com.abc.entity.SysRole;
@@ -67,8 +68,7 @@ public class SysUserController {
     if (StringUtils.isEmpty(user.getPwd())) {
       return Json.fail(oper, "密码不能为空");
     }
-    SysUser userDB =
-        sysUserService.selectOne(new EntityWrapper<SysUser>().eq("uname", user.getUname()));
+    SysUser userDB = sysUserService.selectUserByUserName(user.getUname());
     if (userDB != null) {
       return Json.fail(oper, "用户已注册");
     }
@@ -80,8 +80,13 @@ public class SysUserController {
     user.setPwd(hashedPwd);
     user.setSalt(salt);
     user.setCreated(new Date());
-    boolean success = sysUserService.insert(user);
-    return Json.result(oper, success).data("uid", user.getUid()).data("created", user.getCreated());
+    user.setUid(SnowflakeIdWorker.generateStrId());
+    int result = sysUserService.createUser(user);
+    if (result > 0) {
+      return Json.result(oper, true).data("uid", user.getUid()).data("created", user.getCreated());
+    } else {
+      return Json.fail(oper, "添加用户失败");
+    }
   }
 
   @PermInfo("删除系统用户")

@@ -76,12 +76,12 @@ public class OrderController {
       JapanAddressCache japanAddressCache,
       LabelCache labelCache,
       ChannelCache channelCache,
-    UserCommonService userCommonService) {
+      UserCommonService userCommonService) {
     this.orderService = orderService;
     this.japanAddressCache = japanAddressCache;
     this.labelCache = labelCache;
     this.channelCache = channelCache;
-    this.userCommonService=userCommonService;
+    this.userCommonService = userCommonService;
   }
 
   @PostMapping("/detail")
@@ -280,34 +280,34 @@ public class OrderController {
     Date fromDate1 = DateUtil.getDateFromStr(fromDate);
     Date toDate1 = DateUtil.getDateFromStr(toDate);
     Page<ManualOrder> manualOrderPage;
-    if(userCommonService.isManagerRole(cname)){
-    manualOrderPage =
-        orderService.listByRange(
-            page,
-            type,
-            status,
-            fromDate1,
-            toDate1,
-            ordno,
-            creator,
-            channelCode,
-            trackNo,
-            userCustomOrderNo,
-            pickup);
-    }else{
+    if (userCommonService.isManagerRole(cname)) {
       manualOrderPage =
-        orderService.listByRange(
-          page,
-          type,
-          status,
-          fromDate1,
-          toDate1,
-          ordno,
-          cname,
-          channelCode,
-          trackNo,
-          userCustomOrderNo,
-          pickup);
+          orderService.listByRange(
+              page,
+              type,
+              status,
+              fromDate1,
+              toDate1,
+              ordno,
+              creator,
+              channelCode,
+              trackNo,
+              userCustomOrderNo,
+              pickup);
+    } else {
+      manualOrderPage =
+          orderService.listByRange(
+              page,
+              type,
+              status,
+              fromDate1,
+              toDate1,
+              ordno,
+              cname,
+              channelCode,
+              trackNo,
+              userCustomOrderNo,
+              pickup);
     }
     enrichOrd(manualOrderPage);
     return Json.succ().data("page", manualOrderPage);
@@ -479,29 +479,30 @@ public class OrderController {
       String category = manualOrder.getCategory();
       if ("1".equals(category)) {
         // 更新库存
-        manualOrderContentList.forEach(
-            manualOrderContent -> {
-              String sku = manualOrderContent.getSku();
-              int num = Integer.parseInt(manualOrderContent.getNum());
-              String owner = manualOrder.getCreator();
-              String shelfNo = manualOrderContent.getShelfNo();
-              UpShelfProduct upShelfProduct =
-                  upShelfProductMapper.selectOne(new UpShelfProduct(sku, owner, shelfNo));
-              upShelfProduct.setNum(
-                  String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
-              upShelfProductMapper.updateAllColumnById(upShelfProduct);
-              ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
-              productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
-              productOutWarehouse.setDySku(manualOrderContent.getDySku());
-              productOutWarehouse.setSku(sku);
-              productOutWarehouse.setNum(String.valueOf(num));
-              productOutWarehouse.setOwner(owner);
-              productOutWarehouse.setOrderNo(ordno);
-              productOutWarehouse.setOutTime(new Date());
-              productOutWarehouse.setHoursInWarehouse(
-                  DateUtil.getHourPoor(new Date(), upShelfProduct.getUptime()));
-              productOutWarehouseMapper.insert(productOutWarehouse);
-            });
+        for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+          String sku = manualOrderContent.getSku();
+          int num = Integer.parseInt(manualOrderContent.getNum());
+          String owner = manualOrder.getCreator();
+          String shelfNo = manualOrderContent.getShelfNo();
+          UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(sku, owner);
+          if (upShelfProduct != null) {
+            upShelfProduct.setNum(String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
+            upShelfProductMapper.updateAllColumnById(upShelfProduct);
+            ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
+            productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
+            productOutWarehouse.setDySku(manualOrderContent.getDySku());
+            productOutWarehouse.setSku(sku);
+            productOutWarehouse.setNum(String.valueOf(num));
+            productOutWarehouse.setOwner(owner);
+            productOutWarehouse.setOrderNo(ordno);
+            productOutWarehouse.setOutTime(new Date());
+            productOutWarehouse.setHoursInWarehouse(
+                DateUtil.getHourPoor(new Date(), upShelfProduct.getUptime()));
+            productOutWarehouseMapper.insert(productOutWarehouse);
+          } else {
+            return Json.fail("拣货", "未在当前库存找到对应商品，请先更新库存");
+          }
+        }
       }
     } else {
       return Json.fail();
@@ -529,7 +530,7 @@ public class OrderController {
   public Json batchStatusUpdate(
       @RequestBody List<String> ords, @PathVariable String category, @PathVariable String status) {
     if (ONE.equals(category) && THREE.equals(status)) {
-      List<ManualOrderContent> manualOrderContentList = orderMapper.listContentBatch(ords.get(0));
+      List<ManualOrderContent> manualOrderContentList = orderMapper.listContentBatch(ords);
       if (whetherPickup(manualOrderContentList)) {
         return Json.fail().msg("有商品未拣货完成");
       }

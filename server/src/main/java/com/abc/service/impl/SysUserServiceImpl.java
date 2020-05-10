@@ -25,4 +25,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
   public Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username) {
     return page.setRecords(baseMapper.selectUserIncludeRoles4Option(page, nick, username));
   }
+
+  @Override public int createUser(SysUser sysUser) {
+    return baseMapper.createUser(sysUser);
+  }
 }

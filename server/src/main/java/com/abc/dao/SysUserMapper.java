@@ -16,4 +16,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
   List<SysUser> selectUserIncludeRoles4Option(
       Pagination page, @Param("nick") String nick, @Param("username") String username);
+
+  int createUser(SysUser sysUser);
 }
