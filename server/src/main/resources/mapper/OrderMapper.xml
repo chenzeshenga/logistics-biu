@@ -51,6 +51,45 @@
         </collection>
     </resultMap>
 
+    <resultMap id="resultV2" type="com.abc.chenzeshenga.logistics.model.ManualOrder">
+        <result property="orderNo" column="ord_no"/>
+        <result property="userCustomOrderNo" column="user_custom_order_no"/>
+        <result property="category" column="category"/>
+        <result property="carrierNo" column="carrier_no"/>
+        <result property="chinaCarrier" column="china_carrier"/>
+        <result property="trackNo" column="track_no"/>
+        <result property="creator" column="owner"/>
+        <result property="status" column="status"/>
+        <result property="createOn" column="create_on" jdbcType="TIMESTAMP"/>
+        <result property="updateOn" column="update_on" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="create_by"/>
+        <result property="updator" column="update_by"/>
+        <result property="fromAddressLine1" column="from_address_line1"/>
+        <result property="fromAddressLine2" column="from_address_line2"/>
+        <result property="fromAddressLine3" column="from_address_line3"/>
+        <result property="fromZipCode" column="from_zipcode"/>
+        <result property="toAddressLine1" column="to_address_line1"/>
+        <result property="toAddressLine2" column="to_address_line2"/>
+        <result property="toAddressLine3" column="to_address_line3"/>
+        <result property="toZipCode" column="to_zipcode"/>
+        <result property="collect" column="on_behalf"/>
+        <result property="collectNum" column="collect_num"/>
+        <result property="amount" column="amount"/>
+        <result property="chinaNo" column="china_no"/>
+        <result property="fromContact" column="from_contact"/>
+        <result property="toContact" column="to_contact"/>
+        <result property="fromName" column="from_whom"/>
+        <result property="toName" column="to_whom"/>
+        <result property="channel" column="channel"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="height" column="height"/>
+        <result property="sum" column="sum"/>
+        <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
+        <result property="totalVolume" column="total_volume"/>
+        <result property="totalWeight" column="total_weight"/>
+    </resultMap>
+
     <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
         update l_manual_order
         <trim prefix="set" suffixOverrides=",">
@@ -235,9 +274,48 @@
         order by ord.update_on desc
     </select>
 
-    <select id="listByRange" resultMap="result">
+    <!--    <select id="listByRange" resultMap="result">-->
+    <!--        select *-->
+    <!--        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)-->
+    <!--        <trim prefix="where" prefixOverrides="and">-->
+    <!--            <if test="type != null and type != ''">-->
+    <!--                and ord.category=#{type}-->
+    <!--            </if>-->
+    <!--            <if test="status != null and status != ''">-->
+    <!--                and ord.status=#{status}-->
+    <!--            </if>-->
+    <!--            <if test="ordno != null and ordno != ''">-->
+    <!--                and ord.ord_no=#{ordno}-->
+    <!--            </if>-->
+    <!--            <if test="creator != null and creator != ''">-->
+    <!--                and ord.create_by=#{creator}-->
+    <!--            </if>-->
+    <!--            <if test="channelCode != null and channelCode != ''">-->
+    <!--                and ord.channel=#{channelCode}-->
+    <!--            </if>-->
+    <!--            <if test="trackNo != null and trackNo != ''">-->
+    <!--                and ord.track_no=#{trackNo}-->
+    <!--            </if>-->
+    <!--            <if test="userCustomOrderNo != null and userCustomOrderNo != ''">-->
+    <!--                and ord.user_custom_order_no=#{userCustomOrderNo}-->
+    <!--            </if>-->
+    <!--            <if test="pickup != 3 and pickup != ''">-->
+    <!--                and ord.pickup=#{pickup}-->
+    <!--            </if>-->
+    <!--            <if test="from != null">-->
+    <!--                and ord.create_on >= #{from}-->
+    <!--            </if>-->
+    <!--            <if test="to != null">-->
+    <!--                and ord.create_on &lt;= #{to}-->
+    <!--            </if>-->
+    <!--        </trim>-->
+    <!--        order by ord.update_on desc-->
+    <!--        limit #{fromIdx},#{toIdx}-->
+    <!--    </select>-->
+
+    <select id="listByRange" resultMap="resultV2">
         select *
-        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
+        from l_manual_order ord
         <trim prefix="where" prefixOverrides="and">
             <if test="type != null and type != ''">
                 and ord.category=#{type}
@@ -276,7 +354,7 @@
 
     <select id="countByRange" resultType="java.lang.Integer">
         select count(*)
-        from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
+        from l_manual_order ord
         <where>
             1=1
             <if test="type != null and type != ''">
@@ -397,7 +475,6 @@
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
         select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
         from l_manual_order_content content
-                 inner join l_manual_order ord on (content.ordno = ord.ord_no)
         where ordno = #{ordNo}
     </select>
 

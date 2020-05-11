@@ -88,6 +88,7 @@ public class WarehousingController {
     warehousingContentList.forEach(
         warehousingContent -> {
           warehousingContent.setUuid(SnowflakeIdWorker.generateStrId());
+          warehousingContent.setWarehousingNo(warehousing.getWarehousingNo());
         });
     warehousingContentMapper.insertList(warehousingContentList);
     return Json.succ().data("warehousingNo", warehousing.getWarehousingNo());

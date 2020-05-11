@@ -2,9 +2,12 @@ package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
+import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,7 +44,7 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
     Page<ManualOrder> manualOrderPage = new Page<>();
     long fromIdx = (page.getCurrent() - 1) * (long) page.getSize();
     long toIdx = page.getCurrent() * (long) page.getSize();
-    manualOrderPage.setRecords(
+    List<ManualOrder> manualOrderList =
         baseMapper.listByRange(
             type,
             status,
@@ -54,7 +57,13 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
             userCustomOrderNo,
             pickup,
             fromIdx,
-            toIdx));
+            toIdx);
+    for (ManualOrder manualOrder : manualOrderList) {
+      List<ManualOrderContent> manualOrderContentList =
+          baseMapper.listContent2(manualOrder.getOrderNo());
+      manualOrder.setManualOrderContents(manualOrderContentList);
+    }
+    manualOrderPage.setRecords(manualOrderList);
     manualOrderPage.setSize(page.getSize());
     manualOrderPage.setTotal(
         baseMapper.countByRange(
