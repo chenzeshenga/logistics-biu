@@ -542,6 +542,16 @@ public class OrderController {
     return Json.succ();
   }
 
+  @PostMapping("/update/force/{category}/{status}")
+  public Json batchForceStatusUpdate(
+      @RequestBody List<String> ords, @PathVariable String category, @PathVariable String status) {
+    Map<String, Object> request = new HashMap<>(2);
+    request.put("status", status);
+    request.put("ords", ords);
+    orderMapper.statusUpdateBatch(request);
+    return Json.succ();
+  }
+
   private boolean whetherPickup(List<ManualOrderContent> manualOrderContentList) {
     boolean satisfied = false;
     for (ManualOrderContent manualOrderContent : manualOrderContentList) {

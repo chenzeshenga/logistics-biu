@@ -118,6 +118,15 @@
             </el-button>
           </el-col>
           <el-col :span="2">
+            <el-button
+                type="primary"
+                @click="batchForceStatusUpdate()"
+                v-if="multiSelection"
+            >
+              批量强制提交
+            </el-button>
+          </el-col>
+          <el-col :span="2">
             <el-button type="primary" @click="route2NewOrd()"
             >新建订单
             </el-button
@@ -1029,6 +1038,26 @@ export default {
               data: this.ord4TrackNo,
             }).then((res) => {
               console.log(res);
+              this.fetchData();
+              this.$message.success('提交成功');
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消提交');
+          });
+    },
+    batchForceStatusUpdate() {
+      this.$confirm('您确定要强制提交这些订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url:
+              'ord/update/force/' +
+              this.msgData.category +
+              '/' +
+              this.msgData.statusTo,
+              method: 'post',
+              data: this.ord4TrackNo,
+            }).then((res) => {
               this.fetchData();
               this.$message.success('提交成功');
             });
