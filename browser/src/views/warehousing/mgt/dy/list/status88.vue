@@ -15,7 +15,8 @@ export default {
   data() {
     return {
       msg: {
-        status: '8',
+        category: '1',
+        status: '88',
         buttonVisible1: true,
         buttonVisible2: true,
         buttonVisible3: true,

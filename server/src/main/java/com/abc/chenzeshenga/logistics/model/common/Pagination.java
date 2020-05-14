@@ -18,6 +18,8 @@ public class Pagination {
   private long total;
   private long current;
   private int size;
+  private long fromIdx;
+  private long toIdx;
 
   public Pagination(long current, int size) {
     this.current = current;

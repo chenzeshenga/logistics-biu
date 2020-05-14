@@ -4,7 +4,9 @@ import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.File;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.WarehousingService;
+import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.chenzeshenga.logistics.util.print.CustomsDeclarationUtil;
@@ -53,14 +55,18 @@ public class WarehousingController {
 
   private CustomsDeclarationUtil customsDeclarationUtil;
 
+  private UserCommonService userCommonService;
+
   @Autowired
   public WarehousingController(
       WarehousingService warehousingService,
       LabelCache labelCache,
-      CustomsDeclarationUtil customsDeclarationUtil) {
+      CustomsDeclarationUtil customsDeclarationUtil,
+      UserCommonService userCommonService) {
     this.warehousingService = warehousingService;
     this.labelCache = labelCache;
     this.customsDeclarationUtil = customsDeclarationUtil;
+    this.userCommonService = userCommonService;
   }
 
   @PostMapping
@@ -108,8 +114,18 @@ public class WarehousingController {
     return Json.succ();
   }
 
+  /**
+   * 123
+   *
+   * @param body 12
+   * @param method 12
+   * @param status 12
+   * @return 11
+   * @deprecated replace by v2 version
+   */
   @PostMapping
   @RequestMapping("/list/{method}/{status}")
+  @Deprecated
   public Json list(
       @RequestBody String body, @PathVariable String method, @PathVariable String status) {
     method = switchMethod(method);
@@ -136,6 +152,14 @@ public class WarehousingController {
     return Json.succ().data("page", warehousingPage);
   }
 
+  @PostMapping("/v2/list")
+  public Json listV2(@RequestBody PageQueryEntity<WarehousingReq> warehousingReqPageQueryEntity) {
+    com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> warehousingPage =
+        warehousingService.listV2(warehousingReqPageQueryEntity);
+    enrichWarehousing(warehousingPage);
+    return Json.succ().data("page", warehousingPage);
+  }
+
   @PostMapping("/listByFilter/{method}/{status}")
   public Json listByFilter(
       @RequestBody String body, @PathVariable String method, @PathVariable String status) {
@@ -149,18 +173,8 @@ public class WarehousingController {
     warehousingReq.setChannelCode(jsonObject.getString("channelCode"));
     warehousingReq.setFrom(jsonObject.getDate("from"));
     warehousingReq.setTo(jsonObject.getDate("to"));
-    Subject subject = SecurityUtils.getSubject();
-    SysUser user = (SysUser) subject.getPrincipal();
-    Set<AuthVo> authVos = user.getRoles();
-    AtomicBoolean queryAll = new AtomicBoolean(false);
-    authVos.forEach(
-        authVo -> {
-          if ("root".equals(authVo.getVal()) || "operator".equals(authVo.getVal())) {
-            queryAll.set(true);
-          }
-        });
     Page<Warehousing> warehousingPage;
-    if (queryAll.get()) {
+    if (userCommonService.isManagerRole(cname)) {
       warehousingPage =
           warehousingService.listByStatusAndFilter(page, status, method, warehousingReq);
     } else {
@@ -190,8 +204,16 @@ public class WarehousingController {
         });
   }
 
-  @PostMapping
-  @RequestMapping("/status")
+  private void enrichWarehousing(
+      com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> warehousingPage) {
+    List<Warehousing> warehousingList = warehousingPage.getData();
+    warehousingList.forEach(
+        warehousing -> {
+          warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));
+        });
+  }
+
+  @PostMapping("/status")
   public Json statusUpdate(@RequestBody Map<String, String> request) {
     String to = request.get("to");
     String warehousingNo = request.get("warehousingNo");

@@ -36,6 +36,10 @@ public interface WarehousingMapper extends BaseMapper<Warehousing> {
       String method,
       WarehousingReq warehousingReq);
 
+  List<Warehousing> listV2(WarehousingReq warehousingReq);
+
+  Integer count(WarehousingReq warehousingReq);
+
   List<Warehousing> listByStatus(Pagination pagination, String status, String method);
 
   List<Warehousing> listByStatusAndFilter(

@@ -16,6 +16,7 @@
                 :picker-options="pickerOptions2"
                 value-format="yyyy-MM-dd"
                 style="width: 400px"
+                @change="reGenSearchData"
               ></el-date-picker>
             </el-tooltip>
           </el-col>
@@ -55,16 +56,6 @@
           </el-col>
         </el-row>
         <el-row :gutter="20" style="margin-top: 1%;margin-left: 4%">
-          <!--            <el-col :span="2">-->
-          <!--              <el-button type="primary" @click="applyTrackNo()" v-if="multiSelection">-->
-          <!--                批量申请单号-->
-          <!--              </el-button>-->
-          <!--            </el-col>-->
-          <!--            <el-col :span="2">-->
-          <!--              <el-button type="primary" @click="batchStatusUpdate()" v-if="multiSelection">-->
-          <!--                批量提交-->
-          <!--              </el-button>-->
-          <!--            </el-col>-->
           <el-col :span="2">
             <el-button type="primary" @click="route2NewWarehousing()">新建入库单</el-button>
           </el-col>
@@ -767,12 +758,12 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tableLoading: false,
       tableData: [],
-      daterange: null,
+      daterange: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 7), new Date()],
       dialogVisible1: false,
       dialogVisible1Sub: false,
       dialogVisible2: false,
@@ -850,6 +841,10 @@ export default {
         warehousingNo: '',
         creator: '',
         channelCode: '',
+        from: '',
+        to: '',
+        status: '',
+        category: '',
       },
       dialog: {
         carrier: '',
@@ -900,22 +895,27 @@ export default {
   },
   props: ['msg'],
   created() {
+    this.search.from = this.daterange[0];
+    this.search.to = this.daterange[1];
     this.fetchData();
     this.initUserList();
   },
   methods: {
     fetchData() {
       this.tableLoading = true;
+      this.search.status=this.msgData.status;
+      this.search.category=this.msgData.category;
+      const postData = {
+        'entity': this.search,
+        'pagination': this.tablePage,
+      };
       request({
         url:
-          'warehousing/list/' +
-          this.msgData.category +
-          '/' +
-          this.msgData.status,
+          'warehousing/v2/list/',
         method: 'post',
-        data: this.tablePage,
+        data: postData,
       }).then((res) => {
-        const tableRecords = res.data.page.records;
+        const tableRecords = res.data.page.data;
         for (let i = 0; i < tableRecords.length; i++) {
           const record = tableRecords[i];
           record.channelFlag = Boolean(record.channel);
@@ -1344,6 +1344,10 @@ export default {
         this.$message.success('更新成功');
         this.dialogVisible1Sub = false;
       });
+    },
+    reGenSearchData(val) {
+      this.search.from = val[0];
+      this.search.to = val[1];
     },
   },
   mounted() {},

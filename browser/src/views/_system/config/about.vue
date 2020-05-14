@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.7 1. 入库单列表页修正',
+          timestamp: '2020-05-11',
+        },
+        {
           content: 'v1.6 1. 添加强制更新状态按钮 2. 修复入库单偶尔未保存入库单内容 3. 修复订单展示问题',
           timestamp: '2020-05-11',
         },
