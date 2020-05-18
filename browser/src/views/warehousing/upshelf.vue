@@ -135,6 +135,7 @@ export default {
   },
   inject: ['reload'],
   created() {
+    this.clearOriData();
     this.initData();
     this.fetchShelves();
   },
@@ -144,6 +145,14 @@ export default {
     },
   },
   methods: {
+    clearOriData() {
+      this.warehousing = {};
+      this.products = [];
+      this.currContent = {};
+      this.warehousingContentList = [];
+      this.shelves = [];
+      this.currShelvesMapping = {};
+    },
     initData() {
       const warehousingNo = this.$route.query.warehousingNo;
       if (warehousingNo !== undefined && warehousingNo.length > 0) {
@@ -171,6 +180,7 @@ export default {
             warehousingContentList: retWarehousing.warehousingContentList,
           };
           const warehousingContentList = retWarehousing.warehousingContentList;
+          this.products = [];
           for (const content of warehousingContentList) {
             const product = {
               value: content.sku,

@@ -722,6 +722,7 @@
 import request from '../../../utils/service';
 import CustomSyncfusionBarcode from '../../@syncfusion/custom-syncfusion-barcode';
 import CustomSyncfusionBarcodeDetail from '../../@syncfusion/custom-syncfusion-barcode-detail';
+import moment from 'moment';
 
 export default {
   name: 'warehousingTable',
@@ -763,7 +764,7 @@ export default {
       },
       tableLoading: false,
       tableData: [],
-      daterange: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 7), new Date()],
+      daterange: [moment(new Date(new Date().getTime() - 7 * 24 * 3600 * 1000)).format('YYYY-MM-DD'), moment(new Date(new Date().getTime() + 24 * 3600 * 1000)).format('YYYY-MM-DD')],
       dialogVisible1: false,
       dialogVisible1Sub: false,
       dialogVisible2: false,
