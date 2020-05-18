@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.9 1. 入库订单默认查询时间范围调整 2. 入库订单上架时将上一个订单的内容清空',
+          timestamp: '2020-05-19',
+        },
+        {
           content: 'v1.8 1. 订单新增渠道列 2. 修复订单部分状态页不可见',
           timestamp: '2020-05-18',
         },

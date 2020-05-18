@@ -69,8 +69,7 @@ public class WarehousingController {
     this.userCommonService = userCommonService;
   }
 
-  @PostMapping
-  @RequestMapping("/add")
+  @PostMapping("/add")
   public Json add(@RequestBody @Valid Warehousing warehousing, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       StringBuilder errMsg = getErrMsg(bindingResult);
