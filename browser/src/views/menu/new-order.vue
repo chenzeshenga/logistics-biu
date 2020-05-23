@@ -222,19 +222,27 @@
         </el-form-item>
         <el-form-item label="订单内容">
           <el-col :span="5" v-if="!skuFlag">
-            <el-form-item label="sku">
-              <el-cascader
-                  :options="myProducts"
-                  v-model="selectedProduct"
-                  @change="handleProductChange"
-                  filterable
-              ></el-cascader>
+            <el-form-item label="东岳sku">
+              <el-select
+                filterable
+                clearable
+                v-model="content.dySku"
+                placeholder="请选择商品"
+                @change="handleProductChange"
+                value="">
+                <el-option
+                  v-for="product in myProducts"
+                  :key="product.dySku"
+                  :label="product.dySku"
+                  :value="product.dySku"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5" v-if="skuFlag">
-            <el-form-item label="sku">
+            <el-form-item label="dySku或者sku">
               <el-input
-                  v-model="content.sku"
+                  v-model="content.dySku"
                   placeholder="请输入或者扫描sku"
               ></el-input>
             </el-form-item>
@@ -294,7 +302,7 @@
               style="width: 90%"
           >
             <el-table-column
-                prop="sku"
+                prop="dySku"
                 label="东岳Sku"
                 width="250"
             ></el-table-column>
@@ -444,6 +452,7 @@ export default {
   components: {loading},
   data() {
     return {
+      who: '',
       isLoading: false,
       fullPage: true,
       actionLink: process.env.BASE_API + '/ord/excel',
@@ -493,7 +502,7 @@ export default {
       toTownAddressMap: {},
       fromTownAddressMap: {},
       content: {
-        sku: '',
+        dySku: '',
         name: '',
         price: '',
         num: 0,
@@ -522,7 +531,6 @@ export default {
     this.initUserList();
     this.hasAdminRole();
     this.initPage();
-    this.getMyProducts();
   },
   watch: {
     $route() {
@@ -610,13 +618,14 @@ export default {
         if (this.myProducts.length <= 0) {
           this.$message.warning('当前用户库存商品为0');
         }
-        for (const myProduct of this.myProducts) {
-          const subProduct = myProduct;
-          this.productMap[
-              subProduct['value'].split('/')[0]
-          ] = subProduct;
-        }
+        this.storeProduct2Local(this.myProducts);
       });
+    },
+    storeProduct2Local(myProducts) {
+      for (const myProduct of myProducts) {
+        const subProduct = myProduct;
+        this.productMap[subProduct['dySku']] = subProduct;
+      }
     },
     handleChange(value) {
       this.form.channel = value[0];
@@ -638,10 +647,9 @@ export default {
       this.form.toAddress.city = value[1];
       this.form.toAddress.town = value[2];
     },
-    handleProductChange(value) {
-      const sku = value[0].split('/')[0];
-      const product = this.productMap[sku];
-      this.content.sku = sku;
+    handleProductChange(dySku) {
+      const product = this.productMap[dySku];
+      this.content.dySku = dySku;
       this.content.name = product.name;
       this.content.price = product.price;
       this.selectedProductMaxNum = Number(product.num);
@@ -654,15 +662,15 @@ export default {
       this.content.num = Number(this.content.num);
       tmpContent = JSON.parse(JSON.stringify(this.content));
       tmpContent['index'] = this.form.contentList.length;
-      if (this.selectedProductMap.hasOwnProperty(this.content['sku'])) {
+      if (this.selectedProductMap.hasOwnProperty(this.content['dySku'])) {
         const plannedNum =
-            this.selectedProductMap[this.content['sku']]['num'] +
+            this.selectedProductMap[this.content['dySku']]['num'] +
             Number(this.content.num);
         const product = this.productMap[
-            this.content['sku']
+            this.content['dySku']
         ];
         if (plannedNum > product.num) {
-          this.selectedProductMap[this.content['sku']]['num'] =
+          this.selectedProductMap[this.content['dySku']]['num'] =
               product.num;
           this.$message.warning(
               '当前订单中商品' +
@@ -670,20 +678,20 @@ export default {
               '总数量大于该商品可售数量，系统已自动调整为最大可售数量',
           );
         } else {
-          this.selectedProductMap[this.content['sku']][
+          this.selectedProductMap[this.content['dySku']][
               'num'
           ] += Number(this.content.num);
         }
       } else {
-        this.selectedProductMap[this.content['sku']] = tmpContent;
+        this.selectedProductMap[this.content['dySku']] = tmpContent;
         this.form.contentList.push(
-            this.selectedProductMap[this.content['sku']],
+            this.selectedProductMap[this.content['dySku']],
         );
       }
     },
     handleDelete(index, row) {
       const content = this.form.contentList[index];
-      delete this.selectedProductMap[content.sku];
+      delete this.selectedProductMap[content.dySku];
       this.form.contentList.splice(index, 1);
     },
     createOrd() {
@@ -754,20 +762,23 @@ export default {
     },
     hasAdminRole() {
       request({
-        url: '/sys_user/info',
+        url: '/user/isManagerRole',
         method: 'get',
       }).then((res) => {
-        const roles = res.data.userInfo.roles;
-        for (let i = 0; i < roles.length; i++) {
-          const role = roles[i];
-          const val = role['val'];
-          if (val === 'root' || val === 'operator') {
-            this.adminRole = true;
-          }
-        }
+        this.adminRole = res.data.data;
         if (!this.adminRole) {
-          this.standFor = res.data.userInfo.uname;
+          this.whoami();
+          this.getMyProducts();
         }
+      });
+    },
+    whoami() {
+      request({
+        url: '/user/whoami',
+        method: 'get',
+      }).then((res) => {
+        this.who = res.data.data;
+        this.standFor = this.who;
       });
     },
     filterProduct(val) {
@@ -791,10 +802,7 @@ export default {
           this.form.creator = '';
           return;
         }
-        for (const myProduct of this.myProducts) {
-          const subProduct = myProduct;
-          this.productMap[subProduct['sku']] = subProduct;
-        }
+        this.storeProduct2Local(this.myProducts);
       });
     },
     changeUpdateLink(val) {

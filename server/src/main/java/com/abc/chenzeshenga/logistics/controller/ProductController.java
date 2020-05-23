@@ -60,11 +60,7 @@ public class ProductController {
   public Json listProduct() {
     String uname = UserUtils.getUserName();
     List<SkuLabel> skuLabelList;
-    if (ADMIN.equals(uname)) {
-      skuLabelList = productMapper.listAll();
-    } else {
-      skuLabelList = productMapper.list(uname);
-    }
+    skuLabelList = productMapper.list(uname);
     skuLabelList.forEach(
         skuLabel -> {
           skuLabel.setValue(skuLabel.getSku() + "/" + skuLabel.getDySku());
