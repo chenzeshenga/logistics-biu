@@ -221,79 +221,90 @@
           </el-row>
         </el-form-item>
         <el-form-item label="订单内容">
-          <el-col :span="5" v-if="!skuFlag">
-            <el-form-item label="东岳sku">
-              <el-select
-                filterable
-                clearable
-                v-model="content.dySku"
-                placeholder="请选择商品"
-                @change="handleProductChange"
-                value="">
-                <el-option
-                  v-for="product in myProducts"
-                  :key="product.dySku"
-                  :label="product.dySku"
-                  :value="product.dySku"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="skuFlag">
-            <el-form-item label="dySku或者sku">
-              <el-input
+          <el-row>
+            <el-col :span="5" v-if="!skuFlag">
+              <el-form-item label="东岳sku">
+                <el-select
+                  filterable
+                  clearable
+                  v-model="content.dySku"
+                  placeholder="请选择商品"
+                  @change="handleProductChange"
+                  value="">
+                  <el-option
+                    v-for="product in myProducts"
+                    :key="product.dySku"
+                    :label="product.dySku"
+                    :value="product.dySku"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="!skuFlag">
+              <el-form-item label="商品sku">
+                <el-input v-model="content.sku" placeholder="商品sku" disabled></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="skuFlag">
+              <el-form-item label="dySku或者sku">
+                <el-input
                   v-model="content.dySku"
                   placeholder="请输入或者扫描sku"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="!skuFlag">
-            <el-form-item label="名称">
-              <el-input
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="margin-top-2">
+            <el-col :span="5" v-if="!skuFlag">
+              <el-form-item label="名称">
+                <el-input
                   disabled
                   v-model="content.name"
                   placeholder="请输入产品名称"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="skuFlag">
-            <el-form-item label="名称">
-              <el-input
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="skuFlag">
+              <el-form-item label="名称">
+                <el-input
                   v-model="content.name"
                   placeholder="请输入产品名称"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="!skuFlag">
-            <el-form-item label="商品价值">
-              <el-input
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="!skuFlag">
+              <el-form-item label="商品价值(JPY)">
+                <el-input
                   disabled
                   v-model="content.price"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="skuFlag">
-            <el-form-item label="商品价值">
-              <el-input-number
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="skuFlag">
+              <el-form-item label="商品价值">
+                <el-input-number
                   v-model="content.price"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="商品数量">
-              <el-input-number
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="商品数量">
+                <el-input-number
                   v-model="content.num"
                   :min="1"
                   :max="selectedProductMaxNum"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="2" style="margin-left: 2%">
-            <el-button type="primary" round @click="add2Cart"
-            >添加
-            </el-button
-            >
-          </el-col>
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="margin-top-2">
+            <el-col :span="2" style="margin-left: 2%">
+              <el-button type="primary" round @click="add2Cart"
+              >添加
+              </el-button
+              >
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item>
           <el-table
@@ -305,6 +316,11 @@
                 prop="dySku"
                 label="东岳Sku"
                 width="250"
+            ></el-table-column>
+            <el-table-column
+              prop="sku"
+              label="商品sku"
+              width="250"
             ></el-table-column>
             <el-table-column
                 prop="name"
@@ -323,11 +339,9 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
-                    size="mini"
-                    type="danger"
-                    @click="
-                                        handleDelete(scope.$index, scope.row)
-                                    "
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
                 >删除
                 </el-button
                 >
@@ -503,6 +517,7 @@ export default {
       fromTownAddressMap: {},
       content: {
         dySku: '',
+        sku: '',
         name: '',
         price: '',
         num: 0,
@@ -650,6 +665,7 @@ export default {
     handleProductChange(dySku) {
       const product = this.productMap[dySku];
       this.content.dySku = dySku;
+      this.content.sku = product.sku;
       this.content.name = product.name;
       this.content.price = product.price;
       this.selectedProductMaxNum = Number(product.num);
@@ -803,6 +819,15 @@ export default {
           return;
         }
         this.storeProduct2Local(this.myProducts);
+        this.form.contentList = [];
+        this.content = {
+          dySku: '',
+          sku: '',
+          name: '',
+          price: '',
+          num: 0,
+          totalNum: 0,
+        };
       });
     },
     changeUpdateLink(val) {
@@ -818,10 +843,6 @@ export default {
         this.$message.warning('请选择所属用户');
       }
     },
-    checkChannelSize() {
-      console.log(this.channels);
-      return false;
-    },
     submitUpload() {
       this.$refs.upload.submit();
       this.$message.success('上传成功');
@@ -830,3 +851,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .margin-top-2 {
+    margin-top: 2%;
+  }
+</style>

@@ -221,11 +221,11 @@
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
-        insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied,uuid)
+        insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied,uuid,dy_sku)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num},
-            #{item.price},#{item.picked},#{item.satisfied},#{item.uuid})
+            #{item.price},#{item.picked},#{item.satisfied},#{item.uuid},#{item.dySku})
         </foreach>
     </insert>
 

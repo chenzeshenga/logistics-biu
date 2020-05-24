@@ -345,9 +345,14 @@ public class OrderController {
       content.setTotalPrice(finalPrice);
       String total = content.getNum();
       String picked = content.getPicked();
-      if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
-        manualOrder.setSatisfied(false);
-        break;
+      try {
+        if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
+          manualOrder.setSatisfied(false);
+          break;
+        }
+      } catch (NumberFormatException numberFormatException) {
+        log.info("manual order as {}", manualOrder);
+        log.info("error stack info ", numberFormatException);
       }
     }
     manualOrder.setManualOrderContents(manualOrderContentList);

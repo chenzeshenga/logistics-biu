@@ -69,12 +69,6 @@ public class ProductController {
     return Json.succ().data(skuLabelList);
   }
 
-  @GetMapping("/listByUser")
-  public Json listProductByUser(@RequestParam String username) {
-    List<SkuLabel> skuLabelList = productMapper.listUserOwnProduct(username);
-    return Json.succ().data(skuLabelList);
-  }
-
   @PostMapping(value = "/add")
   public Json add(@RequestBody @Valid Product product, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
