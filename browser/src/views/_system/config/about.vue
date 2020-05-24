@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.10 1. 新建订单页面商品sku统一为东岳sku 2. 修复某些批量导入的订单商品数量不规范时影响页面显示的问题',
+          timestamp: '2020-05-25',
+        },
+        {
           content: 'v1.9 1. 入库订单默认查询时间范围调整 2. 入库订单上架时将上一个订单的内容清空',
           timestamp: '2020-05-19',
         },
