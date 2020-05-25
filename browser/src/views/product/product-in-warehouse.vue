@@ -116,17 +116,24 @@
         </el-row>
         <el-row style="margin-top: 1%">
           <el-col :span="8">
-            <el-tooltip content="商品sku" placement="top">
-              <el-select filterable clearable v-model="currContent.sku" placeholder="商品sku">
+            <el-tooltip content="商品东岳sku" placement="top">
+              <el-select filterable clearable v-model="currContent.dySku" @change="showProductName" placeholder="商品东岳sku">
                 <el-option
                   v-for="product in userProduct"
                   :key="product.dySku"
-                  :label="product.name"
+                  :label="product.dySku"
                   :value="product.dySku"
                 ></el-option>
               </el-select>
             </el-tooltip>
           </el-col>
+          <el-col :span="16">
+            <el-tooltip content="商品名称" placement="top">
+              <el-input v-model="currContent.name" disabled></el-input>
+            </el-tooltip>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 1%">
           <el-col :span="8">
             <el-tooltip content="商品数量" placement="top">
               <el-input-number v-model="currContent.num"></el-input-number>
@@ -173,7 +180,7 @@
         </div>
         <el-row style="margin-top: 5%">
           <el-button type="primary" @click="shelfContent2Backend">更新</el-button>
-          <el-button @click="this.dialogVisible4ShelfContent=false">取消</el-button>
+          <el-button @click="closeDialog">取消</el-button>
         </el-row>
       </el-dialog>
     </div>
@@ -215,6 +222,7 @@ export default {
         content: [],
       },
       currContent: {
+        dySku: '',
         sku: '',
         name: '',
         num: '',
@@ -223,6 +231,7 @@ export default {
         warehousingNo: '',
       },
       userProduct: [],
+      userProductMap: {},
       dialogVisible4ShelfContent: false,
       shelfOptions: [],
     };
@@ -260,6 +269,10 @@ export default {
         method: 'get',
       }).then((ret) => {
         this.userProduct = ret.data.data;
+        for (let i = 0; i < this.userProduct.length; i++) {
+          const product = this.userProduct[i];
+          this.userProductMap[product.dySku] = product;
+        }
       });
     },
     adjustShelfContent() {
@@ -364,6 +377,16 @@ export default {
         this.tableData = ret.data.data;
         this.tableLoading = false;
       });
+    },
+    showProductName(val) {
+      if (this.userProductMap[val]) {
+        this.currContent.name = this.userProductMap[val].name;
+      } else {
+        this.currContent.name = '';
+      }
+    },
+    closeDialog() {
+      this.dialogVisible4ShelfContent = false;
     },
   },
 };

@@ -246,6 +246,12 @@ public class ProductController {
     return Json.succ();
   }
 
+  @GetMapping("/listByUser")
+  public Json listProductByUser(@RequestParam String username) {
+    List<SkuLabel> skuLabelList = productMapper.listUserOwnProduct(username);
+    return Json.succ().data(skuLabelList);
+  }
+
   @GetMapping("/get/{sku}")
   public Json getSingleProduct(@PathVariable String sku) {
     Product product = productMapper.selectByPrimaryKey(sku);
