@@ -107,7 +107,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 22, value = "代收费用总额(JPY)")
   private String collectNum;
 
-  @ExcelProperty(index = 23, value = "sku")
+  @ExcelProperty(index = 23, value = "东岳sku")
   private String sku1;
 
   @ExcelProperty(index = 24, value = "名称")
@@ -116,7 +116,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 25, value = "数量")
   private String num1;
 
-  @ExcelProperty(index = 26, value = "sku")
+  @ExcelProperty(index = 26, value = "东岳sku")
   private String sku2;
 
   @ExcelProperty(index = 27, value = "名称")
@@ -125,7 +125,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 28, value = "数量")
   private String num2;
 
-  @ExcelProperty(index = 29, value = "sku")
+  @ExcelProperty(index = 29, value = "东岳sku")
   private String sku3;
 
   @ExcelProperty(index = 30, value = "名称")
@@ -141,8 +141,6 @@ public class ManualOrder extends BaseRowModel implements Serializable {
 
   @NotEmpty(message = "订单类型必选")
   private String category;
-
-
 
   private String chinaNo;
 

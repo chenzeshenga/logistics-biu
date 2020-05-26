@@ -163,7 +163,7 @@
               style="margin-bottom: 0"
           >
             <el-table-column
-                prop="sku"
+                prop="dySku"
                 label="东岳Sku"
                 width="200"
             ></el-table-column>

@@ -6,6 +6,7 @@
             resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
         select ordno,
                sku,
+               dy_sku as dySku,
                name,
                num,
                price,

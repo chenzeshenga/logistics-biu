@@ -41,7 +41,7 @@
         <result property="totalWeight" column="total_weight"/>
         <collection property="manualOrderContents" ofType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
             <result column="uuid" property="uuid"/>
-            <result column="sku" property="sku"/>
+            <result column="dy_sku" property="dySku"/>
             <result column="name" property="name"/>
             <result column="num" property="num"/>
             <result column="price" property="price"/>
@@ -473,7 +473,14 @@
     </select>
 
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        select content.ordno,
+               content.sku,
+               content.dy_sku as dySku,
+               content.name,
+               content.num,
+               content.price,
+               content.picked,
+               content.satisfied
         from l_manual_order_content content
         where ordno = #{ordNo}
     </select>
