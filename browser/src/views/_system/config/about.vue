@@ -21,6 +21,14 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.12 1. 订单列表的展示改为dySku',
+          timestamp: '2020-05-27',
+        },
+        {
+          content: 'v1.11 1. 修复库存补录功能',
+          timestamp: '2020-05-26',
+        },
+        {
           content: 'v1.10 1. 新建订单页面商品sku统一为东岳sku 2. 修复某些批量导入的订单商品数量不规范时影响页面显示的问题',
           timestamp: '2020-05-25',
         },
