@@ -14,7 +14,7 @@ import lombok.Data;
 @TableName("l_up_shelf_product")
 public class ProductInWarehouseSummary {
 
-  private String sku;
+  private String dySku;
   private String name;
   private String num;
   private String owner;

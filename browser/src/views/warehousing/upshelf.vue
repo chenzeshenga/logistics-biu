@@ -34,22 +34,22 @@
           v-bind:key="content.uuid"
           style="margin-top:2%;margin-left:4%"
         >
-          箱号: {{ content.boxSeq }} sku: {{ content.sku }} 数量:
+          箱号: {{ content.boxSeq }} sku: {{ content.dySku }} 数量:
           {{ content.actual }} 名称: {{ content.name }}
         </div>
       </el-row>
       <el-row style="margin-left:4%;margin-top:2%">
         <el-col :span="4" style="margin-left:4%;">
-          <div class="sub-title">sku</div>
+          <div class="sub-title">东岳sku</div>
           <el-select
-            v-model="currContent.sku"
+            v-model="currContent.dySku"
             placeholder="请从已审核产品中选择"
             @change="handleValueChange"
           >
             <el-option
               v-for="item in products"
               :key="item.value"
-              :label="item.label"
+              :label="item.value"
               :value="item.value"
             />
           </el-select>
@@ -91,7 +91,7 @@
           highlight-current-row
           style="margin-left:4%;width: 90%"
         >
-          <el-table-column prop="sku" label="sku" />
+          <el-table-column prop="dySku" label="东岳sku" />
           <el-table-column prop="name" label="名称" />
           <el-table-column prop="num" label="数量" />
           <el-table-column prop="shelfNo" label="货架" />
@@ -183,7 +183,7 @@ export default {
           this.products = [];
           for (const content of warehousingContentList) {
             const product = {
-              value: content.sku,
+              value: content.dySku,
               label: content.name,
             };
             this.products.push(product);

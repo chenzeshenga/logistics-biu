@@ -4,11 +4,11 @@
 
     <select id="fetchProductInWarehouseWithManagerRole" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.sku, shelf.name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, shelf.name, shelf.owner, sum(shelf.num) as num
         from l_up_shelf_product shelf
         <trim prefix="where" prefixOverrides="or">
             <if test="sku!=null">
-                shelf.sku like CONCAT('%', #{sku}, '%')
+                shelf.dy_sku like CONCAT('%', #{sku}, '%')
             </if>
             <if test="name!=null">
                 or shelf.name like CONCAT('%', #{name}, '%')
@@ -18,23 +18,23 @@
             </if>
         </trim>
         group by
-        shelf.sku, shelf.name, shelf.owner
+        shelf.dy_sku, shelf.name, shelf.owner
     </select>
 
     <select id="fetchProductInWarehouseWithUserRole" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.sku, shelf.name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, shelf.name, shelf.owner, sum(shelf.num) as num
         from l_up_shelf_product shelf
         where
         shelf.owner = #{username}
         <if test="sku != null and sku != ''">
-            and shelf.sku like CONCAT('%', #{sku}, '%')
+            and shelf.dy_sku like CONCAT('%', #{sku}, '%')
         </if>
         <if test="name != null and name != ''">
             and shelf.name like CONCAT('%', #{name}, '%')
         </if>
         group by
-        shelf.sku, shelf.name, shelf.owner
+        shelf.dy_sku, shelf.name, shelf.owner
     </select>
 
 

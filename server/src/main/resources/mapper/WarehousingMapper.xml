@@ -52,6 +52,7 @@
             <result column="uuid" property="uuid"/>
             <result column="warehousing_no" property="warehousingNo"/>
             <result column="sku" property="sku"/>
+            <result column="dy_sku" property="dySku"/>
             <result column="box_seq" property="boxSeq"/>
             <result column="total_num" property="totalNum"/>
             <result column="wrap_type" property="wrapType"/>

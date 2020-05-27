@@ -121,7 +121,7 @@ public class ProductStatisticsController {
     }
     productInWarehouseSummaries.forEach(
         productInWarehouseSummary -> {
-          String subSku = productInWarehouseSummary.getSku();
+          String subSku = productInWarehouseSummary.getDySku();
           String subOwner = productInWarehouseSummary.getOwner();
           String productName = productInWarehouseSummary.getName();
           Product subProduct = new Product();
@@ -132,7 +132,7 @@ public class ProductStatisticsController {
             }
           }
           Map<String, Object> columnMap = new HashMap<>(2);
-          columnMap.put("sku", subSku);
+          columnMap.put("dy_sku", subSku);
           columnMap.put("owner", subOwner);
           List<UpShelfProduct> upShelfProducts = upShelfProductMapper.selectByMap(columnMap);
           Date curr = new Date();
@@ -175,7 +175,7 @@ public class ProductStatisticsController {
     }
     productInWarehouseSummaries.forEach(
         productInWarehouseSummary -> {
-          String subSku = productInWarehouseSummary.getSku();
+          String subSku = productInWarehouseSummary.getDySku();
           String subOwner = productInWarehouseSummary.getOwner();
           ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
           productOutWarehouse.setDySku(subSku);

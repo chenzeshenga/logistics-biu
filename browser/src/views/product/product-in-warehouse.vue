@@ -62,7 +62,7 @@
         <el-table-column type="expand" v-if="outSide">
           <template slot-scope="tableData">
             <el-table :data="tableData.row.children">
-              <el-table-column prop="sku" label="sku"/>
+              <el-table-column prop="dySku" label="东岳sku"/>
               <el-table-column prop="name" label="商品名称"/>
               <el-table-column prop="shelfNo" label="货架号"/>
               <el-table-column prop="num" label="数量"/>
@@ -77,7 +77,7 @@
           <template slot-scope="tableData">
             <el-table :data="tableData.row.productOutWarehouseList">
               <el-table-column prop="uuid" label="uuid"/>
-              <el-table-column prop="sku" label="sku"/>
+              <el-table-column prop="dySku" label="东岳sku"/>
               <el-table-column prop="num" label="数量"/>
               <el-table-column prop="owner" label="属主"/>
               <el-table-column prop="orderNo" label="订单号"/>
@@ -86,7 +86,7 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column prop="sku" label="sku"></el-table-column>
+        <el-table-column prop="dySku" label="东岳sku"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
         <el-table-column prop="num" label="在库总数量"></el-table-column>

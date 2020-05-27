@@ -150,7 +150,8 @@
                wrap_type      as wrapType,
                `name`         as name,
                received,
-               actual
+               actual,
+               uuid
         from l_warehousing_content
         where warehousing_no = #{warehousingNo}
     </select>
