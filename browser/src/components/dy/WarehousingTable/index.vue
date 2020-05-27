@@ -88,7 +88,7 @@
       <el-table-column type="expand">
         <template slot-scope="tableData">
           <el-table :data="tableData.row.warehousingContentList">
-            <el-table-column prop="sku" label="sku/东岳Sku" width="250" />
+            <el-table-column prop="dySku" label="东岳Sku" width="250" />
             <el-table-column prop="name" label="商品名称" width="250" />
             <el-table-column prop="boxSeq" label="箱号" width="150" />
             <el-table-column prop="totalNum" label="数量" width="200" />

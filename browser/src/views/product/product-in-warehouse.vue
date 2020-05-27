@@ -174,7 +174,7 @@
           </el-col>
         </el-row>
         <div v-for="(shelfSubContent,index) in shelfContent.content" :key="index" style="margin-top: 2%">
-          商品sku:{{shelfSubContent.sku}} 商品数量:{{shelfSubContent.num}} 上架货架:{{shelfSubContent.shelfNo}}
+          商品sku:{{shelfSubContent.dySku}} 商品数量:{{shelfSubContent.num}} 上架货架:{{shelfSubContent.shelfNo}}
           上架时间:{{shelfSubContent.uptime}} 入库单号:{{shelfSubContent.warehousingNo}}
           <el-button style="margin-left: 2%" type="danger" @click="removeSubContent(index)">删除</el-button>
         </div>

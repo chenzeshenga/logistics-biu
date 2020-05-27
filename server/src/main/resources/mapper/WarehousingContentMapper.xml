@@ -43,12 +43,13 @@
     </insert>
 
     <insert id="insertList" parameterType="java.util.List">
-        insert into l_warehousing_content (warehousing_no, sku, box_seq,
-        total_num, wrap_type, `name`, received,actual,uuid)
+        insert into l_warehousing_content (warehousing_no, dy_sku, box_seq,
+        total_num, wrap_type, `name`, received, actual, uuid)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
-            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},#{item.received},#{item.actual},#{item.uuid})
+            (#{item.warehousingNo,jdbcType=VARCHAR}, #{item.dySku,jdbcType=VARCHAR}, #{item.boxSeq,jdbcType=VARCHAR},
+            #{item.totalNum,jdbcType=VARCHAR}, #{item.wrapType,jdbcType=VARCHAR},
+            #{item.name,jdbcType=VARCHAR}, #{item.received}, #{item.actual}, #{item.uuid})
         </foreach>
     </insert>
 
@@ -143,12 +144,12 @@
 
     <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.WarehousingContent">
         select warehousing_no as warehousingNo,
-               sku,
+               dy_sku         as dySku,
                box_seq        as boxSeq,
                total_num      as totalNum,
                wrap_type      as wrapType,
                `name`         as name,
-               received
+               received,
                actual
         from l_warehousing_content
         where warehousing_no = #{warehousingNo}

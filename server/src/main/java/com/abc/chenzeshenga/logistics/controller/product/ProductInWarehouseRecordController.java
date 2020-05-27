@@ -13,24 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author chenzesheng
- * @since 2020-05-02 08:40
+ * @since 2020-05-27 22:20
  */
 @RestController
-@RequestMapping("/product/out")
+@RequestMapping("/product/in")
 public class ProductInWarehouseRecordController {
 
-  private ProductOutWarehouseRecordService productOutWarehouseRecordService;
-
-  @Autowired
-  public ProductInWarehouseRecordController(
-      ProductOutWarehouseRecordService productOutWarehouseRecordService) {
-    this.productOutWarehouseRecordService = productOutWarehouseRecordService;
-  }
-
-  @PostMapping("/warehouse/records")
-  public Json listProductOutWarehouseRecords(
-      @RequestBody PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
-    Page<ProductOutWarehouse> productOutWarehousePage= productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
-    return Json.succ("query", "data", productOutWarehousePage);
-  }
+  //  private ProductOutWarehouseRecordService productOutWarehouseRecordService;
+  //
+  //  @Autowired
+  //  public ProductInWarehouseRecordController(
+  //      ProductOutWarehouseRecordService productOutWarehouseRecordService) {
+  //    this.productOutWarehouseRecordService = productOutWarehouseRecordService;
+  //  }
+  //
+  //  @PostMapping("/warehouse/records")
+  //  public Json listProductOutWarehouseRecords(
+  //      @RequestBody PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
+  //    Page<ProductOutWarehouse> productOutWarehousePage=
+  // productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
+  //    return Json.succ("query", "data", productOutWarehousePage);
+  //  }
 }
