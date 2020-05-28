@@ -186,7 +186,7 @@ public class CommonController {
           if (!manualOrderContents.isEmpty()) {
             ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
             if (ObjectUtils.anyNotNull(manualOrderContent1)) {
-              manualOrder.setSku1(manualOrderContent1.getSku());
+              manualOrder.setSku1(manualOrderContent1.getDySku());
               manualOrder.setName1(manualOrderContent1.getName());
               manualOrder.setNum1(manualOrderContent1.getNum());
             }
@@ -194,7 +194,7 @@ public class CommonController {
           if (manualOrderContents.size() >= 2) {
             ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
             if (ObjectUtils.anyNotNull(manualOrderContent2)) {
-              manualOrder.setSku2(manualOrderContent2.getSku());
+              manualOrder.setSku2(manualOrderContent2.getDySku());
               manualOrder.setName2(manualOrderContent2.getName());
               manualOrder.setNum2(manualOrderContent2.getNum());
             }
@@ -202,7 +202,7 @@ public class CommonController {
           if (manualOrderContents.size() >= 3) {
             ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
             if (ObjectUtils.anyNotNull(manualOrderContent3)) {
-              manualOrder.setSku3(manualOrderContent3.getSku());
+              manualOrder.setSku3(manualOrderContent3.getDySku());
               manualOrder.setName3(manualOrderContent3.getName());
               manualOrder.setNum3(manualOrderContent3.getNum());
             }

@@ -149,6 +149,8 @@
                 v-model="currContent.dySku"
                 placeholder="请从已审核产品中选择"
                 @change="handleValueChange"
+                clearable
+                filterable
               >
                 <el-option
                   v-for="item in myProducts"

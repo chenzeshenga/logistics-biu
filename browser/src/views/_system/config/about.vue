@@ -21,6 +21,14 @@ export default {
     return {
       activities: [
         {
+          content: 'todo v1.14 1. 新增在库商品明细页面 2. 在库商品统计页面改成单纯的表格 分页细化',
+          timestamp: '2020-05-29',
+        },
+        {
+          content: 'v1.13 1. 订单导出修正为东岳sku 2. 在库商品统计页面改成单纯的表格',
+          timestamp: '2020-05-28',
+        },
+        {
           content: 'v1.12 1. 订单列表的展示改为dySku',
           timestamp: '2020-05-27',
         },

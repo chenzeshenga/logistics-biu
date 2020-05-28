@@ -119,33 +119,6 @@ public class ProductStatisticsController {
       productInWarehouseSummaries =
           productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
     }
-    productInWarehouseSummaries.forEach(
-        productInWarehouseSummary -> {
-          String subSku = productInWarehouseSummary.getDySku();
-          String subOwner = productInWarehouseSummary.getOwner();
-          String productName = productInWarehouseSummary.getName();
-          Product subProduct = new Product();
-          if (StringUtils.isEmpty(productName)) {
-            subProduct = productMapper.selectProductBySku(subSku);
-            if (subProduct != null) {
-              productInWarehouseSummary.setName(subProduct.getProductName());
-            }
-          }
-          Map<String, Object> columnMap = new HashMap<>(2);
-          columnMap.put("dy_sku", subSku);
-          columnMap.put("owner", subOwner);
-          List<UpShelfProduct> upShelfProducts = upShelfProductMapper.selectByMap(columnMap);
-          Date curr = new Date();
-          for (UpShelfProduct product : upShelfProducts) {
-            Date uptime = product.getUptime();
-            product.setDatePoor(DateUtil.getDatePoor(curr, uptime));
-            if (StringUtils.isEmpty(productName) && subProduct != null) {
-              product.setName(subProduct.getProductName());
-            }
-          }
-          productInWarehouseSummary.setChildren(upShelfProducts);
-        });
-
     return Json.succ().data("data", productInWarehouseSummaries);
   }
 
