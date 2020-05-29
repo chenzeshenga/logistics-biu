@@ -339,7 +339,7 @@ public class CommonController {
                 ManualOrderContent manualOrderContent1 = new ManualOrderContent();
                 manualOrderContent1.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent1.setOrdno(orderno);
-                manualOrderContent1.setSku(manualOrder4Input.getSku1());
+                manualOrderContent1.setDySku(manualOrder4Input.getSku1());
                 manualOrderContent1.setName(manualOrder4Input.getName1());
                 manualOrderContent1.setNum(manualOrder4Input.getNum1());
                 manualOrderContentList.add(manualOrderContent1);
@@ -349,7 +349,7 @@ public class CommonController {
                 ManualOrderContent manualOrderContent2 = new ManualOrderContent();
                 manualOrderContent2.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent2.setOrdno(orderno);
-                manualOrderContent2.setSku(manualOrder4Input.getSku2());
+                manualOrderContent2.setDySku(manualOrder4Input.getSku2());
                 manualOrderContent2.setName(manualOrder4Input.getName2());
                 manualOrderContent2.setNum(manualOrder4Input.getNum2());
                 manualOrderContentList.add(manualOrderContent2);
@@ -359,7 +359,7 @@ public class CommonController {
                 ManualOrderContent manualOrderContent3 = new ManualOrderContent();
                 manualOrderContent3.setUuid(SnowflakeIdWorker.generateStrId());
                 manualOrderContent3.setOrdno(orderno);
-                manualOrderContent3.setSku(manualOrder4Input.getSku3());
+                manualOrderContent3.setDySku(manualOrder4Input.getSku3());
                 manualOrderContent3.setName(manualOrder4Input.getName3());
                 manualOrderContent3.setNum(manualOrder4Input.getNum3());
                 manualOrderContentList.add(manualOrderContent3);
