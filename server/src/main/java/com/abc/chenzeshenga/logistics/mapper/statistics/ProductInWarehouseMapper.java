@@ -16,8 +16,14 @@ public interface ProductInWarehouseMapper extends BaseMapper<ProductInWarehouseS
   List<ProductInWarehouseSummary> fetchProductInWarehouseWithManagerRole(
       String dySku, String name, String owner, long from, long to);
 
+  List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithManagerRole(
+      String dySku, String name, String owner);
+
   List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
       String dySku, String name, String username, long from, long to);
+
+  List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithUserRole(
+      String dySku, String name, String username);
 
   long countProductInWarehouseWithUserRole(String dySku, String name, String owner);
 

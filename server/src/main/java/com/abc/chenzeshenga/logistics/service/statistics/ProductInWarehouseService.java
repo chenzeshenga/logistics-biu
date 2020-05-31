@@ -22,6 +22,13 @@ public class ProductInWarehouseService
     return productInWarehouseSummaries;
   }
 
+  public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithManagerRole(
+      String dySku, String name, String owner) {
+    List<ProductInWarehouseSummary> productInWarehouseSummaries =
+        baseMapper.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
+    return productInWarehouseSummaries;
+  }
+
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
       String dySku, String name, String username, long from, long to) {
     List<ProductInWarehouseSummary> productInWarehouseSummaries =
@@ -35,5 +42,12 @@ public class ProductInWarehouseService
 
   public long countProductInWarehouseWithManagerRole(String dySku, String name, String owner) {
     return baseMapper.countProductInWarehouseWithManagerRole(dySku, name, owner);
+  }
+
+  public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithUserRole(
+      String dySku, String name, String username) {
+    List<ProductInWarehouseSummary> productInWarehouseSummaries =
+        baseMapper.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
+    return productInWarehouseSummaries;
   }
 }

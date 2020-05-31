@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
+import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
@@ -14,13 +15,26 @@ import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.BaseRowModel;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -151,6 +165,48 @@ public class ProductStatisticsController {
     }
     pagination.setTotal(total);
     return Json.succ().data("data", productInWarehouseSummaries).data("page", pagination);
+  }
+
+  @GetMapping("/excel/productInWarehouse")
+  public void exportProductStatistics(
+      HttpServletResponse httpServletResponse,
+      @RequestParam(required = false, defaultValue = "") String dySku,
+      @RequestParam(required = false, defaultValue = "") String name,
+      @RequestParam(required = false, defaultValue = "") String owner) throws IOException {
+    String username = UserUtils.getUserName();
+    boolean isManager = userCommonService.isManagerRole(username);
+    List<ProductInWarehouseSummary> productInWarehouseSummaries;
+    if (isManager) {
+      if (StringUtils.isEmpty(owner)) {
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
+      } else {
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchAllProductInWarehouseWithUserRole(dySku, name, owner);
+      }
+    } else {
+      productInWarehouseSummaries =
+          productInWarehouseService.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
+    }
+    String fileName = "商品在库统计信息.xlsx";
+    httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+    httpServletResponse.setHeader(
+        "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+    writeServletResp(
+        httpServletResponse, productInWarehouseSummaries, ProductInWarehouseSummary.class);
+  }
+
+  private void writeServletResp(
+      HttpServletResponse httpServletResponse,
+      List<? extends BaseRowModel> baseRowModels,
+      Class<? extends BaseRowModel> clazz)
+      throws IOException {
+    ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+    ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
+    Sheet sheet1 = new Sheet(1, 0, clazz);
+    excelWriter.write(baseRowModels, sheet1);
+    excelWriter.finish();
+    httpServletResponse.flushBuffer();
   }
 
   //  @PostMapping("/productOutWarehouse")

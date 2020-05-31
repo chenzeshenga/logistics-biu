@@ -34,6 +34,11 @@
             <el-button icon="el-icon-refresh" @click="searchProductInWarehouse()"></el-button>
           </el-tooltip>
         </el-col>
+        <el-col :span="2">
+          <el-tooltip content="导出库存记录-统计" placement="top">
+            <el-button type="primary" @click="exportStatistics()">下载</el-button>
+          </el-tooltip>
+        </el-col>
         <el-col :span="1" v-if="adminRole">
           <el-tooltip content="库存补录" placement="top">
             <el-button @click="adjustShelfContent()">
@@ -358,6 +363,14 @@ export default {
     },
     closeDialog() {
       this.dialogVisible4ShelfContent = false;
+    },
+    exportStatistics() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/statistics/excel/productInWarehouse?dySku=' + this.search.dySku + '&name=' + this.search.name + '&owner=' + this.search.owner;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
   },
 };
