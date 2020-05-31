@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.statistics.ProductInWarehouseMapper">
-
     <select id="fetchProductInWarehouseWithManagerRole"
             resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
         shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         <trim prefix="where" prefixOverrides="or">
-            <if test="sku!=null">
-                shelf.dy_sku like CONCAT('%', #{sku}, '%')
+            <if test="dySku != null and dySku != ''">
+                shelf.dy_sku like CONCAT('%', #{dySku}, '%')
             </if>
-            <if test="name!=null">
+            <if test="name != null and name != ''">
                 or lp.product_name like CONCAT('%', #{name}, '%')
             </if>
-            <if test="owner!=null">
+            <if test="owner!=null and owner != ''">
                 or shelf.owner like CONCAT('%', #{owner}, '%')
             </if>
         </trim>
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
         order by 4 desc
+        limit #{from},#{to}
     </select>
 
     <select id="fetchProductInWarehouseWithUserRole"
@@ -30,8 +30,8 @@
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         where
         shelf.owner = #{username}
-        <if test="sku != null and sku != ''">
-            and shelf.dy_sku like CONCAT('%', #{sku}, '%')
+        <if test="dySku != null and dySku != ''">
+            and shelf.dy_sku like CONCAT('%', #{dySku}, '%')
         </if>
         <if test="name != null and name != ''">
             and lp.product_name like CONCAT('%', #{name}, '%')
@@ -39,7 +39,52 @@
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
         order by 4 desc
+        limit #{from},#{to}
     </select>
 
 
+    <select id="countProductInWarehouseWithUserRole"
+            resultType="java.lang.Long">
+        select count(*) as result
+        from
+        (
+        select
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
+        where
+        shelf.owner = #{owner}
+        <if test="dySku != null and dySku != ''">
+            and shelf.dy_sku like CONCAT('%', #{dySku}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and lp.product_name like CONCAT('%', #{name}, '%')
+        </if>
+        group by
+        shelf.dy_sku, lp.product_name, shelf.owner
+        ) as tmp
+    </select>
+
+    <select id="countProductInWarehouseWithManagerRole"
+            resultType="java.lang.Long">
+        select count(*) as result
+        from
+        (
+        select
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
+        <trim prefix="where" prefixOverrides="or">
+            <if test="dySku != null and dySku != ''">
+                shelf.dy_sku like CONCAT('%', #{dySku}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                or lp.product_name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="owner!=null and owner != ''">
+                or shelf.owner like CONCAT('%', #{owner}, '%')
+            </if>
+        </trim>
+        group by
+        shelf.dy_sku, lp.product_name, shelf.owner
+        ) as tmp
+    </select>
 </mapper>

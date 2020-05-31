@@ -4,7 +4,7 @@
       <el-row :gutter="20" style="margin: 1%">
         <el-col :span="6">
           <el-tooltip content="请输入商品sku/东岳sku" placement="top">
-            <el-input v-model="search.sku" placeholder="请输入商品sku/东岳sku"></el-input>
+            <el-input v-model="search.dySku" placeholder="请输入商品sku/东岳sku"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
@@ -162,7 +162,7 @@ export default {
   data() {
     return {
       search: {
-        sku: '',
+        dySku: '',
         name: '',
         owner: '',
       },
@@ -176,7 +176,7 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tip: {
@@ -211,13 +211,17 @@ export default {
     searchProductInWarehouse() {
       this.tip.timestamp = moment().format('YYYY-MM-DD HH:mm:ss ddd');
       const postData = {
-        current: this.tablePage.current,
-        pages: this.tablePage.pages,
-        size: this.tablePage.size,
-        total: this.tablePage.total,
-        sku: this.search.sku,
-        name: this.search.name,
-        owner: this.search.owner,
+        'pagination':
+          {
+            current: this.tablePage.current,
+            size: this.tablePage.size,
+          },
+        'entity':
+          {
+            dySku: this.search.dySku,
+            name: this.search.name,
+            owner: this.search.owner,
+          },
       };
       this.tableLoading = true;
       request({
@@ -226,6 +230,7 @@ export default {
         data: postData,
       }).then((ret) => {
         this.tableData = ret.data.data;
+        this.tablePage.total = ret.data.page.total;
         this.tableLoading = false;
       });
     },

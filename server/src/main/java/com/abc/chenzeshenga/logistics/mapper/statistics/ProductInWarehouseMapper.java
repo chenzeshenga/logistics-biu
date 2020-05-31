@@ -14,8 +14,12 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ProductInWarehouseMapper extends BaseMapper<ProductInWarehouseSummary> {
 
   List<ProductInWarehouseSummary> fetchProductInWarehouseWithManagerRole(
-      Page page, String sku, String name, String owner);
+      String dySku, String name, String owner, long from, long to);
 
   List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
-      Page page, String sku, String name, String username);
+      String dySku, String name, String username, long from, long to);
+
+  long countProductInWarehouseWithUserRole(String dySku, String name, String owner);
+
+  long countProductInWarehouseWithManagerRole(String dySku, String name, String owner);
 }

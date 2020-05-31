@@ -21,8 +21,12 @@ export default {
     return {
       activities: [
         {
-          content: 'todo v1.14 1. 新增在库商品明细页面 2. 在库商品统计页面改成单纯的表格 分页细化',
-          timestamp: '2020-05-29',
+          content: 'todo v1.15 1. 新增在库商品明细页面',
+          timestamp: '2020-06-02',
+        },
+        {
+          content: 'v1.14 1. 修复缺陷-导入订单的sku为东岳sku 2. 修复缺陷-手动新建订单无法选择商品 3. 增强商品库存信息统计页面分页功能',
+          timestamp: '2020-06-01',
         },
         {
           content: 'v1.13 1. 订单导出修正为东岳sku 2. 在库商品统计页面改成单纯的表格',
