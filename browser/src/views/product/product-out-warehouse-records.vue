@@ -12,11 +12,6 @@
             <el-input v-model="search.sku" placeholder="请输入商品sku"></el-input>
           </el-tooltip>
         </el-col>
-        <el-col :span="6">
-          <el-tooltip content="请输入商品名称" placement="top">
-            <el-input v-model="search.name" placeholder="请输入商品名称"></el-input>
-          </el-tooltip>
-        </el-col>
         <el-col :span="3">
           <el-tooltip content="请选择商品属主" placement="top">
             <el-select filterable clearable v-model="search.owner" placeholder="请选择商品属主">
@@ -34,11 +29,6 @@
         <el-col :span="6">
           <el-tooltip content="请输入订单号" placement="top">
             <el-input v-model="search.orderNo" placeholder="请输入订单号"></el-input>
-          </el-tooltip>
-        </el-col>
-        <el-col :span="6">
-          <el-tooltip content="请输入追踪单号" placement="top">
-            <el-input v-model="search.trackNo" placeholder="请输入追踪单号"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
@@ -75,10 +65,8 @@
       >
         <el-table-column prop="dySku" label="东岳sku"></el-table-column>
         <el-table-column prop="sku" label="sku"></el-table-column>
-        <el-table-column prop="name" label="商品名称"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
         <el-table-column prop="orderNo" label="出库订单号"></el-table-column>
-        <el-table-column prop="trackNo" label="出库追踪单号"></el-table-column>
         <el-table-column prop="outTime" label="出库时间"></el-table-column>
         <el-table-column prop="hoursInWarehouse" label="在库时长"></el-table-column>
       </el-table>
@@ -133,7 +121,6 @@ export default {
       search: {
         dySku: '',
         sku: '',
-        name: '',
         owner: '',
         orderNo: '',
         trackNo: '',

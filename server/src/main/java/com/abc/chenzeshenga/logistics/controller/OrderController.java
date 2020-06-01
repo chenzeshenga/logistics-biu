@@ -442,7 +442,6 @@ public class OrderController {
           String sku = manualOrderContent.getDySku();
           int num = Integer.parseInt(manualOrderContent.getNum());
           String owner = manualOrder.getCreator();
-          String shelfNo = manualOrderContent.getShelfNo();
           UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(sku, owner);
           if (upShelfProduct != null) {
             upShelfProduct.setNum(String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
@@ -450,6 +449,7 @@ public class OrderController {
             ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
             productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
             productOutWarehouse.setDySku(manualOrderContent.getDySku());
+            productOutWarehouse.setSku(manualOrderContent.getSku());
             productOutWarehouse.setNum(String.valueOf(num));
             productOutWarehouse.setOwner(owner);
             productOutWarehouse.setOrderNo(ordno);
