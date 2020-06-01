@@ -2,9 +2,11 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
+import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductInWarehouseRecordMapper;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.shelf.ShelfContent;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductShelfController {
 
   @Resource private UpShelfProductMapper upShelfProductMapper;
+  @Resource private ProductInWarehouseRecordMapper productInWarehouseRecordMapper;
 
   @Resource private WarehousingMapper warehousingMapper;
 
@@ -42,6 +45,16 @@ public class ProductShelfController {
           upshelfProduct.setWarehousingNo(warehousingNo);
           upshelfProduct.setOwner(warehousing.getCreator());
           upShelfProductMapper.insert(upshelfProduct);
+          ProductInWarehouse productInWarehouse=new ProductInWarehouse();
+          productInWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
+          productInWarehouse.setDySku(upshelfProduct.getDySku());
+          productInWarehouse.setNum(upshelfProduct.getNum());
+          productInWarehouse.setOwner(upshelfProduct.getOwner());
+          productInWarehouse.setWarehousingNo(upshelfProduct.getWarehousingNo());
+          productInWarehouse.setInTime(new Date());
+          productInWarehouse.setShelfNo(upshelfProduct.getShelfNo());
+          productInWarehouse.setWarehousingNo(upshelfProduct.getWarehousingNo());
+          productInWarehouseRecordMapper.insert(productInWarehouse);
         });
     String method = warehousing.getMethod();
     if ("东岳头程".equals(method)) {
