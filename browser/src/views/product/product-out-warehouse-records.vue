@@ -208,11 +208,11 @@ export default {
     },
     handleSizeChange(val) {
       this.tablePage.size = val;
-      this.searchProductInWarehouse();
+      this.searchProductOutWarehouseRecord();
     },
     handleCurrentChange(val) {
       this.tablePage.current = val;
-      this.searchProductInWarehouse();
+      this.searchProductOutWarehouseRecord();
     },
     searchProductOutWarehouseRecord() {
       const postData = {
@@ -233,8 +233,13 @@ export default {
       });
     },
     dateTimeRangeChange() {
-      this.search.startDate = this.search.dateTimeRange[0];
-      this.search.endDate = this.search.dateTimeRange[1];
+      if (this.search.dateTimeRange) {
+        this.search.startDate = this.search.dateTimeRange[0];
+        this.search.endDate = this.search.dateTimeRange[1];
+      } else {
+        this.search.startDate = '';
+        this.search.endDate = '';
+      }
     },
   },
 };

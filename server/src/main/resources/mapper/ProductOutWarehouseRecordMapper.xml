@@ -8,7 +8,22 @@
         from logistics.l_product_out_warehouse_record
         <trim prefix="where" prefixOverrides="and">
             <if test="productOutWarehouseRecord.dySku != null and productOutWarehouseRecord.dySku != ''">
-                and dySku like CONCAT('%', #{productOutWarehouseRecord.dySku}, '%')
+                and dy_sku like CONCAT('%', #{productOutWarehouseRecord.dySku}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.sku != null and productOutWarehouseRecord.sku != ''">
+                and sku like CONCAT('%', #{productOutWarehouseRecord.sku}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.owner != null and productOutWarehouseRecord.owner != ''">
+                and owner like CONCAT('%', #{productOutWarehouseRecord.owner}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.orderNo != null and productOutWarehouseRecord.orderNo != ''">
+                and order_no like CONCAT('%', #{productOutWarehouseRecord.orderNo}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.trackNo != null and productOutWarehouseRecord.trackNo != ''">
+                and track_no like CONCAT('%', #{productOutWarehouseRecord.trackNo}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.startDate != null and productOutWarehouseRecord.endDate != null">
+                and out_time between #{productOutWarehouseRecord.startDate} and #{productOutWarehouseRecord.endDate}
             </if>
         </trim>
         limit #{sqlLimit.from},#{sqlLimit.to}
@@ -18,10 +33,24 @@
         select count(1)
         from logistics.l_product_out_warehouse_record
         <trim prefix="where" prefixOverrides="and">
-            <if test="dySku != null and dySku != ''">
-                and dySku like CONCAT('%', #{dySku}, '%')
+            <if test="productOutWarehouseRecord.dySku != null and productOutWarehouseRecord.dySku != ''">
+                and dy_sku like CONCAT('%', #{productOutWarehouseRecord.dySku}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.sku != null and productOutWarehouseRecord.sku != ''">
+                and sku like CONCAT('%', #{productOutWarehouseRecord.sku}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.owner != null and productOutWarehouseRecord.owner != ''">
+                and owner like CONCAT('%', #{productOutWarehouseRecord.owner}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.orderNo != null and productOutWarehouseRecord.orderNo != ''">
+                and order_no like CONCAT('%', #{productOutWarehouseRecord.orderNo}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.trackNo != null and productOutWarehouseRecord.trackNo != ''">
+                and track_no like CONCAT('%', #{productOutWarehouseRecord.trackNo}, '%')
+            </if>
+            <if test="productOutWarehouseRecord.startDate != null and productOutWarehouseRecord.endDate != null">
+                and out_time between #{productOutWarehouseRecord.startDate} and #{productOutWarehouseRecord.endDate}
             </if>
         </trim>
     </select>
-
 </mapper>

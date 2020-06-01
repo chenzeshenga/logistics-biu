@@ -447,12 +447,18 @@
     </select>
 
     <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        select content.ordno,
+               content.dy_sku as dySku,
+               content.name,
+               content.num,
+               content.price,
+               content.picked,
+               content.satisfied
         from l_manual_order_content content
-                 inner join l_manual_order ord on (content.ordno = ord.ord_no)
+                     inner join l_manual_order ord on (content.ordno = ord.ord_no)
         where ordno = #{ordNo}
           and (ord.status = 2
-            or ord.status = 7)
+                or ord.status = 7)
         order by ord.update_on desc
     </select>
 
