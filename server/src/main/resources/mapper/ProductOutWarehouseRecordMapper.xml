@@ -26,6 +26,7 @@
                 and out_time between #{productOutWarehouseRecord.startDate} and #{productOutWarehouseRecord.endDate}
             </if>
         </trim>
+        order by out_time desc
         limit #{sqlLimit.from},#{sqlLimit.to}
     </select>
 

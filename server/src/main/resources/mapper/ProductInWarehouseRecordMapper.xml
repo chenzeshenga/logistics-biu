@@ -6,129 +6,52 @@
         values (#{uuid}, #{dySku}, #{num}, #{owner}, #{warehousingNo}, #{inTime}, #{shelfNo})
     </insert>
 
-
-    <select id="fetchProductInWarehouseWithManagerRole"
-            resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse">
         select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        <trim prefix="where" prefixOverrides="or">
-            <if test="dySku != null and dySku != ''">
-                shelf.dy_sku like CONCAT('%', #{dySku}, '%')
+
+        dy_sku as dySku, sku, num, owner, warehousing_no as warehousingNo, in_time as inTime, shelf_no as shelfNo
+
+        from logistics.l_product_in_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="productInWarehouse.dySku != null and productInWarehouse.dySku != ''">
+                and dy_sku like CONCAT('%', #{productInWarehouse.dySku}, '%')
             </if>
-            <if test="name != null and name != ''">
-                or lp.product_name like CONCAT('%', #{name}, '%')
+            <if test="productInWarehouse.owner != null and productInWarehouse.owner != ''">
+                and owner like CONCAT('%', #{productInWarehouse.owner}, '%')
             </if>
-            <if test="owner!=null and owner != ''">
-                or shelf.owner like CONCAT('%', #{owner}, '%')
+            <if test="productInWarehouse.warehousingNo != null and productInWarehouse.warehousingNo != ''">
+                and warehousing_no like CONCAT('%', #{productInWarehouse.warehousingNo}, '%')
+            </if>
+            <if test="productInWarehouse.shelfNo != null and productInWarehouse.shelfNo != ''">
+                and shelf_no like CONCAT('%', #{productInWarehouse.shelfNo}, '%')
+            </if>
+            <if test="productInWarehouse.startDate != null and productInWarehouse.endDate != null">
+                and in_time between #{productInWarehouse.startDate} and #{productInWarehouse.endDate}
             </if>
         </trim>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        order by 4 desc
-        limit #{from},#{to}
+        order by in_time desc
+        limit #{sqlLimit.from},#{sqlLimit.to}
     </select>
-    <select id="fetchAllProductInWarehouseWithManagerRole"
-            resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
-        select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        <trim prefix="where" prefixOverrides="or">
-            <if test="dySku != null and dySku != ''">
-                shelf.dy_sku like CONCAT('%', #{dySku}, '%')
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from logistics.l_product_in_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="productInWarehouse.dySku != null and productInWarehouse.dySku != ''">
+                and dy_sku like CONCAT('%', #{productInWarehouse.dySku}, '%')
             </if>
-            <if test="name != null and name != ''">
-                or lp.product_name like CONCAT('%', #{name}, '%')
+            <if test="productInWarehouse.owner != null and productInWarehouse.owner != ''">
+                and owner like CONCAT('%', #{productInWarehouse.owner}, '%')
             </if>
-            <if test="owner!=null and owner != ''">
-                or shelf.owner like CONCAT('%', #{owner}, '%')
+            <if test="productInWarehouse.warehousingNo != null and productInWarehouse.warehousingNo != ''">
+                and warehousing_no like CONCAT('%', #{productInWarehouse.warehousingNo}, '%')
+            </if>
+            <if test="productInWarehouse.shelfNo != null and productInWarehouse.shelfNo != ''">
+                and shelf_no like CONCAT('%', #{productInWarehouse.shelfNo}, '%')
+            </if>
+            <if test="productInWarehouse.startDate != null and productInWarehouse.endDate != null">
+                and in_time between #{productInWarehouse.startDate} and #{productInWarehouse.endDate}
             </if>
         </trim>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        order by 4 desc
-    </select>
-
-    <select id="fetchProductInWarehouseWithUserRole"
-            resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
-        select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        where
-        shelf.owner = #{username}
-        <if test="dySku != null and dySku != ''">
-            and shelf.dy_sku like CONCAT('%', #{dySku}, '%')
-        </if>
-        <if test="name != null and name != ''">
-            and lp.product_name like CONCAT('%', #{name}, '%')
-        </if>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        order by 4 desc
-        limit #{from},#{to}
-    </select>
-
-    <select id="fetchAllProductInWarehouseWithUserRole"
-            resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
-        select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        where
-        shelf.owner = #{username}
-        <if test="dySku != null and dySku != ''">
-            and shelf.dy_sku like CONCAT('%', #{dySku}, '%')
-        </if>
-        <if test="name != null and name != ''">
-            and lp.product_name like CONCAT('%', #{name}, '%')
-        </if>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        order by 4 desc
-    </select>
-
-
-    <select id="countProductInWarehouseWithUserRole"
-            resultType="java.lang.Long">
-        select count(*) as result
-        from
-        (
-        select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        where
-        shelf.owner = #{owner}
-        <if test="dySku != null and dySku != ''">
-            and shelf.dy_sku like CONCAT('%', #{dySku}, '%')
-        </if>
-        <if test="name != null and name != ''">
-            and lp.product_name like CONCAT('%', #{name}, '%')
-        </if>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        ) as tmp
-    </select>
-
-    <select id="countProductInWarehouseWithManagerRole"
-            resultType="java.lang.Long">
-        select count(*) as result
-        from
-        (
-        select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
-        from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
-        <trim prefix="where" prefixOverrides="or">
-            <if test="dySku != null and dySku != ''">
-                shelf.dy_sku like CONCAT('%', #{dySku}, '%')
-            </if>
-            <if test="name != null and name != ''">
-                or lp.product_name like CONCAT('%', #{name}, '%')
-            </if>
-            <if test="owner!=null and owner != ''">
-                or shelf.owner like CONCAT('%', #{owner}, '%')
-            </if>
-        </trim>
-        group by
-        shelf.dy_sku, lp.product_name, shelf.owner
-        ) as tmp
     </select>
 </mapper>

@@ -22,7 +22,7 @@ public class ProductInWarehouse {
 
   private String uuid;
   private String num;
-
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
   private Date inTime;
 
   // follow properties support search from front end

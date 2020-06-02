@@ -2,8 +2,9 @@ package com.abc.chenzeshenga.logistics.controller.product;
 
 import com.abc.chenzeshenga.logistics.model.common.Page;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
-import com.abc.chenzeshenga.logistics.service.product.ProductOutWarehouseRecordService;
+import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
 import com.abc.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product/in")
 public class ProductInWarehouseRecordController {
 
-  //  private ProductOutWarehouseRecordService productOutWarehouseRecordService;
+    private ProductInWarehouseRecordService productInWarehouseRecordService;
+
+    @Autowired
+    public ProductInWarehouseRecordController(ProductInWarehouseRecordService productInWarehouseRecordService){
+      this.productInWarehouseRecordService =productInWarehouseRecordService;
+    }
+
+
   //
   //  @Autowired
   //  public ProductInWarehouseRecordController(
@@ -27,11 +35,11 @@ public class ProductInWarehouseRecordController {
   //    this.productOutWarehouseRecordService = productOutWarehouseRecordService;
   //  }
   //
-  //  @PostMapping("/warehouse/records")
-  //  public Json listProductOutWarehouseRecords(
-  //      @RequestBody PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
-  //    Page<ProductOutWarehouse> productOutWarehousePage=
-  // productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
-  //    return Json.succ("query", "data", productOutWarehousePage);
-  //  }
+  @PostMapping("/warehouse/records")
+  public Json listProductInWarehouseRecords(
+      @RequestBody PageQueryEntity<ProductInWarehouse> productInWarehousePageQueryEntity) {
+    Page<ProductInWarehouse> productInWarehousePage =
+        productInWarehouseRecordService.list(productInWarehousePageQueryEntity);
+    return Json.succ("query", "data", productInWarehousePage);
+  }
 }
