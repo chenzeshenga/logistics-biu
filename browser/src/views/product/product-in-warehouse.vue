@@ -46,9 +46,8 @@
             </el-button>
           </el-tooltip>
         </el-col>
-        <el-col :span="5">刷新时间： {{tip.timestamp}}</el-col>
+        <el-col :span="5" style="margin-top: 1%">刷新时间： {{tip.timestamp}}</el-col>
       </el-row>
-      <el-alert title="当前页面显示的在库时间仅做参考，实际在库时间以账单为准" type="info"></el-alert>
       <el-table
         style="width: 100%;margin: 10px;margin-left:50px"
         :data="tableData"
@@ -61,6 +60,8 @@
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
         <el-table-column prop="num" label="在库总数量"></el-table-column>
+        <el-table-column prop="totalVolume" label="在库总体积(cm^3)"></el-table-column>
+        <el-table-column prop="totalWeight" label="在库总重量(kg)"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"

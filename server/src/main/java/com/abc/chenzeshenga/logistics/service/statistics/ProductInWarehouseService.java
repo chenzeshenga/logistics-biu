@@ -16,9 +16,9 @@ public class ProductInWarehouseService
     extends ServiceImpl<ProductInWarehouseMapper, ProductInWarehouseSummary> {
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithManagerRole(
-      String dySku, String name, String owner, long from, long to) {
+      String dySku, String name, String owner, long from, long size) {
     List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithManagerRole(dySku, name, owner, from, to);
+        baseMapper.fetchProductInWarehouseWithManagerRole(dySku, name, owner, from, size);
     return productInWarehouseSummaries;
   }
 
@@ -30,9 +30,9 @@ public class ProductInWarehouseService
   }
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
-      String dySku, String name, String username, long from, long to) {
+      String dySku, String name, String username, long from, long size) {
     List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithUserRole(dySku, name, username, from, to);
+        baseMapper.fetchProductInWarehouseWithUserRole(dySku, name, username, from, size);
     return productInWarehouseSummaries;
   }
 

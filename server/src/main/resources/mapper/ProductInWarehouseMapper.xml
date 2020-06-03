@@ -4,7 +4,8 @@
     <select id="fetchProductInWarehouseWithManagerRole"
             resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num,
+        sum(lp.weight*shelf.num) as totalWeight,sum(lp.length*lp.width*lp.height*shelf.num) as totalVolume
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         <trim prefix="where" prefixOverrides="or">
             <if test="dySku != null and dySku != ''">
@@ -19,13 +20,15 @@
         </trim>
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
+        having sum(shelf.num)>0
         order by 4 desc
-        limit #{from},#{to}
+        limit #{from},#{size}
     </select>
     <select id="fetchAllProductInWarehouseWithManagerRole"
             resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num,
+        sum(lp.weight*shelf.num) as totalWeight,sum(lp.length*lp.width*lp.height*shelf.num) as totalVolume
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         <trim prefix="where" prefixOverrides="or">
             <if test="dySku != null and dySku != ''">
@@ -40,13 +43,15 @@
         </trim>
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
+        having sum(shelf.num)>0
         order by 4 desc
     </select>
 
     <select id="fetchProductInWarehouseWithUserRole"
             resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num,
+        sum(lp.weight*shelf.num) as totalWeight,sum(lp.length*lp.width*lp.height*shelf.num) as totalVolume
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         where
         shelf.owner = #{username}
@@ -58,14 +63,16 @@
         </if>
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
+        having sum(shelf.num)>0
         order by 4 desc
-        limit #{from},#{to}
+        limit #{from},#{size}
     </select>
 
     <select id="fetchAllProductInWarehouseWithUserRole"
             resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary">
         select
-        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num
+        shelf.dy_sku, lp.product_name as name, shelf.owner, sum(shelf.num) as num,
+        sum(lp.weight*shelf.num) as totalWeight,sum(lp.length*lp.width*lp.height*shelf.num) as totalVolume
         from l_up_shelf_product shelf left join l_productions lp on shelf.dy_sku = lp.dy_sku
         where
         shelf.owner = #{username}
@@ -77,6 +84,7 @@
         </if>
         group by
         shelf.dy_sku, lp.product_name, shelf.owner
+        having sum(shelf.num)>0
         order by 4 desc
     </select>
 

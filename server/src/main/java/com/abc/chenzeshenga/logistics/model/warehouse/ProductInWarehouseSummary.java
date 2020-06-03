@@ -32,6 +32,8 @@ public class ProductInWarehouseSummary extends BaseRowModel {
   private String shelfNo;
   private String warehousingNo;
   private String totalWarehousingTime;
+  private String totalWeight;
+  private String totalVolume;
   private List<UpShelfProduct> children = new ArrayList<>();
   private List<ProductOutWarehouse> productOutWarehouseList = new ArrayList<>();
 }

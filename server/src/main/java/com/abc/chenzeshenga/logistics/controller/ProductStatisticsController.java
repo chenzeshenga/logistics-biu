@@ -113,7 +113,6 @@ public class ProductStatisticsController {
     long current = pagination.getCurrent();
     int size = pagination.getSize();
     long fromIdx = (current - 1) * size;
-    long toIdx = current * size;
     ProductInWarehouseSummary productInWarehouseSummaryReq =
         productInWarehouseSummaryPageQueryEntity.getEntity();
     String owner = productInWarehouseSummaryReq.getOwner();
@@ -129,7 +128,7 @@ public class ProductStatisticsController {
                 productInWarehouseSummaryReq.getName(),
                 owner,
                 fromIdx,
-                toIdx);
+                size);
         total =
             productInWarehouseService.countProductInWarehouseWithManagerRole(
                 productInWarehouseSummaryReq.getDySku(),
@@ -142,7 +141,7 @@ public class ProductStatisticsController {
                 productInWarehouseSummaryReq.getName(),
                 owner,
                 fromIdx,
-                toIdx);
+                size);
         total =
             productInWarehouseService.countProductInWarehouseWithUserRole(
                 productInWarehouseSummaryReq.getDySku(),
@@ -156,7 +155,7 @@ public class ProductStatisticsController {
               productInWarehouseSummaryReq.getName(),
               username,
               fromIdx,
-              toIdx);
+              size);
       total =
           productInWarehouseService.countProductInWarehouseWithUserRole(
               productInWarehouseSummaryReq.getDySku(),
@@ -172,7 +171,8 @@ public class ProductStatisticsController {
       HttpServletResponse httpServletResponse,
       @RequestParam(required = false, defaultValue = "") String dySku,
       @RequestParam(required = false, defaultValue = "") String name,
-      @RequestParam(required = false, defaultValue = "") String owner) throws IOException {
+      @RequestParam(required = false, defaultValue = "") String owner)
+      throws IOException {
     String username = UserUtils.getUserName();
     boolean isManager = userCommonService.isManagerRole(username);
     List<ProductInWarehouseSummary> productInWarehouseSummaries;
