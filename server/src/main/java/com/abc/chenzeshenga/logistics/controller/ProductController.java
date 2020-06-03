@@ -5,8 +5,13 @@ import com.abc.chenzeshenga.logistics.mapper.ImgMapper;
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
+import com.abc.chenzeshenga.logistics.model.common.Pagination;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.ProductService;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
+import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
@@ -109,32 +114,26 @@ public class ProductController {
   }
 
   @PostMapping("/list/{status}")
-  @SuppressWarnings("rawtypes")
-  public Json listProduct(@RequestBody String body, @PathVariable String status) {
+  public Json listProduct(
+      @RequestBody PageQueryEntity<Product> productPageQueryEntity, @PathVariable String status) {
     String username = UserUtils.getUserName();
-    JSONObject jsonObject = JSON.parseObject(body);
-    String searchSku = jsonObject.getString("sku");
-    String searchDySku = jsonObject.getString("dySku");
-    String searchName = jsonObject.getString("name");
-    String searchCreator = jsonObject.getString("creator");
-    Page page = PageUtils.getPageParam(jsonObject);
-    Page<Product> productPage;
+    Product searchProduct = productPageQueryEntity.getEntity();
+    searchProduct.setStatus(status);
+    Pagination pagination = productPageQueryEntity.getPagination();
+    SqlLimit sqlLimit = SqlUtils.generateSqlLimitV2(pagination);
+    List<Product> productList;
     if (ADMIN.equals(username)) {
-      productPage =
-          productService.listByStatus(
-              page, status, searchSku, searchDySku, searchName, searchCreator);
+      productList = productService.listByStatus(searchProduct, sqlLimit);
     } else {
-      if (StringUtils.isNotBlank(searchCreator)) {
-        productPage =
-            productService.listByStatusWithUser(
-                page, searchCreator, status, searchSku, searchDySku, searchName);
+      if (StringUtils.isNotBlank(searchProduct.getCreatedBy())) {
+        productList = productService.listByStatusWithUser(searchProduct, sqlLimit);
       } else {
-        productPage =
-            productService.listByStatusWithUser(
-                page, username, status, searchSku, searchDySku, searchName);
+        searchProduct.setCreatedBy(username);
+        productList = productService.listByStatusWithUser(searchProduct, sqlLimit);
       }
     }
-    List<Product> productList = productPage.getRecords();
+    long total = productService.countByStatus(searchProduct);
+    pagination.setTotal(total);
     productList.forEach(
         product -> {
           if (StringUtils.isEmpty(product.getCategoryName())) {
@@ -146,7 +145,7 @@ public class ProductController {
             product.setStatusDesc("在库");
           }
         });
-    return Json.succ().data("page", productPage);
+    return Json.succ().data("page", pagination).data("data", productList);
   }
 
   private StringBuilder getErrMsg(BindingResult bindingResult) {

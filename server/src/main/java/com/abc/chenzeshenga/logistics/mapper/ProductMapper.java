@@ -2,10 +2,12 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author chenzeshenga
@@ -40,10 +42,12 @@ public interface ProductMapper extends BaseMapper<Product> {
   Product selectByPrimaryKey(String sku);
 
   List<Product> listByStatusWithUser(
-      Page page, String username, String status, String sku, String dySku, String name);
+      @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
 
   List<Product> listByStatus(
-      Page page, String status, String sku, String dySku, String name, String creator);
+      @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
+
+  long countByStatus(@Param("searchProduct") Product searchProduct);
 
   int statusUpdate(String sku, String status);
 

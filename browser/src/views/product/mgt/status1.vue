@@ -34,7 +34,7 @@
               <el-input
                 placeholder="请输入商品名称"
                 clearable
-                v-model="search.name"
+                v-model="search.productName"
                 @clear="searchProduct"
               ></el-input>
             </el-tooltip>
@@ -44,7 +44,7 @@
               <el-select
                 filterable
                 clearable
-                v-model="search.creator"
+                v-model="search.createdBy"
                 placeholder="请选择创建人"
               >
                 <el-option
@@ -263,9 +263,9 @@ export default {
     return {
       timer: new Date().getTime(),
       tablePage: {
-        current: null,
+        current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tableLoading: false,
@@ -273,8 +273,8 @@ export default {
       search: {
         sku: '',
         dySku: '',
-        name: '',
-        creator: '',
+        productName: '',
+        createdBy: '',
       },
       users: [],
       dialogTableVisible: false,
@@ -302,19 +302,17 @@ export default {
     },
     fetchData() {
       this.tableLoading = true;
+      const postData = {
+        'pagination': this.tablePage,
+        'entity': this.search,
+      };
       request({
         url: 'product/list/1',
         method: 'post',
-        data: {
-          current: this.tablePage.current,
-          size: this.tablePage.size,
-        },
+        data: postData,
       }).then((res) => {
-        this.tableData = res.data.page.records;
-        this.tablePage.current = res.data.page.current;
-        this.tablePage.pages = res.data.page.pages;
-        this.tablePage.size = res.data.page.size;
-        this.tablePage.total = res.data.page.total;
+        this.tableData = res.data.data;
+        this.tablePage = res.data.page;
         this.tableLoading = false;
       });
     },
@@ -376,26 +374,7 @@ export default {
       // link.click();
     },
     searchProduct() {
-      this.tableLoading = true;
-      request({
-        url: 'product/list/1',
-        method: 'post',
-        data: {
-          current: this.tablePage.current,
-          size: this.tablePage.size,
-          sku: this.search.sku,
-          dySku: this.search.dySku,
-          creator: this.search.creator,
-          name: this.search.name,
-        },
-      }).then((res) => {
-        this.tableData = res.data.page.records;
-        this.tablePage.current = res.data.page.current;
-        this.tablePage.pages = res.data.page.pages;
-        this.tablePage.size = res.data.page.size;
-        this.tablePage.total = res.data.page.total;
-        this.tableLoading = false;
-      });
+      this.fetchData();
     },
   },
 };

@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SkuUtil;
@@ -232,9 +233,11 @@ public class CommonController {
     httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
     httpServletResponse.setHeader(
         "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+    Product searchProduct = new Product();
+    searchProduct.setStatus(status);
+    searchProduct.setCreatedBy(UserUtils.getUserName());
     List<Product> productList =
-        productMapper.listByStatusWithUser(
-            new Page(1, 500), UserUtils.getUserName(), status, null, null, null);
+        productMapper.listByStatusWithUser(searchProduct, new SqlLimit(1, 500));
     productList.forEach(
         product -> {
           if (StringUtils.isEmpty(product.getCategoryName())) {
