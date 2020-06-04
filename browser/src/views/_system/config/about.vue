@@ -21,8 +21,8 @@ export default {
     return {
       activities: [
         {
-          content: 'todo v1.16 1. 新增在库商品明细页面 2. 展示入库记录',
-          timestamp: '2020-06-03',
+          content: 'v1.16 1. 订单列表增加关联文件列',
+          timestamp: '2020-06-05',
         },
         {
           content: 'v1.15 1. 出库记录页面分页查询完善 2. 拣货页面优化 3. 记录入库记录',

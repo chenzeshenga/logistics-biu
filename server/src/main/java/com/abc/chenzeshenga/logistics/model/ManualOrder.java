@@ -174,6 +174,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
 
   private double totalWeight;
   private int pickup = 2;
+  private String files;
 
   public ManualOrder(String orderNo, int pickup) {
     this.orderNo = orderNo;

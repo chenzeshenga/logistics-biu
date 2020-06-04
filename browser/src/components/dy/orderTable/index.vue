@@ -328,6 +328,25 @@
           label="总重量(kg)"
       ></el-table-column>
       <el-table-column
+        width="120"
+        prop="files"
+        label="关联文件"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>点击按钮下载文件</p>
+            <p>
+              <el-button type="text" v-on:click="handleSystemFile(scope.$index, scope.row)">下载</el-button>
+            </p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">
+                <svg-icon icon-class="doc"/>
+              </el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column
           width="170"
           prop="createOn"
           label="创建时间"
@@ -527,6 +546,20 @@
                 circle
                 plain
             ></el-button>
+          </el-tooltip>
+          <el-tooltip
+              content="上传"
+              placement="top"
+              v-if="msgData.buttonVisible12"
+          >
+            <el-button
+                @click="uploadOrderFile(scope.$index, scope.row)"
+                size="small"
+                circle
+                plain
+            >
+              <svg-icon icon-class="upload"/>
+            </el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -819,6 +852,25 @@
           <el-button type="primary" @click="getPdfWithSetting(barcodeSetting.value,'#barcode',setting)">下 载</el-button>
         </span>
     </el-dialog>
+    <el-dialog title="上传外箱标签" :visible.sync="dialogVisible4" width="30%">
+      <span>订单号: {{tmpOrderNo}}</span>
+      <el-upload
+        :action="actionLink2uploadOrderFile"
+        with-credentials
+        multiple
+        :file-list="fileList"
+        ref="upload"
+        :limit="3"
+      >
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <div slot="tip" class="el-upload__tip">
+          只能上传excel/pdf文件
+        </div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible4 = false">取 消</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -847,6 +899,7 @@ export default {
         buttonVisible9: this.msg.buttonVisible9,
         buttonVisible10: this.msg.buttonVisible10,
         buttonVisible11: this.msg.buttonVisible11,
+        buttonVisible12: this.msg.buttonVisible12,
       },
       timestamp: '',
       tablePage: {
@@ -898,6 +951,7 @@ export default {
       dialogVisible: false,
       dialogVisible2: false,
       dialogVisible3: false,
+      dialogVisible4: false,
       carrier: [],
       form: {
         orderNo: '',
@@ -926,6 +980,7 @@ export default {
       },
       users: [],
       channels: [],
+      actionLink2uploadOrderFile: process.env.BASE_API + '/file/order',
       actionLink1: process.env.BASE_API + '/ord/trackno/list',
       dialogVisible4Barcode: false,
       barcodeSetting: {
@@ -938,6 +993,8 @@ export default {
         width: 270,
         length: 200,
       },
+      fileList: [],
+      tmpOrderNo: '',
     };
   },
   props: ['msg'],
@@ -1363,6 +1420,23 @@ export default {
       }
       return urlParam;
     },
+    uploadOrderFile(index, row) {
+      this.tmpOrderNo = row.orderNo;
+      this.actionLink2uploadOrderFile = process.env.BASE_API + '/file/order?orderNo=' + this.tmpOrderNo
+      this.dialogVisible4 = true;
+    },
+    handleSystemFile(index, row) {
+      const files = row.files;
+      const fileuuids = files.split(';');
+      for (const uuid of fileuuids) {
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = process.env.BASE_API + '/file/' + uuid;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+      }
+    }
   },
 };
 </script>

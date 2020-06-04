@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,29 @@ public class CommonController {
       throws IOException {
     Img img = new Img(uuid, multipartFile.getBytes());
     imgMapper.insert(img);
+    return Json.succ();
+  }
+
+  @PostMapping("/file/order")
+  public Json putFile2OrderRecord(
+      @RequestParam(value = "file") MultipartFile multipartFile, @RequestParam String orderNo)
+      throws IOException {
+    File file = new File();
+    String md5 = DigestUtils.md5Hex(multipartFile.getBytes());
+    file.setFileName(multipartFile.getOriginalFilename());
+    file.setUserFile(multipartFile.getBytes());
+    file.setUuid(md5 + System.currentTimeMillis());
+    fileMapper.insert(file);
+    ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
+    String files = manualOrder.getFiles();
+    if (StringUtils.isBlank(files)) {
+      files = "";
+      files += md5;
+    } else {
+      files += ";" + md5;
+    }
+    manualOrder.setFiles(files);
+    orderMapper.update(manualOrder);
     return Json.succ();
   }
 

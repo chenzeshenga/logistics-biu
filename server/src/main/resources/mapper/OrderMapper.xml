@@ -39,6 +39,7 @@
         <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
         <result property="totalVolume" column="total_volume"/>
         <result property="totalWeight" column="total_weight"/>
+        <result property="files" column="files"/>
         <collection property="manualOrderContents" ofType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
             <result column="uuid" property="uuid"/>
             <result column="dy_sku" property="dySku"/>
@@ -88,6 +89,7 @@
         <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
         <result property="totalVolume" column="total_volume"/>
         <result property="totalWeight" column="total_weight"/>
+        <result property="files" column="files"/>
     </resultMap>
 
     <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
@@ -185,6 +187,9 @@
             </if>
             <if test="status != null and status != ''">
                 status=#{status},
+            </if>
+            <if test="files != null and files != ''">
+                files=#{files},
             </if>
             <if test="pickup != 2">
                 pickup=#{pickup},

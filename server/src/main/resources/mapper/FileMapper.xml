@@ -36,8 +36,8 @@
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.File">
-        insert into l_file (uuid, file)
-        values (#{uuid,jdbcType=VARCHAR}, #{userFile,jdbcType=LONGVARBINARY})
+        insert into l_file (uuid, file, name)
+        values (#{uuid,jdbcType=VARCHAR}, #{userFile,jdbcType=LONGVARBINARY}, #{fileName})
     </insert>
     <insert id="insertWithName" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file (uuid, file, name)
