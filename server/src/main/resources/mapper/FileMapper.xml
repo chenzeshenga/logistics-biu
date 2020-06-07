@@ -30,6 +30,17 @@
         from l_file file
         where file.uuid = #{uuid,jdbcType=VARCHAR}
     </select>
+
+    <select id="getFileListByUuid" resultType="com.abc.chenzeshenga.logistics.model.File">
+        select file.uuid,
+        name as fileName
+        from l_file file
+        where file.uuid in
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from l_file

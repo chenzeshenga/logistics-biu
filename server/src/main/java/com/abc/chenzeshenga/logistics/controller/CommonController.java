@@ -120,12 +120,17 @@ public class CommonController {
   public void commonFile(@PathVariable String uuid, HttpServletResponse httpServletResponse)
       throws IOException {
     File file = fileMapper.selectByPrimaryKeyWithName(uuid);
-    httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-    httpServletResponse.setHeader(
-        "Content-Disposition",
-        "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
-    httpServletResponse.getOutputStream().write(file.getUserFile());
-    httpServletResponse.flushBuffer();
+    if (file == null) {
+      httpServletResponse.getOutputStream().write("no file related".getBytes());
+      httpServletResponse.flushBuffer();
+    } else {
+      httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+      httpServletResponse.setHeader(
+          "Content-Disposition",
+          "attachment;filename=" + URLEncoder.encode(file.getFileName(), "utf-8"));
+      httpServletResponse.getOutputStream().write(file.getUserFile());
+      httpServletResponse.flushBuffer();
+    }
   }
 
   @PostMapping
@@ -520,5 +525,17 @@ public class CommonController {
           }
         });
     writeServletResp(httpServletResponse, warehousingList, Warehousing.class);
+  }
+
+  @PostMapping("/file/list")
+  public Json getFileListByUuid(@RequestBody Map<String, String> orderNoMap) {
+    ManualOrder manualOrder = orderMapper.getOrdDetail(orderNoMap.get("orderNo"));
+    String files = manualOrder.getFiles();
+    if (StringUtils.isNotBlank(files)) {
+      List<File> fileList = fileMapper.getFileListByUuid(Arrays.asList(files.split(";")));
+      return Json.succ().data(fileList);
+    } else {
+      return Json.succ().data(null);
+    }
   }
 }

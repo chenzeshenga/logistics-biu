@@ -334,9 +334,9 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>点击按钮下载文件</p>
+            <p>查看关联文件</p>
             <p>
-              <el-button type="text" v-on:click="handleSystemFile(scope.$index, scope.row)">下载</el-button>
+              <el-button type="text" v-on:click="triggerDialog5(scope.$index, scope.row)">查看</el-button>
             </p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">
@@ -871,6 +871,47 @@
                 <el-button @click="dialogVisible4 = false">取 消</el-button>
             </span>
     </el-dialog>
+    <el-dialog title="关联文件" :visible.sync="dialogVisible5" width="30%">
+      <el-table
+        style="width: 100%"
+        :data="tableData4File"
+        v-loading.body="tableLoading2"
+        element-loading-text="加载中"
+        stripe
+        highlight-current-row
+      >
+        <el-table-column
+          width="180"
+          prop="uuid"
+          label="uuid"
+        ></el-table-column>
+        <el-table-column
+          width="180"
+          prop="fileName"
+          label="文件名"
+        ></el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip
+              content="下载"
+              placement="top"
+            >
+              <el-button
+                @click="handleSystemFile(scope.$index, scope.row)"
+                size="small"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible5 = false">取 消</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -909,6 +950,7 @@ export default {
         total: null,
       },
       tableLoading: false,
+      tableLoading2: false,
       tableData: [],
       daterange: null,
       pickerOptions2: {
@@ -952,6 +994,7 @@ export default {
       dialogVisible2: false,
       dialogVisible3: false,
       dialogVisible4: false,
+      dialogVisible5: false,
       carrier: [],
       form: {
         orderNo: '',
@@ -995,6 +1038,7 @@ export default {
       },
       fileList: [],
       tmpOrderNo: '',
+      tableData4File: [],
     };
   },
   props: ['msg'],
@@ -1383,7 +1427,6 @@ export default {
       this.$refs.upload.submit();
     },
     handleSuccess(response, file, fileList) {
-      console.log(response);
       this.dialogVisibleList = false;
       this.fetchData();
     },
@@ -1422,21 +1465,28 @@ export default {
     },
     uploadOrderFile(index, row) {
       this.tmpOrderNo = row.orderNo;
-      this.actionLink2uploadOrderFile = process.env.BASE_API + '/file/order?orderNo=' + this.tmpOrderNo
+      this.actionLink2uploadOrderFile = process.env.BASE_API + '/file/order?orderNo=' + this.tmpOrderNo;
       this.dialogVisible4 = true;
     },
     handleSystemFile(index, row) {
-      const files = row.files;
-      const fileuuids = files.split(';');
-      for (const uuid of fileuuids) {
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = process.env.BASE_API + '/file/' + uuid;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-      }
-    }
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/file/' + row.uuid;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    triggerDialog5(index, row) {
+      const postData = {orderNo: row.orderNo};
+      request({
+        url: '/file/list',
+        method: 'post',
+        data: postData,
+      }).then((ret) => {
+        this.tableData4File = ret.data.data;
+      });
+      this.dialogVisible5 = true;
+    },
   },
 };
 </script>
