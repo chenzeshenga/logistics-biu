@@ -1401,7 +1401,7 @@ export default {
       this.dialogVisible4Barcode = true;
     },
     generateUrlParam() {
-      const urlParam = 'ordno=' +
+      let urlParam = 'ordno=' +
         this.search.ordno +
         '&creator=' +
         this.search.creator +
@@ -1412,7 +1412,7 @@ export default {
         '&pickup=' +
         this.search.pickup;
       if (this.daterange) {
-        link.href = link.href +
+        urlParam = urlParam +
           '&fromDate=' +
           this.daterange[0] +
           '&toDate=' +
