@@ -150,15 +150,16 @@ public class CommonController {
     String md5 = DigestUtils.md5Hex(multipartFile.getBytes());
     file.setFileName(multipartFile.getOriginalFilename());
     file.setUserFile(multipartFile.getBytes());
-    file.setUuid(md5 + System.currentTimeMillis());
+    String fileSign = md5 + System.currentTimeMillis();
+    file.setUuid(fileSign);
     fileMapper.insert(file);
     ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
     String files = manualOrder.getFiles();
     if (StringUtils.isBlank(files)) {
       files = "";
-      files += md5;
+      files += fileSign;
     } else {
-      files += ";" + md5;
+      files += ";" + fileSign;
     }
     manualOrder.setFiles(files);
     orderMapper.update(manualOrder);

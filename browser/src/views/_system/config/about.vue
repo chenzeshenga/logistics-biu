@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.18 1. 修复用户上传文件无法查看的问题',
+          timestamp: '2020-06-11',
+        },
+        {
           content: 'v1.17 1. fix订单页面根据日期无法搜索 2. 订单关联文件新增弹窗列表展示',
           timestamp: '2020-06-08',
         },
