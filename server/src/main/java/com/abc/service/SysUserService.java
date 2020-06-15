@@ -14,4 +14,7 @@ public interface SysUserService extends IService<SysUser> {
   Page<SysUser> queryUserIncludeRoles4Option(Page page, String nick, String username);
 
   int createUser(SysUser sysUser);
+
+  @Override
+  boolean updateById(SysUser sysUser);
 }

@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.19 1. 修复用户密码修改功能',
+          timestamp: '2020-06-16',
+        },
+        {
           content: 'v1.18 1. 修复用户上传文件无法查看的问题',
           timestamp: '2020-06-11',
         },

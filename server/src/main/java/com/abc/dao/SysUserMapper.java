@@ -18,4 +18,9 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
       Pagination page, @Param("nick") String nick, @Param("username") String username);
 
   int createUser(SysUser sysUser);
+
+  @Override
+  Integer updateById(SysUser sysUser);
+
+  SysUser selectById(String uid);
 }

@@ -227,12 +227,9 @@ public class SysUserController {
   @RequiresPermissions("a:sys:user:info:update")
   @PatchMapping("/info")
   public Json update(@RequestBody String body) {
-
     String oper = "update user";
     log.info("{}, body: {}", oper, body);
-
     SysUser user = JSON.parseObject(body, SysUser.class);
-
     if (StringUtils.isNotBlank(user.getPwd())) {
       // 密码加密
       RandomNumberGenerator saltGen = new SecureRandomNumberGenerator();
@@ -244,15 +241,10 @@ public class SysUserController {
       user.setPwd(null);
       user.setSalt(null);
     }
-
     user.setUname(null);
     user.setCreated(null);
     user.setUpdated(new Date());
-
-    // boolean success = sysUserService.update(user,new
-    // EntityWrapper<User>().eq("uid",user.getUid()));
     boolean success = sysUserService.updateById(user);
-
     return Json.result(oper, success).data("updated", user.getUpdated());
   }
 
