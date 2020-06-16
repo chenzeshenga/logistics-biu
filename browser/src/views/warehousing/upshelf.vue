@@ -1,6 +1,9 @@
 <template>
   <div class="login-container">
     <div class="app-container">
+      <input type="file" accept="image/*" capture="camera">
+      <input type="file" accept="video/*" capture="camcorder">
+      <input type="file" accept="audio/*" capture="microphone">
       <el-row :gutter="20" style="margin-left:4%;margin-top:2%">
         <el-col :span="8"> 入库单号: {{ warehousing.warehousingNo }} </el-col>
         <el-col :span="8"> 发货地址: {{ warehousing.fromAddress }} </el-col>
