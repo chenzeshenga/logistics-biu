@@ -45,7 +45,7 @@ public class ProductShelfController {
           upshelfProduct.setWarehousingNo(warehousingNo);
           upshelfProduct.setOwner(warehousing.getCreator());
           upShelfProductMapper.insert(upshelfProduct);
-          ProductInWarehouse productInWarehouse=new ProductInWarehouse();
+          ProductInWarehouse productInWarehouse = new ProductInWarehouse();
           productInWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
           productInWarehouse.setDySku(upshelfProduct.getDySku());
           productInWarehouse.setNum(upshelfProduct.getNum());
@@ -73,6 +73,15 @@ public class ProductShelfController {
           upshelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
           upshelfProduct.setOwner(shelfContent.getOwner());
           upShelfProductMapper.insert(upshelfProduct);
+          ProductInWarehouse productInWarehouse = new ProductInWarehouse();
+          productInWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
+          productInWarehouse.setDySku(upshelfProduct.getDySku());
+          productInWarehouse.setNum(upshelfProduct.getNum());
+          productInWarehouse.setOwner(shelfContent.getOwner());
+          productInWarehouse.setWarehousingNo(upshelfProduct.getWarehousingNo());
+          productInWarehouse.setShelfNo(upshelfProduct.getShelfNo());
+          productInWarehouse.setInTime(new Date());
+          productInWarehouseRecordMapper.insert(productInWarehouse);
         });
     return Json.succ();
   }

@@ -27,7 +27,7 @@
             </if>
         </trim>
         order by out_time desc
-        limit #{sqlLimit.from},#{sqlLimit.to}
+        limit #{sqlLimit.from},#{sqlLimit.size}
     </select>
 
     <select id="count" resultType="java.lang.Long">

@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.20 1. 库存补录时新增入库记录',
+          timestamp: '2020-06-18',
+        },
+        {
           content: 'v1.19 1. 修复用户密码修改功能',
           timestamp: '2020-06-16',
         },

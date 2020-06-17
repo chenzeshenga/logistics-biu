@@ -65,6 +65,7 @@
       >
         <el-table-column prop="dySku" label="东岳sku"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
+        <el-table-column prop="num" label="数量"></el-table-column>
         <el-table-column prop="warehousingNo" label="入库号"></el-table-column>
         <el-table-column prop="shelfNo" label="货架号"></el-table-column>
         <el-table-column prop="inTime" label="入库时间"></el-table-column>
