@@ -163,7 +163,7 @@
               style="margin-bottom: 0"
           >
             <el-table-column
-                prop="sku"
+                prop="dySku"
                 label="东岳Sku"
                 width="200"
             ></el-table-column>
@@ -327,6 +327,25 @@
           prop="totalWeight"
           label="总重量(kg)"
       ></el-table-column>
+      <el-table-column
+        width="120"
+        prop="files"
+        label="关联文件"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>查看关联文件</p>
+            <p>
+              <el-button type="text" v-on:click="triggerDialog5(scope.$index, scope.row)">查看</el-button>
+            </p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">
+                <svg-icon icon-class="doc"/>
+              </el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column
           width="170"
           prop="createOn"
@@ -527,6 +546,20 @@
                 circle
                 plain
             ></el-button>
+          </el-tooltip>
+          <el-tooltip
+              content="上传"
+              placement="top"
+              v-if="msgData.buttonVisible12"
+          >
+            <el-button
+                @click="uploadOrderFile(scope.$index, scope.row)"
+                size="small"
+                circle
+                plain
+            >
+              <svg-icon icon-class="upload"/>
+            </el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -819,6 +852,66 @@
           <el-button type="primary" @click="getPdfWithSetting(barcodeSetting.value,'#barcode',setting)">下 载</el-button>
         </span>
     </el-dialog>
+    <el-dialog title="上传外箱标签" :visible.sync="dialogVisible4" width="30%">
+      <span>订单号: {{tmpOrderNo}}</span>
+      <el-upload
+        :action="actionLink2uploadOrderFile"
+        with-credentials
+        multiple
+        :file-list="fileList"
+        ref="upload"
+        :limit="3"
+      >
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <div slot="tip" class="el-upload__tip">
+          只能上传excel/pdf文件
+        </div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible4 = false">取 消</el-button>
+            </span>
+    </el-dialog>
+    <el-dialog title="关联文件" :visible.sync="dialogVisible5" width="30%">
+      <el-table
+        style="width: 100%"
+        :data="tableData4File"
+        v-loading.body="tableLoading2"
+        element-loading-text="加载中"
+        stripe
+        highlight-current-row
+      >
+        <el-table-column
+          width="180"
+          prop="uuid"
+          label="uuid"
+        ></el-table-column>
+        <el-table-column
+          width="180"
+          prop="fileName"
+          label="文件名"
+        ></el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip
+              content="下载"
+              placement="top"
+            >
+              <el-button
+                @click="handleSystemFile(scope.$index, scope.row)"
+                size="small"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible5 = false">取 消</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -847,6 +940,7 @@ export default {
         buttonVisible9: this.msg.buttonVisible9,
         buttonVisible10: this.msg.buttonVisible10,
         buttonVisible11: this.msg.buttonVisible11,
+        buttonVisible12: this.msg.buttonVisible12,
       },
       timestamp: '',
       tablePage: {
@@ -856,6 +950,7 @@ export default {
         total: null,
       },
       tableLoading: false,
+      tableLoading2: false,
       tableData: [],
       daterange: null,
       pickerOptions2: {
@@ -898,6 +993,8 @@ export default {
       dialogVisible: false,
       dialogVisible2: false,
       dialogVisible3: false,
+      dialogVisible4: false,
+      dialogVisible5: false,
       carrier: [],
       form: {
         orderNo: '',
@@ -926,6 +1023,7 @@ export default {
       },
       users: [],
       channels: [],
+      actionLink2uploadOrderFile: process.env.BASE_API + '/file/order',
       actionLink1: process.env.BASE_API + '/ord/trackno/list',
       dialogVisible4Barcode: false,
       barcodeSetting: {
@@ -938,6 +1036,9 @@ export default {
         width: 270,
         length: 200,
       },
+      fileList: [],
+      tmpOrderNo: '',
+      tableData4File: [],
     };
   },
   props: ['msg'],
@@ -1326,7 +1427,6 @@ export default {
       this.$refs.upload.submit();
     },
     handleSuccess(response, file, fileList) {
-      console.log(response);
       this.dialogVisibleList = false;
       this.fetchData();
     },
@@ -1344,7 +1444,7 @@ export default {
       this.dialogVisible4Barcode = true;
     },
     generateUrlParam() {
-      const urlParam = 'ordno=' +
+      let urlParam = 'ordno=' +
         this.search.ordno +
         '&creator=' +
         this.search.creator +
@@ -1355,13 +1455,37 @@ export default {
         '&pickup=' +
         this.search.pickup;
       if (this.daterange) {
-        link.href = link.href +
+        urlParam = urlParam +
           '&fromDate=' +
           this.daterange[0] +
           '&toDate=' +
           this.daterange[1];
       }
       return urlParam;
+    },
+    uploadOrderFile(index, row) {
+      this.tmpOrderNo = row.orderNo;
+      this.actionLink2uploadOrderFile = process.env.BASE_API + '/file/order?orderNo=' + this.tmpOrderNo;
+      this.dialogVisible4 = true;
+    },
+    handleSystemFile(index, row) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/file/' + row.uuid;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    triggerDialog5(index, row) {
+      const postData = {orderNo: row.orderNo};
+      request({
+        url: '/file/list',
+        method: 'post',
+        data: postData,
+      }).then((ret) => {
+        this.tableData4File = ret.data.data;
+      });
+      this.dialogVisible5 = true;
     },
   },
 };

@@ -61,16 +61,17 @@
     </resultMap>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select product.dy_sku       as sku,
+        select product.dy_sku       as dySku,
+               product.dy_sku       as value,
                product.product_name as name,
                product.price,
-               product.dy_sku       as value,
+               product.sku          as sku,
                product.product_name as label,
                sum(shelf.num)       as num
         from l_up_shelf_product shelf
-                 inner join l_productions product on (shelf.sku = product.dy_sku)
+                 inner join l_productions product on (shelf.dy_sku = product.dy_sku)
         where createdBy = #{username}
-        group by product.dy_sku, product.product_name, product.price
+        group by product.dy_sku, product.product_name, product.price, product.sku
         having sum(shelf.num) > 0;
     </select>
 
@@ -141,27 +142,29 @@
            or dy_sku = #{sku,jdbcType=VARCHAR}
     </select>
 
-    <select id="listByStatusWithUser" parameterType="java.lang.String" resultMap="resultWithShelfContent">
+    <select id="listByStatusWithUser" resultMap="resultWithShelfContent">
         select product.*,content.sku as subSku,content.dySku as subDySku,content.name as subName,content.location as
         subLocation,content.num as subNum
         from l_productions product left join l_product_shelf_layout content on(product.sku=content.sku and
         product.dy_sku=content.dySku)
-        where status = #{status}
-        <if test="username != null and username != 'admin' and username != 'operator'">
-            and createdBy = #{username}
+        where status = #{searchProduct.status}
+        <if test="searchProduct.createdBy != null and searchProduct.createdBy !='' and searchProduct.createdBy != 'admin' and searchProduct.createdBy != 'operator'">
+            and createdBy = #{searchProduct.createdBy}
         </if>
-        <if test="sku != null and sku != ''">
-            and product.sku like CONCAT('%', #{sku}, '%')
+        <if test="searchProduct.sku != null and searchProduct.sku != ''">
+            and product.sku like CONCAT('%', #{searchProduct.sku}, '%')
         </if>
-        <if test="dySku != null and dySku != ''">
-            and product.dy_sku like CONCAT('%', #{dySku}, '%')
+        <if test="searchProduct.dySku != null and searchProduct.dySku != ''">
+            and product.dy_sku like CONCAT('%', #{searchProduct.dySku}, '%')
         </if>
-        <if test="name != null and name != ''">
-            and product.product_name like CONCAT('%', #{name}, '%')
+        <if test="searchProduct.productName != null and searchProduct.productName != ''">
+            and product.product_name like CONCAT('%', #{searchProduct.productName}, '%')
         </if>
+        order by product.create_on desc
+        limit #{sqlLimit.from},#{sqlLimit.size}
     </select>
 
-    <select id="listByStatus" parameterType="java.lang.String" resultMap="resultWithShelfContent">
+    <select id="listByStatus" resultMap="resultWithShelfContent">
         select product.*,
         content.sku as subSku,
         content.dySku as subDySku,
@@ -172,18 +175,38 @@
         from l_productions product
         left join l_product_shelf_layout content on (product.sku = content.sku and
         product.dy_sku = content.dySku)
-        where status = #{status}
-        <if test="creator != null and creator !='' and creator != 'admin' and creator != 'operator'">
-            and createdBy = #{creator}
+        where status = #{searchProduct.status}
+        <if test="searchProduct.createdBy != null and searchProduct.createdBy !='' and searchProduct.createdBy != 'admin' and searchProduct.createdBy != 'operator'">
+            and createdBy = #{searchProduct.createdBy}
         </if>
-        <if test="sku != null and sku != ''">
-            and product.sku like CONCAT('%', #{sku}, '%')
+        <if test="searchProduct.sku != null and searchProduct.sku != ''">
+            and product.sku like CONCAT('%', #{searchProduct.sku}, '%')
         </if>
-        <if test="dySku != null and dySku != ''">
-            and product.dy_sku like CONCAT('%', #{dySku}, '%')
+        <if test="searchProduct.dySku != null and searchProduct.dySku != ''">
+            and product.dy_sku like CONCAT('%', #{searchProduct.dySku}, '%')
         </if>
-        <if test="name != null and name != ''">
-            and product.product_name like CONCAT('%', #{name}, '%')
+        <if test="searchProduct.productName != null and searchProduct.productName != ''">
+            and product.product_name like CONCAT('%', #{searchProduct.productName}, '%')
+        </if>
+        order by product.create_on desc
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="countByStatus" resultType="java.lang.Long">
+        select count(*) as total
+        from l_productions product
+        where status = #{searchProduct.status}
+        <if test="searchProduct.createdBy != null and searchProduct.createdBy !='' and searchProduct.createdBy != 'admin' and searchProduct.createdBy != 'operator'">
+            and createdBy = #{searchProduct.createdBy}
+        </if>
+        <if test="searchProduct.sku != null and searchProduct.sku != ''">
+            and product.sku like CONCAT('%', #{searchProduct.sku}, '%')
+        </if>
+        <if test="searchProduct.dySku != null and searchProduct.dySku != ''">
+            and product.dy_sku like CONCAT('%', #{searchProduct.dySku}, '%')
+        </if>
+        <if test="searchProduct.productName != null and searchProduct.productName != ''">
+            and product.product_name like CONCAT('%', #{searchProduct.productName}, '%')
         </if>
     </select>
 
@@ -450,12 +473,11 @@
     </update>
 
     <select id="listUserOwnProduct" resultType="com.abc.chenzeshenga.logistics.model.SkuLabel">
-        select
-            sku,
-            dy_sku as dySku,
-            product_name as name
+        select sku,
+               dy_sku       as dySku,
+               product_name as name
         from l_productions
-        where createdBy=#{username}
+        where createdBy = #{username}
     </select>
 
     <select id="selectProductBySku" resultType="com.abc.chenzeshenga.logistics.model.Product">

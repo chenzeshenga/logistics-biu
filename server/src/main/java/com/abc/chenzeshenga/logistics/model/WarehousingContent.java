@@ -25,4 +25,5 @@ public class WarehousingContent extends WarehousingContentKey implements Seriali
   private String width;
   private String height;
   private String weight;
+  private String dySku;
 }

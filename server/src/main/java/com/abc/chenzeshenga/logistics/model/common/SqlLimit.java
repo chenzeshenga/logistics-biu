@@ -16,5 +16,6 @@ import lombok.ToString;
 public class SqlLimit {
 
   private long from;
-  private long to;
+  private long size;
+
 }

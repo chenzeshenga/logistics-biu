@@ -20,7 +20,7 @@
           @row-click="handleCurrentChange"
           :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="sku" label="东岳Sku" width="200">
+        <el-table-column prop="dySku" label="东岳Sku" width="200">
         </el-table-column>
         <el-table-column prop="name" label="商品名称">
         </el-table-column>

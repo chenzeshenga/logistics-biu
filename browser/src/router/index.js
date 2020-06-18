@@ -964,6 +964,17 @@ export const asyncRouterMap = [
           noCache: true,
         },
       },
+      {
+        path: 'product-in-warehouse-records',
+        name: 'product-in-warehouse-records',
+        component: _import('product/product-in-warehouse-records'),
+        meta: {
+          perm: 'm:product:mgt:6',
+          title: '商品入库记录',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
     ],
   },
   {

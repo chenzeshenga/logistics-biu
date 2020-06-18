@@ -23,7 +23,7 @@ public class UpShelfProduct {
   @TableId(type = IdType.ID_WORKER_STR)
   private String uuid;
 
-  private String sku;
+  private String dySku;
   private String name;
   private String num;
   private String shelfNo;
@@ -37,8 +37,8 @@ public class UpShelfProduct {
   @TableField(exist = false)
   private String datePoor;
 
-  public UpShelfProduct(String sku, String owner, String shelfNo) {
-    this.sku = sku;
+  public UpShelfProduct(String dySku, String owner, String shelfNo) {
+    this.dySku = dySku;
     this.owner = owner;
     this.shelfNo = shelfNo;
   }

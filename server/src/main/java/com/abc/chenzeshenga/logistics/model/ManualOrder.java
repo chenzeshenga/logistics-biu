@@ -55,77 +55,83 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @ExcelProperty(index = 7, value = "订单类型")
   private String categoryName;
 
-  @ExcelProperty(index = 8, value = "发件地址-道/府/县-城市-乡镇")
+  @NotEmpty(message = "运送渠道必选")
+  @ExcelProperty(index = 8, value = "运送渠道")
+  private String channel;
+
+  private String channelDesc;
+
+  @ExcelProperty(index = 9, value = "发件地址-道/府/县-城市-乡镇")
   private String fromAddressLine1;
 
-  @ExcelProperty(index = 9, value = "发件地址1")
+  @ExcelProperty(index = 10, value = "发件地址1")
   private String fromAddressLine2;
 
-  @ExcelProperty(index = 10, value = "发件地址2")
+  @ExcelProperty(index = 11, value = "发件地址2")
   private String fromAddressLine3;
 
-  @ExcelProperty(index = 11, value = "发件地址邮编")
+  @ExcelProperty(index = 12, value = "发件地址邮编")
   private String fromZipCode;
 
-  @ExcelProperty(index = 12, value = "发件人姓名")
+  @ExcelProperty(index = 13, value = "发件人姓名")
   private String fromName;
 
-  @ExcelProperty(index = 13, value = "发件人联系方式")
+  @ExcelProperty(index = 14, value = "发件人联系方式")
   private String fromContact;
 
-  @ExcelProperty(index = 14, value = "收件地址-道/府/县-城市-乡镇")
+  @ExcelProperty(index = 15, value = "收件地址-道/府/县-城市-乡镇")
   private String toAddressLine1;
 
-  @ExcelProperty(index = 15, value = "收件地址1")
+  @ExcelProperty(index = 16, value = "收件地址1")
   private String toAddressLine2;
 
-  @ExcelProperty(index = 16, value = "收件地址2")
+  @ExcelProperty(index = 17, value = "收件地址2")
   private String toAddressLine3;
 
-  @ExcelProperty(index = 17, value = "收件地址邮编")
+  @ExcelProperty(index = 18, value = "收件地址邮编")
   @NotEmpty(message = "收件人邮编必填")
   private String toZipCode;
 
-  @ExcelProperty(index = 18, value = "收件人姓名")
+  @ExcelProperty(index = 19, value = "收件人姓名")
   @NotEmpty(message = "收件人姓名必填")
   private String toName;
 
-  @ExcelProperty(index = 19, value = "收件人联系方式")
+  @ExcelProperty(index = 20, value = "收件人联系方式")
   private String toContact;
 
   private String collect;
 
-  @ExcelProperty(index = 20, value = "是否代收费用")
+  @ExcelProperty(index = 21, value = "是否代收费用")
   private String collectDesc;
   /** 代收金额 */
-  @ExcelProperty(index = 21, value = "代收费用总额(JPY)")
+  @ExcelProperty(index = 22, value = "代收费用总额(JPY)")
   private String collectNum;
 
-  @ExcelProperty(index = 22, value = "sku")
+  @ExcelProperty(index = 23, value = "东岳sku")
   private String sku1;
 
-  @ExcelProperty(index = 23, value = "名称")
+  @ExcelProperty(index = 24, value = "名称")
   private String name1;
 
-  @ExcelProperty(index = 24, value = "数量")
+  @ExcelProperty(index = 25, value = "数量")
   private String num1;
 
-  @ExcelProperty(index = 25, value = "sku")
+  @ExcelProperty(index = 26, value = "东岳sku")
   private String sku2;
 
-  @ExcelProperty(index = 26, value = "名称")
+  @ExcelProperty(index = 27, value = "名称")
   private String name2;
 
-  @ExcelProperty(index = 27, value = "数量")
+  @ExcelProperty(index = 28, value = "数量")
   private String num2;
 
-  @ExcelProperty(index = 28, value = "sku")
+  @ExcelProperty(index = 29, value = "东岳sku")
   private String sku3;
 
-  @ExcelProperty(index = 29, value = "名称")
+  @ExcelProperty(index = 30, value = "名称")
   private String name3;
 
-  @ExcelProperty(index = 30, value = "数量")
+  @ExcelProperty(index = 31, value = "数量")
   private String num3;
 
   private String status;
@@ -136,10 +142,6 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   @NotEmpty(message = "订单类型必选")
   private String category;
 
-  @NotEmpty(message = "运送渠道必选")
-  private String channel;
-
-  private String channelDesc;
   private String chinaNo;
 
   @NotEmpty(message = "订单内容必选")
@@ -172,6 +174,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
 
   private double totalWeight;
   private int pickup = 2;
+  private String files;
 
   public ManualOrder(String orderNo, int pickup) {
     this.orderNo = orderNo;

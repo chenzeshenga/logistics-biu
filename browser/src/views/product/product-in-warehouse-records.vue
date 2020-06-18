@@ -7,11 +7,6 @@
             <el-input v-model="search.dySku" placeholder="请输入东岳sku"></el-input>
           </el-tooltip>
         </el-col>
-        <el-col :span="6">
-          <el-tooltip content="请输入商品sku" placement="top">
-            <el-input v-model="search.sku" placeholder="请输入商品sku"></el-input>
-          </el-tooltip>
-        </el-col>
         <el-col :span="3">
           <el-tooltip content="请选择商品属主" placement="top">
             <el-select filterable clearable v-model="search.owner" placeholder="请选择商品属主">
@@ -27,8 +22,13 @@
       </el-row>
       <el-row :gutter="20" style="margin: 1%">
         <el-col :span="6">
-          <el-tooltip content="请输入订单号" placement="top">
-            <el-input v-model="search.orderNo" placeholder="请输入订单号"></el-input>
+          <el-tooltip content="请输入入库单号" placement="top">
+            <el-input v-model="search.warehousingNo" placeholder="请输入入库单号"></el-input>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="6">
+          <el-tooltip content="请输入货架号" placement="top">
+            <el-input v-model="search.shelfNo" placeholder="请输入货架号"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
@@ -46,17 +46,17 @@
         </el-col>
         <el-col :span="1">
           <el-tooltip content="搜索" placement="top">
-            <el-button icon="el-icon-search" @click="searchProductOutWarehouseRecord()"></el-button>
+            <el-button icon="el-icon-search" @click="searchProductInWarehouseRecord()"></el-button>
           </el-tooltip>
         </el-col>
         <el-col :span="1">
           <el-tooltip content="刷新" placement="top">
-            <el-button icon="el-icon-refresh" @click="searchProductOutWarehouseRecord()"></el-button>
+            <el-button icon="el-icon-refresh" @click="searchProductInWarehouseRecord()"></el-button>
           </el-tooltip>
         </el-col>
       </el-row>
       <el-table
-        style="width: 100%;margin: 10px;margin-left:10px"
+        style="width: 100%;margin: 10px;"
         :data="tableData"
         v-loading.body="tableLoading"
         element-loading-text="加载中"
@@ -64,11 +64,11 @@
         highlight-current-row
       >
         <el-table-column prop="dySku" label="东岳sku"></el-table-column>
-        <el-table-column prop="sku" label="sku"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
-        <el-table-column prop="orderNo" label="出库订单号"></el-table-column>
-        <el-table-column prop="outTime" label="出库时间"></el-table-column>
-        <el-table-column prop="hoursInWarehouse" label="在库时长"></el-table-column>
+        <el-table-column prop="num" label="数量"></el-table-column>
+        <el-table-column prop="warehousingNo" label="入库号"></el-table-column>
+        <el-table-column prop="shelfNo" label="货架号"></el-table-column>
+        <el-table-column prop="inTime" label="入库时间"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -120,10 +120,9 @@ export default {
       },
       search: {
         dySku: '',
-        sku: '',
         owner: '',
-        orderNo: '',
-        trackNo: '',
+        warehousingNo: '',
+        shelfNo: '',
         startDate: '',
         endDate: '',
         dateTimeRange: '',
@@ -162,7 +161,7 @@ export default {
   },
   created() {
     this.initUserList();
-    this.searchProductOutWarehouseRecord();
+    this.searchProductInWarehouseRecord();
     this.hasAdminRole();
   },
   methods: {
@@ -195,27 +194,27 @@ export default {
     },
     handleSizeChange(val) {
       this.tablePage.size = val;
-      this.searchProductOutWarehouseRecord();
+      this.searchProductInWarehouseRecord();
     },
     handleCurrentChange(val) {
       this.tablePage.current = val;
-      this.searchProductOutWarehouseRecord();
+      this.searchProductInWarehouseRecord();
     },
-    searchProductOutWarehouseRecord() {
+    searchProductInWarehouseRecord() {
       const postData = {
         'entity': this.search,
         'pagination': this.tablePage,
       };
       this.tableLoading = true;
       request({
-        url: '/product/out/warehouse/records',
+        url: '/product/in/warehouse/records',
         method: 'post',
         data: postData,
       }).then((ret) => {
         this.tableData = ret.data.data.data;
-        this.tablePage.current=ret.data.data.current;
-        this.tablePage.total=ret.data.data.total;
-        this.tablePage.size=ret.data.data.size;
+        this.tablePage.current = ret.data.data.current;
+        this.tablePage.total = ret.data.data.total;
+        this.tablePage.size = ret.data.data.size;
         this.tableLoading = false;
       });
     },

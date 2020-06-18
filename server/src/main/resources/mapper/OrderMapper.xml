@@ -39,9 +39,10 @@
         <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
         <result property="totalVolume" column="total_volume"/>
         <result property="totalWeight" column="total_weight"/>
+        <result property="files" column="files"/>
         <collection property="manualOrderContents" ofType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
             <result column="uuid" property="uuid"/>
-            <result column="sku" property="sku"/>
+            <result column="dy_sku" property="dySku"/>
             <result column="name" property="name"/>
             <result column="num" property="num"/>
             <result column="price" property="price"/>
@@ -88,6 +89,7 @@
         <result property="totalVolumeWithWeight" column="total_volume_with_weight"/>
         <result property="totalVolume" column="total_volume"/>
         <result property="totalWeight" column="total_weight"/>
+        <result property="files" column="files"/>
     </resultMap>
 
     <update id="update" parameterType="com.abc.chenzeshenga.logistics.model.ManualOrder">
@@ -186,6 +188,9 @@
             <if test="status != null and status != ''">
                 status=#{status},
             </if>
+            <if test="files != null and files != ''">
+                files=#{files},
+            </if>
             <if test="pickup != 2">
                 pickup=#{pickup},
             </if>
@@ -221,11 +226,11 @@
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">
-        insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied,uuid)
+        insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied,uuid,dy_sku)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.ordno}, #{item.sku}, #{item.name}, #{item.num},
-            #{item.price},#{item.picked},#{item.satisfied},#{item.uuid})
+            #{item.price},#{item.picked},#{item.satisfied},#{item.uuid},#{item.dySku})
         </foreach>
     </insert>
 
@@ -447,12 +452,18 @@
     </select>
 
     <select id="listContent" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        select content.ordno,
+               content.dy_sku as dySku,
+               content.name,
+               content.num,
+               content.price,
+               content.picked,
+               content.satisfied
         from l_manual_order_content content
-                 inner join l_manual_order ord on (content.ordno = ord.ord_no)
+                     inner join l_manual_order ord on (content.ordno = ord.ord_no)
         where ordno = #{ordNo}
           and (ord.status = 2
-            or ord.status = 7)
+                or ord.status = 7)
         order by ord.update_on desc
     </select>
 
@@ -473,7 +484,14 @@
     </select>
 
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
-        select content.ordno, content.sku, content.name, content.num, content.price, content.picked, content.satisfied
+        select content.ordno,
+               content.sku,
+               content.dy_sku as dySku,
+               content.name,
+               content.num,
+               content.price,
+               content.picked,
+               content.satisfied
         from l_manual_order_content content
         where ordno = #{ordNo}
     </select>

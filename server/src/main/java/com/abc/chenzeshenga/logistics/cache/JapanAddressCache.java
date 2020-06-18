@@ -27,8 +27,8 @@ public class JapanAddressCache {
 
   private Map<String, List<JpDetailAddress>> townMap = new HashMap<>();
 
-  @Scheduled(cron = "0 0 0 * * ?")
-  @PostConstruct
+//  @Scheduled(cron = "0 0 0 * * ?")
+//  @PostConstruct
   public void init() {
     log.info("begin to load japan address cache");
     List<JpDetailAddress> jpDetailAddressList = addressMapper.getAll();

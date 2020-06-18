@@ -30,7 +30,7 @@ public class ProductOutWarehouseRecordService {
     Pagination pagination = productOutWarehousePageQueryEntity.getPagination();
     List<ProductOutWarehouse> productOutWarehouseList =
         productOutWarehouseRecordMapper.list(
-            productOutWarehouse, SqlUtils.generateSqlLimit(pagination));
+            productOutWarehouse, SqlUtils.generateSqlLimitV2(pagination));
     long total = productOutWarehouseRecordMapper.count(productOutWarehouse);
     result.setCurrent(productOutWarehousePageQueryEntity.getPagination().getCurrent());
     result.setTotal(total);

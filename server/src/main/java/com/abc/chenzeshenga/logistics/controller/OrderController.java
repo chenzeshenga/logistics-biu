@@ -345,9 +345,14 @@ public class OrderController {
       content.setTotalPrice(finalPrice);
       String total = content.getNum();
       String picked = content.getPicked();
-      if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
-        manualOrder.setSatisfied(false);
-        break;
+      try {
+        if (!Double.valueOf(total).equals(Double.valueOf(picked))) {
+          manualOrder.setSatisfied(false);
+          break;
+        }
+      } catch (NumberFormatException numberFormatException) {
+        log.info("manual order as {}", manualOrder);
+        log.info("error stack info ", numberFormatException);
       }
     }
     manualOrder.setManualOrderContents(manualOrderContentList);
@@ -363,52 +368,6 @@ public class OrderController {
   @GetMapping("/get/{ordNo}")
   public Json selectByPk(@PathVariable String ordNo) {
     ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
-    //    if (StringUtils.isNotEmpty(manualOrder.getFromKenId())
-    //        && StringUtils.isNotEmpty(manualOrder.getToKenId())) {
-    //      List<String> selectedAddress = new ArrayList<>();
-    //      selectedAddress.add(manualOrder.getFromKenId());
-    //      selectedAddress.add(manualOrder.getFromCityId());
-    //      selectedAddress.add(manualOrder.getFromTownId());
-    //      manualOrder.setSelectedAddress(selectedAddress);
-    //      Map<String, String> address = manualOrder.getAddress();
-    //      if (address == null || address.isEmpty()) {
-    //        address = new HashMap<>(3);
-    //      }
-    //      address.put("ken", manualOrder.getFromKenId());
-    //      address.put("city", manualOrder.getFromCityId());
-    //      address.put("town", manualOrder.getFromTownId());
-    //      JpDetailAddress jpDetailAddress =
-    //          japanAddressCache.getJpDetailAddress(
-    //              Integer.valueOf(manualOrder.getFromKenId()),
-    //              Integer.valueOf(manualOrder.getFromCityId()),
-    //              Integer.valueOf(manualOrder.getFromTownId()));
-    //      manualOrder.setFromKenName(jpDetailAddress.getKenName());
-    //      manualOrder.setFromCityName(jpDetailAddress.getCityName());
-    //      manualOrder.setFromTownName(jpDetailAddress.getTownName());
-    //      List<String> selectedToAddress = new ArrayList<>();
-    //      selectedToAddress.add(manualOrder.getToKenId());
-    //      selectedToAddress.add(manualOrder.getToCityId());
-    //      selectedToAddress.add(manualOrder.getToTownId());
-    //      manualOrder.setSelectedToAddress(selectedToAddress);
-    //      Map<String, String> toAddress = manualOrder.getToAddress();
-    //      if (toAddress == null || toAddress.isEmpty()) {
-    //        toAddress = new HashMap<>(3);
-    //      }
-    //      toAddress.put("ken", manualOrder.getToKenId());
-    //      toAddress.put("city", manualOrder.getToCityId());
-    //      toAddress.put("town", manualOrder.getToTownId());
-    //      JpDetailAddress toJpDetailAddress =
-    //          japanAddressCache.getJpDetailAddress(
-    //              Integer.valueOf(manualOrder.getToKenId()),
-    //              Integer.valueOf(manualOrder.getToCityId()),
-    //              Integer.valueOf(manualOrder.getToTownId()));
-    //      manualOrder.setToKenName(toJpDetailAddress.getKenName());
-    //      manualOrder.setToCityName(toJpDetailAddress.getCityName());
-    //      manualOrder.setToTownName(toJpDetailAddress.getTownName());
-    //    } else {
-    //      manualOrder.setSelectedAddress(new ArrayList<>());
-    //      manualOrder.setSelectedToAddress(new ArrayList<>());
-    //    }
     return Json.succ().data(manualOrder);
   }
 
@@ -417,7 +376,7 @@ public class OrderController {
     List<ManualOrderContent> contentList = orderMapper.listContent(regTxt);
     contentList.forEach(
         manualOrderContent -> {
-          String sku = manualOrderContent.getSku();
+          String sku = manualOrderContent.getDySku();
           String orderNo = manualOrderContent.getOrdno();
           ManualOrder manualOrder = orderMapper.getOrdDetail(orderNo);
           UpShelfProduct upShelfProduct =
@@ -480,10 +439,9 @@ public class OrderController {
       if ("1".equals(category)) {
         // 更新库存
         for (ManualOrderContent manualOrderContent : manualOrderContentList) {
-          String sku = manualOrderContent.getSku();
+          String sku = manualOrderContent.getDySku();
           int num = Integer.parseInt(manualOrderContent.getNum());
           String owner = manualOrder.getCreator();
-          String shelfNo = manualOrderContent.getShelfNo();
           UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(sku, owner);
           if (upShelfProduct != null) {
             upShelfProduct.setNum(String.valueOf(Integer.parseInt(upShelfProduct.getNum()) - num));
@@ -491,7 +449,7 @@ public class OrderController {
             ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
             productOutWarehouse.setUuid(SnowflakeIdWorker.generateStrId());
             productOutWarehouse.setDySku(manualOrderContent.getDySku());
-            productOutWarehouse.setSku(sku);
+            productOutWarehouse.setSku(manualOrderContent.getSku());
             productOutWarehouse.setNum(String.valueOf(num));
             productOutWarehouse.setOwner(owner);
             productOutWarehouse.setOrderNo(ordno);

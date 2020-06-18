@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     implements SysUserService {
 
-  @Override public SysUser selectUserByUserName(String userName) {
+  @Override
+  public SysUser selectUserByUserName(String userName) {
     return baseMapper.selectUserByUserName(userName);
   }
 
@@ -26,7 +27,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     return page.setRecords(baseMapper.selectUserIncludeRoles4Option(page, nick, username));
   }
 
-  @Override public int createUser(SysUser sysUser) {
+  @Override
+  public int createUser(SysUser sysUser) {
     return baseMapper.createUser(sysUser);
+  }
+
+  @Override
+  public boolean updateById(SysUser entity) {
+    SysUser ori = baseMapper.selectById(entity.getUid());
+    ori.setPwd(entity.getPwd());
+    ori.setSalt(entity.getSalt());
+    int result = baseMapper.updateById(ori);
+    return result > 0;
   }
 }

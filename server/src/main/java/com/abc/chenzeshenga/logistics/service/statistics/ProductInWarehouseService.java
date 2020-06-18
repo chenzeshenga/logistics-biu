@@ -16,16 +16,38 @@ public class ProductInWarehouseService
     extends ServiceImpl<ProductInWarehouseMapper, ProductInWarehouseSummary> {
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithManagerRole(
-      Page page, String sku, String name, String owner) {
+      String dySku, String name, String owner, long from, long size) {
     List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithManagerRole(page, sku, name, owner);
+        baseMapper.fetchProductInWarehouseWithManagerRole(dySku, name, owner, from, size);
+    return productInWarehouseSummaries;
+  }
+
+  public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithManagerRole(
+      String dySku, String name, String owner) {
+    List<ProductInWarehouseSummary> productInWarehouseSummaries =
+        baseMapper.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
     return productInWarehouseSummaries;
   }
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
-      Page page, String sku, String name, String username) {
+      String dySku, String name, String username, long from, long size) {
     List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithUserRole(page, sku, name, username);
+        baseMapper.fetchProductInWarehouseWithUserRole(dySku, name, username, from, size);
+    return productInWarehouseSummaries;
+  }
+
+  public long countProductInWarehouseWithUserRole(String dySku, String name, String owner) {
+    return baseMapper.countProductInWarehouseWithUserRole(dySku, name, owner);
+  }
+
+  public long countProductInWarehouseWithManagerRole(String dySku, String name, String owner) {
+    return baseMapper.countProductInWarehouseWithManagerRole(dySku, name, owner);
+  }
+
+  public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithUserRole(
+      String dySku, String name, String username) {
+    List<ProductInWarehouseSummary> productInWarehouseSummaries =
+        baseMapper.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
     return productInWarehouseSummaries;
   }
 }

@@ -25,6 +25,7 @@ export default {
         buttonVisible3: true,
         buttonVisible4: true,
         buttonVisible5: true,
+        buttonVisible12: true,
       },
     };
   },

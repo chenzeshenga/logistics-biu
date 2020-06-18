@@ -6,26 +6,35 @@ import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
-import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
+import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
-import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.statistics.ProductInWarehouseService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
-import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
 import com.abc.vo.Json;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.BaseRowModel;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import java.util.Date;
-import java.util.HashMap;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -97,93 +106,146 @@ public class ProductStatisticsController {
 
   @PostMapping("/productInWarehouse")
   @SuppressWarnings("rawtypes")
-  public Json searchProductInWarehouse(@RequestBody String body) {
-    JSONObject jsonObject = JSON.parseObject(body);
-    String sku = jsonObject.getString("sku");
-    String name = jsonObject.getString("name");
-    String owner = jsonObject.getString("owner");
-    Page page = PageUtils.getPageParam(jsonObject);
+  public Json searchProductInWarehouse(
+      @RequestBody
+          PageQueryEntity<ProductInWarehouseSummary> productInWarehouseSummaryPageQueryEntity) {
+    Pagination pagination = productInWarehouseSummaryPageQueryEntity.getPagination();
+    long current = pagination.getCurrent();
+    int size = pagination.getSize();
+    long fromIdx = (current - 1) * size;
+    ProductInWarehouseSummary productInWarehouseSummaryReq =
+        productInWarehouseSummaryPageQueryEntity.getEntity();
+    String owner = productInWarehouseSummaryReq.getOwner();
+    String username = UserUtils.getUserName();
+    boolean isManager = userCommonService.isManagerRole(username);
+    List<ProductInWarehouseSummary> productInWarehouseSummaries;
+    long total;
+    if (isManager) {
+      if (StringUtils.isEmpty(owner)) {
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
+                productInWarehouseSummaryReq.getDySku(),
+                productInWarehouseSummaryReq.getName(),
+                owner,
+                fromIdx,
+                size);
+        total =
+            productInWarehouseService.countProductInWarehouseWithManagerRole(
+                productInWarehouseSummaryReq.getDySku(),
+                productInWarehouseSummaryReq.getName(),
+                owner);
+      } else {
+        productInWarehouseSummaries =
+            productInWarehouseService.fetchProductInWarehouseWithUserRole(
+                productInWarehouseSummaryReq.getDySku(),
+                productInWarehouseSummaryReq.getName(),
+                owner,
+                fromIdx,
+                size);
+        total =
+            productInWarehouseService.countProductInWarehouseWithUserRole(
+                productInWarehouseSummaryReq.getDySku(),
+                productInWarehouseSummaryReq.getName(),
+                owner);
+      }
+    } else {
+      productInWarehouseSummaries =
+          productInWarehouseService.fetchProductInWarehouseWithUserRole(
+              productInWarehouseSummaryReq.getDySku(),
+              productInWarehouseSummaryReq.getName(),
+              username,
+              fromIdx,
+              size);
+      total =
+          productInWarehouseService.countProductInWarehouseWithUserRole(
+              productInWarehouseSummaryReq.getDySku(),
+              productInWarehouseSummaryReq.getName(),
+              username);
+    }
+    pagination.setTotal(total);
+    return Json.succ().data("data", productInWarehouseSummaries).data("page", pagination);
+  }
+
+  @GetMapping("/excel/productInWarehouse")
+  public void exportProductStatistics(
+      HttpServletResponse httpServletResponse,
+      @RequestParam(required = false, defaultValue = "") String dySku,
+      @RequestParam(required = false, defaultValue = "") String name,
+      @RequestParam(required = false, defaultValue = "") String owner)
+      throws IOException {
     String username = UserUtils.getUserName();
     boolean isManager = userCommonService.isManagerRole(username);
     List<ProductInWarehouseSummary> productInWarehouseSummaries;
     if (isManager) {
       if (StringUtils.isEmpty(owner)) {
         productInWarehouseSummaries =
-            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
-                page, sku, name, owner);
+            productInWarehouseService.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
       } else {
         productInWarehouseSummaries =
-            productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
+            productInWarehouseService.fetchAllProductInWarehouseWithUserRole(dySku, name, owner);
       }
     } else {
       productInWarehouseSummaries =
-          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
+          productInWarehouseService.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
     }
-    productInWarehouseSummaries.forEach(
-        productInWarehouseSummary -> {
-          String subSku = productInWarehouseSummary.getSku();
-          String subOwner = productInWarehouseSummary.getOwner();
-          String productName = productInWarehouseSummary.getName();
-          Product subProduct = new Product();
-          if (StringUtils.isEmpty(productName)) {
-            subProduct = productMapper.selectProductBySku(subSku);
-            if (subProduct != null) {
-              productInWarehouseSummary.setName(subProduct.getProductName());
-            }
-          }
-          Map<String, Object> columnMap = new HashMap<>(2);
-          columnMap.put("sku", subSku);
-          columnMap.put("owner", subOwner);
-          List<UpShelfProduct> upShelfProducts = upShelfProductMapper.selectByMap(columnMap);
-          Date curr = new Date();
-          for (UpShelfProduct product : upShelfProducts) {
-            Date uptime = product.getUptime();
-            product.setDatePoor(DateUtil.getDatePoor(curr, uptime));
-            if (StringUtils.isEmpty(productName) && subProduct != null) {
-              product.setName(subProduct.getProductName());
-            }
-          }
-          productInWarehouseSummary.setChildren(upShelfProducts);
-        });
-
-    return Json.succ().data("data", productInWarehouseSummaries);
+    String fileName = "商品在库统计信息.xlsx";
+    httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+    httpServletResponse.setHeader(
+        "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+    writeServletResp(
+        httpServletResponse, productInWarehouseSummaries, ProductInWarehouseSummary.class);
   }
 
-  @PostMapping("/productOutWarehouse")
-  @SuppressWarnings("rawtypes")
-  public Json searchProductOutWarehouse(@RequestBody String body) {
-    JSONObject jsonObject = JSON.parseObject(body);
-    String sku = jsonObject.getString("sku");
-    String name = jsonObject.getString("name");
-    String owner = jsonObject.getString("owner");
-    Page page = PageUtils.getPageParam(jsonObject);
-    String username = UserUtils.getUserName();
-    boolean isManager = userCommonService.isManagerRole(username);
-    List<ProductInWarehouseSummary> productInWarehouseSummaries;
-    if (isManager) {
-      if (StringUtils.isEmpty(owner)) {
-        productInWarehouseSummaries =
-            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
-                page, sku, name, owner);
-      } else {
-        productInWarehouseSummaries =
-            productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, owner);
-      }
-    } else {
-      productInWarehouseSummaries =
-          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name, username);
-    }
-    productInWarehouseSummaries.forEach(
-        productInWarehouseSummary -> {
-          String subSku = productInWarehouseSummary.getSku();
-          String subOwner = productInWarehouseSummary.getOwner();
-          ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
-          productOutWarehouse.setDySku(subSku);
-          productOutWarehouse.setOwner(subOwner);
-          List<ProductOutWarehouse> productOutWarehouseList =
-              productOutWarehouseMapper.list(productOutWarehouse);
-          productInWarehouseSummary.setProductOutWarehouseList(productOutWarehouseList);
-        });
-    return Json.succ().data("data", productInWarehouseSummaries);
+  private void writeServletResp(
+      HttpServletResponse httpServletResponse,
+      List<? extends BaseRowModel> baseRowModels,
+      Class<? extends BaseRowModel> clazz)
+      throws IOException {
+    ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+    ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
+    Sheet sheet1 = new Sheet(1, 0, clazz);
+    excelWriter.write(baseRowModels, sheet1);
+    excelWriter.finish();
+    httpServletResponse.flushBuffer();
   }
+
+  //  @PostMapping("/productOutWarehouse")
+  //  @SuppressWarnings("rawtypes")
+  //  public Json searchProductOutWarehouse(@RequestBody String body) {
+  //    JSONObject jsonObject = JSON.parseObject(body);
+  //    String sku = jsonObject.getString("sku");
+  //    String name = jsonObject.getString("name");
+  //    String owner = jsonObject.getString("owner");
+  //    Page page = PageUtils.getPageParam(jsonObject);
+  //    String username = UserUtils.getUserName();
+  //    boolean isManager = userCommonService.isManagerRole(username);
+  //    List<ProductInWarehouseSummary> productInWarehouseSummaries;
+  //    if (isManager) {
+  //      if (StringUtils.isEmpty(owner)) {
+  //        productInWarehouseSummaries =
+  //            productInWarehouseService.fetchProductInWarehouseWithManagerRole(
+  //                page, sku, name, owner);
+  //      } else {
+  //        productInWarehouseSummaries =
+  //            productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name,
+  // owner);
+  //      }
+  //    } else {
+  //      productInWarehouseSummaries =
+  //          productInWarehouseService.fetchProductInWarehouseWithUserRole(page, sku, name,
+  // username);
+  //    }
+  //    productInWarehouseSummaries.forEach(
+  //        productInWarehouseSummary -> {
+  //          String subSku = productInWarehouseSummary.getDySku();
+  //          String subOwner = productInWarehouseSummary.getOwner();
+  //          ProductOutWarehouse productOutWarehouse = new ProductOutWarehouse();
+  //          productOutWarehouse.setDySku(subSku);
+  //          productOutWarehouse.setOwner(subOwner);
+  //          List<ProductOutWarehouse> productOutWarehouseList =
+  //              productOutWarehouseMapper.list(productOutWarehouse);
+  //          productInWarehouseSummary.setProductOutWarehouseList(productOutWarehouseList);
+  //        });
+  //    return Json.succ().data("data", productInWarehouseSummaries);
+  //  }
 }

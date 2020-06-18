@@ -144,17 +144,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="sku">
+            <el-form-item label="东岳sku">
               <el-select
-                v-model="currContent.sku"
+                v-model="currContent.dySku"
                 placeholder="请从已审核产品中选择"
                 @change="handleValueChange"
+                clearable
+                filterable
               >
                 <el-option
-                  v-for="item in products"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in myProducts"
+                  :key="item.dySku"
+                  :label="item.dySku"
+                  :value="item.dySku"
                 />
               </el-select>
             </el-form-item>
@@ -188,7 +190,7 @@
             style="width: 90%"
           >
             <el-table-column prop="boxSeq" label="箱号" />
-            <el-table-column prop="sku" label="sku" />
+            <el-table-column prop="dySku" label="东岳sku"/>
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="totalNum" label="数量" />
             <el-table-column prop="wrapType" label="包装方式" />
@@ -296,6 +298,7 @@ export default {
           },
         ],
       },
+      myProducts: [],
     };
   },
   created() {
@@ -342,43 +345,33 @@ export default {
     },
     filterProductAndUserAddress(val) {
       request({
-        url: '/product/listAllByUser',
-        method: 'post',
-        data: {
-          user: val,
-        },
+        url: '/product/listByUser?username='+val,
+        method: 'get',
       }).then((res) => {
-        this.products = res.data.data;
-        if (this.products == null || this.products.length <= 0) {
-          this.$message.error(
-              '当前用户未配置商品，请重新选择用户或者去为该用户添加商品'
-          );
+        this.myProducts = res.data.data;
+        if (this.myProducts == null || this.myProducts.length <= 0) {
+          this.$message.error('当前用户未配置商品，请重新选择用户或者去为该用户添加商品');
           for (let i = 0; i < this.users.length; i++) {
             const subUser = this.users[i];
             if (subUser['uname'] === val) {
               subUser['disabled'] = true;
-              this.users[i] = subUser;
-              break;
             }
+            this.users[i] = subUser;
           }
           this.form.creator = '';
           return;
         }
-        for (const myProduct of this.products) {
-          const subProduct = myProduct;
-          this.productMap[subProduct['value']] = subProduct;
-        }
-      });
-      request({
-        url: '/user/info/get',
-        method: 'post',
-        data: {
-          userId: val,
-        },
-      }).then((ret) => {
-        if (ret.data.data != undefined && ret.data.data.hasOwnProperty('userAddress')) {
-          this.form.fromAddress = ret.data.data.userAddress;
-        }
+        this.storeProduct2Local(this.myProducts);
+        this.form.warehousingContentList = [];
+        this.currContent = {
+          dySku: '',
+          warehousingNo: '',
+          sku: '',
+          name: '',
+          boxSeq: '',
+          totalNum: '',
+          wrapType: '',
+        };
       });
     },
     initPage() {
@@ -432,23 +425,23 @@ export default {
       });
     },
     add2Cart() {
-      if (!this.currContent.sku || this.currContent.totalNum === 0) {
+      if (!this.currContent.dySku || this.currContent.totalNum === 0) {
         this.$message.warning('请选择入库商品或者调整数量');
         return;
       }
       this.currContent.warehousingNo = this.form.warehousingNo;
-      const sku = this.currContent.sku;
+      const dySku = this.currContent.dySku;
       const boxSeq = this.currContent.boxSeq;
       const boxContentMap = this.selectedProductMap[boxSeq];
       if (boxContentMap === undefined || boxContentMap.length <= 0) {
         this.selectedProductMap[boxSeq] = {};
-        this.selectedProductMap[boxSeq][sku] = this.currContent;
+        this.selectedProductMap[boxSeq][dySku] = this.currContent;
         this.pushData2Table();
       } else {
-        if (boxContentMap.hasOwnProperty(sku)) {
+        if (boxContentMap.hasOwnProperty(dySku)) {
           this.$confirm('相同箱号中的相同sku产品将合并', '提示', confirm)
               .then(() => {
-                const oriContent = boxContentMap[sku];
+                const oriContent = boxContentMap[dySku];
                 oriContent.totalNum += this.currContent.totalNum;
                 this.pushData2Table();
               })
@@ -456,7 +449,7 @@ export default {
                 this.$message.info('请重新选择箱号');
               });
         } else {
-          this.selectedProductMap[boxSeq][sku] = this.currContent;
+          this.selectedProductMap[boxSeq][dySku] = this.currContent;
           this.pushData2Table();
         }
       }
@@ -474,7 +467,7 @@ export default {
       }
       this.currContent = {
         warehousingNo: '',
-        sku: '',
+        dySku: '',
         name: '',
         boxSeq: '',
         totalNum: '',
@@ -486,7 +479,7 @@ export default {
     },
     handleDelete(index, row) {
       this.form.warehousingContentList.splice(index, 1);
-      delete this.selectedProductMap[row.boxSeq][row.sku];
+      delete this.selectedProductMap[row.boxSeq][row.dySku];
     },
     submitForm() {
       if (this.adminRole && this.form.creator.length <= 0) {
@@ -523,6 +516,12 @@ export default {
         this.initPage();
         this.reload();
       });
+    },
+    storeProduct2Local(myProducts) {
+      for (const myProduct of myProducts) {
+        const subProduct = myProduct;
+        this.productMap[subProduct['dySku']] = subProduct;
+      }
     },
   },
 };

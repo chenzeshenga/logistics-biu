@@ -80,4 +80,27 @@
         values (#{uid}, #{uname}, #{nick}, #{pwd}, #{salt}, #{created})
     </insert>
 
+    <update id="updateById" parameterType="com.abc.entity.SysUser">
+        update sys_user
+        set uname=#{uname},
+            nick=#{nick},
+            pwd=#{pwd},
+            salt=#{salt}
+        where uid = #{uid}
+    </update>
+
+    <select id="selectById" resultType="com.abc.entity.SysUser">
+        select uid,
+               uname,
+               nick,
+               pwd,
+               salt,
+               `lock`,
+               created,
+               updated
+        from sys_user
+        where uid = #{uid}
+    </select>
+
+
 </mapper>

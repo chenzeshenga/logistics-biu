@@ -2,9 +2,13 @@ package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.model.Product;
+import com.abc.chenzeshenga.logistics.model.common.Pagination;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -13,14 +17,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService extends ServiceImpl<ProductMapper, Product> {
 
-  public Page<Product> listByStatusWithUser(
-      Page page, String username, String status, String sku, String dySku, String name) {
-    return page.setRecords(
-        baseMapper.listByStatusWithUser(page, username, status, sku, dySku, name));
+  public List<Product> listByStatusWithUser(Product searchProduct, SqlLimit sqlLimit) {
+    return baseMapper.listByStatusWithUser(searchProduct, sqlLimit);
   }
 
-  public Page<Product> listByStatus(
-      Page page, String status, String sku, String dySku, String name, String creator) {
-    return page.setRecords(baseMapper.listByStatus(page, status, sku, dySku, name, creator));
+  public List<Product> listByStatus(Product searchProduct, SqlLimit sqlLimit) {
+    return baseMapper.listByStatus(searchProduct, sqlLimit);
+  }
+
+  public long countByStatus(Product searchProduct) {
+    return baseMapper.countByStatus(searchProduct);
   }
 }

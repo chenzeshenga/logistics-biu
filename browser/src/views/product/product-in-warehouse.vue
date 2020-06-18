@@ -4,7 +4,7 @@
       <el-row :gutter="20" style="margin: 1%">
         <el-col :span="6">
           <el-tooltip content="请输入商品sku/东岳sku" placement="top">
-            <el-input v-model="search.sku" placeholder="请输入商品sku/东岳sku"></el-input>
+            <el-input v-model="search.dySku" placeholder="请输入商品sku/东岳sku"></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
@@ -34,11 +34,9 @@
             <el-button icon="el-icon-refresh" @click="searchProductInWarehouse()"></el-button>
           </el-tooltip>
         </el-col>
-        <el-col :span="1">
-          <el-tooltip content="查询出库记录" placement="top">
-            <el-button @click="searchProductOutWarehouseRecord()">
-              <svg-icon icon-class="outWarehouse"></svg-icon>
-            </el-button>
+        <el-col :span="2">
+          <el-tooltip content="导出库存记录-统计" placement="top">
+            <el-button type="primary" @click="exportStatistics()">下载</el-button>
           </el-tooltip>
         </el-col>
         <el-col :span="1" v-if="adminRole">
@@ -48,9 +46,8 @@
             </el-button>
           </el-tooltip>
         </el-col>
-        <el-col :span="5">刷新时间： {{tip.timestamp}}</el-col>
+        <el-col :span="5" style="margin-top: 1%">刷新时间： {{tip.timestamp}}</el-col>
       </el-row>
-      <el-alert title="当前页面显示的在库时间仅做参考，实际在库时间以账单为准" type="info"></el-alert>
       <el-table
         style="width: 100%;margin: 10px;margin-left:50px"
         :data="tableData"
@@ -59,37 +56,12 @@
         stripe
         highlight-current-row
       >
-        <el-table-column type="expand" v-if="outSide">
-          <template slot-scope="tableData">
-            <el-table :data="tableData.row.children">
-              <el-table-column prop="sku" label="sku"/>
-              <el-table-column prop="name" label="商品名称"/>
-              <el-table-column prop="shelfNo" label="货架号"/>
-              <el-table-column prop="num" label="数量"/>
-              <el-table-column prop="owner" label="属主"/>
-              <el-table-column prop="warehousingNo" label="入库单号"/>
-              <el-table-column prop="uptime" label="上架时间"/>
-              <el-table-column prop="datePoor" label="在库时间"/>
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column type="expand" v-if="inSide">
-          <template slot-scope="tableData">
-            <el-table :data="tableData.row.productOutWarehouseList">
-              <el-table-column prop="uuid" label="uuid"/>
-              <el-table-column prop="sku" label="sku"/>
-              <el-table-column prop="num" label="数量"/>
-              <el-table-column prop="owner" label="属主"/>
-              <el-table-column prop="orderNo" label="订单号"/>
-              <el-table-column prop="trackNo" label="追踪单号"/>
-              <el-table-column prop="outTime" label="出库时间"/>
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sku" label="sku"></el-table-column>
+        <el-table-column prop="dySku" label="东岳sku"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="owner" label="属主"></el-table-column>
         <el-table-column prop="num" label="在库总数量"></el-table-column>
+        <el-table-column prop="totalVolume" label="在库总体积(cm^3)"></el-table-column>
+        <el-table-column prop="totalWeight" label="在库总重量(kg)"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -116,17 +88,24 @@
         </el-row>
         <el-row style="margin-top: 1%">
           <el-col :span="8">
-            <el-tooltip content="商品sku" placement="top">
-              <el-select filterable clearable v-model="currContent.sku" placeholder="商品sku">
+            <el-tooltip content="商品东岳sku" placement="top">
+              <el-select filterable clearable v-model="currContent.dySku" @change="showProductName" placeholder="商品东岳sku">
                 <el-option
                   v-for="product in userProduct"
                   :key="product.dySku"
-                  :label="product.name"
+                  :label="product.dySku"
                   :value="product.dySku"
                 ></el-option>
               </el-select>
             </el-tooltip>
           </el-col>
+          <el-col :span="16">
+            <el-tooltip content="商品名称" placement="top">
+              <el-input v-model="currContent.name" disabled></el-input>
+            </el-tooltip>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 1%">
           <el-col :span="8">
             <el-tooltip content="商品数量" placement="top">
               <el-input-number v-model="currContent.num"></el-input-number>
@@ -167,13 +146,13 @@
           </el-col>
         </el-row>
         <div v-for="(shelfSubContent,index) in shelfContent.content" :key="index" style="margin-top: 2%">
-          商品sku:{{shelfSubContent.sku}} 商品数量:{{shelfSubContent.num}} 上架货架:{{shelfSubContent.shelfNo}}
+          商品sku:{{shelfSubContent.dySku}} 商品数量:{{shelfSubContent.num}} 上架货架:{{shelfSubContent.shelfNo}}
           上架时间:{{shelfSubContent.uptime}} 入库单号:{{shelfSubContent.warehousingNo}}
           <el-button style="margin-left: 2%" type="danger" @click="removeSubContent(index)">删除</el-button>
         </div>
         <el-row style="margin-top: 5%">
           <el-button type="primary" @click="shelfContent2Backend">更新</el-button>
-          <el-button @click="this.dialogVisible4ShelfContent=false">取消</el-button>
+          <el-button @click="closeDialog">取消</el-button>
         </el-row>
       </el-dialog>
     </div>
@@ -189,7 +168,7 @@ export default {
   data() {
     return {
       search: {
-        sku: '',
+        dySku: '',
         name: '',
         owner: '',
       },
@@ -203,7 +182,7 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tip: {
@@ -215,6 +194,7 @@ export default {
         content: [],
       },
       currContent: {
+        dySku: '',
         sku: '',
         name: '',
         num: '',
@@ -223,6 +203,7 @@ export default {
         warehousingNo: '',
       },
       userProduct: [],
+      userProductMap: {},
       dialogVisible4ShelfContent: false,
       shelfOptions: [],
     };
@@ -236,13 +217,17 @@ export default {
     searchProductInWarehouse() {
       this.tip.timestamp = moment().format('YYYY-MM-DD HH:mm:ss ddd');
       const postData = {
-        current: this.tablePage.current,
-        pages: this.tablePage.pages,
-        size: this.tablePage.size,
-        total: this.tablePage.total,
-        sku: this.search.sku,
-        name: this.search.name,
-        owner: this.search.owner,
+        'pagination':
+          {
+            current: this.tablePage.current,
+            size: this.tablePage.size,
+          },
+        'entity':
+          {
+            dySku: this.search.dySku,
+            name: this.search.name,
+            owner: this.search.owner,
+          },
       };
       this.tableLoading = true;
       request({
@@ -251,6 +236,7 @@ export default {
         data: postData,
       }).then((ret) => {
         this.tableData = ret.data.data;
+        this.tablePage.total = ret.data.page.total;
         this.tableLoading = false;
       });
     },
@@ -260,6 +246,10 @@ export default {
         method: 'get',
       }).then((ret) => {
         this.userProduct = ret.data.data;
+        for (let i = 0; i < this.userProduct.length; i++) {
+          const product = this.userProduct[i];
+          this.userProductMap[product.dySku] = product;
+        }
       });
     },
     adjustShelfContent() {
@@ -364,6 +354,24 @@ export default {
         this.tableData = ret.data.data;
         this.tableLoading = false;
       });
+    },
+    showProductName(val) {
+      if (this.userProductMap[val]) {
+        this.currContent.name = this.userProductMap[val].name;
+      } else {
+        this.currContent.name = '';
+      }
+    },
+    closeDialog() {
+      this.dialogVisible4ShelfContent = false;
+    },
+    exportStatistics() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/statistics/excel/productInWarehouse?dySku=' + this.search.dySku + '&name=' + this.search.name + '&owner=' + this.search.owner;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
   },
 };

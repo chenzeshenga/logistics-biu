@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.warehouse.ProductInWarehouseRecordMapper">
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse">
+        insert into l_product_in_warehouse_record(uuid, dy_sku, num, owner, warehousing_no, in_time, shelf_no)
+        values (#{uuid}, #{dySku}, #{num}, #{owner}, #{warehousingNo}, #{inTime}, #{shelfNo})
+    </insert>
+
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse">
+        select
+
+        dy_sku as dySku, sku, num, owner, warehousing_no as warehousingNo, in_time as inTime, shelf_no as shelfNo
+
+        from logistics.l_product_in_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="productInWarehouse.dySku != null and productInWarehouse.dySku != ''">
+                and dy_sku like CONCAT('%', #{productInWarehouse.dySku}, '%')
+            </if>
+            <if test="productInWarehouse.owner != null and productInWarehouse.owner != ''">
+                and owner like CONCAT('%', #{productInWarehouse.owner}, '%')
+            </if>
+            <if test="productInWarehouse.warehousingNo != null and productInWarehouse.warehousingNo != ''">
+                and warehousing_no like CONCAT('%', #{productInWarehouse.warehousingNo}, '%')
+            </if>
+            <if test="productInWarehouse.shelfNo != null and productInWarehouse.shelfNo != ''">
+                and shelf_no like CONCAT('%', #{productInWarehouse.shelfNo}, '%')
+            </if>
+            <if test="productInWarehouse.startDate != null and productInWarehouse.endDate != null">
+                and in_time between #{productInWarehouse.startDate} and #{productInWarehouse.endDate}
+            </if>
+        </trim>
+        order by in_time desc
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from logistics.l_product_in_warehouse_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="productInWarehouse.dySku != null and productInWarehouse.dySku != ''">
+                and dy_sku like CONCAT('%', #{productInWarehouse.dySku}, '%')
+            </if>
+            <if test="productInWarehouse.owner != null and productInWarehouse.owner != ''">
+                and owner like CONCAT('%', #{productInWarehouse.owner}, '%')
+            </if>
+            <if test="productInWarehouse.warehousingNo != null and productInWarehouse.warehousingNo != ''">
+                and warehousing_no like CONCAT('%', #{productInWarehouse.warehousingNo}, '%')
+            </if>
+            <if test="productInWarehouse.shelfNo != null and productInWarehouse.shelfNo != ''">
+                and shelf_no like CONCAT('%', #{productInWarehouse.shelfNo}, '%')
+            </if>
+            <if test="productInWarehouse.startDate != null and productInWarehouse.endDate != null">
+                and in_time between #{productInWarehouse.startDate} and #{productInWarehouse.endDate}
+            </if>
+        </trim>
+    </select>
+</mapper>
