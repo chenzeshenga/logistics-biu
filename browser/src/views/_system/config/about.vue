@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.21 1. 修复订单长宽高记录',
+          timestamp: '2020-06-21',
+        },
+        {
           content: 'v1.20 1. 库存补录时新增入库记录',
           timestamp: '2020-06-18',
         },

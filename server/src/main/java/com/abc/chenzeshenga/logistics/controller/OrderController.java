@@ -169,8 +169,10 @@ public class OrderController {
         }
         return Json.succ().data("订单已发货");
       }
+    } else {
+      orderMapper.update(manualOrder);
+      return Json.succ().data("订单信息更新");
     }
-    return Json.fail("update", "非可更新状态");
   }
 
   @PostMapping("/updateOrd")

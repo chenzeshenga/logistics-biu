@@ -372,6 +372,7 @@
               content="提交发货"
               placement="top"
               v-if="msgData.buttonVisible6"
+              v-perm="'b:order:submit'"
           >
             <el-button
                 @click="
