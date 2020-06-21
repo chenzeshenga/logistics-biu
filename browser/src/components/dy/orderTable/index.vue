@@ -375,9 +375,7 @@
               v-perm="'b:order:submit'"
           >
             <el-button
-                @click="
-                                triggerVolumeAndWeight(scope.$index, scope.row)
-                            "
+                @click="triggerVolumeAndWeight(scope.$index, scope.row)"
                 size="small"
                 type="info"
                 icon="el-icon-check"

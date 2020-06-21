@@ -12,12 +12,17 @@ import java.util.TimeZone;
 public class DateUtil {
 
   private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT_2 = new SimpleDateFormat("yyyy-MM-dd");
 
   private static final SimpleDateFormat SIMPLE_STR_FORMAT =
       new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   public static Date getDateFromStr(String dateString) throws ParseException {
     return SIMPLE_DATE_FORMAT.parse(dateString);
+  }
+
+  public static Date getDateFromStr2(String dateString) throws ParseException {
+    return SIMPLE_DATE_FORMAT_2.parse(dateString);
   }
 
   public static String getStrFromDate(Date date) {

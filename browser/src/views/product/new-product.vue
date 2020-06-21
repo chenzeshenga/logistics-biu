@@ -225,7 +225,7 @@
                 模版文件
               </el-button>
               <div slot="tip" class="el-upload__tip">
-                只能上传excel文件(xls/xlsx)，记录条数小于200条
+                只能上传excel文件(xls/xlsx)，建议记录条数小于200条
               </div>
             </el-upload>
           </el-form-item>

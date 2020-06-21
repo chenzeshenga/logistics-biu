@@ -154,6 +154,42 @@
           <el-button type="primary" @click="shelfContent2Backend">更新</el-button>
           <el-button @click="closeDialog">取消</el-button>
         </el-row>
+        <el-row style="margin-top: 5%">批量导入</el-row>
+        <el-form :model="form">
+        <el-upload
+          :action="actionLink"
+          with-credentials
+          :on-error="handleError"
+          :limit="1"
+          :auto-upload="false"
+        >
+          <el-button
+            slot="trigger"
+            size="small"
+            type="primary"
+          >选取文件
+          </el-button>
+          <el-button
+            style="margin-left: 10px;"
+            size="small"
+            type="success"
+            @click="submitUpload4Excel"
+          >上传
+          </el-button>
+          <el-button
+            style="margin-left: 150px;"
+            size="small"
+            type="success"
+            @click="downloadTemplate"
+          >
+            <svg-icon icon-class="doc"></svg-icon>
+            模版文件
+          </el-button>
+          <div slot="tip" class="el-upload__tip">
+            只能上传excel文件(xls/xlsx)，建议记录条数小于200条
+          </div>
+        </el-upload>
+        </el-form>
       </el-dialog>
     </div>
   </div>
@@ -206,6 +242,8 @@ export default {
       userProductMap: {},
       dialogVisible4ShelfContent: false,
       shelfOptions: [],
+      actionLink: process.env.BASE_API + '/product/shelf/addShelfContentByFile?owner=',
+      form: {},
     };
   },
   created() {
@@ -372,6 +410,25 @@ export default {
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
+    },
+    handleError(err) {
+      this.$message.error(JSON.parse(err.message)['message']);
+    },
+    downloadTemplate() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/template/file/PRODUCT_IN_WAREHOUSE_TEMPLATE';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    submitUpload4Excel() {
+      if (!this.shelfContent.owner) {
+        this.$message.warning('请选择库存属主');
+        return;
+      }
+      this.actionLink = process.env.BASE_API + '/product/shelf/addShelfContentByFile?owner=' + this.shelfContent.owner;
+      this.$refs.upload.submit();
     },
   },
 };
