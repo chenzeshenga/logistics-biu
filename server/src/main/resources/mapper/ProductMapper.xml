@@ -487,4 +487,12 @@
         limit 1
     </select>
 
+    <select id="selectProductByOwnerAndDySku" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select *
+        from l_productions
+        where dy_sku = #{dysku}
+          and createdBy = #{owner}
+        limit 1
+    </select>
+
 </mapper>

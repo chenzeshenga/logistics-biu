@@ -56,4 +56,6 @@ public interface ProductMapper extends BaseMapper<Product> {
   List<SkuLabel> listUserOwnProduct(String username);
 
   Product selectProductBySku(String sku);
+
+  Product selectProductByOwnerAndDySku(String owner, String dysku);
 }

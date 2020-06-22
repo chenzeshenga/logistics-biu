@@ -3,7 +3,6 @@ package com.abc.chenzeshenga.logistics.controller.product;
 import com.abc.chenzeshenga.logistics.model.common.Page;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
-import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
 import com.abc.vo.Json;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product/in")
 public class ProductInWarehouseRecordController {
 
-    private ProductInWarehouseRecordService productInWarehouseRecordService;
+  private ProductInWarehouseRecordService productInWarehouseRecordService;
 
-    @Autowired
-    public ProductInWarehouseRecordController(ProductInWarehouseRecordService productInWarehouseRecordService){
-      this.productInWarehouseRecordService =productInWarehouseRecordService;
-    }
+  @Autowired
+  public ProductInWarehouseRecordController(
+      ProductInWarehouseRecordService productInWarehouseRecordService) {
+    this.productInWarehouseRecordService = productInWarehouseRecordService;
+  }
 
-
-  //
-  //  @Autowired
-  //  public ProductInWarehouseRecordController(
-  //      ProductOutWarehouseRecordService productOutWarehouseRecordService) {
-  //    this.productOutWarehouseRecordService = productOutWarehouseRecordService;
-  //  }
-  //
   @PostMapping("/warehouse/records")
   public Json listProductInWarehouseRecords(
       @RequestBody PageQueryEntity<ProductInWarehouse> productInWarehousePageQueryEntity) {

@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.FileMapper;
+import com.abc.chenzeshenga.logistics.mapper.ProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.UserFileRecordMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
@@ -51,6 +52,7 @@ public class ProductShelfController {
   @Resource private FileMapper fileMapper;
   @Resource private WarehousingMapper warehousingMapper;
   @Resource private UserFileRecordMapper userFileRecordMapper;
+  @Resource private ProductMapper productMapper;
 
   @PostMapping("/add")
   public Json add(
@@ -106,9 +108,9 @@ public class ProductShelfController {
 
   @PostMapping("/addShelfContentByFile")
   public Json addShelfContentByFile(
-      @RequestParam(value = "file") MultipartFile multipartFile,
-      @RequestParam(required = false, defaultValue = "") String owner)
+      @RequestParam(value = "file") MultipartFile multipartFile, @RequestParam String owner)
       throws IOException {
+    StringBuilder msg = new StringBuilder();
     String uuid = UUID.randomUUID().toString().replace("-", "");
     File file = new File(uuid, multipartFile.getBytes());
     fileMapper.insert(file);
@@ -124,7 +126,6 @@ public class ProductShelfController {
     InputStream inputStream = multipartFile.getInputStream();
     List<Object> warehouseRecordList =
         EasyExcelFactory.read(inputStream, new Sheet(1, 0, UpShelfProductInFile.class));
-    //  ignore the first item since it's the Excel head
     for (int i = 1; i < warehouseRecordList.size(); i++) {
       UpShelfProductInFile upShelfProductInFile = (UpShelfProductInFile) warehouseRecordList.get(i);
       try {
@@ -132,6 +133,12 @@ public class ProductShelfController {
         upShelfProduct.setUuid(SnowflakeIdWorker.generateStrId());
         upShelfProduct.setOwner(owner);
         upShelfProduct.setDySku(upShelfProductInFile.getDySku());
+        Product product =
+            productMapper.selectProductByOwnerAndDySku(owner, upShelfProductInFile.getDySku());
+        if (product == null) {
+          throw new IllegalArgumentException(
+              "东岳sku" + upShelfProductInFile.getDySku() + "不存在，导入失败;");
+        }
         upShelfProduct.setNum(upShelfProductInFile.getNum());
         upShelfProduct.setShelfNo(upShelfProductInFile.getShelfNo());
         String inTime = upShelfProductInFile.getInTime();
@@ -146,13 +153,14 @@ public class ProductShelfController {
         productInWarehouse.setOwner(upShelfProduct.getOwner());
         productInWarehouse.setWarehousingNo(upShelfProduct.getWarehousingNo());
         productInWarehouse.setShelfNo(upShelfProduct.getShelfNo());
-        productInWarehouse.setInTime(new Date());
+        productInWarehouse.setInTime(inTimeDate);
         productInWarehouseRecordMapper.insert(productInWarehouse);
       } catch (Exception e) {
         log.error("error data {}", upShelfProductInFile);
         log.error("error stack info", e);
+        msg.append(e.getMessage());
       }
     }
-    return Json.succ();
+    return Json.succ().msg(msg.toString());
   }
 }
