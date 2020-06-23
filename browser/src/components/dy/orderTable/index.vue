@@ -639,22 +639,25 @@
     </el-dialog>
     <el-dialog title="提交发货" :visible.sync="dialogVisible2" width="50%">
       <el-form :model="form">
-        <el-col :span="24">
+        <el-row :span="24">
           <el-form-item label="订单号">
             <el-input v-model="form.orderNo" disabled></el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="24" style="margin-top: 10px">
+        </el-row>
+        <el-alert type="info" title="每个订单默认1个包裹，如需拆分包裹，请点击按钮" :closable="false"/>
+        <el-row :span="24" style="margin-top: 10px">
           <el-col :span="7">
             <el-form-item label="长(cm)">
               <el-input-number
                   v-model="form.length"
+                  @change="calculateIndex"
               ></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="7">
             <el-form-item label="宽(cm)">
               <el-input-number
+                @change="calculateIndex"
                   v-model="form.width"
               ></el-input-number>
             </el-form-item>
@@ -663,86 +666,115 @@
             <el-form-item label="高(cm)">
               <el-input-number
                   v-model="form.height"
+                  @change="calculateIndex"
               ></el-input-number>
             </el-form-item>
           </el-col>
-          <el-col :span="1"></el-col>
-          <el-col :span="2">
-            <el-tooltip content="计算" placement="top">
-              <el-button circle @click="calculateIndex">
-                <svg-icon icon-class="calculate"></svg-icon>
-              </el-button>
+        </el-row>
+        <el-row :span="24" style="margin-bottom: 2%">
+          <label>根据页面输入计算结果如下(仅供参考):</label>
+        </el-row>
+        <el-form-item style="margin-top: 2%">
+          <el-col :span="8">
+            <el-tooltip
+              placement="top"
+              content="总体积(cm^3)=长*宽*高"
+            >
+              <el-form-item label="总体积(cm^3)">
+                <el-input-number
+                  v-model="form.totalVolumeFrontEnd"
+                ></el-input-number>
+              </el-form-item>
             </el-tooltip>
           </el-col>
-          <el-col :span="24" style="margin-bottom: 2%">
-            <label>根据页面输入计算结果如下(仅供参考):</label>
+          <el-col :span="8">
+            <el-tooltip
+              content="三边和(cm)=长+宽+高"
+              placement="top"
+            >
+              <el-form-item label="三边和(cm)">
+                <el-input-number
+                  v-model="form.sum"
+                ></el-input-number>
+              </el-form-item>
+            </el-tooltip>
           </el-col>
-          <el-form-item style="margin-top: 2%">
-            <el-col :span="8">
-              <el-tooltip
-                  placement="top"
-                  content="总体积(cm^3)=长*宽*高"
-              >
-                <el-form-item label="总体积(cm^3)">
-                  <el-input-number
-                      v-model="form.totalVolumeFrontEnd"
-                  ></el-input-number>
-                </el-form-item>
-              </el-tooltip>
-            </el-col>
-            <el-col :span="8">
-              <el-tooltip
-                  content="三边和(cm)=长+宽+高"
-                  placement="top"
-              >
-                <el-form-item label="三边和(cm)">
-                  <el-input-number
-                      v-model="form.sum"
-                  ></el-input-number>
-                </el-form-item>
-              </el-tooltip>
-            </el-col>
-            <el-col :span="8">
-              <el-tooltip
-                  content="体积重=长*宽*高/6000"
-                  placement="top"
-              >
-                <el-form-item label="体积重(cm^3)">
-                  <el-input-number
-                      v-model="form.totalVolumeWithWeight"
-                  ></el-input-number>
-                </el-form-item>
-              </el-tooltip>
-            </el-col>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
+          <el-col :span="8">
+            <el-tooltip
+              content="体积重=长*宽*高/6000"
+              placement="top"
+            >
+              <el-form-item label="体积重(cm^3)">
+                <el-input-number
+                  v-model="form.totalVolumeWithWeight"
+                ></el-input-number>
+              </el-form-item>
+            </el-tooltip>
+          </el-col>
+        </el-form-item>
+        <el-row :span="24">
           <el-form-item label="当前订单总重量(kg)">
             <el-input-number
                 v-model="form.totalWeight"
             ></el-input-number>
           </el-form-item>
-        </el-col>
-        <el-col :span="24">
+        </el-row>
+        <el-row :span="24">
           <el-form-item label="承运人">
-            <el-cascader
-                :options="carrier"
-                v-model="form.carrierNo"
-                @change="handleCarrierChange"
-                filterable
-            ></el-cascader>
+            <el-select filterable clearable v-model="form.carrierNo" placeholder="请选择创建人">
+              <el-option v-for="ele in carrier" :key="ele.label" :label="ele.label"
+                         :value="ele.value"></el-option>
+            </el-select>
           </el-form-item>
-        </el-col>
-        <el-col :span="24">
+        </el-row>
+        <el-row :span="24">
           <el-form-item label="追踪单号">
             <el-input placeholder="请输入或者扫描对应的追踪单号" v-model="form.trackNo"></el-input>
           </el-form-item>
-        </el-col>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          <el-tooltip placement="top" content="增加该包裹">
+            <el-button type="primary" @click="addPackage" style="margin-left: 85%">
+              增加
+            </el-button>
+          </el-tooltip>
+        </el-row>
+        <h5>当前订单包裹列表</h5>
+        <el-table style="margin-top: 2%;width: 100%"
+                  :data="tableDataInDialog"
+                  stripe
+                  highlight-current-row
+        >
+          <el-table-column prop="orderNo" label="订单号"/>
+          <el-table-column prop="length" label="长(cm)"/>
+          <el-table-column prop="width" label="宽(cm)"/>
+          <el-table-column prop="height" label="高(cm)"/>
+          <el-table-column prop="totalWeight" label="包裹重量(kg)"/>
+          <el-table-column prop="carrierNo" label="承运人"/>
+          <el-table-column prop="trackNo" label="追踪单号"/>
+<!--          <el-table-column label="操作">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-tooltip-->
+<!--                content="删除"-->
+<!--                placement="top"-->
+<!--              >-->
+<!--&lt;!&ndash;                  @click="removePackage(scope.$index, scope.row)"&ndash;&gt;-->
+<!--                <el-button-->
+<!--                  size="small"-->
+<!--                  type="danger"-->
+<!--                  icon="el-icon-remove"-->
+<!--                  circle-->
+<!--                  plain-->
+<!--                ></el-button>-->
+<!--              </el-tooltip>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+        </el-table>
       </el-form>
       <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible2 = false">取 消</el-button>
-                <el-button type="primary" @click="updateOrd">确 定</el-button>
-            </span>
+         <el-button @click="dialogVisible2 = false">取 消</el-button>
+         <el-button type="primary" @click="updateOrd">确 定</el-button>
+      </span>
     </el-dialog>
     <el-dialog
         title="编辑订单体积重量"
@@ -1038,6 +1070,7 @@ export default {
       fileList: [],
       tmpOrderNo: '',
       tableData4File: [],
+      tableDataInDialog: [],
     };
   },
   props: ['msg'],
@@ -1485,6 +1518,23 @@ export default {
         this.tableData4File = ret.data.data;
       });
       this.dialogVisible5 = true;
+    },
+    addPackage() {
+      this.tableDataInDialog.push(this.form);
+      this.form = {
+        orderNo: '',
+        status: '',
+        selectedCarrier: [],
+        carrierNo: '',
+        trackNo: '',
+        length: 0,
+        width: 0,
+        height: 0,
+        totalVolumeFrontEnd: 0,
+        sum: 0,
+        totalVolumeWithWeight: 0,
+        totalWeight: 0,
+      };
     },
   },
 };
