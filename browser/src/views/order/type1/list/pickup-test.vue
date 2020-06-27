@@ -2,6 +2,7 @@
   <div class="login-container">
     <div class="app-container">
       <el-button @click="scanBarcode">确定</el-button>
+      <el-button @click="stopBarcodeScan">停止</el-button>
       <div id="test" style="width: 100%;height: 20%"></div>
     </div>
   </div>
@@ -146,6 +147,9 @@ export default {
       } else {
         this.$message.error('当前浏览器不支持扫码功能');
       }
+    },
+    stopBarcodeScan() {
+      Quagga.stop();
     },
   },
   watch: {
