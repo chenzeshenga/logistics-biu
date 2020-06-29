@@ -61,10 +61,6 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
 
   private static final String ALGORITHM = "HmacSHA256";
 
-  private static final String SECRET_KEY = "Hlk378HmiTqB6qNbpX9hcK/V3wE6n8uDwa6uXGq9";
-
-  private static final String AWS_ACCESS_KEY_ID = "AKIAIBNSITOXC4E6G4SQ";
-
   @Resource private AmazonStoreInfoMapper amazonStoreInfoMapper;
 
   private RestTemplate restTemplate;
@@ -353,15 +349,12 @@ public class AmazonOrderServiceImpl implements AmazonOrderService {
   //    // Create set of parameters needed and store in a map
   //    HashMap<String, String> parameters = new HashMap<>(12);
   //    // Add required parameters. Change these as needed.
-  //    parameters.put("AWSAccessKeyId", urlEncode("AKIAIBNSITOXC4E6G4SQ"));
   //    parameters.put("Action", urlEncode("ListOrders"));
-  //    parameters.put("MWSAuthToken", urlEncode("amzn.mws.46b82a85-7012-ba93-cf4f-6c084bbf1262"));
   //    parameters.put("SignatureVersion", urlEncode("2"));
   //    parameters.put("Timestamp", urlEncode(new Date().toString()));
   //    parameters.put("Version", urlEncode("2013-09-01"));
   //    parameters.put("Signature", urlEncode(ALGORITHM));
   //    parameters.put("SignatureMethod", urlEncode(ALGORITHM));
-  //    parameters.put("SellerId", urlEncode("A2SNP3C6EOJ094"));
   //    parameters.put("CreatedAfter", urlEncode("2020-02-29T16%3A00%3A00Z"));
   //    parameters.put("CreatedBefore", urlEncode("2020-03-09T16%3A00%3A00Z"));
   //    parameters.put("MarketplaceId.Id.1", urlEncode("A1VC38T7YXB528"));
