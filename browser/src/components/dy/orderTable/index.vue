@@ -752,23 +752,23 @@
           <el-table-column prop="totalWeight" label="包裹重量(kg)"/>
           <el-table-column prop="carrierNo" label="承运人"/>
           <el-table-column prop="trackNo" label="追踪单号"/>
-<!--          <el-table-column label="操作">-->
-<!--            <template slot-scope="scope">-->
-<!--              <el-tooltip-->
-<!--                content="删除"-->
-<!--                placement="top"-->
-<!--              >-->
-<!--&lt;!&ndash;                  @click="removePackage(scope.$index, scope.row)"&ndash;&gt;-->
-<!--                <el-button-->
-<!--                  size="small"-->
-<!--                  type="danger"-->
-<!--                  icon="el-icon-remove"-->
-<!--                  circle-->
-<!--                  plain-->
-<!--                ></el-button>-->
-<!--              </el-tooltip>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-tooltip
+                content="删除"
+                placement="top"
+              >
+                <el-button
+                  @click="removePackage(scope.$index, scope.row)"
+                  size="small"
+                  type="danger"
+                  icon="el-icon-remove"
+                  circle
+                  plain
+                ></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
         </el-table>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -1040,6 +1040,7 @@ export default {
         sum: 0,
         totalVolumeWithWeight: 0,
         totalWeight: 0,
+        orderPackageList: [],
       },
       ord4TrackNo: [],
       dialogVisibleList: false,
@@ -1419,6 +1420,8 @@ export default {
     },
     updateOrd() {
       this.form.status = this.msgData.statusTo;
+      this.form.orderPackageList = this.tableDataInDialog;
+      console.log(this.form);
       request({
         url: '/ord/updateOrd',
         method: 'post',
@@ -1522,8 +1525,8 @@ export default {
     addPackage() {
       this.tableDataInDialog.push(this.form);
       this.form = {
-        orderNo: '',
-        status: '',
+        orderNo: this.form.orderNo,
+        status: this.form.status,
         selectedCarrier: [],
         carrierNo: '',
         trackNo: '',
@@ -1535,6 +1538,9 @@ export default {
         totalVolumeWithWeight: 0,
         totalWeight: 0,
       };
+    },
+    removePackage(index, row) {
+      this.tableDataInDialog.splice(index, 1);
     },
   },
 };

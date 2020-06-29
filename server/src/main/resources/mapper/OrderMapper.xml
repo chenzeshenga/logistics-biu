@@ -460,10 +460,10 @@
                content.picked,
                content.satisfied
         from l_manual_order_content content
-                     inner join l_manual_order ord on (content.ordno = ord.ord_no)
+                 inner join l_manual_order ord on (content.ordno = ord.ord_no)
         where ordno = #{ordNo}
           and (ord.status = 2
-                or ord.status = 7)
+            or ord.status = 7)
         order by ord.update_on desc
     </select>
 
@@ -618,6 +618,20 @@
         set to_zipcode=#{toZipCode}
         where user_custom_order_no = #{userCustomOrderNo}
     </update>
+
+    <delete id="dropOrderPackage">
+        delete
+        from l_order_package
+        where orderNo = #{ordNo}
+    </delete>
+
+    <insert id="insertOrderPackage" parameterType="java.util.List">
+        insert into l_order_package(uuid, orderNo, length, width, height, carrierNo, trackNo)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.uuid},#{item.orderNo},#{item.length},#{item.width},#{item.height},#{item.carrierNo},#{item.trackNo})
+        </foreach>
+    </insert>
 
 
 </mapper>

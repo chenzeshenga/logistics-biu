@@ -9,6 +9,7 @@ import com.abc.chenzeshenga.logistics.mapper.shelf.UpShelfProductMapper;
 import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
+import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.service.OrderService;
@@ -182,6 +183,13 @@ public class OrderController {
     String cname = UserUtils.getUserName();
     manualOrder.setUpdator(cname);
     int result = orderMapper.update(manualOrder);
+    List<OrderPackage> orderPackageList = manualOrder.getOrderPackageList();
+    if (orderPackageList != null && !orderPackageList.isEmpty()) {
+      orderMapper.dropOrderPackage(manualOrder.getOrderNo());
+      orderPackageList.forEach(
+          orderPackage -> orderPackage.setUuid(SnowflakeIdWorker.generateStrId()));
+      orderMapper.insertOrderPackage(orderPackageList);
+    }
     return Json.succ().data(result);
   }
 

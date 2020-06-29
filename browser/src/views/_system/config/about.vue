@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.23 1. 订单对应多个包裹',
+          timestamp: '2020-06-30',
+        },
+        {
           content: 'v1.22 1. 增加入库单批量导入',
           timestamp: '2020-06-23',
         },

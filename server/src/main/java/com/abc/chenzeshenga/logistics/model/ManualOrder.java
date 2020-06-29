@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -175,6 +176,8 @@ public class ManualOrder extends BaseRowModel implements Serializable {
   private double totalWeight;
   private int pickup = 2;
   private String files;
+
+  private List<OrderPackage> orderPackageList;
 
   public ManualOrder(String orderNo, int pickup) {
     this.orderNo = orderNo;

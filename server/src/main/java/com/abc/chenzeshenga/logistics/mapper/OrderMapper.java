@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
+import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.abc.chenzeshenga.logistics.temp.entity.TmpOrder;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
@@ -123,4 +124,8 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
   List<ManualOrderContent> listContentByOrdNo(String ordNo);
 
   int updateOrder(TmpOrder tmpOrder);
+
+  int dropOrderPackage(String ordNo);
+
+  int insertOrderPackage(List<OrderPackage> orderPackageList);
 }
