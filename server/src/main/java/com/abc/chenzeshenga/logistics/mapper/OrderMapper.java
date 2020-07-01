@@ -128,4 +128,6 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
   int dropOrderPackage(String ordNo);
 
   int insertOrderPackage(List<OrderPackage> orderPackageList);
+
+  List<OrderPackage> listPackage(String orderno);
 }

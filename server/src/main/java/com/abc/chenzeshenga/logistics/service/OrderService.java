@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.service;
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.util.Date;
@@ -61,7 +62,9 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
     for (ManualOrder manualOrder : manualOrderList) {
       List<ManualOrderContent> manualOrderContentList =
           baseMapper.listContent2(manualOrder.getOrderNo());
+      List<OrderPackage> orderPackageList = baseMapper.listPackage(manualOrder.getOrderNo());
       manualOrder.setManualOrderContents(manualOrderContentList);
+      manualOrder.setOrderPackageList(orderPackageList);
     }
     manualOrderPage.setRecords(manualOrderList);
     manualOrderPage.setSize(page.getSize());

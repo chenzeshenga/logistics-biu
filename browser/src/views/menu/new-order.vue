@@ -613,6 +613,7 @@ export default {
             this.selectedChannels.push(ord.channel);
           }
           setTimeout(() => {
+            this.$message.warning('部分内容无法自动填充，请在提交前核对订单内容');
             this.form = ord;
             const contentList = ord.contentList;
             this.form.contentList = [];

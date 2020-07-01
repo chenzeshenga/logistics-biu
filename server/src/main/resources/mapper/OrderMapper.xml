@@ -626,12 +626,26 @@
     </delete>
 
     <insert id="insertOrderPackage" parameterType="java.util.List">
-        insert into l_order_package(uuid, orderNo, length, width, height, carrierNo, trackNo)
+        insert into l_order_package(uuid, orderNo, length, width, height,totalWeight, carrierNo, trackNo)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.uuid},#{item.orderNo},#{item.length},#{item.width},#{item.height},#{item.carrierNo},#{item.trackNo})
+            (#{item.uuid},#{item.orderNo},#{item.length},#{item.width},#{item.height},#{item.totalWeight},#{item.carrierNo},#{item.trackNo})
         </foreach>
     </insert>
+
+    <select id="listPackage" parameterType="java.lang.String"
+            resultType="com.abc.chenzeshenga.logistics.model.ord.OrderPackage">
+        select uuid,
+               orderNo,
+               length,
+               width,
+               height,
+               totalWeight,
+               carrierNo,
+               trackNo
+        from l_order_package
+        where orderNo = #{orderno}
+    </select>
 
 
 </mapper>

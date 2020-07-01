@@ -20,6 +20,7 @@ public class OrderPackage {
   private double length;
   private double width;
   private double height;
+  private double totalWeight;
   private String carrierNo;
   private String trackNo;
 }

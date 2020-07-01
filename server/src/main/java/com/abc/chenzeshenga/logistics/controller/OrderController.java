@@ -135,6 +135,13 @@ public class OrderController {
   public Json update(@RequestBody ManualOrder manualOrder) {
     String ordno = manualOrder.getOrderNo();
     ManualOrder manualOrderOri = orderMapper.selectById(ordno);
+    List<OrderPackage> orderPackageList = manualOrder.getOrderPackageList();
+    if (orderPackageList != null && !orderPackageList.isEmpty()) {
+      orderMapper.dropOrderPackage(manualOrder.getOrderNo());
+      orderPackageList.forEach(
+        orderPackage -> orderPackage.setUuid(SnowflakeIdWorker.generateStrId()));
+      orderMapper.insertOrderPackage(orderPackageList);
+    }
     if ("2".equals(manualOrder.getStatus()) && "1".equals(manualOrderOri.getCategory())) {
       List<ManualOrderContent> manualOrderContentList = orderMapper.listContent(ordno);
       boolean satisfied = true;
