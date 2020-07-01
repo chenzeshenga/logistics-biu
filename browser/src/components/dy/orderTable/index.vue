@@ -156,6 +156,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="expand">
         <template slot-scope="tableData">
+          <el-alert type="info" title="订单内容" :closable="false"/>
           <el-table
               :data="tableData.row.contentList"
               show-summary
@@ -186,6 +187,51 @@
                 prop="picked"
                 label="已拣货"
                 width="180"
+            ></el-table-column>
+          </el-table>
+          <el-alert type="info" title="包裹列表" :closable="false" style="margin-top: 1%"/>
+          <el-table
+            :data="tableData.row.orderPackageList"
+          >
+            <el-table-column
+              prop="uuid"
+              label="uuid"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="orderNo"
+              label="订单号"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="length"
+              label="长(cm)"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="width"
+              label="宽(cm)"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="height"
+              label="高(cm)"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="totalWeight"
+              label="重量(kg)"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="carrierNo"
+              label="承运人"
+              width="200"
+            ></el-table-column>
+            <el-table-column
+              prop="trackNo"
+              label="运单号"
+              width="200"
             ></el-table-column>
           </el-table>
         </template>
@@ -291,41 +337,6 @@
           width="80"
           prop="collectNum"
           label="总计代收费用"
-      ></el-table-column>
-      <el-table-column
-          width="80"
-          prop="length"
-          label="长(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="80"
-          prop="width"
-          label="宽(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="80"
-          prop="height"
-          label="高(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="120"
-          prop="totalVolumeFrontEnd"
-          label="总体积(cm^3)"
-      ></el-table-column>
-      <el-table-column
-          width="120"
-          prop="sum"
-          label="三边和(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="80"
-          prop="totalVolumeWithWeight"
-          label="体积重"
-      ></el-table-column>
-      <el-table-column
-          width="120"
-          prop="totalWeight"
-          label="总重量(kg)"
       ></el-table-column>
       <el-table-column
         width="120"
