@@ -107,6 +107,9 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
   List<ManualOrder> listAllByStatus(String category, String status);
 
+  //TODO correct below
+  List<ManualOrder> listAllByStatusV2(String category, String status);
+
   List<ManualOrder> listAllByUsername(Map<String, String> request);
 
   int count();

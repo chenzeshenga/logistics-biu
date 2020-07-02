@@ -141,6 +141,15 @@
               </el-button>
             </el-tooltip>
           </el-col>
+          <el-col :span="2">
+            <el-tooltip effect="dark" content="导出当前状态所有订单" placement="top">
+              <el-button
+                type="primary"
+                @click="exportExcelV2()"
+              >导出excel-v2
+              </el-button>
+            </el-tooltip>
+          </el-col>
         </el-row>
       </el-form-item>
     </el-form>
@@ -1407,6 +1416,28 @@ export default {
         this.search.ordno +
         '&creator=' +
         this.search.creator +
+        '&channelCode=' +
+        this.search.channelCode +
+        '&trackNo=' +
+        this.search.trackNo +
+        '&pickup=' +
+        this.search.pickup;
+      if (this.daterange) {
+        link.href = link.href +
+          '&fromDate=' +
+          this.daterange[0] +
+          '&toDate=' +
+          this.daterange[1];
+      }
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    exportExcelV2() {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/ord/excel/v2/' + this.msgData.category + '/' + this.msgData.status + '?ordno=' +
+        this.search.ordno +
         '&channelCode=' +
         this.search.channelCode +
         '&trackNo=' +

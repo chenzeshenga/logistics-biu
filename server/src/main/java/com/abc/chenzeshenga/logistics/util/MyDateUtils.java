@@ -23,4 +23,10 @@ public class MyDateUtils {
     calendar.setTime(date);
     return calendar;
   }
+
+  public static String getCurrDateStr() {
+    Date date = new Date();
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd-HHmmss");
+    return simpleDateFormat.format(date);
+  }
 }
