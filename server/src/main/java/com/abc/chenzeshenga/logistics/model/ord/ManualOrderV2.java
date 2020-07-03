@@ -24,6 +24,8 @@ public class ManualOrderV2 extends BaseRowModel {
   @ExcelProperty(index = 1, value = "用户定义订单号")
   private String userCustomOrderNo;
 
+  private String status;
+
   @ExcelProperty(index = 2, value = "当前状态")
   private String statusDesc;
 
@@ -34,11 +36,15 @@ public class ManualOrderV2 extends BaseRowModel {
   @ExcelProperty(index = 4, value = "创建时间", format = "yyyy-MM-dd HH:mm:ss")
   private Date createOn;
 
+  private String carrierNo;
+
   @ExcelProperty(index = 5, value = "承运人")
   private String carrierName;
 
   @ExcelProperty(index = 6, value = "追踪单号")
   private String trackNo;
+
+  private String category;
 
   @ExcelProperty(index = 7, value = "订单类型")
   private String categoryName;
@@ -81,6 +87,8 @@ public class ManualOrderV2 extends BaseRowModel {
 
   @ExcelProperty(index = 20, value = "收件人联系方式")
   private String toContact;
+
+  private String onBehalf;
 
   @ExcelProperty(index = 21, value = "是否代收费用")
   private String collectDesc;

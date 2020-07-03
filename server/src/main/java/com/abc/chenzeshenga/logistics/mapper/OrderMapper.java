@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 import com.abc.chenzeshenga.logistics.model.ManualOrder;
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
 import com.abc.chenzeshenga.logistics.model.Product;
+import com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2;
 import com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping;
 import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.abc.chenzeshenga.logistics.temp.entity.TmpOrder;
@@ -83,6 +84,18 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
       @Param("userCustomOrderNo") String userCustomOrderNo,
       @Param("pickup") int pickup);
 
+  List<ManualOrderV2> listByRangeWithoutPageV2(
+      @Param("type") String type,
+      @Param("status") String status,
+      @Param("from") Date from,
+      @Param("to") Date to,
+      @Param("ordno") String ordno,
+      @Param("creator") String creator,
+      @Param("channelCode") String channelCode,
+      @Param("trackNo") String trackNo,
+      @Param("userCustomOrderNo") String userCustomOrderNo,
+      @Param("pickup") int pickup);
+
   int delete(String ordNo);
 
   int deleteContent(String ordNo);
@@ -107,8 +120,8 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
   List<ManualOrder> listAllByStatus(String category, String status);
 
-  //TODO correct below
-  List<ManualOrder> listAllByStatusV2(String category, String status);
+  // TODO correct below
+  List<ManualOrderV2> listAllByStatusV2(String category, String status);
 
   List<ManualOrder> listAllByUsername(Map<String, String> request);
 

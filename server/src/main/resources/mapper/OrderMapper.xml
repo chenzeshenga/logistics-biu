@@ -262,8 +262,30 @@
     </select>
 
     <!--todo correct sql-->
-    <select id="listAllByStatusV2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrder">
-        select *
+    <select id="listAllByStatusV2" resultType="com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2">
+        select ord_no               as orderNo,
+               user_custom_order_no as userCustomOrderNo,
+               status,
+               create_by            as creator,
+               create_on            as createOn,
+               carrier_no           as carrierNo,
+               track_no             as trackNo,
+               category,
+               channel,
+               from_address_line1   as fromAddressLine1,
+               from_address_line2   as fromAddressLine2,
+               from_address_line3   as fromAddressLine3,
+               from_zipcode         as fromZipCode,
+               from_whom            as fromName,
+               from_contact         as fromContact,
+               to_address_line1     as toAddressLine1,
+               to_address_line2     as toAddressLine2,
+               to_address_line3     as toAddressLine3,
+               to_zipcode           as toZipCode,
+               to_whom              as toName,
+               to_contact           as toContact,
+               on_behalf            as onBehalf,
+               collect_num          as collectNum
         from l_manual_order ord
         where ord.status = #{status}
           and ord.category = #{category}
@@ -368,6 +390,66 @@
     <select id="listByRangeWithoutPage" resultMap="result">
         select *
         from l_manual_order ord left join l_manual_order_content content on (ord.ord_no=content.ordno)
+        <trim prefix="where" prefixOverrides="and">
+            <if test="type != null and type != ''">
+                and ord.category=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and ord.status=#{status}
+            </if>
+            <if test="ordno != null and ordno != ''">
+                and ord.ord_no=#{ordno}
+            </if>
+            <if test="creator != null and creator != ''">
+                and ord.create_by=#{creator}
+            </if>
+            <if test="channelCode != null and channelCode != ''">
+                and ord.channel=#{channelCode}
+            </if>
+            <if test="trackNo != null and trackNo != ''">
+                and ord.track_no=#{trackNo}
+            </if>
+            <if test="userCustomOrderNo != null and userCustomOrderNo != ''">
+                and ord.user_custom_order_no=#{userCustomOrderNo}
+            </if>
+            <if test="pickup != 3 and pickup != ''">
+                and ord.pickup=#{pickup}
+            </if>
+            <if test="from != null">
+                and ord.create_on >= #{from}
+            </if>
+            <if test="to != null">
+                and ord.create_on &lt;= #{to}
+            </if>
+        </trim>
+        order by ord.update_on desc
+    </select>
+
+    <select id="listByRangeWithoutPageV2" resultType="com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2">
+        select ord_no as orderNo,
+        user_custom_order_no as userCustomOrderNo,
+        status,
+        create_by as creator,
+        create_on as createOn,
+        carrier_no as carrierNo,
+        track_no as trackNo,
+        category,
+        channel,
+        from_address_line1 as fromAddressLine1,
+        from_address_line2 as fromAddressLine2,
+        from_address_line3 as fromAddressLine3,
+        from_zipcode as fromZipCode,
+        from_whom as fromName,
+        from_contact as fromContact,
+        to_address_line1 as toAddressLine1,
+        to_address_line2 as toAddressLine2,
+        to_address_line3 as toAddressLine3,
+        to_zipcode as toZipCode,
+        to_whom as toName,
+        to_contact as toContact,
+        on_behalf as onBehalf,
+        collect_num as collectNum
+        from l_manual_order ord
         <trim prefix="where" prefixOverrides="and">
             <if test="type != null and type != ''">
                 and ord.category=#{type}

@@ -5,6 +5,7 @@ import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
+import com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.*;
 import com.abc.vo.Json;
@@ -241,6 +242,7 @@ public class CommonController {
 
   /**
    * todo correct below
+   *
    * @param httpServletResponse
    * @param category
    * @param status
@@ -256,73 +258,76 @@ public class CommonController {
    */
   @GetMapping("/ord/excel/v2/{category}/{status}")
   public void getOrdExcelV2(
-    HttpServletResponse httpServletResponse,
-    @PathVariable String category,
-    @PathVariable String status,
-    @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
-    @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
-    @RequestParam(required = false) String ordno,
-    @RequestParam(required = false) String channelCode,
-    @RequestParam(required = false) String trackNo,
-    @RequestParam(required = false) String userCustomOrderNo,
-    @RequestParam(required = false) int pickup)
-    throws IOException, ParseException {
+      HttpServletResponse httpServletResponse,
+      @PathVariable String category,
+      @PathVariable String status,
+      @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
+      @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
+      @RequestParam(required = false) String ordno,
+      @RequestParam(required = false) String channelCode,
+      @RequestParam(required = false) String trackNo,
+      @RequestParam(required = false) String userCustomOrderNo,
+      @RequestParam(required = false) int pickup)
+      throws IOException, ParseException {
     String fileName = "订单" + MyDateUtils.getCurrDateStr() + ".xlsx";
     httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
     httpServletResponse.setHeader(
-      "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
-    List<ManualOrder> manualOrderList;
+        "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+    List<ManualOrderV2> manualOrderList;
     if (userCommonService.isManagerRole(UserUtils.getUserName())) {
       manualOrderList = orderMapper.listAllByStatusV2(category, status);
     } else {
       Date fromDate1 = DateUtil.getDateFromStr(fromDate);
       Date toDate1 = DateUtil.getDateFromStr(toDate);
       manualOrderList =
-        orderMapper.listByRangeWithoutPage(
-          category,
-          status,
-          fromDate1,
-          toDate1,
-          ordno,
-          UserUtils.getUserName(),
-          channelCode,
-          trackNo,
-          userCustomOrderNo,
-          pickup);
+          orderMapper.listByRangeWithoutPageV2(
+              category,
+              status,
+              fromDate1,
+              toDate1,
+              ordno,
+              UserUtils.getUserName(),
+              channelCode,
+              trackNo,
+              userCustomOrderNo,
+              pickup);
     }
-    manualOrderList.forEach(
-      manualOrder -> {
-        manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
-        manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
-        manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
-        manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "否" : "是");
-        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
-        if (!manualOrderContents.isEmpty()) {
-          ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
-          if (ObjectUtils.anyNotNull(manualOrderContent1)) {
-            manualOrder.setSku1(manualOrderContent1.getDySku());
-            manualOrder.setName1(manualOrderContent1.getName());
-            manualOrder.setNum1(manualOrderContent1.getNum());
-          }
-        }
-        if (manualOrderContents.size() >= 2) {
-          ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
-          if (ObjectUtils.anyNotNull(manualOrderContent2)) {
-            manualOrder.setSku2(manualOrderContent2.getDySku());
-            manualOrder.setName2(manualOrderContent2.getName());
-            manualOrder.setNum2(manualOrderContent2.getNum());
-          }
-        }
-        if (manualOrderContents.size() >= 3) {
-          ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
-          if (ObjectUtils.anyNotNull(manualOrderContent3)) {
-            manualOrder.setSku3(manualOrderContent3.getDySku());
-            manualOrder.setName3(manualOrderContent3.getName());
-            manualOrder.setNum3(manualOrderContent3.getNum());
-          }
-        }
-      });
-    writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);
+    log.info(String.valueOf(manualOrderList));
+    //    manualOrderList.forEach(
+    //      manualOrder -> {
+    //        manualOrder.setCategoryName(labelCache.getLabel("category_" +
+    // manualOrder.getCategory()));
+    //        manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" +
+    // manualOrder.getStatus()));
+    //        manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+    //        manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "否" : "是");
+    //        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
+    //        if (!manualOrderContents.isEmpty()) {
+    //          ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
+    //          if (ObjectUtils.anyNotNull(manualOrderContent1)) {
+    //            manualOrder.setSku1(manualOrderContent1.getDySku());
+    //            manualOrder.setName1(manualOrderContent1.getName());
+    //            manualOrder.setNum1(manualOrderContent1.getNum());
+    //          }
+    //        }
+    //        if (manualOrderContents.size() >= 2) {
+    //          ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
+    //          if (ObjectUtils.anyNotNull(manualOrderContent2)) {
+    //            manualOrder.setSku2(manualOrderContent2.getDySku());
+    //            manualOrder.setName2(manualOrderContent2.getName());
+    //            manualOrder.setNum2(manualOrderContent2.getNum());
+    //          }
+    //        }
+    //        if (manualOrderContents.size() >= 3) {
+    //          ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
+    //          if (ObjectUtils.anyNotNull(manualOrderContent3)) {
+    //            manualOrder.setSku3(manualOrderContent3.getDySku());
+    //            manualOrder.setName3(manualOrderContent3.getName());
+    //            manualOrder.setNum3(manualOrderContent3.getNum());
+    //          }
+    //        }
+    //      });
+    //    writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);
   }
 
   private void writeServletResp(
