@@ -17,4 +17,23 @@
         where ordno = #{ordno}
     </select>
 
+    <select id="listManualOrderContentByCategoryAndStatus"
+            resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+        select content.ordno,
+               content.sku,
+               content.dy_sku as dySku,
+               content.name,
+               content.num,
+               content.price,
+               content.picked,
+               content.satisfied,
+               content.uuid
+        from l_manual_order_content content,
+             l_manual_order ord
+        where content.ordno = ord.ord_no
+          and ord.category = #{category}
+          and ord.status = #{status}
+        order by ord.update_on desc
+    </select>
+
 </mapper>

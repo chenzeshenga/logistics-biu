@@ -12,4 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ManualOrderContentMapper {
 
   List<ManualOrderContent> getManualOrderContent(String ordno);
+
+  List<ManualOrderContent> listManualOrderContentByCategoryAndStatus(
+      String category, String status);
 }

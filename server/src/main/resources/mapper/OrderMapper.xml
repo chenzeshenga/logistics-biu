@@ -699,5 +699,22 @@
         where orderNo = #{orderno}
     </select>
 
+    <select id="listPackageByCategoryAndStatus"
+            resultType="com.abc.chenzeshenga.logistics.model.ord.OrderPackage">
+        select package.uuid,
+               package.orderNo,
+               package.length,
+               package.width,
+               package.height,
+               package.totalWeight,
+               package.carrierNo,
+               package.trackNo
+        from l_order_package package,
+             l_manual_order ord
+        where package.orderNo = ord.ord_no
+          and ord.category = #{category}
+          and ord.status = #{status}
+        order by ord.update_on desc
+    </select>
 
 </mapper>

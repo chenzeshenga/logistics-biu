@@ -146,4 +146,6 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
   int insertOrderPackage(List<OrderPackage> orderPackageList);
 
   List<OrderPackage> listPackage(String orderno);
+
+  List<OrderPackage> listPackageByCategoryAndStatus(String category, String status);
 }

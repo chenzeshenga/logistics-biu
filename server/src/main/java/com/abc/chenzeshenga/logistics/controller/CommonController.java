@@ -3,9 +3,11 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
+import com.abc.chenzeshenga.logistics.mapper.order.ManualOrderContentMapper;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2;
+import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.*;
 import com.abc.vo.Json;
@@ -45,6 +47,7 @@ public class CommonController {
   @Resource private ImgMapper imgMapper;
 
   @Resource private OrderMapper orderMapper;
+  @Resource private ManualOrderContentMapper manualOrderContentMapper;
 
   @Resource private WarehousingMapper warehousingMapper;
 
@@ -240,22 +243,6 @@ public class CommonController {
     writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);
   }
 
-  /**
-   * todo correct below
-   *
-   * @param httpServletResponse
-   * @param category
-   * @param status
-   * @param fromDate
-   * @param toDate
-   * @param ordno
-   * @param channelCode
-   * @param trackNo
-   * @param userCustomOrderNo
-   * @param pickup
-   * @throws IOException
-   * @throws ParseException
-   */
   @GetMapping("/ord/excel/v2/{category}/{status}")
   public void getOrdExcelV2(
       HttpServletResponse httpServletResponse,
@@ -274,8 +261,13 @@ public class CommonController {
     httpServletResponse.setHeader(
         "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
     List<ManualOrderV2> manualOrderList;
+    List<ManualOrderContent> manualOrderContentList = new ArrayList<>();
+    List<OrderPackage> orderPackageList = new ArrayList<>();
     if (userCommonService.isManagerRole(UserUtils.getUserName())) {
       manualOrderList = orderMapper.listAllByStatusV2(category, status);
+      manualOrderContentList =
+          manualOrderContentMapper.listManualOrderContentByCategoryAndStatus(category, status);
+      orderPackageList = orderMapper.listPackageByCategoryAndStatus(category, status);
     } else {
       Date fromDate1 = DateUtil.getDateFromStr(fromDate);
       Date toDate1 = DateUtil.getDateFromStr(toDate);
@@ -292,42 +284,34 @@ public class CommonController {
               userCustomOrderNo,
               pickup);
     }
-    log.info(String.valueOf(manualOrderList));
-    //    manualOrderList.forEach(
-    //      manualOrder -> {
-    //        manualOrder.setCategoryName(labelCache.getLabel("category_" +
-    // manualOrder.getCategory()));
-    //        manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" +
-    // manualOrder.getStatus()));
-    //        manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
-    //        manualOrder.setCollectDesc("false".equals(manualOrder.getCollect()) ? "否" : "是");
-    //        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
-    //        if (!manualOrderContents.isEmpty()) {
-    //          ManualOrderContent manualOrderContent1 = manualOrderContents.get(0);
-    //          if (ObjectUtils.anyNotNull(manualOrderContent1)) {
-    //            manualOrder.setSku1(manualOrderContent1.getDySku());
-    //            manualOrder.setName1(manualOrderContent1.getName());
-    //            manualOrder.setNum1(manualOrderContent1.getNum());
-    //          }
-    //        }
-    //        if (manualOrderContents.size() >= 2) {
-    //          ManualOrderContent manualOrderContent2 = manualOrderContents.get(1);
-    //          if (ObjectUtils.anyNotNull(manualOrderContent2)) {
-    //            manualOrder.setSku2(manualOrderContent2.getDySku());
-    //            manualOrder.setName2(manualOrderContent2.getName());
-    //            manualOrder.setNum2(manualOrderContent2.getNum());
-    //          }
-    //        }
-    //        if (manualOrderContents.size() >= 3) {
-    //          ManualOrderContent manualOrderContent3 = manualOrderContents.get(2);
-    //          if (ObjectUtils.anyNotNull(manualOrderContent3)) {
-    //            manualOrder.setSku3(manualOrderContent3.getDySku());
-    //            manualOrder.setName3(manualOrderContent3.getName());
-    //            manualOrder.setNum3(manualOrderContent3.getNum());
-    //          }
-    //        }
-    //      });
-    //    writeServletResp(httpServletResponse, manualOrderList, ManualOrder.class);
+    manualOrderList.forEach(
+        manualOrder -> {
+          manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
+          manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
+          manualOrder.setCarrierName(labelCache.getLabel(CARRIER + manualOrder.getCarrierNo()));
+          manualOrder.setCollectDesc("false".equals(manualOrder.getCollectDesc()) ? "否" : "是");
+        });
+
+    writeServletRespV2(
+        httpServletResponse, manualOrderList, manualOrderContentList, orderPackageList);
+  }
+
+  private void writeServletRespV2(
+      HttpServletResponse httpServletResponse,
+      List<ManualOrderV2> manualOrderList,
+      List<ManualOrderContent> manualOrderContentList,
+      List<OrderPackage> orderPackageList)
+      throws IOException {
+    ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+    ExcelWriter excelWriter = new ExcelWriter(servletOutputStream, ExcelTypeEnum.XLSX);
+    Sheet sheet1 = new Sheet(1, 0, ManualOrderV2.class);
+    Sheet sheet2 = new Sheet(2, 0, ManualOrderContent.class);
+    Sheet sheet3 = new Sheet(3, 0, OrderPackage.class);
+    excelWriter.write(manualOrderList, sheet1);
+    excelWriter.write(manualOrderContentList, sheet2);
+    excelWriter.write(orderPackageList, sheet3);
+    excelWriter.finish();
+    httpServletResponse.flushBuffer();
   }
 
   private void writeServletResp(
