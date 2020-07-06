@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <div class="app-container">
+      <input type="file" accept="image/*" capture="camera">
       <el-button @click="scanBarcode">确定</el-button>
       <el-button @click="stopBarcodeScan">停止</el-button>
       <div id="test" style="width: 100%;height: 20%"></div>
