@@ -193,8 +193,8 @@ public class CommonController {
     if (userCommonService.isManagerRole(UserUtils.getUserName())) {
       manualOrderList = orderMapper.listAllByStatus(category, status);
     } else {
-      Date fromDate1 = DateUtil.getDateFromStr(fromDate);
-      Date toDate1 = DateUtil.getDateFromStr(toDate);
+      Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
+      Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
       manualOrderList =
           orderMapper.listByRangeWithoutPage(
               category,
@@ -269,8 +269,8 @@ public class CommonController {
           manualOrderContentMapper.listManualOrderContentByCategoryAndStatus(category, status);
       orderPackageList = orderMapper.listPackageByCategoryAndStatus(category, status);
     } else {
-      Date fromDate1 = DateUtil.getDateFromStr(fromDate);
-      Date toDate1 = DateUtil.getDateFromStr(toDate);
+      Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
+      Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
       manualOrderList =
           orderMapper.listByRangeWithoutPageV2(
               category,

@@ -139,7 +139,7 @@ public class OrderController {
     if (orderPackageList != null && !orderPackageList.isEmpty()) {
       orderMapper.dropOrderPackage(manualOrder.getOrderNo());
       orderPackageList.forEach(
-        orderPackage -> orderPackage.setUuid(SnowflakeIdWorker.generateStrId()));
+          orderPackage -> orderPackage.setUuid(SnowflakeIdWorker.generateStrId()));
       orderMapper.insertOrderPackage(orderPackageList);
     }
     if ("2".equals(manualOrder.getStatus()) && "1".equals(manualOrderOri.getCategory())) {
@@ -294,8 +294,8 @@ public class OrderController {
     String cname = UserUtils.getUserName();
     JSONObject jsonObject = JSON.parseObject(body);
     Page page = PageUtils.getPageParam(jsonObject);
-    Date fromDate1 = DateUtil.getDateFromStr(fromDate);
-    Date toDate1 = DateUtil.getDateFromStr(toDate);
+    Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
+    Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
     Page<ManualOrder> manualOrderPage;
     if (userCommonService.isManagerRole(cname)) {
       manualOrderPage =
