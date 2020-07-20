@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.25 1. 更新虚拟海外仓步骤名称',
+          timestamp: '2020-07-20',
+        },
+        {
           content: 'v1.24 1. 订单编辑功能修复 2. 订单拆分包裹功能优化 3. 订单列表包裹展示',
           timestamp: '2020-07-02',
         },

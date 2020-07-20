@@ -522,7 +522,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status2',
             meta: {
               perm: 'm:order3:list:2',
-              title: '国内待发货',
+              title: '待发货',
               icon: 'chart',
               noCache: true,
             },
@@ -533,7 +533,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status3',
             meta: {
               perm: 'm:order3:list:3',
-              title: '日仓收货',
+              title: '已打印',
               icon: 'chart',
               noCache: true,
             },
@@ -544,7 +544,7 @@ export const asyncRouterMap = [
             name: 'order-list-mgt-type3-status4',
             meta: {
               perm: 'm:order3:list:6',
-              title: '日仓发货',
+              title: '已打包',
               icon: 'chart',
               noCache: true,
             },
