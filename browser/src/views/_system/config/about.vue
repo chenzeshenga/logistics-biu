@@ -4,10 +4,10 @@
       <h3 style="margin-left: 2%">版本历史</h3>
       <el-timeline style="margin-top: 2%">
         <el-timeline-item
-          v-for="(activity, index) in activities"
-          :key="index"
-          :timestamp="activity.timestamp">
-          {{activity.content}}
+            v-for="(activity, index) in activities"
+            :key="index"
+            :timestamp="activity.timestamp">
+          {{ activity.content }}
         </el-timeline-item>
       </el-timeline>
     </div>
@@ -20,6 +20,10 @@ export default {
   data() {
     return {
       activities: [
+        {
+          content: 'v1.26 1. 入库单展示渠道名称',
+          timestamp: '2020-08-08',
+        },
         {
           content: 'v1.25 1. 更新虚拟海外仓步骤名称',
           timestamp: '2020-07-20',
