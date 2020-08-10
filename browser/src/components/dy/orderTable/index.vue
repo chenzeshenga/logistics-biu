@@ -31,9 +31,9 @@
           <el-col :span="3">
             <el-tooltip content="用户定义订单号" placement="top">
               <el-input
-                v-model="search.userCustomOrderNo"
-                clearable="clearable"
-                placeholder="请输入用户定义订单号"
+                  v-model="search.userCustomOrderNo"
+                  clearable="clearable"
+                  placeholder="请输入用户定义订单号"
               ></el-input>
             </el-tooltip>
           </el-col>
@@ -144,8 +144,8 @@
           <el-col :span="2">
             <el-tooltip effect="dark" content="导出当前状态所有订单" placement="top">
               <el-button
-                type="primary"
-                @click="exportExcelV2()"
+                  type="primary"
+                  @click="exportExcelV2()"
               >导出excel-v2
               </el-button>
             </el-tooltip>
@@ -200,47 +200,47 @@
           </el-table>
           <el-alert type="info" title="包裹列表" :closable="false" style="margin-top: 1%"/>
           <el-table
-            :data="tableData.row.orderPackageList"
+              :data="tableData.row.orderPackageList"
           >
             <el-table-column
-              prop="uuid"
-              label="uuid"
-              width="200"
+                prop="uuid"
+                label="uuid"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="orderNo"
-              label="订单号"
-              width="200"
+                prop="orderNo"
+                label="订单号"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="length"
-              label="长(cm)"
-              width="200"
+                prop="length"
+                label="长(cm)"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="width"
-              label="宽(cm)"
-              width="200"
+                prop="width"
+                label="宽(cm)"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="height"
-              label="高(cm)"
-              width="200"
+                prop="height"
+                label="高(cm)"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="totalWeight"
-              label="重量(kg)"
-              width="200"
+                prop="totalWeight"
+                label="重量(kg)"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="carrierNo"
-              label="承运人"
-              width="200"
+                prop="carrierNo"
+                label="承运人"
+                width="200"
             ></el-table-column>
             <el-table-column
-              prop="trackNo"
-              label="运单号"
-              width="200"
+                prop="trackNo"
+                label="运单号"
+                width="200"
             ></el-table-column>
           </el-table>
         </template>
@@ -251,9 +251,9 @@
           label="订单号"
       ></el-table-column>
       <el-table-column
-        width="180"
-        prop="userCustomOrderNo"
-        label="用户定义订单号"
+          width="180"
+          prop="userCustomOrderNo"
+          label="用户定义订单号"
       ></el-table-column>
       <el-table-column
           width="150"
@@ -268,9 +268,7 @@
             <p>
               <el-button
                   type="text"
-                  v-on:click="
-                                    route2ChannelPage(scope.$index, scope.row)
-                                "
+                  v-on:click="route2ChannelPage(scope.$index, scope.row)"
               >查看详情
               </el-button>
             </p>
@@ -348,9 +346,9 @@
           label="总计代收费用"
       ></el-table-column>
       <el-table-column
-        width="120"
-        prop="files"
-        label="关联文件"
+          width="120"
+          prop="files"
+          label="关联文件"
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -492,17 +490,17 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip
-            content="打印配货单-条形码"
-            placement="top"
-            v-if="msgData.buttonVisible4"
+              content="打印配货单-条形码"
+              placement="top"
+              v-if="msgData.buttonVisible4"
           >
             <el-button
-              @click="printBarcode(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-printer"
-              circle
-              plain
+                @click="printBarcode(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-printer"
+                circle
+                plain
             ></el-button>
           </el-tooltip>
           <el-tooltip
@@ -672,7 +670,7 @@
           <el-col :span="7">
             <el-form-item label="宽(cm)">
               <el-input-number
-                @change="calculateIndex"
+                  @change="calculateIndex"
                   v-model="form.width"
               ></el-input-number>
             </el-form-item>
@@ -692,36 +690,36 @@
         <el-form-item style="margin-top: 2%">
           <el-col :span="8">
             <el-tooltip
-              placement="top"
-              content="总体积(cm^3)=长*宽*高"
+                placement="top"
+                content="总体积(cm^3)=长*宽*高"
             >
               <el-form-item label="总体积(cm^3)">
                 <el-input-number
-                  v-model="form.totalVolumeFrontEnd"
+                    v-model="form.totalVolumeFrontEnd"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
           </el-col>
           <el-col :span="8">
             <el-tooltip
-              content="三边和(cm)=长+宽+高"
-              placement="top"
+                content="三边和(cm)=长+宽+高"
+                placement="top"
             >
               <el-form-item label="三边和(cm)">
                 <el-input-number
-                  v-model="form.sum"
+                    v-model="form.sum"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
           </el-col>
           <el-col :span="8">
             <el-tooltip
-              content="体积重=长*宽*高/6000"
-              placement="top"
+                content="体积重=长*宽*高/6000"
+                placement="top"
             >
               <el-form-item label="体积重(cm^3)">
                 <el-input-number
-                  v-model="form.totalVolumeWithWeight"
+                    v-model="form.totalVolumeWithWeight"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
@@ -770,16 +768,16 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-tooltip
-                content="删除"
-                placement="top"
+                  content="删除"
+                  placement="top"
               >
                 <el-button
-                  @click="removePackage(scope.$index, scope.row)"
-                  size="small"
-                  type="danger"
-                  icon="el-icon-remove"
-                  circle
-                  plain
+                    @click="removePackage(scope.$index, scope.row)"
+                    size="small"
+                    type="danger"
+                    icon="el-icon-remove"
+                    circle
+                    plain
                 ></el-button>
               </el-tooltip>
             </template>
@@ -807,24 +805,24 @@
           <el-col :span="7">
             <el-form-item label="长(cm)">
               <el-input-number
-                v-model="form.length"
-                @change="calculateIndex"
+                  v-model="form.length"
+                  @change="calculateIndex"
               ></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="7">
             <el-form-item label="宽(cm)">
               <el-input-number
-                @change="calculateIndex"
-                v-model="form.width"
+                  @change="calculateIndex"
+                  v-model="form.width"
               ></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="7">
             <el-form-item label="高(cm)">
               <el-input-number
-                v-model="form.height"
-                @change="calculateIndex"
+                  v-model="form.height"
+                  @change="calculateIndex"
               ></el-input-number>
             </el-form-item>
           </el-col>
@@ -835,36 +833,36 @@
         <el-form-item style="margin-top: 2%">
           <el-col :span="8">
             <el-tooltip
-              placement="top"
-              content="总体积(cm^3)=长*宽*高"
+                placement="top"
+                content="总体积(cm^3)=长*宽*高"
             >
               <el-form-item label="总体积(cm^3)">
                 <el-input-number
-                  v-model="form.totalVolumeFrontEnd"
+                    v-model="form.totalVolumeFrontEnd"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
           </el-col>
           <el-col :span="8">
             <el-tooltip
-              content="三边和(cm)=长+宽+高"
-              placement="top"
+                content="三边和(cm)=长+宽+高"
+                placement="top"
             >
               <el-form-item label="三边和(cm)">
                 <el-input-number
-                  v-model="form.sum"
+                    v-model="form.sum"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
           </el-col>
           <el-col :span="8">
             <el-tooltip
-              content="体积重=长*宽*高/6000"
-              placement="top"
+                content="体积重=长*宽*高/6000"
+                placement="top"
             >
               <el-form-item label="体积重(cm^3)">
                 <el-input-number
-                  v-model="form.totalVolumeWithWeight"
+                    v-model="form.totalVolumeWithWeight"
                 ></el-input-number>
               </el-form-item>
             </el-tooltip>
@@ -873,7 +871,7 @@
         <el-row :span="24">
           <el-form-item label="当前订单总重量(kg)">
             <el-input-number
-              v-model="form.totalWeight"
+                v-model="form.totalWeight"
             ></el-input-number>
           </el-form-item>
         </el-row>
@@ -913,16 +911,16 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-tooltip
-                content="删除"
-                placement="top"
+                  content="删除"
+                  placement="top"
               >
                 <el-button
-                  @click="removePackage(scope.$index, scope.row)"
-                  size="small"
-                  type="danger"
-                  icon="el-icon-remove"
-                  circle
-                  plain
+                    @click="removePackage(scope.$index, scope.row)"
+                    size="small"
+                    type="danger"
+                    icon="el-icon-remove"
+                    circle
+                    plain
                 ></el-button>
               </el-tooltip>
             </template>
@@ -946,14 +944,14 @@
         </span>
     </el-dialog>
     <el-dialog title="上传外箱标签" :visible.sync="dialogVisible4" width="30%">
-      <span>订单号: {{tmpOrderNo}}</span>
+      <span>订单号: {{ tmpOrderNo }}</span>
       <el-upload
-        :action="actionLink2uploadOrderFile"
-        with-credentials
-        multiple
-        :file-list="fileList"
-        ref="upload"
-        :limit="3"
+          :action="actionLink2uploadOrderFile"
+          with-credentials
+          multiple
+          :file-list="fileList"
+          ref="upload"
+          :limit="3"
       >
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <div slot="tip" class="el-upload__tip">
@@ -966,36 +964,36 @@
     </el-dialog>
     <el-dialog title="关联文件" :visible.sync="dialogVisible5" width="30%">
       <el-table
-        style="width: 100%"
-        :data="tableData4File"
-        v-loading.body="tableLoading2"
-        element-loading-text="加载中"
-        stripe
-        highlight-current-row
+          style="width: 100%"
+          :data="tableData4File"
+          v-loading.body="tableLoading2"
+          element-loading-text="加载中"
+          stripe
+          highlight-current-row
       >
         <el-table-column
-          width="180"
-          prop="uuid"
-          label="uuid"
+            width="180"
+            prop="uuid"
+            label="uuid"
         ></el-table-column>
         <el-table-column
-          width="180"
-          prop="fileName"
-          label="文件名"
+            width="180"
+            prop="fileName"
+            label="文件名"
         ></el-table-column>
         <el-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-tooltip
-              content="下载"
-              placement="top"
+                content="下载"
+                placement="top"
             >
               <el-button
-                @click="handleSystemFile(scope.$index, scope.row)"
-                size="small"
-                type="info"
-                icon="el-icon-check"
-                circle
-                plain
+                  @click="handleSystemFile(scope.$index, scope.row)"
+                  size="small"
+                  type="info"
+                  icon="el-icon-check"
+                  circle
+                  plain
               ></el-button>
             </el-tooltip>
           </template>
@@ -1166,10 +1164,10 @@ export default {
       this.tableLoading = true;
       request({
         url:
-          'ord/v2/list/' +
-          this.msgData.category +
-          '/' +
-          this.msgData.status + '?' + this.generateUrlParam(),
+            'ord/v2/list/' +
+            this.msgData.category +
+            '/' +
+            this.msgData.status + '?' + this.generateUrlParam(),
         method: 'post',
         data: this.tablePage,
       }).then((res) => {
@@ -1200,12 +1198,12 @@ export default {
           .then(() => {
             request({
               url:
-                'ord/update/' +
-                this.msgData.category +
-                '/' +
-                row.orderNo +
-                '/' +
-                this.msgData.statusTo,
+                  'ord/update/' +
+                  this.msgData.category +
+                  '/' +
+                  row.orderNo +
+                  '/' +
+                  this.msgData.statusTo,
               method: 'get',
             }).then((res) => {
               console.log(res);
@@ -1226,10 +1224,10 @@ export default {
           .then(() => {
             request({
               url:
-                'ord/update/' +
-                this.msgData.category +
-                '/' +
-                this.msgData.statusTo,
+                  'ord/update/' +
+                  this.msgData.category +
+                  '/' +
+                  this.msgData.statusTo,
               method: 'post',
               data: this.ord4TrackNo,
             }).then((res) => {
@@ -1247,10 +1245,10 @@ export default {
           .then(() => {
             request({
               url:
-              'ord/update/force/' +
-              this.msgData.category +
-              '/' +
-              this.msgData.statusTo,
+                  'ord/update/force/' +
+                  this.msgData.category +
+                  '/' +
+                  this.msgData.statusTo,
               method: 'post',
               data: this.ord4TrackNo,
             }).then((res) => {
@@ -1267,12 +1265,12 @@ export default {
           .then(() => {
             request({
               url:
-                'ord/update/' +
-                this.msgData.category +
-                '/' +
-                row.orderNo +
-                '/' +
-                this.msgData.statusAbandon,
+                  'ord/update/' +
+                  this.msgData.category +
+                  '/' +
+                  row.orderNo +
+                  '/' +
+                  this.msgData.statusAbandon,
               method: 'get',
             }).then((res) => {
               console.log(res);
@@ -1413,21 +1411,21 @@ export default {
       const link = document.createElement('a');
       link.style.display = 'none';
       link.href = process.env.BASE_API + '/ord/excel/' + this.msgData.category + '/' + this.msgData.status + '?ordno=' +
-        this.search.ordno +
-        '&creator=' +
-        this.search.creator +
-        '&channelCode=' +
-        this.search.channelCode +
-        '&trackNo=' +
-        this.search.trackNo +
-        '&pickup=' +
-        this.search.pickup;
+          this.search.ordno +
+          '&creator=' +
+          this.search.creator +
+          '&channelCode=' +
+          this.search.channelCode +
+          '&trackNo=' +
+          this.search.trackNo +
+          '&pickup=' +
+          this.search.pickup;
       if (this.daterange) {
         link.href = link.href +
-          '&fromDate=' +
-          this.daterange[0] +
-          '&toDate=' +
-          this.daterange[1];
+            '&fromDate=' +
+            this.daterange[0] +
+            '&toDate=' +
+            this.daterange[1];
       }
       link.target = '_blank';
       document.body.appendChild(link);
@@ -1437,19 +1435,19 @@ export default {
       const link = document.createElement('a');
       link.style.display = 'none';
       link.href = process.env.BASE_API + '/ord/excel/v2/' + this.msgData.category + '/' + this.msgData.status + '?ordno=' +
-        this.search.ordno +
-        '&channelCode=' +
-        this.search.channelCode +
-        '&trackNo=' +
-        this.search.trackNo +
-        '&pickup=' +
-        this.search.pickup;
+          this.search.ordno +
+          '&channelCode=' +
+          this.search.channelCode +
+          '&trackNo=' +
+          this.search.trackNo +
+          '&pickup=' +
+          this.search.pickup;
       if (this.daterange) {
         link.href = link.href +
-          '&fromDate=' +
-          this.daterange[0] +
-          '&toDate=' +
-          this.daterange[1];
+            '&fromDate=' +
+            this.daterange[0] +
+            '&toDate=' +
+            this.daterange[1];
       }
       link.target = '_blank';
       document.body.appendChild(link);
@@ -1568,21 +1566,21 @@ export default {
     },
     generateUrlParam() {
       let urlParam = 'ordno=' +
-        this.search.ordno +
-        '&creator=' +
-        this.search.creator +
-        '&channelCode=' +
-        this.search.channelCode +
-        '&trackNo=' +
-        this.search.trackNo +
-        '&pickup=' +
-        this.search.pickup;
+          this.search.ordno +
+          '&creator=' +
+          this.search.creator +
+          '&channelCode=' +
+          this.search.channelCode +
+          '&trackNo=' +
+          this.search.trackNo +
+          '&pickup=' +
+          this.search.pickup;
       if (this.daterange) {
         urlParam = urlParam +
-          '&fromDate=' +
-          this.daterange[0] +
-          '&toDate=' +
-          this.daterange[1];
+            '&fromDate=' +
+            this.daterange[0] +
+            '&toDate=' +
+            this.daterange[1];
       }
       return urlParam;
     },
@@ -1635,11 +1633,11 @@ export default {
 </script>
 
 <style>
-  .el-table .success-row {
-    background: rgba(103, 194, 58, 0.1);
-  }
+.el-table .success-row {
+  background: rgba(103, 194, 58, 0.1);
+}
 
-  .el-table .danger-row {
-    background: rgb(253, 226, 226);
-  }
+.el-table .danger-row {
+  background: rgb(253, 226, 226);
+}
 </style>
