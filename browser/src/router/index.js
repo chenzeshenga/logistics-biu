@@ -328,11 +328,33 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status2',
+            component: _import('order/type1/list/status2-user'),
+            name: 'user-status2',
+            meta: {
+              perm: 'm:order1:list:user:status2',
+              title: '待发货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status3',
             component: _import('order/type1/list/status3'),
             name: 'status3',
             meta: {
               perm: 'm:order1:list:4',
+              title: '已发货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'user-status3',
+            component: _import('order/type1/list/status3-user'),
+            name: 'user-status3',
+            meta: {
+              perm: 'm:order1:list:user:status3',
               title: '已发货',
               icon: 'chart',
               noCache: true,
@@ -439,11 +461,33 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status2',
+            component: _import('order/type2/list/status2-user'),
+            name: 'order-list-mgt-type2-status2-user',
+            meta: {
+              perm: 'm:order2:list:user:2',
+              title: '国内待发货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status3',
             component: _import('order/type2/list/status3'),
             name: 'order-list-mgt-type2-status3',
             meta: {
               perm: 'm:order2:list:3',
+              title: '国内已发货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'user-status3',
+            component: _import('order/type2/list/status3-user'),
+            name: 'order-list-mgt-type2-status3-user',
+            meta: {
+              perm: 'm:order2:list:user:3',
               title: '国内已发货',
               icon: 'chart',
               noCache: true,
