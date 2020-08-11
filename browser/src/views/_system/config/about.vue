@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.27 1. 单票单请/海外仓代发 增加中间过程用户可见',
+          timestamp: '2020-08-11',
+        },
+        {
           content: 'v1.26 1. 入库单展示渠道名称',
           timestamp: '2020-08-08',
         },
