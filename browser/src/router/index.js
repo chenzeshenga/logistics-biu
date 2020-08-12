@@ -572,11 +572,33 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status2',
+            component: _import('order/type3/list/status2-user'),
+            name: 'order-list-mgt-type3-status2-user',
+            meta: {
+              perm: 'm:order3:list:user:2',
+              title: '待发货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status3',
             component: _import('order/type3/list/status3'),
             name: 'order-list-mgt-type3-status3',
             meta: {
               perm: 'm:order3:list:3',
+              title: '已打印',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'user-status3',
+            component: _import('order/type3/list/status3-user'),
+            name: 'order-list-mgt-type3-status3-user',
+            meta: {
+              perm: 'm:order3:list:user:3',
               title: '已打印',
               icon: 'chart',
               noCache: true,
@@ -594,11 +616,33 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status4',
+            component: _import('order/type3/list/status4-user'),
+            name: 'order-list-mgt-type3-status4-user',
+            meta: {
+              perm: 'm:order3:list:user:4',
+              title: '已打包',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status5',
             component: _import('order/type3/list/status5'),
             name: 'order-list-mgt-type3-status5',
             meta: {
               perm: 'm:order3:list:7',
+              title: '已完成',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'user-status5',
+            component: _import('order/type3/list/status5-user'),
+            name: 'order-list-mgt-type3-status5-user',
+            meta: {
+              perm: 'm:order3:list:user:5',
               title: '已完成',
               icon: 'chart',
               noCache: true,
