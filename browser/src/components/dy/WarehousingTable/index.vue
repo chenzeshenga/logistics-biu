@@ -406,7 +406,7 @@
     <el-dialog title="申请报关单" :visible.sync="dialogVisible2" width="40%">
       <el-form :model="profile" label-width="135px">
         <el-alert
-          title="此页面提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写响应的报关单通过上传报关单功能进行上传.当前页面所有输入框必填"
+          title="此页面提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写相应的报关单通过上传报关单功能进行上传.当前页面所有输入框必填"
           type="info"
           style="margin-bottom: 2%"
         />
@@ -749,7 +749,6 @@ export default {
         buttonVisibleA: this.msg.buttonVisibleA === true,
         buttonVisibleB: this.msg.buttonVisibleB === true,
         buttonVisibleC: this.msg.buttonVisibleC === true,
-        buttonVisible10: this.msg.buttonVisible10 === true,
         buttonVisible11: this.msg.buttonVisible11 === true,
         buttonVisible12: this.msg.buttonVisible12 === true,
         buttonVisible13: this.msg.buttonVisible13 === true,
