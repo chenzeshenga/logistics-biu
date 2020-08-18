@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.29 1. 其他入库单用户可见中间状态',
+          timestamp: '2020-08-12',
+        },
+        {
           content: 'v1.28 1. 虚拟海外仓用户可见中间过程 2. 东岳入库单用户可见中间状态',
           timestamp: '2020-08-12',
         },

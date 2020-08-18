@@ -25,6 +25,7 @@ import perm from '@/directive/permission/perm';
 import htmlToPdf from './utils/htmlToPdf';
 import downloadPDF from './utils/pdf';
 import previewImg from './utils/pdf';
+import Mui from 'vue-awesome-mui';
 // 使用Vue.use()方法就会调用工具方法中的install方法
 Vue.use(htmlToPdf);
 Vue.use(downloadPDF);
@@ -38,7 +39,7 @@ Vue.use(Element, {
   size: 'medium', // set element-ui default size
 });
 Vue.use(Loading);
-
+Vue.use(Mui)
 // register global utility filters.
 Object.keys(filters).forEach((key) => {
   Vue.filter(key, filters[key]);

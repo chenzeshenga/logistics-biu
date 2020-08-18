@@ -10,20 +10,16 @@
 import WarehousingTable from '../../../../../components/dy/WarehousingTable/index';
 
 export default {
-  name: 'warehousing-mgt-other-list-status1',
+  name: 'warehousing-mgt-other-list-status2-user',
   components: {WarehousingTable},
   data() {
     return {
       msg: {
-        status: '1',
+        status: '2',
         category: '2',
         buttonVisible1: true,
         buttonVisible4: true,
-        buttonVisible5: true,
-        buttonVisible6: true,
-        buttonVisible7: true,
         buttonVisible10: true,
-        buttonVisible11: true,
       },
     };
   },

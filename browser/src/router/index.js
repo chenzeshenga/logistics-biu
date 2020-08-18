@@ -985,6 +985,17 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status2',
+            component: _import('warehousing/mgt/other/list/status2-user'),
+            name: 'warehousing-mgt-other-list-status2-user',
+            meta: {
+              perm: 'm:warehousing:other:list:user:2',
+              title: '已收货',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status3',
             component: _import('warehousing/mgt/other/list/status3'),
             name: 'warehousing-mgt-other-list-status3',
@@ -996,11 +1007,33 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'user-status3',
+            component: _import('warehousing/mgt/other/list/status3-user'),
+            name: 'warehousing-mgt-other-list-status3-user',
+            meta: {
+              perm: 'm:warehousing:other:list:user:3',
+              title: '入库清点',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status4',
             component: _import('warehousing/mgt/other/list/status4'),
             name: 'warehousing-mgt-other-list-status4',
             meta: {
               perm: 'm:warehousing:other:list:4',
+              title: '待上架',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
+            path: 'user-status4',
+            component: _import('warehousing/mgt/other/list/status4-user'),
+            name: 'warehousing-mgt-other-list-status4-user',
+            meta: {
+              perm: 'm:warehousing:other:list:user:4',
               title: '待上架',
               icon: 'chart',
               noCache: true,
