@@ -1162,6 +1162,17 @@ export const asyncRouterMap = [
           noCache: true,
         },
       },
+      {
+        path: 'user-volume-weight',
+        name: 'user-volume-weight',
+        component: _import('product/user-volume-weight'),
+        meta: {
+          perm: 'm:product:mgt:7',
+          title: '用户体积重量',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
     ],
   },
   {

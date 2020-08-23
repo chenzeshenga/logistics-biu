@@ -128,28 +128,28 @@
 </template>
 
 <script>
-import request from "@/utils/service";
+import request from '@/utils/service';
 
 export default {
-  name: "product-statistic",
+  name: 'product-statistic',
   data() {
     return {
       search: {
-        sku: "",
-        name: "",
-        owner: ""
+        sku: '',
+        name: '',
+        owner: '',
       },
       options: {
-        owners: []
+        owners: [],
       },
       tablePage: {
         current: 1,
         pages: null,
         size: null,
-        total: null
+        total: null,
       },
       tableLoading: false,
-      tableData: []
+      tableData: [],
     };
   },
   created() {
@@ -160,10 +160,10 @@ export default {
     fetchData() {
       this.tableLoading = true;
       request({
-        url: "/statistics/list",
-        method: "post",
-        data: this.tablePage
-      }).then(res => {
+        url: '/statistics/list',
+        method: 'post',
+        data: this.tablePage,
+      }).then((res) => {
         this.tableData = res.data.page.records;
         this.tablePage.current = res.data.page.current;
         this.tablePage.pages = res.data.page.pages;
@@ -174,13 +174,13 @@ export default {
     },
     initUserList() {
       request({
-        url: "/sys_user/query4Option",
-        method: "post",
+        url: '/sys_user/query4Option',
+        method: 'post',
         data: {
           current: null,
-          size: "all"
-        }
-      }).then(res => {
+          size: 'all',
+        },
+      }).then((res) => {
         this.options.owners = res.data.page.records;
       });
     },
@@ -193,50 +193,50 @@ export default {
       this.fetchData();
     },
     statusUpdate(index, row) {
-      this.$confirm("您确定审核通过该商品？", "提示", confirm)
-        .then(() => {
-          request({
-            url: "/statistics/list",
-            method: "get"
-          }).then(() => {
-            this.$message.success("审核成功");
-            this.fetchData();
+      this.$confirm('您确定审核通过该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/statistics/list',
+              method: 'get',
+            }).then(() => {
+              this.$message.success('审核成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消审核');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消审核");
-        });
     },
     handleDelete(index, row) {
-      this.$confirm("您确定删除该商品？", "提示", confirm)
-        .then(() => {
-          request({
-            url: "/product/delete/" + row.sku,
-            method: "get"
-          }).then(() => {
-            this.$message.success(row.sku + "删除成功");
-            this.fetchData();
+      this.$confirm('您确定删除该商品？', '提示', confirm)
+          .then(() => {
+            request({
+              url: '/product/delete/' + row.sku,
+              method: 'get',
+            }).then(() => {
+              this.$message.success(row.sku + '删除成功');
+              this.fetchData();
+            });
+          })
+          .catch(() => {
+            this.$message.info('已取消删除');
           });
-        })
-        .catch(() => {
-          this.$message.info("已取消删除");
-        });
     },
     handleUpdate(index, row) {
       this.$router.push({
-        path: "/new-product/new-product?sku=" + row.sku
+        path: '/new-product/new-product?sku=' + row.sku,
       });
     },
     searchProductStatistics() {
       const postData = this.tablePage;
-      postData["sku"] = this.search.sku;
-      postData["name"] = this.search.name;
-      postData["owner"] = this.search.owner;
+      postData['sku'] = this.search.sku;
+      postData['name'] = this.search.name;
+      postData['owner'] = this.search.owner;
       request({
-        url: "/statistics/listBySearch",
-        method: "post",
-        data: postData
-      }).then(res => {
+        url: '/statistics/listBySearch',
+        method: 'post',
+        data: postData,
+      }).then((res) => {
         this.tableData = res.data.page.records;
         this.tablePage.current = res.data.page.current;
         this.tablePage.pages = res.data.page.pages;
@@ -244,7 +244,7 @@ export default {
         this.tablePage.total = res.data.page.total;
         this.tableLoading = false;
       });
-    }
-  }
+    },
+  },
 };
 </script>

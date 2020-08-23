@@ -2,7 +2,6 @@ package com.abc.chenzeshenga.logistics.service.statistics;
 
 import com.abc.chenzeshenga.logistics.mapper.statistics.ProductInWarehouseMapper;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -17,23 +16,17 @@ public class ProductInWarehouseService
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithManagerRole(
       String dySku, String name, String owner, long from, long size) {
-    List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithManagerRole(dySku, name, owner, from, size);
-    return productInWarehouseSummaries;
+    return baseMapper.fetchProductInWarehouseWithManagerRole(dySku, name, owner, from, size);
   }
 
   public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithManagerRole(
       String dySku, String name, String owner) {
-    List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
-    return productInWarehouseSummaries;
+    return baseMapper.fetchAllProductInWarehouseWithManagerRole(dySku, name, owner);
   }
 
   public List<ProductInWarehouseSummary> fetchProductInWarehouseWithUserRole(
       String dySku, String name, String username, long from, long size) {
-    List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchProductInWarehouseWithUserRole(dySku, name, username, from, size);
-    return productInWarehouseSummaries;
+    return baseMapper.fetchProductInWarehouseWithUserRole(dySku, name, username, from, size);
   }
 
   public long countProductInWarehouseWithUserRole(String dySku, String name, String owner) {
@@ -46,8 +39,6 @@ public class ProductInWarehouseService
 
   public List<ProductInWarehouseSummary> fetchAllProductInWarehouseWithUserRole(
       String dySku, String name, String username) {
-    List<ProductInWarehouseSummary> productInWarehouseSummaries =
-        baseMapper.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
-    return productInWarehouseSummaries;
+    return baseMapper.fetchAllProductInWarehouseWithUserRole(dySku, name, username);
   }
 }
