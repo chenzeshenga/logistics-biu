@@ -2,9 +2,15 @@ package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.Date;
 
 /**
  * @author chenzeshenga
@@ -12,15 +18,23 @@ import org.springframework.stereotype.Service;
  * @since 20190809
  */
 @Service
+@Slf4j
 public class ProductStatisticsService
-    extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
+        extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
 
-  public Page<ProductStatistics> selectAll(Page page) {
-    return page.setRecords(baseMapper.selectAll(page));
-  }
+    public Page<ProductStatistics> selectAll(Page page) {
+        return page.setRecords(baseMapper.selectAll(page));
+    }
 
-  public Page<ProductStatistics> selectAllBySearch(
-      Page page, String sku, String name, String owner) {
-    return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
-  }
+    public Page<ProductStatistics> selectAllBySearch(
+            Page page, String sku, String name, String owner) {
+        return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
+    }
+
+    @PostConstruct
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void statistics() {
+        log.info("statistics " + DateUtil.getStrFromDate(new Date()));
+    }
+
 }
