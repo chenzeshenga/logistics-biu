@@ -261,7 +261,6 @@
         order by ord.update_on desc
     </select>
 
-    <!--todo correct sql-->
     <select id="listAllByStatusV2" resultType="com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2">
         select ord_no               as orderNo,
                user_custom_order_no as userCustomOrderNo,
@@ -289,6 +288,37 @@
         from l_manual_order ord
         where ord.status = #{status}
           and ord.category = #{category}
+        order by ord.update_on desc
+    </select>
+
+    <select id="listAllByStatusAndCreatorV2" resultType="com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2">
+        select ord_no               as orderNo,
+               user_custom_order_no as userCustomOrderNo,
+               status,
+               create_by            as creator,
+               create_on            as createOn,
+               carrier_no           as carrierNo,
+               track_no             as trackNo,
+               category,
+               channel,
+               from_address_line1   as fromAddressLine1,
+               from_address_line2   as fromAddressLine2,
+               from_address_line3   as fromAddressLine3,
+               from_zipcode         as fromZipCode,
+               from_whom            as fromName,
+               from_contact         as fromContact,
+               to_address_line1     as toAddressLine1,
+               to_address_line2     as toAddressLine2,
+               to_address_line3     as toAddressLine3,
+               to_zipcode           as toZipCode,
+               to_whom              as toName,
+               to_contact           as toContact,
+               on_behalf            as onBehalf,
+               collect_num          as collectNum
+        from l_manual_order ord
+        where ord.status = #{status}
+          and ord.category = #{category}
+          and ord.create_by = #{creator}
         order by ord.update_on desc
     </select>
 
@@ -714,6 +744,25 @@
         where package.orderNo = ord.ord_no
           and ord.category = #{category}
           and ord.status = #{status}
+        order by ord.update_on desc
+    </select>
+
+    <select id="listPackageByCategoryAndStatusUser"
+            resultType="com.abc.chenzeshenga.logistics.model.ord.OrderPackage">
+        select package.uuid,
+               package.orderNo,
+               package.length,
+               package.width,
+               package.height,
+               package.totalWeight,
+               package.carrierNo,
+               package.trackNo
+        from l_order_package package,
+             l_manual_order ord
+        where package.orderNo = ord.ord_no
+          and ord.category = #{category}
+          and ord.status = #{status}
+          and ord.create_by = #{creator}
         order by ord.update_on desc
     </select>
 

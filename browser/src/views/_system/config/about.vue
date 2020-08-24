@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.30 1. 订单导出可根据选择的创建人进行导出',
+          timestamp: '2020-08-24',
+        },
+        {
           content: 'v1.29 1. 其他入库单用户可见中间状态',
           timestamp: '2020-08-12',
         },

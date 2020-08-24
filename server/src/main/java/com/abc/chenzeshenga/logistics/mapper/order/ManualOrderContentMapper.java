@@ -1,7 +1,9 @@
 package com.abc.chenzeshenga.logistics.mapper.order;
 
 import com.abc.chenzeshenga.logistics.model.ManualOrderContent;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,8 +13,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ManualOrderContentMapper {
 
-  List<ManualOrderContent> getManualOrderContent(String ordno);
+    List<ManualOrderContent> getManualOrderContent(String ordno);
 
-  List<ManualOrderContent> listManualOrderContentByCategoryAndStatus(
-      String category, String status);
+    List<ManualOrderContent> listManualOrderContentByCategoryAndStatus(
+            String category, String status);
+
+    List<ManualOrderContent> listManualOrderContentByCategoryAndStatusUser(
+            String category, String status, String creator);
 }

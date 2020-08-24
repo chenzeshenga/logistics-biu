@@ -9,9 +9,11 @@ import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.abc.chenzeshenga.logistics.temp.entity.TmpOrder;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,130 +24,133 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface OrderMapper extends BaseMapper<ManualOrder> {
 
-  int add(ManualOrder manualOrder);
+    int add(ManualOrder manualOrder);
 
-  int update(ManualOrder manualOrder);
+    int update(ManualOrder manualOrder);
 
-  int updateVolumeAndWeight(ManualOrder manualOrder);
+    int updateVolumeAndWeight(ManualOrder manualOrder);
 
-  int insertContent(List<ManualOrderContent> manualOrderContents);
+    int insertContent(List<ManualOrderContent> manualOrderContents);
 
-  List<ManualOrder> list(
-      Pagination pagination,
-      @Param("cname") String cname,
-      @Param("type") String type,
-      @Param("status") String status);
+    List<ManualOrder> list(
+            Pagination pagination,
+            @Param("cname") String cname,
+            @Param("type") String type,
+            @Param("status") String status);
 
-  List<ManualOrder> listV2(
-      @Param("cname") String cname,
-      @Param("type") String type,
-      @Param("status") String status,
-      @Param("from") long from,
-      @Param("to") long to);
+    List<ManualOrder> listV2(
+            @Param("cname") String cname,
+            @Param("type") String type,
+            @Param("status") String status,
+            @Param("from") long from,
+            @Param("to") long to);
 
-  Integer countList(
-      @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
+    Integer countList(
+            @Param("cname") String cname, @Param("type") String type, @Param("status") String status);
 
-  List<ManualOrder> listByRange(
-      @Param("type") String type,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to,
-      @Param("ordno") String ordno,
-      @Param("creator") String creator,
-      @Param("channelCode") String channelCode,
-      @Param("trackNo") String trackNo,
-      @Param("userCustomOrderNo") String userCustomOrderNo,
-      @Param("pickup") int pickup,
-      @Param("fromIdx") long fromIdx,
-      @Param("toIdx") long toIdx);
+    List<ManualOrder> listByRange(
+            @Param("type") String type,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to,
+            @Param("ordno") String ordno,
+            @Param("creator") String creator,
+            @Param("channelCode") String channelCode,
+            @Param("trackNo") String trackNo,
+            @Param("userCustomOrderNo") String userCustomOrderNo,
+            @Param("pickup") int pickup,
+            @Param("fromIdx") long fromIdx,
+            @Param("toIdx") long toIdx);
 
-  Integer countByRange(
-      @Param("type") String type,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to,
-      @Param("ordno") String ordno,
-      @Param("creator") String creator,
-      @Param("channelCode") String channelCode,
-      @Param("trackNo") String trackNo,
-      @Param("userCustomOrderNo") String userCustomOrderNo,
-      @Param("pickup") int pickup);
+    Integer countByRange(
+            @Param("type") String type,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to,
+            @Param("ordno") String ordno,
+            @Param("creator") String creator,
+            @Param("channelCode") String channelCode,
+            @Param("trackNo") String trackNo,
+            @Param("userCustomOrderNo") String userCustomOrderNo,
+            @Param("pickup") int pickup);
 
-  List<ManualOrder> listByRangeWithoutPage(
-      @Param("type") String type,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to,
-      @Param("ordno") String ordno,
-      @Param("creator") String creator,
-      @Param("channelCode") String channelCode,
-      @Param("trackNo") String trackNo,
-      @Param("userCustomOrderNo") String userCustomOrderNo,
-      @Param("pickup") int pickup);
+    List<ManualOrder> listByRangeWithoutPage(
+            @Param("type") String type,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to,
+            @Param("ordno") String ordno,
+            @Param("creator") String creator,
+            @Param("channelCode") String channelCode,
+            @Param("trackNo") String trackNo,
+            @Param("userCustomOrderNo") String userCustomOrderNo,
+            @Param("pickup") int pickup);
 
-  List<ManualOrderV2> listByRangeWithoutPageV2(
-      @Param("type") String type,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to,
-      @Param("ordno") String ordno,
-      @Param("creator") String creator,
-      @Param("channelCode") String channelCode,
-      @Param("trackNo") String trackNo,
-      @Param("userCustomOrderNo") String userCustomOrderNo,
-      @Param("pickup") int pickup);
+    List<ManualOrderV2> listByRangeWithoutPageV2(
+            @Param("type") String type,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to,
+            @Param("ordno") String ordno,
+            @Param("creator") String creator,
+            @Param("channelCode") String channelCode,
+            @Param("trackNo") String trackNo,
+            @Param("userCustomOrderNo") String userCustomOrderNo,
+            @Param("pickup") int pickup);
 
-  int delete(String ordNo);
+    int delete(String ordNo);
 
-  int deleteContent(String ordNo);
+    int deleteContent(String ordNo);
 
-  List<ManualOrderContent> listContent(String ordNo);
+    List<ManualOrderContent> listContent(String ordNo);
 
-  List<ManualOrder> listAll();
+    List<ManualOrder> listAll();
 
-  List<ManualOrderContent> listContentBatch(List<String> ordNoList);
+    List<ManualOrderContent> listContentBatch(List<String> ordNoList);
 
-  List<ManualOrderContent> listContent2(String ordNo);
+    List<ManualOrderContent> listContent2(String ordNo);
 
-  int statusUpdate(ManualOrder manualOrder);
+    int statusUpdate(ManualOrder manualOrder);
 
-  int statusUpdateBatch(Map<String, Object> request);
+    int statusUpdateBatch(Map<String, Object> request);
 
-  int fillInTrackNo(ManualOrder manualOrder);
+    int fillInTrackNo(ManualOrder manualOrder);
 
-  int abnormal(ManualOrder manualOrder);
+    int abnormal(ManualOrder manualOrder);
 
-  Product getProduct(String sku);
+    Product getProduct(String sku);
 
-  List<ManualOrder> listAllByStatus(String category, String status);
+    List<ManualOrder> listAllByStatus(String category, String status);
 
-  // TODO correct below
-  List<ManualOrderV2> listAllByStatusV2(String category, String status);
+    List<ManualOrderV2> listAllByStatusV2(String category, String status);
 
-  List<ManualOrder> listAllByUsername(Map<String, String> request);
+    List<ManualOrderV2> listAllByStatusAndCreatorV2(String category, String status, String creator);
 
-  int count();
+    List<ManualOrder> listAllByUsername(Map<String, String> request);
 
-  ManualOrder quickSearch(String search);
+    int count();
 
-  ManualOrder getOrderSeq();
+    ManualOrder quickSearch(String search);
 
-  List<ManualOrder> fetchOrderNo(String creator);
+    ManualOrder getOrderSeq();
 
-  ManualOrder getOrdDetail(String ordNo);
+    List<ManualOrder> fetchOrderNo(String creator);
 
-  int updateTrackNo(OrdTrackNoMapping ordTrackNoMapping);
+    ManualOrder getOrdDetail(String ordNo);
 
-  List<ManualOrderContent> listContentByOrdNo(String ordNo);
+    int updateTrackNo(OrdTrackNoMapping ordTrackNoMapping);
 
-  int updateOrder(TmpOrder tmpOrder);
+    List<ManualOrderContent> listContentByOrdNo(String ordNo);
 
-  int dropOrderPackage(String ordNo);
+    int updateOrder(TmpOrder tmpOrder);
 
-  int insertOrderPackage(List<OrderPackage> orderPackageList);
+    int dropOrderPackage(String ordNo);
 
-  List<OrderPackage> listPackage(String orderno);
+    int insertOrderPackage(List<OrderPackage> orderPackageList);
 
-  List<OrderPackage> listPackageByCategoryAndStatus(String category, String status);
+    List<OrderPackage> listPackage(String orderno);
+
+    List<OrderPackage> listPackageByCategoryAndStatus(String category, String status);
+
+    List<OrderPackage> listPackageByCategoryAndStatusUser(String category, String status, String creator);
 }

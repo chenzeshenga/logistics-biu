@@ -1441,7 +1441,9 @@ export default {
           '&trackNo=' +
           this.search.trackNo +
           '&pickup=' +
-          this.search.pickup;
+          this.search.pickup +
+          '&creator=' +
+          this.search.creator;
       if (this.daterange) {
         link.href = link.href +
             '&fromDate=' +
