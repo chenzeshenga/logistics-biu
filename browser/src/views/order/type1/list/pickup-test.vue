@@ -2,36 +2,25 @@
   <div class="login-container">
     <div class="app-container">
       <div>
-        <v-quagga :onDetected="logIt" :readerSize="readerSize" :readerTypes="['ean_reader']"></v-quagga>
-        <input
-            type="file"
-            @change="handleFileChange($event)"
-            id="barCode"
-            accept="image/*"
-            mutiple="mutiple"
-            capture="camera"
-        />
+        <input type="file" accept="image/*;capture=camera" id="fileCapture" capture="camera"
+               v-on:change="uploadFile($event)"/>
+        <el-row>
+          <img id="preview" src="" alt="预览" style="width: 100%"/>
+        </el-row>
+        <el-row>
+          <el-button type="success" @change="scanBarcode">识别条形码</el-button>
+        </el-row>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import VueQuagga from 'vue-quaggajs';
-import Quagga from 'quagga';
-
-Vue.use(VueQuagga);
 export default {
   name: 'order-list-mgt-type1-pickup-test',
   data() {
     return {
-      readerSize: {
-        width: 640,
-        height: 480,
-      },
-      detecteds: [],
-      fileList: [],
+      file: null,
     };
   },
   created() {
@@ -39,47 +28,24 @@ export default {
   mounted() {
   },
   methods: {
-    logIt(data) {
-      console.log('detected', data);
-      alert(data);
+    uploadFile($event) {
+      const file = document.getElementById('fileCapture');
+      const fileObj = file.files[0];
+      if (fileObj) {
+        this.file = fileObj;
+        const windowURL = window.URL || window.webkitURL;
+        const img = document.getElementById('preview');
+        if (file && fileObj) {
+          const dataURl = windowURL.createObjectURL(fileObj);
+          img.setAttribute('src', dataURl);
+        }
+        alert(fileObj.name);
+      }
+      console.log($event);
     },
-    decode(file) {
-      Quagga.decodeSingle(
-          {
-            inputStream: {
-              size: 800, // 这里指定图片的大小，需要自己测试一下
-              singleChannel: false,
-            },
-            locator: {
-              patchSize: 'medium',
-              halfSample: false,
-            },
-            numOfWorkers: 1,
-            decoder: {
-              readers: [
-                {
-                  format: 'code_128_reader', // ean_reader 这里指定ean条形码，就是国际13位的条形码   code39    code_128
-                  config: {},
-                },
-              ],
-            },
-            // readers: ['code_128_reader'],
-            locate: true,
-            src: URL.createObjectURL(file),
-          },
-          function(result) {
-            // let code = result.codeResult.code
-            console.log(result);
-            alert(result);
-          },
-      );
+    scanBarcode() {
+      alert('未完成功能');
     },
-    handleFileChange(evt) {
-      console.log('evt', evt);
-      const file = evt.target.files[0];
-      this.decode(file);
-    },
-
   },
   watch: {},
 };
