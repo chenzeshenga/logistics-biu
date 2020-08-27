@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'order-list-mgt-type1-pickup-test',
+  name: 'order-list-mgt-type1-pickup-scan',
   data() {
     return {
       file: null,

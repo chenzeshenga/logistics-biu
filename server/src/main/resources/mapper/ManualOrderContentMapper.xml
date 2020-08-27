@@ -56,4 +56,51 @@
         order by ord.update_on desc
     </select>
 
+    <select id="listManualOrderContentByParamsWithoutPage"
+            resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
+        select content.ordno,
+        content.sku,
+        content.dy_sku as dySku,
+        content.name,
+        content.num,
+        content.price,
+        content.picked,
+        content.satisfied,
+        content.uuid
+        from l_manual_order_content content left join
+            l_manual_order ord on content.ordno=ord.ord_no
+        where
+        <trim prefixOverrides="and">
+            <if test="params.category != null and params.category != ''">
+                and ord.category=#{params.category}
+            </if>
+            <if test="params.status != null and params.status != ''">
+                and ord.status=#{params.status}
+            </if>
+            <if test="params.ordno != null and params.ordno != ''">
+                and ord.ord_no=#{params.ordno}
+            </if>
+            <if test="params.creator != null and params.creator != ''">
+                and ord.create_by=#{params.creator}
+            </if>
+            <if test="params.channelCode != null and params.channelCode != ''">
+                and ord.channel=#{params.channelCode}
+            </if>
+            <if test="params.trackNo != null and params.trackNo != ''">
+                and ord.track_no=#{params.trackNo}
+            </if>
+            <if test="params.userCustomOrderNo != null and params.userCustomOrderNo != ''">
+                and ord.user_custom_order_no=#{params.userCustomOrderNo}
+            </if>
+            <if test="params.pickup != null and params.pickup != 3">
+                and ord.pickup=#{params.pickup}
+            </if>
+            <if test="params.fromDate != null and params.toDate != null">
+                and ord.create_on between #{params.fromDate} and #{params.toDate}
+            </if>
+
+        </trim>
+        order by ord.update_on desc
+    </select>
+
 </mapper>

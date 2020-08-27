@@ -71,9 +71,9 @@ public class CommonController {
 
     private JapanAddressCache japanAddressCache;
 
-    private LabelCache labelCache;
+    private final LabelCache labelCache;
 
-    private UserCommonService userCommonService;
+    private final UserCommonService userCommonService;
 
     @Autowired
     public CommonController(
@@ -184,27 +184,34 @@ public class CommonController {
             @PathVariable String status,
             @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
             @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
-            @RequestParam(required = false) String ordno,
-            @RequestParam(required = false) String creator,
-            @RequestParam(required = false) String channelCode,
-            @RequestParam(required = false) String trackNo,
-            @RequestParam(required = false) String userCustomOrderNo,
+            @RequestParam(required = false, defaultValue = "") String ordno,
+            @RequestParam(required = false, defaultValue = "") String creator,
+            @RequestParam(required = false, defaultValue = "") String channelCode,
+            @RequestParam(required = false, defaultValue = "") String trackNo,
+            @RequestParam(required = false, defaultValue = "") String userCustomOrderNo,
             @RequestParam(required = false) int pickup)
             throws IOException, ParseException {
         String fileName = "订单状态.xlsx";
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         httpServletResponse.setHeader(
                 "Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
-        Map<String, String> request = new HashMap<>(2);
-        request.put("cname", UserUtils.getUserName());
-        request.put("status", status);
-        request.put("category", category);
         List<ManualOrder> manualOrderList;
+        Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
+        Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
         if (userCommonService.isManagerRole(UserUtils.getUserName())) {
-            manualOrderList = orderMapper.listAllByStatus(category, status);
+            manualOrderList =
+                    orderMapper.listByRangeWithoutPage(
+                            category,
+                            status,
+                            fromDate1,
+                            toDate1,
+                            ordno,
+                            creator,
+                            channelCode,
+                            trackNo,
+                            userCustomOrderNo,
+                            pickup);
         } else {
-            Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
-            Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
             manualOrderList =
                     orderMapper.listByRangeWithoutPage(
                             category,
@@ -260,12 +267,12 @@ public class CommonController {
             @PathVariable String status,
             @RequestParam(required = false, defaultValue = "2000-01-01") String fromDate,
             @RequestParam(required = false, defaultValue = "2099-01-01") String toDate,
-            @RequestParam(required = false) String ordno,
-            @RequestParam(required = false) String channelCode,
-            @RequestParam(required = false) String trackNo,
-            @RequestParam(required = false) String userCustomOrderNo,
-            @RequestParam(required = false) int pickup,
-            @RequestParam(required = false) String creator)
+            @RequestParam(required = false, defaultValue = "") String ordno,
+            @RequestParam(required = false, defaultValue = "") String channelCode,
+            @RequestParam(required = false, defaultValue = "") String trackNo,
+            @RequestParam(required = false, defaultValue = "") String userCustomOrderNo,
+            @RequestParam(required = false, defaultValue = "") int pickup,
+            @RequestParam(required = false, defaultValue = "") String creator)
             throws IOException, ParseException {
         String fileName = "订单" + MyDateUtils.getCurrDateStr() + ".xlsx";
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -275,17 +282,34 @@ public class CommonController {
         List<ManualOrderContent> manualOrderContentList = new ArrayList<>();
         List<OrderPackage> orderPackageList = new ArrayList<>();
         if (userCommonService.isManagerRole(UserUtils.getUserName())) {
-            if (StringUtils.isEmpty(creator)) {
-                manualOrderList = orderMapper.listAllByStatusV2(category, status);
-                manualOrderContentList =
-                        manualOrderContentMapper.listManualOrderContentByCategoryAndStatus(category, status);
-                orderPackageList = orderMapper.listPackageByCategoryAndStatus(category, status);
-            } else {
-                manualOrderList = orderMapper.listAllByStatusAndCreatorV2(category, status, creator);
-                manualOrderContentList =
-                        manualOrderContentMapper.listManualOrderContentByCategoryAndStatusUser(category, status, creator);
-                orderPackageList = orderMapper.listPackageByCategoryAndStatusUser(category, status, creator);
-            }
+            Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
+            Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
+            manualOrderList = orderMapper.listByRangeWithoutPageV2(
+                    category,
+                    status,
+                    fromDate1,
+                    toDate1,
+                    ordno,
+                    creator,
+                    channelCode,
+                    trackNo,
+                    userCustomOrderNo,
+                    pickup);
+            Map<String, Object> params = new HashMap<>();
+            params.put("category", category);
+            params.put("status", status);
+            params.put("ordno", ordno);
+            params.put("creator", creator);
+            params.put("channelCode", channelCode);
+            params.put("trackNo", trackNo);
+            params.put("userCustomOrderNo", userCustomOrderNo);
+            params.put("pickup", pickup);
+            params.put("fromDate", fromDate1);
+            params.put("toDate", toDate1);
+            manualOrderContentList =
+                    manualOrderContentMapper.listManualOrderContentByParamsWithoutPage(params);
+            //todo
+            orderPackageList = orderMapper.listPackageByCategoryAndStatusUser(category, status, creator);
         } else {
             Date fromDate1 = DateUtil.getFromDateFromStr(fromDate);
             Date toDate1 = DateUtil.getToDateFromStr(toDate + " 23:59:59");
@@ -346,7 +370,6 @@ public class CommonController {
     }
 
     @GetMapping("/product/excel/{status}")
-    @SuppressWarnings("rawtypes")
     public void getProductExcel(HttpServletResponse httpServletResponse, @PathVariable String status)
             throws IOException {
         String fileName = "商品信息.xlsx";
