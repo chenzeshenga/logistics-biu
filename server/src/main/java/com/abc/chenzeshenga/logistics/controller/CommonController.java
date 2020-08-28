@@ -520,6 +520,13 @@ public class CommonController {
         return Json.succ();
     }
 
+    @PostMapping("/ord/barcode/scan")
+    public Json scan(
+            @RequestParam(value = "file") MultipartFile multipartFile)
+            throws IOException {
+        return Json.succ("scan", ZxingBarcodeUtils.decode(multipartFile.getInputStream()));
+    }
+
     @PostMapping("/product/excel")
     public Json parseProductExcel(
             @RequestParam(value = "file") MultipartFile multipartFile,

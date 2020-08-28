@@ -8,7 +8,7 @@
           <img id="preview" src="" alt="预览" style="width: 100%"/>
         </el-row>
         <el-row>
-          <el-button type="success" @change="scanBarcode">识别条形码</el-button>
+          <el-button type="success" @click="scanBarcode">识别条形码</el-button>
         </el-row>
       </div>
     </div>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import request from '@/utils/service';
+
 export default {
   name: 'order-list-mgt-type1-pickup-scan',
   data() {
@@ -35,16 +37,24 @@ export default {
         this.file = fileObj;
         const windowURL = window.URL || window.webkitURL;
         const img = document.getElementById('preview');
-        if (file && fileObj) {
-          const dataURl = windowURL.createObjectURL(fileObj);
-          img.setAttribute('src', dataURl);
-        }
-        alert(fileObj.name);
+        const dataURl = windowURL.createObjectURL(fileObj);
+        img.setAttribute('src', dataURl);
+        this.scanBarcode();
       }
-      console.log($event);
     },
     scanBarcode() {
       alert('未完成功能');
+      console.log(this.file);
+      request({
+        url: 'ord/barcode/scan',
+        method: 'post',
+        contentType: 'multipart/form-data',
+        data: {
+          'file': this.file,
+        },
+      }).then((res) => {
+        alert(res);
+      });
     },
   },
   watch: {},

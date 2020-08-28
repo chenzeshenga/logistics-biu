@@ -91,7 +91,7 @@ export default {
       }
       request({
         url: 'ord/pickup/' + this.search,
-        type: 'get',
+        method: 'get',
       }).then((res) => {
         this.content = res.data.data;
       });
