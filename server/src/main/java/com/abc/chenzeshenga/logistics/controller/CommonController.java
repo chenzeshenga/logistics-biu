@@ -524,7 +524,13 @@ public class CommonController {
     public Json scan(
             @RequestParam(value = "file") MultipartFile multipartFile)
             throws IOException {
-        return Json.succ("scan", ZxingBarcodeUtils.decode(multipartFile.getInputStream()));
+        String result = ZxingBarcodeUtils.decode(multipartFile.getInputStream());
+        if (StringUtils.isEmpty(result)) {
+            return Json.succ("scan", "未识别的条形码");
+        } else {
+            return Json.succ("scan", result);
+        }
+
     }
 
     @PostMapping("/product/excel")

@@ -43,17 +43,14 @@ export default {
       }
     },
     scanBarcode() {
-      alert('未完成功能');
-      console.log(this.file);
+      const data = new FormData();
+      data.append('file', this.file);
       request({
         url: 'ord/barcode/scan',
         method: 'post',
-        contentType: 'multipart/form-data',
-        data: {
-          'file': this.file,
-        },
+        data: data,
       }).then((res) => {
-        alert(res);
+        alert(res.data.msg);
       });
     },
   },
