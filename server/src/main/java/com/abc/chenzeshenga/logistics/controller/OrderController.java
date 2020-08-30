@@ -95,6 +95,7 @@ public class OrderController {
     @PostMapping("/detail")
     public Json getOrdDetail(@RequestBody Map<String, String> request) {
         ManualOrder manualOrder = orderMapper.getOrdDetail(request.get("ordNo"));
+        manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
         return Json.succ().data(manualOrder);
     }
 

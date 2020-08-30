@@ -81,7 +81,6 @@ export default {
   },
   methods: {
     searchOrdContent() {
-      console.log(this.$route.query.orderNo);
       if (this.$route.query.orderNo !== undefined && this.$route.query.orderNo.length > 0) {
         this.search = this.$route.query.orderNo;
       }

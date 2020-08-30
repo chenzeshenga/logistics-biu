@@ -426,6 +426,17 @@ export const asyncRouterMap = [
               noCache: true,
             },
           },
+          {
+            path: 'pickup-info',
+            component: _import('order/type1/list/pickup-info'),
+            name: 'order-list-mgt-type1-info-scan',
+            meta: {
+              perm: 'm:order1:list:1',
+              title: '拣货-信息',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
         ],
       },
       {

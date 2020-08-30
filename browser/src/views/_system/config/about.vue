@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.31 1. 移动端订单详情页',
+          timestamp: '2020-08-30',
+        },
+        {
           content: 'v1.30 1. 订单导出可根据选择的创建人进行导出',
           timestamp: '2020-08-24',
         },
