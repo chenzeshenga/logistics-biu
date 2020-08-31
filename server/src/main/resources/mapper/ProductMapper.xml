@@ -481,7 +481,7 @@
     </select>
 
     <select id="selectProductBySku" resultType="com.abc.chenzeshenga.logistics.model.Product">
-        select sku, product_name as productName
+        select sku, dy_sku as dySku, product_name as productName, createdBy, img_path as imgPath
         from l_productions
         where dy_sku = #{sku}
         limit 1

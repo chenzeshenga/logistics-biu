@@ -68,6 +68,9 @@ public class OrderController {
     @Resource
     private ProductOutWarehouseMapper productOutWarehouseMapper;
 
+    @Resource
+    private ProductMapper productMapper;
+
     private OrderService orderService;
 
     private JapanAddressCache japanAddressCache;
@@ -96,6 +99,15 @@ public class OrderController {
     public Json getOrdDetail(@RequestBody Map<String, String> request) {
         ManualOrder manualOrder = orderMapper.getOrdDetail(request.get("ordNo"));
         manualOrder.setCategoryName(labelCache.getLabel("category_" + manualOrder.getCategory()));
+        manualOrder.setStatusDesc(labelCache.getLabel("ord_status_" + manualOrder.getStatus()));
+        List<ManualOrderContent> manualOrderContentList = manualOrder.getManualOrderContents();
+        for (ManualOrderContent manualOrderContent : manualOrderContentList) {
+            String dySku = manualOrderContent.getDySku();
+            Product product = productMapper.selectProductBySku(dySku);
+            manualOrderContent.setImgUrl(product.getImgPath());
+            UpShelfProduct upShelfProduct = upShelfProductMapper.selectOneBySku(dySku, product.getCreatedBy());
+            manualOrderContent.setShelfNo(upShelfProduct.getShelfNo());
+        }
         return Json.succ().data(manualOrder);
     }
 

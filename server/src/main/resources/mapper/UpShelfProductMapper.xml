@@ -14,6 +14,7 @@
         from l_up_shelf_product
         where dy_sku = #{sku}
           and owner = #{owner}
+          and num > 0
         order by uptime desc
         limit 1
     </select>

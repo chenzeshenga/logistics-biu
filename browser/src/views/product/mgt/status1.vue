@@ -107,6 +107,14 @@
           </template>
         </el-table-column>
         <el-table-column
+            label="图片"
+            width="150"
+        >
+          <template slot-scope="tableData">
+            <img :src="tableData.row.imgPath" alt="商品" style="width: 100%">
+          </template>
+        </el-table-column>
+        <el-table-column
             label="sku"
             prop="sku"
             width="150"

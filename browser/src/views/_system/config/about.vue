@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.32 1. 完善移动端订单详情页',
+          timestamp: '2020-08-31',
+        },
+        {
           content: 'v1.31 1. 移动端订单详情页',
           timestamp: '2020-08-30',
         },
