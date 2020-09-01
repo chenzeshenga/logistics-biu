@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.33 1. 新建商品时修复无法上传图片',
+          timestamp: '2020-09-01',
+        },
+        {
           content: 'v1.32 1. 完善移动端订单详情页',
           timestamp: '2020-08-31',
         },

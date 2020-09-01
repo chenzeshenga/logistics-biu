@@ -51,6 +51,7 @@ public class CommonController {
 
     @Resource
     private OrderMapper orderMapper;
+
     @Resource
     private ManualOrderContentMapper manualOrderContentMapper;
 

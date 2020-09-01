@@ -109,9 +109,10 @@
     </select>
 
     <select id="whetherImgsV2" resultType="com.abc.chenzeshenga.logistics.model.Product">
-        select sku, img1, img2, img3
+        select sku, dy_sku as dySku, img_path as imgPath
         from l_productions
         where sku = #{sku}
+        limit 1
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -432,6 +433,77 @@
             </if>
         </set>
         where sku = #{sku,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKeySelectiveV2" parameterType="com.abc.chenzeshenga.logistics.model.Product">
+        update l_productions
+        <set>
+            <if test="productName != null">
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                color = #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                `size` = #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=VARCHAR},
+            </if>
+            <if test="length != null">
+                `length` = #{length,jdbcType=VARCHAR},
+            </if>
+            <if test="width != null">
+                width = #{width,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                height = #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                weight = #{weight,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null">
+                createdBy = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                updateBy = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                `location` = #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="imgPath != null">
+                img_path = #{imgPath,jdbcType=VARCHAR},
+            </if>
+            <if test="alertNum != null">
+                alert_num = #{alertNum,jdbcType=INTEGER},
+            </if>
+            <if test="createOn != null">
+                create_on = #{createOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateOn != null">
+                update_on = #{updateOn,jdbcType=TIMESTAMP},
+            </if>
+            <if test="avaNum != null">
+                ava_num = #{avaNum,jdbcType=INTEGER},
+            </if>
+            <if test="img1 != null">
+                img1 = #{img1,jdbcType=VARCHAR},
+            </if>
+            <if test="img2 != null">
+                img2 = #{img2,jdbcType=VARCHAR},
+            </if>
+            <if test="img3 != null">
+                img3 = #{img3,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where sku = #{sku,jdbcType=VARCHAR}
+        and dy_sku=#{dySku}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="com.abc.chenzeshenga.logistics.model.Product">

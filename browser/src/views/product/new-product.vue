@@ -28,6 +28,18 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item label="东岳sku">
+          <el-col :span="12">
+            <el-form-item label="东岳sku" prop="dySku">
+              <el-input
+                  v-model="form.dySku"
+                  disabled
+                  placeholder="东岳sku由系统自动生成，并在全局唯一"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
         <el-form-item label="商品信息">
           <el-col :span="12">
             <el-form-item label="sku" prop="sku">
@@ -62,15 +74,15 @@
                   v-model="form.category"
                   placeholder="请选择商品类型"
                   value="">
-                <el-option value="1" label="小物" />
-                <el-option value="2" label="服装" />
-                <el-option value="3" label="户外运动" />
-                <el-option value="4" label="电子产品" />
-                <el-option value="5" label="家居用品" />
-                <el-option value="6" label="玩具" />
-                <el-option value="7" label="易碎品" />
-                <el-option value="8" label="大件" />
-                <el-option value="9" label="其他" />
+                <el-option value="1" label="小物"/>
+                <el-option value="2" label="服装"/>
+                <el-option value="3" label="户外运动"/>
+                <el-option value="4" label="电子产品"/>
+                <el-option value="5" label="家居用品"/>
+                <el-option value="6" label="玩具"/>
+                <el-option value="7" label="易碎品"/>
+                <el-option value="8" label="大件"/>
+                <el-option value="9" label="其他"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -140,12 +152,12 @@
               list-type="picture"
               :file-list="fileList"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove"
               :data="form"
               :on-change="handleFileChange"
               ref="upload"
               :on-error="handleError"
-              :limit="3"
+              :on-success="handleSuccess"
+              :limit="1"
           >
             <el-button slot="trigger" size="small" type="primary"
             >选取文件
@@ -162,7 +174,7 @@
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%" :src="dialogImageUrl" alt=""/>
           </el-dialog>
         </el-form-item>
         <el-form-item>
@@ -267,14 +279,16 @@
         <el-row>
           <el-col :offset="14" :span="2">
             <el-button @click="triggerUploadDialog" type="primary"
-            >确认</el-button
+            >确认
+            </el-button
             >
           </el-col>
           <el-col :offset="3" :span="2">
             <el-button
                 @click="dialogVisible4StandFor = false"
                 type="primary"
-            >取消</el-button
+            >取消
+            </el-button
             >
           </el-col>
         </el-row>
@@ -301,6 +315,7 @@ export default {
       users: [],
       form: {
         sku: '',
+        dySku: '',
         productName: '',
         category: '8',
         color: '',
@@ -403,67 +418,50 @@ export default {
           this.onCreate = false;
           this.onUpdate = true;
           this.fileList = [];
-          if (
-            res.data.data.img1 !== null &&
-                            res.data.data.img1.length > 0
-          ) {
+          if (res.data.data.img1 !== null && res.data.data.img1.length > 0) {
             const tmp = {
               name: 'img1',
               index: '1',
               url:
-                                    process.env.BASE_API +
-                                    '/img/' +
-                                    res.data.data.img1,
+                  process.env.BASE_API +
+                  '/img/' +
+                  res.data.data.img1,
               uid: res.data.data.img1,
             };
             this.fileList.push(tmp);
           }
           if (
-            res.data.data.img2 !== null &&
-                            res.data.data.img2.length > 0
+              res.data.data.img2 !== null &&
+              res.data.data.img2.length > 0
           ) {
             const tmp = {
               name: 'img2',
               index: '2',
               url:
-                                    process.env.BASE_API +
-                                    '/img/' +
-                                    res.data.data.img2,
+                  process.env.BASE_API +
+                  '/img/' +
+                  res.data.data.img2,
               uid: res.data.data.img2,
             };
             this.fileList.push(tmp);
           }
           if (
-            res.data.data.img3 !== null &&
-                            res.data.data.img3.length > 0
+              res.data.data.img3 !== null &&
+              res.data.data.img3.length > 0
           ) {
             const tmp = {
               name: 'img3',
               index: '3',
               url:
-                                    process.env.BASE_API +
-                                    '/img/' +
-                                    res.data.data.img3,
+                  process.env.BASE_API +
+                  '/img/' +
+                  res.data.data.img3,
               uid: res.data.data.img3,
             };
             this.fileList.push(tmp);
           }
         });
       }
-    },
-    handleRemove(file, fileList) {
-      request({
-        url:
-                        '/product/img/drop/' +
-                        file.uid +
-                        '/' +
-                        this.form.sku +
-                        '/' +
-                        file.index,
-        method: 'get',
-      }).then(() => {
-        this.$message.success('成功删除关联图片');
-      });
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -554,7 +552,10 @@ export default {
     },
     changeUpdateLink(val) {
       console.log(val);
-      this.actionLink+='?standFor='+val;
+      this.actionLink += '?standFor=' + val;
+    },
+    handleSuccess(resp) {
+      this.form.dySku = resp.data.dySku;
     },
   },
 };

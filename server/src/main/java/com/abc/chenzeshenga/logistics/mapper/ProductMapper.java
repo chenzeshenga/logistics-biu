@@ -4,8 +4,9 @@ import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.SkuLabel;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.Page;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,46 +17,60 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProductMapper extends BaseMapper<Product> {
 
-  List<SkuLabel> list(String username);
+    List<SkuLabel> list(String username);
 
-  List<SkuLabel> listAll();
+    List<SkuLabel> listAll();
 
-  List<SkuLabel> listAllByUser(String username);
+    List<SkuLabel> listAllByUser(String username);
 
-  int addImg(Product product);
+    int addImg(Product product);
 
-  Product whetherImgs(String sku);
+    Product whetherImgs(String sku);
 
-  Product whetherImgsV2(String sku);
+    /**
+     * 根据sku查找商品，不准确
+     *
+     * @param sku 用户sku
+     * @return 商品信息
+     */
+    Product whetherImgsV2(String sku);
 
-  @Override
-  Integer insert(Product product);
+    @Override
+    Integer insert(Product product);
 
-  int insertSelective(Product product);
+    int insertSelective(Product product);
 
-  int updateByPrimaryKeySelective(Product product);
+    int updateByPrimaryKeySelective(Product product);
 
-  int updateByPrimaryKey(Product product);
+    /**
+     * 根据sku/dySku更新产品
+     *
+     * @param product 商品
+     * @return 更新数量
+     */
+    int updateByPrimaryKeySelectiveV2(Product product);
 
-  int deleteByPrimaryKey(String sku);
+    int updateByPrimaryKey(Product product);
 
-  Product selectByPrimaryKey(String sku);
+    int deleteByPrimaryKey(String sku);
 
-  List<Product> listByStatusWithUser(
-      @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
+    Product selectByPrimaryKey(String sku);
 
-  List<Product> listByStatus(
-      @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
+    List<Product> listByStatusWithUser(
+            @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
 
-  long countByStatus(@Param("searchProduct") Product searchProduct);
+    List<Product> listByStatus(
+            @Param("searchProduct") Product searchProduct, @Param("sqlLimit") SqlLimit sqlLimit);
 
-  int statusUpdate(String sku, String status);
+    long countByStatus(@Param("searchProduct") Product searchProduct);
 
-  int batchUpdate(List<String> skus);
+    int statusUpdate(String sku, String status);
 
-  List<SkuLabel> listUserOwnProduct(String username);
+    int batchUpdate(List<String> skus);
 
-  Product selectProductBySku(String sku);
+    List<SkuLabel> listUserOwnProduct(String username);
 
-  Product selectProductByOwnerAndDySku(String owner, String dysku);
+    Product selectProductBySku(String sku);
+
+    Product selectProductByOwnerAndDySku(String owner, String dysku);
 }
