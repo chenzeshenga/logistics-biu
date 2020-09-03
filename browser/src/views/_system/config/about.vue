@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.34 1. 订单扫描新增商品sku扫描',
+          timestamp: '2020-09-03',
+        },
+        {
           content: 'v1.33 1. 新建商品时修复无法上传图片',
           timestamp: '2020-09-01',
         },
