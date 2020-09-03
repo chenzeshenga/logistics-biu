@@ -1,6 +1,5 @@
 package com.abc.chenzeshenga.logistics.controller;
 
-import com.abc.chenzeshenga.logistics.cache.JapanAddressCache;
 import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.mapper.order.ManualOrderContentMapper;
@@ -67,21 +66,12 @@ public class CommonController {
     @Resource
     private ProductMapper productMapper;
 
-    @Resource
-    private AddressMapper addressMapper;
-
-    private JapanAddressCache japanAddressCache;
-
     private final LabelCache labelCache;
 
     private final UserCommonService userCommonService;
 
     @Autowired
-    public CommonController(
-            JapanAddressCache japanAddressCache,
-            LabelCache labelCache,
-            UserCommonService userCommonService) {
-        this.japanAddressCache = japanAddressCache;
+    public CommonController(LabelCache labelCache, UserCommonService userCommonService) {
         this.labelCache = labelCache;
         this.userCommonService = userCommonService;
     }
@@ -522,9 +512,7 @@ public class CommonController {
     }
 
     @PostMapping("/ord/barcode/scan")
-    public Json scan(
-            @RequestParam(value = "file") MultipartFile multipartFile)
-            throws IOException {
+    public Json scan(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String result = ZxingBarcodeUtils.decode(multipartFile.getInputStream());
         if (StringUtils.isEmpty(result)) {
             return Json.succ("scan", "未识别的条形码");
@@ -532,6 +520,16 @@ public class CommonController {
             return Json.succ("scan", result);
         }
 
+    }
+
+    @PostMapping("/product/barcode/scan")
+    public Json productBarcode(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        String result = ZxingBarcodeUtils.decode(multipartFile.getInputStream());
+        if (StringUtils.isEmpty(result)) {
+            return Json.succ("scan", "未识别的商品条形码");
+        } else {
+            return Json.succ("scan", result);
+        }
     }
 
     @PostMapping("/product/excel")

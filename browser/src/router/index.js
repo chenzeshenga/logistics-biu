@@ -409,7 +409,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/pickup'),
             name: 'order-list-mgt-type1-pickup',
             meta: {
-              perm: 'm:order1:list:1',
+              perm: 'm:order1:list:pickup:1',
               title: '拣货',
               icon: 'chart',
               noCache: true,
@@ -420,7 +420,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/pickup-scan'),
             name: 'order-list-mgt-type1-pickup-scan',
             meta: {
-              perm: 'm:order1:list:1',
+              perm: 'm:order1:list:pickup:2',
               title: '拣货-扫描',
               icon: 'chart',
               noCache: true,
@@ -431,7 +431,7 @@ export const asyncRouterMap = [
             component: _import('order/type1/list/pickup-info'),
             name: 'order-list-mgt-type1-info-scan',
             meta: {
-              perm: 'm:order1:list:1',
+              perm: 'm:order1:list:pickup:3',
               title: '拣货-信息',
               icon: 'chart',
               noCache: true,

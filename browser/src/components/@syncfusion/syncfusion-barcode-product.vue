@@ -1,15 +1,17 @@
 <template>
   <div style="width: 145px;height: 80px;display: table-cell;vertical-align: middle;horiz-align: center">
     <span
-      style="margin-left:15px;text-align: center;width:120px;display: block;font-size:10px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{name}}</span>
+        style="margin-left:15px;text-align: center;width:120px;display: block;font-size:10px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{
+        name
+      }}</span>
     <ejs-barcodegenerator
-      id="barcode4product"
-      ref="barcodeControl"
-      :width="width"
-      :height="height"
-      :type="type"
-      :value="value"
-      :mode="mode"
+        id="barcode4product"
+        ref="barcodeControl"
+        :width="width"
+        :height="height"
+        :type="type"
+        :value="value"
+        :mode="mode"
     />
   </div>
 </template>
@@ -24,7 +26,7 @@ let barCodeInstance;
 export default {
   name: 'syncfusion-barcode-product',
   props: ['barcode'],
-  data: function() {
+  data() {
     return {
       mode: 'SVG',
       type: 'Code128',
@@ -48,7 +50,6 @@ export default {
       barCodeInstance.margin.bottom = 2;
       barCodeInstance.margin.left = 20;
       barCodeInstance.margin.right = 20;
-
     }
   },
 };

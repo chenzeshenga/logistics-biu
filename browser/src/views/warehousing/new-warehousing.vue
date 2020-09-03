@@ -234,7 +234,7 @@ export default {
       dialogVisible: false,
       form: {
         fromAddress: '',
-        target: '岡山县岡山市中区新京橋3丁目4-26',
+        target: '岡山県岡山市中区桑野704-1',
         warehousingNo: '',
         method: '东岳头程',
         creator: '',

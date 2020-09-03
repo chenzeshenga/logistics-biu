@@ -50,6 +50,19 @@
           </div>
         </div>
         <div>
+          <div style="margin-top: 2%;margin-bottom: 3%">
+            请扫描商品sku（东岳sku）
+            <input type="file" accept="image/*;capture=camera" id="fileCapture" capture="camera"
+                   v-on:change="uploadFile($event)" style="margin-top: 2%"/>
+            <el-row style="margin-top: 2%">
+              <img id="preview" src="" alt="预览" style="width: 100%"/>
+            </el-row>
+            数量
+            <el-input-number v-model="pickNum" style="margin-top: 2%"></el-input-number>
+          </div>
+          <div style="margin-top: 2%;margin-bottom: 3%">
+            <el-button @click="addProductNum">确定</el-button>
+          </div>
           <div>
             <span class="ord-title">订单内容</span>
             <div v-for="content in ord.contentList" :key="content.uuid" style="margin-top: 3%;">
@@ -59,7 +72,7 @@
               名称 <span class="ord-content">{{ content.name }}</span><br>
               数量 <span class="ord-content">{{ content.num }}</span><br>
               货架号 <span class="ord-content">{{ content.shelfNo }}</span><br>
-              拣货数量
+              已拣货数量
               <el-input-number v-model="content.picked"></el-input-number>
               <el-divider/>
             </div>
@@ -95,6 +108,8 @@ export default {
       hidden: {
         'display': 'none',
       },
+      pickNum: 1,
+      dySku: '',
     };
   },
   created() {
@@ -129,17 +144,62 @@ export default {
       this.ordDetailOpp = this.hidden;
     },
     donePickup() {
-      console.log(this.ord);
+      const contentList = this.ord.contentList;
+      for (const content of contentList) {
+        if (Number(content.picked) !== Number(content.num)) {
+          this.$message.warning('商品' + content.dySku + '应拣货' + content.num + '个');
+          return;
+        }
+      }
       request({
         url: 'ord/pickup',
         method: 'post',
         data: this.ord.contentList,
       }).then((res) => {
         console.log(res);
+        this.$message.info('拣货完成');
+        this.$router.push({path: '/order-list/mgt/type1/pickup-scan'});
       });
     },
+    uploadFile($event) {
+      const file = document.getElementById('fileCapture');
+      const fileObj = file.files[0];
+      if (fileObj) {
+        this.file = fileObj;
+        const windowURL = window.URL || window.webkitURL;
+        const img = document.getElementById('preview');
+        const dataURl = windowURL.createObjectURL(fileObj);
+        img.setAttribute('src', dataURl);
+        this.scanBarcode();
+      }
+    },
+    scanBarcode() {
+      const data = new FormData();
+      data.append('file', this.file);
+      request({
+        url: '/product/barcode/scan',
+        method: 'post',
+        data: data,
+      }).then((res) => {
+        this.$message.info('商品东岳sku为 ' + res.data.msg);
+        this.dySku = res.data.msg;
+      });
+    },
+    addProductNum() {
+      const contentList = this.ord.contentList;
+      for (const content of contentList) {
+        if (content.dySku === this.dySku) {
+          content.picked += this.pickNum;
+          break;
+        }
+      }
+    },
   },
-  watch: {},
+  watch: {
+    $route() {
+      this.fetchOrd();
+    },
+  },
 };
 </script>
 
