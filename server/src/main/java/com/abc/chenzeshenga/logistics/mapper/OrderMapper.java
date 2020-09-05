@@ -30,6 +30,12 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
     int updateVolumeAndWeight(ManualOrder manualOrder);
 
+    /**
+     * 批量插入订单货物
+     *
+     * @param manualOrderContents 订单货物
+     * @return 更新数量
+     */
     int insertContent(List<ManualOrderContent> manualOrderContents);
 
     List<ManualOrder> list(
@@ -108,6 +114,12 @@ public interface OrderMapper extends BaseMapper<ManualOrder> {
 
     List<ManualOrderContent> listContentBatch(List<String> ordNoList);
 
+    /**
+     * 根据订单号获取订单货物内容
+     *
+     * @param ordNo 订单号
+     * @return 订单货物内容
+     */
     List<ManualOrderContent> listContent2(String ordNo);
 
     int statusUpdate(ManualOrder manualOrder);

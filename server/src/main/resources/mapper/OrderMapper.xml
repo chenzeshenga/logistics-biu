@@ -225,6 +225,7 @@
                 #{toName}, #{channel}, #{chinaCarrier}, #{collectNum})
     </insert>
 
+    <!-- 批量插入订单货物 -->
     <insert id="insertContent" parameterType="java.util.List">
         insert into l_manual_order_content(ordno, sku, name, num, price,picked,satisfied,uuid,dy_sku)
         values
@@ -565,6 +566,7 @@
         order by ord.update_on desc
     </select>
 
+    <!-- 根据订单号获取订单货物内容 -->
     <select id="listContent2" resultType="com.abc.chenzeshenga.logistics.model.ManualOrderContent">
         select content.ordno,
                content.sku,

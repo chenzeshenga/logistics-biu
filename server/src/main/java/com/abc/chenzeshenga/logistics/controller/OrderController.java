@@ -71,25 +71,21 @@ public class OrderController {
     @Resource
     private ProductMapper productMapper;
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    private JapanAddressCache japanAddressCache;
+    private final LabelCache labelCache;
 
-    private LabelCache labelCache;
+    private final ChannelCache channelCache;
 
-    private ChannelCache channelCache;
-
-    private UserCommonService userCommonService;
+    private final UserCommonService userCommonService;
 
     @Autowired
     public OrderController(
             OrderService orderService,
-            JapanAddressCache japanAddressCache,
             LabelCache labelCache,
             ChannelCache channelCache,
             UserCommonService userCommonService) {
         this.orderService = orderService;
-        this.japanAddressCache = japanAddressCache;
         this.labelCache = labelCache;
         this.channelCache = channelCache;
         this.userCommonService = userCommonService;
@@ -120,7 +116,6 @@ public class OrderController {
             }
             return Json.fail().msg(errMsg.toString());
         }
-        setAddress(manualOrder);
         manualOrder.setStatus("1");
         Date curr = new Date();
         manualOrder.setCreateOn(curr);
@@ -151,6 +146,12 @@ public class OrderController {
         return Json.succ().data(result);
     }
 
+    /**
+     * 订单信息更新
+     *
+     * @param manualOrder 订单内容
+     * @return 更新成功
+     */
     @PostMapping("/update")
     public Json update(@RequestBody ManualOrder manualOrder) {
         String ordno = manualOrder.getOrderNo();
@@ -171,35 +172,36 @@ public class OrderController {
                     break;
                 }
             }
+            Date curr = new Date();
+            manualOrder.setUpdateOn(curr);
+            String cname = UserUtils.getUserName();
+            manualOrder.setUpdator(cname);
             if (!satisfied) {
-                setAddress(manualOrder);
-                Date curr = new Date();
-                manualOrder.setUpdateOn(curr);
-                String cname = UserUtils.getUserName();
-                manualOrder.setUpdator(cname);
                 orderMapper.update(manualOrder);
                 return Json.succ("update ord fail", "该订单商品未完成拣货操作，基本信息已更新");
             } else {
-                setAddress(manualOrder);
-                Date curr = new Date();
-                manualOrder.setUpdateOn(curr);
-                String cname = UserUtils.getUserName();
-                manualOrder.setUpdator(cname);
                 String status = manualOrder.getStatus();
                 manualOrder.setStatus(String.valueOf(Integer.parseInt(status) + 1));
-                orderMapper.update(manualOrder);
-                List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
-                if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
-                    orderMapper.deleteContent(manualOrder.getOrderNo());
-                    manualOrderContents.forEach(
-                            manualOrderContent -> manualOrderContent.setOrdno(manualOrder.getOrderNo()));
-                    orderMapper.insertContent(manualOrderContents);
-                }
+                updateOrdAndOrdContent(manualOrder);
                 return Json.succ().data("订单已发货");
             }
         } else {
-            orderMapper.update(manualOrder);
+            updateOrdAndOrdContent(manualOrder);
             return Json.succ().data("订单信息更新");
+        }
+    }
+
+    private void updateOrdAndOrdContent(@RequestBody ManualOrder manualOrder) {
+        orderMapper.update(manualOrder);
+        List<ManualOrderContent> manualOrderContents = manualOrder.getManualOrderContents();
+        if (manualOrderContents != null && !manualOrderContents.isEmpty()) {
+            orderMapper.deleteContent(manualOrder.getOrderNo());
+            manualOrderContents.forEach(
+                    manualOrderContent -> {
+                        manualOrderContent.setOrdno(manualOrder.getOrderNo());
+                        manualOrderContent.setUuid(UuidUtils.uuid());
+                    });
+            orderMapper.insertContent(manualOrderContents);
         }
     }
 
@@ -267,21 +269,6 @@ public class OrderController {
                 });
         log.info(ordTrackNoMappingList.toString());
         return Json.succ();
-    }
-
-    private void setAddress(@RequestBody ManualOrder manualOrder) {
-        List<String> fromAddress = manualOrder.getSelectedAddress();
-        //    if (fromAddress != null && !fromAddress.isEmpty()) {
-        //      manualOrder.setFromKenId(fromAddress.get(0));
-        //      manualOrder.setFromCityId(fromAddress.get(1));
-        //      manualOrder.setFromTownId(fromAddress.get(2));
-        //    }
-        //    List<String> toAddress = manualOrder.getSelectedToAddress();
-        //    if (toAddress != null && !toAddress.isEmpty()) {
-        //      manualOrder.setToKenId(toAddress.get(0));
-        //      manualOrder.setToCityId(toAddress.get(1));
-        //      manualOrder.setToTownId(toAddress.get(2));
-        //    }
     }
 
     @PostMapping("/list/{type}/{status}")
@@ -402,9 +389,17 @@ public class OrderController {
         return Json.succ();
     }
 
+    /**
+     * 根据订单号获取订单明细
+     *
+     * @param ordNo 订单号
+     * @return 订单信息
+     */
     @GetMapping("/get/{ordNo}")
     public Json selectByPk(@PathVariable String ordNo) {
-        ManualOrder manualOrder = orderMapper.getOrdDetail(ordNo);
+        ManualOrder manualOrder = orderMapper.selectById(ordNo);
+        List<ManualOrderContent> manualOrderContentList = orderMapper.listContent2(ordNo);
+        manualOrder.setManualOrderContents(manualOrderContentList);
         return Json.succ().data(manualOrder);
     }
 

@@ -50,9 +50,9 @@
           <el-col :span="12">
             <el-form-item label="用户定义订单号">
               <el-input
-                v-model="form.userCustomOrderNo"
-                v-bind:disabled="onUpdate"
-                placeholder="请输入用户自定义订单号"
+                  v-model="form.userCustomOrderNo"
+                  v-bind:disabled="onUpdate"
+                  placeholder="请输入用户自定义订单号"
               >
               </el-input>
             </el-form-item>
@@ -155,8 +155,10 @@
           <el-col :span="24" style="margin-top: 1%">
             <el-form-item label="发件地址">
               <el-input v-model="form.fromAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
-              <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
-              <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1"
+                        style="margin-top: 1%"></el-input>
+              <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2"
+                        style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -188,8 +190,10 @@
           <el-col :span="24" style="margin-top: 1%">
             <el-form-item label="收件地址">
               <el-input v-model="form.toAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
-              <el-input v-model="form.toAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
-              <el-input v-model="form.toAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.toAddressLine2" clearable placeholder="请输入详细地址1"
+                        style="margin-top: 1%"></el-input>
+              <el-input v-model="form.toAddressLine3" clearable placeholder="请输入详细地址2"
+                        style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -225,17 +229,17 @@
             <el-col :span="5" v-if="!skuFlag">
               <el-form-item label="东岳sku">
                 <el-select
-                  filterable
-                  clearable
-                  v-model="content.dySku"
-                  placeholder="请选择商品"
-                  @change="handleProductChange"
-                  value="">
+                    filterable
+                    clearable
+                    v-model="content.dySku"
+                    placeholder="请选择商品"
+                    @change="handleProductChange"
+                    value="">
                   <el-option
-                    v-for="product in myProducts"
-                    :key="product.dySku"
-                    :label="product.dySku"
-                    :value="product.dySku"
+                      v-for="product in myProducts"
+                      :key="product.dySku"
+                      :label="product.dySku"
+                      :value="product.dySku"
                   />
                 </el-select>
               </el-form-item>
@@ -248,8 +252,8 @@
             <el-col :span="5" v-if="skuFlag">
               <el-form-item label="dySku或者sku">
                 <el-input
-                  v-model="content.dySku"
-                  placeholder="请输入或者扫描sku"
+                    v-model="content.dySku"
+                    placeholder="请输入或者扫描sku"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -258,41 +262,41 @@
             <el-col :span="5" v-if="!skuFlag">
               <el-form-item label="名称">
                 <el-input
-                  disabled
-                  v-model="content.name"
-                  placeholder="请输入产品名称"
+                    disabled
+                    v-model="content.name"
+                    placeholder="请输入产品名称"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="5" v-if="skuFlag">
               <el-form-item label="名称">
                 <el-input
-                  v-model="content.name"
-                  placeholder="请输入产品名称"
+                    v-model="content.name"
+                    placeholder="请输入产品名称"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="5" v-if="!skuFlag">
               <el-form-item label="商品价值(JPY)">
                 <el-input
-                  disabled
-                  v-model="content.price"
+                    disabled
+                    v-model="content.price"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="5" v-if="skuFlag">
               <el-form-item label="商品价值">
                 <el-input-number
-                  v-model="content.price"
+                    v-model="content.price"
                 ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="商品数量">
                 <el-input-number
-                  v-model="content.num"
-                  :min="1"
-                  :max="selectedProductMaxNum"
+                    v-model="content.num"
+                    :min="1"
+                    :max="selectedProductMaxNum"
                 ></el-input-number>
               </el-form-item>
             </el-col>
@@ -318,9 +322,9 @@
                 width="250"
             ></el-table-column>
             <el-table-column
-              prop="sku"
-              label="商品sku"
-              width="250"
+                prop="sku"
+                label="商品sku"
+                width="250"
             ></el-table-column>
             <el-table-column
                 prop="name"
@@ -339,9 +343,9 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)"
                 >删除
                 </el-button
                 >
@@ -664,6 +668,10 @@ export default {
       this.form.toAddress.town = value[2];
     },
     handleProductChange(dySku) {
+      if (dySku === undefined) {
+        this.$message.warning('请选择商品');
+        return;
+      }
       const product = this.productMap[dySku];
       this.content.dySku = dySku;
       this.content.sku = product.sku;
@@ -683,9 +691,7 @@ export default {
         const plannedNum =
             this.selectedProductMap[this.content['dySku']]['num'] +
             Number(this.content.num);
-        const product = this.productMap[
-            this.content['dySku']
-        ];
+        const product = this.productMap[this.content['dySku']];
         if (plannedNum > product.num) {
           this.selectedProductMap[this.content['dySku']]['num'] =
               product.num;
@@ -695,9 +701,7 @@ export default {
               '总数量大于该商品可售数量，系统已自动调整为最大可售数量',
           );
         } else {
-          this.selectedProductMap[this.content['dySku']][
-              'num'
-          ] += Number(this.content.num);
+          this.selectedProductMap[this.content['dySku']]['num'] += Number(this.content.num);
         }
       } else {
         this.selectedProductMap[this.content['dySku']] = tmpContent;
@@ -737,11 +741,7 @@ export default {
       }).then(() => {
         this.$message.success('当前订单已更新');
         this.$router.push({
-          path:
-              '/order-list/mgt/type' +
-              this.form.category +
-              '/status' +
-              this.status,
+          path: '/order-list/mgt/type1/status1',
         });
       });
     },
@@ -854,7 +854,7 @@ export default {
 </script>
 
 <style scoped>
-  .margin-top-2 {
-    margin-top: 2%;
-  }
+.margin-top-2 {
+  margin-top: 2%;
+}
 </style>

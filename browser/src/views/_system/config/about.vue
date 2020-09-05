@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.35 1. 订单编辑功能修复[缺陷]',
+          timestamp: '2020-09-05',
+        },
+        {
           content: 'v1.34 1. 订单扫描新增商品sku扫描',
           timestamp: '2020-09-03',
         },
