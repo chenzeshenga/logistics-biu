@@ -63,31 +63,39 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" v-if="oriOrd.showFlag">
-            <el-col :span="6">订单号:{{oriOrd.orderNo}}</el-col>
-            <el-col :span="6">订单类型:{{oriOrd.categoryName}}</el-col>
-            <el-col :span="6">订单当前状态:{{oriOrd.statusDesc}}</el-col>
+            <el-col :span="6">订单号:{{ oriOrd.orderNo }}</el-col>
+            <el-col :span="6">订单类型:{{ oriOrd.categoryName }}</el-col>
+            <el-col :span="6">订单当前状态:{{ oriOrd.statusDesc }}</el-col>
             <el-col :span="24">订单发货信息:</el-col>
-            <el-col :span="6">道/府/县:{{oriOrd.fromKenName}}</el-col>
-            <el-col :span="6">城市:{{oriOrd.fromCityName}}</el-col>
-            <el-col :span="6">乡:{{oriOrd.fromTownName}}</el-col>
-            <el-col :span="6">邮编:{{oriOrd.fromZipCode}}</el-col>
-            <el-col :span="6">详细地址:{{oriOrd.fromDetailAddress}}</el-col>
-            <el-col :span="6">发货人:{{oriOrd.fromName}}</el-col>
-            <el-col :span="6">发货人联系方式:{{oriOrd.fromContact}}</el-col>
+            <el-col :span="6">道/府/县:{{ oriOrd.fromKenName }}</el-col>
+            <el-col :span="6">城市:{{ oriOrd.fromCityName }}</el-col>
+            <el-col :span="6">乡:{{ oriOrd.fromTownName }}</el-col>
+            <el-col :span="6">邮编:{{ oriOrd.fromZipCode }}</el-col>
+            <el-col :span="6">详细地址:{{ oriOrd.fromDetailAddress }}</el-col>
+            <el-col :span="6">发货人:{{ oriOrd.fromName }}</el-col>
+            <el-col :span="6">发货人联系方式:{{ oriOrd.fromContact }}</el-col>
             <el-col :span="24">订单收货信息:</el-col>
-            <el-col :span="6">道/府/县:{{oriOrd.toKenName}}</el-col>
-            <el-col :span="6">城市:{{oriOrd.toCityName}}</el-col>
-            <el-col :span="6">乡:{{oriOrd.toTownName}}</el-col>
-            <el-col :span="6">邮编:{{oriOrd.toZipCode}}</el-col>
-            <el-col :span="6">详细地址:{{oriOrd.toDetailAddress}}</el-col>
-            <el-col :span="6">发货人:{{oriOrd.toName}}</el-col>
-            <el-col :span="6">发货人联系方式:{{oriOrd.toContact}}</el-col>
+            <el-col :span="6">道/府/县:{{ oriOrd.toKenName }}</el-col>
+            <el-col :span="6">城市:{{ oriOrd.toCityName }}</el-col>
+            <el-col :span="6">乡:{{ oriOrd.toTownName }}</el-col>
+            <el-col :span="6">邮编:{{ oriOrd.toZipCode }}</el-col>
+            <el-col :span="6">详细地址:{{ oriOrd.toDetailAddress }}</el-col>
+            <el-col :span="6">发货人:{{ oriOrd.toName }}</el-col>
+            <el-col :span="6">发货人联系方式:{{ oriOrd.toContact }}</el-col>
             <el-col :span="24">订单内容:</el-col>
             <div v-for="content in oriOrd.contentList" v-bind:key="content.uuid">
-              <h6><el-col :span="6">sku: {{content.sku}} </el-col></h6>
-              <h6><el-col :span="6">商品名称: {{content.name}} </el-col></h6>
-              <h6><el-col :span="6">商品数量: {{content.picked}} </el-col></h6>
-              <h6><el-col :span="6">商品价格: {{content.price}} </el-col></h6>
+              <h6>
+                <el-col :span="6">sku: {{ content.sku }}</el-col>
+              </h6>
+              <h6>
+                <el-col :span="6">商品名称: {{ content.name }}</el-col>
+              </h6>
+              <h6>
+                <el-col :span="6">商品数量: {{ content.picked }}</el-col>
+              </h6>
+              <h6>
+                <el-col :span="6">商品价格: {{ content.price }}</el-col>
+              </h6>
             </div>
           </el-col>
         </el-form-item>
@@ -141,8 +149,10 @@
           <el-col :span="24" style="margin-top: 1%">
             <el-form-item label="收件地址">
               <el-input v-model="form.toAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
-              <el-input v-model="form.toAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
-              <el-input v-model="form.toAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.toAddressLine2" clearable placeholder="请输入详细地址1"
+                        style="margin-top: 1%"></el-input>
+              <el-input v-model="form.toAddressLine3" clearable placeholder="请输入详细地址2"
+                        style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -174,8 +184,10 @@
           <el-col :span="24" style="margin-top: 1%">
             <el-form-item label="发件地址">
               <el-input v-model="form.fromAddressLine1" clearable placeholder="请输入道/府/县-城市-乡"></el-input>
-              <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1" style="margin-top: 1%"></el-input>
-              <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2" style="margin-top: 1%"></el-input>
+              <el-input v-model="form.fromAddressLine2" clearable placeholder="请输入详细地址1"
+                        style="margin-top: 1%"></el-input>
+              <el-input v-model="form.fromAddressLine3" clearable placeholder="请输入详细地址2"
+                        style="margin-top: 1%"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -370,8 +382,6 @@ export default {
   created() {
     this.hasAdminRole();
     this.initUserList();
-    this.getAddress();
-    this.getKenAddress();
     this.initPage();
   },
   inject: ['reload'],
@@ -406,23 +416,6 @@ export default {
     },
     trimInput() {
       this.form.returnNo = this.form.returnNo.trim();
-    },
-    getAddress() {
-      request({
-        url: '/address/getKen',
-        method: 'get',
-      }).then((res) => {
-        this.address = res.data.data;
-      });
-    },
-    getKenAddress() {
-      request({
-        url: '/address/getKen',
-        method: 'get',
-      }).then((res) => {
-        this.toKenAddress = res.data.data;
-        this.fromKenAddress = res.data.data;
-      });
     },
     initUserList() {
       request({
@@ -495,6 +488,10 @@ export default {
     },
     add2Cart() {
       const sku = this.content.sku;
+      if (sku === '') {
+        this.$message.warning('请输入sku');
+        return;
+      }
       let content4CurrSku;
       if (this.contentMap.hasOwnProperty(sku)) {
         content4CurrSku = this.contentMap[sku];
@@ -653,32 +650,6 @@ export default {
             type: 'warning',
           }).then(() => {
             this.form.fromZipCode = zip;
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消修改',
-            });
-          });
-        }
-      } else {
-        this.$message.warning('请选择乡镇');
-      }
-    },
-    fillToZipCode() {
-      if (this.form.toTownId) {
-        const town = this.toTownAddressMap[this.form.toTownId];
-        const zip = town.zip;
-        if (zip !== this.form.toZipCode) {
-          this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }).then(() => {
-            this.form.toZipCode = zip;
             this.$message({
               type: 'success',
               message: '修改成功!',

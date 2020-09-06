@@ -4,8 +4,10 @@ import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+
 import java.util.Date;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,29 +19,43 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ReturnMapper extends BaseMapper<Return> {
 
-  Return getReturnSeq();
+    Return getReturnSeq();
 
-  Return selectByPk(String returnNo);
+    Return selectByPk(String returnNo);
 
-  int updateByPk(Return returnOrder);
+    int updateByPk(Return returnOrder);
 
-  int insertReturnOrder(Return returnOrder);
+    int insertReturnOrder(Return returnOrder);
 
-  int insertContent(List<ReturnContent> returnContentList);
+    int insertContent(List<ReturnContent> returnContentList);
 
-  int deleteContent(String returnNo);
+    int deleteContent(String returnNo);
 
-  List<Return> list(
-      Pagination pagination,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to);
+    List<Return> list(
+            Pagination pagination,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to);
 
-  List<Return> listAll(
-      Pagination pagination,
-      @Param("status") String status,
-      @Param("from") Date from,
-      @Param("to") Date to);
+    List<Return> listAll(
+            Pagination pagination,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to);
 
-  int updatePkgInfo(Return returnOrd);
+    /**
+     *
+     * @param pagination
+     * @param status
+     * @param from
+     * @param to
+     * @return
+     */
+    List<Return> listAllV2(
+            Pagination pagination,
+            @Param("status") String status,
+            @Param("from") Date from,
+            @Param("to") Date to);
+
+    int updatePkgInfo(Return returnOrd);
 }

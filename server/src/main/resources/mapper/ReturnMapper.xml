@@ -147,6 +147,13 @@
           and create_on between #{from} and #{to}
     </select>
 
+    <select id="listAllV2" resultMap="result">
+        select returning.*
+        from l_returning returning
+        where status = #{status}
+          and create_on between #{from} and #{to}
+    </select>
+
     <update id="updatePkgInfo" parameterType="com.abc.chenzeshenga.logistics.model.Return">
         update l_returning
         set length=#{length},

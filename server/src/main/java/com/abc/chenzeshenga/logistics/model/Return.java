@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,53 +27,59 @@ import lombok.ToString;
 @TableName("l_returning")
 public class Return implements Serializable {
 
-  private static final long serialVersionUID = -6249013466703476021L;
+    private static final long serialVersionUID = -6249013466703476021L;
 
-  @TableId(type = IdType.ID_WORKER_STR)
-  private String returnNo;
+    @TableId(type = IdType.ID_WORKER_STR)
+    private String returnNo;
 
-  private boolean withoutOrderNoFlag;
-  private String toName;
-  private String toContact;
-  private String toZipCode;
-  private String toDetailAddress;
-  private String toKenId;
-  private String toCityId;
-  private String toTownId;
-  private String fromName;
-  private String fromContact;
-  private String fromZipCode;
-  private String fromDetailAddress;
-  private String fromKenId;
-  private String fromCityId;
-  private String fromTownId;
-  private String carrier;
-  private String trackNo;
-  private String imgs;
-  private String status;
+    private boolean withoutOrderNoFlag;
+    private String toName;
+    private String toContact;
+    private String toZipCode;
+    private String toDetailAddress;
+    private String toKenId;
+    private String toCityId;
+    private String toTownId;
+    private String fromName;
+    private String fromContact;
+    private String fromZipCode;
+    private String fromDetailAddress;
+    private String fromKenId;
+    private String fromCityId;
+    private String fromTownId;
+    private String carrier;
+    private String trackNo;
+    private String imgs;
+    private String status;
 
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-  private Date createOn;
+    private String fromAddressLine1;
+    private String fromAddressLine2;
+    private String fromAddressLine3;
+    private String toAddressLine1;
+    private String toAddressLine2;
+    private String toAddressLine3;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createOn;
 
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-  private Date updateOn;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateOn;
 
-  @TableField(value = "create_by")
-  private String creator;
+    @TableField(value = "create_by")
+    private String creator;
 
-  @TableField(value = "update_by")
-  private String updator;
+    @TableField(value = "update_by")
+    private String updator;
 
-  private String orderNo;
+    private String orderNo;
 
-  private Double length;
+    private Double length;
 
-  private Double width;
+    private Double width;
 
-  private Double height;
+    private Double height;
 
-  private Double weight;
+    private Double weight;
 
-  @TableField(exist = false)
-  private List<ReturnContent> contentList;
+    @TableField(exist = false)
+    private List<ReturnContent> contentList;
 }
