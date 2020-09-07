@@ -29,6 +29,12 @@
         <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
         <result column="update_by" property="updator"/>
         <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="to_address_line1" property="toAddressLine1"/>
+        <result column="to_address_line2" property="toAddressLine2"/>
+        <result column="to_address_line3" property="toAddressLine3"/>
+        <result column="from_address_line1" property="fromAddressLine1"/>
+        <result column="from_address_line2" property="fromAddressLine2"/>
+        <result column="from_address_line3" property="fromAddressLine3"/>
         <collection property="contentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
             <result column="subReturnNo" property="returnNo"/>
             <result column="sku" property="sku"/>
@@ -76,20 +82,29 @@
             create_by             = #{creator},
             update_by             = #{updator},
             create_on             = #{createOn,jdbcType=TIMESTAMP},
-            update_on             = #{updateOn,jdbcType=TIMESTAMP}
-        where return_no = #{returnNo}
+            update_on             = #{updateOn,jdbcType=TIMESTAMP},
+            to_address_line1      =#{toAddressLine1},
+            to_address_line2      =#{toAddressLine2},
+            to_address_line3      =#{toAddressLine3},
+            from_address_line1    =#{fromAddressLine1},
+            from_address_line2    =#{fromAddressLine2},
+            from_address_line3    =#{fromAddressLine3},
+            where return_no = #{returnNo}
     </update>
 
     <insert id="insertReturnOrder" parameterType="com.abc.chenzeshenga.logistics.model.Return">
         insert into l_returning (return_no, without_order_no_flag, to_name, to_contact, to_zip_code, to_detail_address,
                                  to_ken_id, to_city_id, to_town_id, from_name, from_contact, from_zip_code,
                                  from_detail_address, from_ken_id, from_city_id, from_town_id, carrier, track_no, imgs,
-                                 status, create_on, update_on, create_by, update_by, order_no)
+                                 status, create_on, update_on, create_by, update_by, order_no, from_address_line1,
+                                 from_address_line2, from_address_line3, to_address_line1,
+                                 to_address_line2, to_address_line3)
         values (#{returnNo}, #{withoutOrderNoFlag}, #{toName}, #{toContact}, #{toZipCode}, #{toDetailAddress},
                 #{toKenId}, #{toCityId}, #{toTownId}, #{fromName}, #{fromContact}, #{fromZipCode},
                 #{fromDetailAddress}, #{fromKenId}, #{fromCityId}, #{fromTownId}, #{carrier}, #{trackNo}, #{imgs},
                 #{status}, #{createOn,jdbcType=TIMESTAMP}, #{updateOn,jdbcType=TIMESTAMP}, #{creator}, #{updator},
-                #{orderNo})
+                #{orderNo}, #{fromAddressLine1}, #{fromAddressLine2}, #{fromAddressLine3}, #{toAddressLine1},
+                #{toAddressLine2}, #{toAddressLine3})
         on duplicate key update without_order_no_flag=#{withoutOrderNoFlag},
                                 to_name= #{toName},
                                 to_contact=#{toContact},
@@ -113,7 +128,13 @@
                                 update_on=#{updateOn,jdbcType=TIMESTAMP},
                                 create_by= #{creator},
                                 update_by= #{updator},
-                                order_no= #{orderNo}
+                                order_no= #{orderNo},
+                                to_address_line1=#{toAddressLine1},
+                                to_address_line2=#{toAddressLine2},
+                                to_address_line3=#{toAddressLine3},
+                                from_address_line1=#{fromAddressLine1},
+                                from_address_line2=#{fromAddressLine2},
+                                from_address_line3=#{fromAddressLine3}
     </insert>
 
     <insert id="insertContent" parameterType="java.util.List">

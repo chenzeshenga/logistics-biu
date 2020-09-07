@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.36 1. 退货单新建字段更改[功能][WIP]',
+          timestamp: '2020-09-06',
+        },
+        {
           content: 'v1.35 1. 订单编辑功能修复[缺陷]',
           timestamp: '2020-09-05',
         },

@@ -657,16 +657,6 @@ export default {
         this.form.collect = false;
       }
     },
-    handleAddressChange(value) {
-      this.form.address.ken = value[0];
-      this.form.address.city = value[1];
-      this.form.address.town = value[2];
-    },
-    handleAddressChange2(value) {
-      this.form.toAddress.ken = value[0];
-      this.form.toAddress.city = value[1];
-      this.form.toAddress.town = value[2];
-    },
     handleProductChange(dySku) {
       if (dySku === undefined) {
         this.$message.warning('请选择商品');

@@ -15,7 +15,6 @@
               <el-date-picker
                   v-model="daterange"
                   type="daterange"
-                  align="right"
                   unlink-panels
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -187,24 +186,24 @@
           label="承认人追踪单号"
       ></el-table-column>
       <el-table-column
-        width="200"
-        prop="length"
-        label="长(cm)"
+          width="200"
+          prop="length"
+          label="长(cm)"
       ></el-table-column>
       <el-table-column
-        width="200"
-        prop="width"
-        label="宽(cm)"
+          width="200"
+          prop="width"
+          label="宽(cm)"
       ></el-table-column>
       <el-table-column
-        width="200"
-        prop="height"
-        label="高(cm)"
+          width="200"
+          prop="height"
+          label="高(cm)"
       ></el-table-column>
       <el-table-column
-        width="200"
-        prop="weight"
-        label="重(kg)"
+          width="200"
+          prop="weight"
+          label="重(kg)"
       ></el-table-column>
       <el-table-column width="200" label="图片">
         <template slot-scope="scope">
@@ -298,14 +297,14 @@
             </el-button>
           </el-tooltip>
           <el-tooltip
-            content="退货品处理"
-            placement="top"
-            v-if="msgData.dealWithReturnContent"
+              content="退货品处理"
+              placement="top"
+              v-if="msgData.dealWithReturnContent"
           >
             <el-button
-              @click="dealWithReturnContent(scope.$index, scope.row)"
-              circle
-              plain
+                @click="dealWithReturnContent(scope.$index, scope.row)"
+                circle
+                plain
             >
               <svg-icon icon-class="dealWithReturnContent"></svg-icon>
             </el-button>
@@ -328,19 +327,27 @@
     <el-dialog title="确认收货" :visible.sync="dialogVisible" width="20%">
       <el-form :ref="formInDialog1" :model="formInDialog1" label-width="80px">
         <el-col :span="24">
-          <el-form-item label="退货单号">{{formInDialog1.returnNo}}</el-form-item>
+          <el-form-item label="退货单号">{{ formInDialog1.returnNo }}</el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="长(cm)"><el-input-number v-model="formInDialog1.length"/></el-form-item>
+          <el-form-item label="长(cm)">
+            <el-input-number v-model="formInDialog1.length"/>
+          </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="宽(cm)"><el-input-number v-model="formInDialog1.width"/></el-form-item>
+          <el-form-item label="宽(cm)">
+            <el-input-number v-model="formInDialog1.width"/>
+          </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="高(cm)"><el-input-number v-model="formInDialog1.height"/></el-form-item>
+          <el-form-item label="高(cm)">
+            <el-input-number v-model="formInDialog1.height"/>
+          </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="重(kg)"><el-input-number v-model="formInDialog1.weight"/></el-form-item>
+          <el-form-item label="重(kg)">
+            <el-input-number v-model="formInDialog1.weight"/>
+          </el-form-item>
         </el-col>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -410,9 +417,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 7
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -421,9 +426,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 30
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -432,9 +435,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 90
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -474,7 +475,8 @@ export default {
     this.initUserList();
   },
   methods: {
-    searchReturning() {},
+    searchReturning() {
+    },
     fetchData() {
       this.tableLoading = true;
       request({
@@ -515,7 +517,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path:
-            '/new-returns/new-returns?returnNo='+row.returnNo,
+            '/new-returns/new-returns?returnNo=' + row.returnNo,
       });
     },
     statusUpdate(index, row, statusUpdateTo) {

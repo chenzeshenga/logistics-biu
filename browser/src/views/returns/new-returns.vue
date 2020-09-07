@@ -444,16 +444,6 @@ export default {
         }
       });
     },
-    handleAddressChange(value) {
-      this.form.address.ken = value[0];
-      this.form.address.city = value[1];
-      this.form.address.town = value[2];
-    },
-    handleAddressChange2(value) {
-      this.form.toAddress.ken = value[0];
-      this.form.toAddress.city = value[1];
-      this.form.toAddress.town = value[2];
-    },
     initOrderContent() {
       request({
         url: '/ord/ordContent?ordNo=' + this.form.orderNo,
@@ -463,7 +453,6 @@ export default {
         if (this.oriOrd.toKenId) {
           this.form.fromKenId = this.oriOrd.toKenId;
           this.form.fromCityId = this.oriOrd.toCityId;
-          this.getFromCityAddress();
           if (this.oriOrd.toCityId) {
             this.form.fromCityId = this.oriOrd.toCityId;
             this.form.fromTownId = this.oriOrd.toTownId;
@@ -535,15 +524,6 @@ export default {
       this.$refs.upload.submit();
     },
     submitForm() {
-      const toAddr = this.form.address;
-      const fromAddr = this.form.toAddress;
-      this.form.fromKenId = fromAddr.ken;
-      this.form.fromCityId = fromAddr.city;
-      this.form.fromTownId = fromAddr.town;
-      this.form.toKenId = toAddr.ken;
-      this.form.toCityId = toAddr.city;
-      this.form.toTownId = toAddr.town;
-
       request({
         url: '/return/add',
         method: 'post',
@@ -552,24 +532,6 @@ export default {
         this.$message.success('退货创建成功');
         this.reload();
       });
-    },
-    getFromCityAddress() {
-      if (this.form.fromKenId) {
-        request({
-          url: '/address/getCity?kenId=' + this.form.fromKenId,
-          method: 'get',
-        }).then((ret) => {
-          this.fromCityAddress = ret.data.data;
-        });
-        this.form.fromCityId = '';
-        this.form.fromTownId = '';
-      } else {
-        this.$message.warning('请选择 道/府/县');
-        this.form.fromCityId = '';
-        this.form.fromTownId = '';
-        this.fromCityAddress = [];
-        this.fromTownAddress = [];
-      }
     },
     getToCityAddress() {
       if (this.form.toKenId) {
@@ -637,32 +599,6 @@ export default {
         this.$message.warning('请选择 城市');
         this.form.fromTownId = '';
         this.fromTownAddress = [];
-      }
-    },
-    fillFromZipCode() {
-      if (this.form.fromTownId) {
-        const town = this.fromTownAddressMap[this.form.fromTownId];
-        const zip = town.zip;
-        if (zip !== this.form.fromZipCode) {
-          this.$confirm('当前地址对应的邮编为 ' + zip + ' ,是否修改？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }).then(() => {
-            this.form.fromZipCode = zip;
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消修改',
-            });
-          });
-        }
-      } else {
-        this.$message.warning('请选择乡镇');
       }
     },
   },
