@@ -32,22 +32,21 @@ public class Return implements Serializable {
     @TableId(type = IdType.ID_WORKER_STR)
     private String returnNo;
 
+    @TableField(value = "create_by")
+    private String creator;
     private boolean withoutOrderNoFlag;
+    private String orderNo;
     private String toName;
     private String toContact;
     private String toZipCode;
-    private String toDetailAddress;
-    private String toKenId;
-    private String toCityId;
-    private String toTownId;
+    private String toAddressLine1;
+    private String toAddressLine2;
+    private String toAddressLine3;
     private String fromName;
     private String fromContact;
     private String fromZipCode;
-    private String fromDetailAddress;
-    private String fromKenId;
-    private String fromCityId;
-    private String fromTownId;
     private String carrier;
+    private String chinaCarrier;
     private String trackNo;
     private String imgs;
     private String status;
@@ -55,22 +54,16 @@ public class Return implements Serializable {
     private String fromAddressLine1;
     private String fromAddressLine2;
     private String fromAddressLine3;
-    private String toAddressLine1;
-    private String toAddressLine2;
-    private String toAddressLine3;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createOn;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateOn;
 
-    @TableField(value = "create_by")
-    private String creator;
 
     @TableField(value = "update_by")
     private String updator;
 
-    private String orderNo;
 
     private Double length;
 

@@ -1,7 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
-import com.abc.chenzeshenga.logistics.model.JpDetailAddress;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
@@ -38,11 +37,11 @@ public class ReturnController {
     @Resource
     private ReturnMapper returnMapper;
 
-    private ReturnService returnService;
+    private final ReturnService returnService;
 
-    private ReturnCommonService returnCommonService;
+    private final ReturnCommonService returnCommonService;
 
-    private CommonController commonController;
+    private final CommonController commonController;
 
     @Autowired
     public ReturnController(
@@ -103,11 +102,12 @@ public class ReturnController {
             returnOrder.setUpdateOn(new Date());
             returnOrder.setCreateOn(new Date());
             returnOrder.setUpdator(UserUtils.getUserName());
-            returnMapper.insertReturnOrder(returnOrder);
+            returnMapper.insert(returnOrder);
             List<ReturnContent> returnContentList = returnOrder.getContentList();
             if (returnContentList != null && !returnContentList.isEmpty()) {
                 returnContentList.forEach(
                         returnContent -> {
+                            returnContent.setUuid(SnowflakeIdWorker.generateStrId());
                             String returnNoInContent = returnContent.getReturnNo();
                             if (StringUtils.isBlank(returnNoInContent)) {
                                 returnContent.setReturnNo(returnNo);
@@ -166,17 +166,9 @@ public class ReturnController {
             ori.setToName(returnOrder.getToName());
             ori.setToContact(returnOrder.getToContact());
             ori.setToZipCode(returnOrder.getToZipCode());
-            ori.setToDetailAddress(returnOrder.getToDetailAddress());
-            ori.setToKenId(returnOrder.getToKenId());
-            ori.setToCityId(returnOrder.getToCityId());
-            ori.setToTownId(returnOrder.getToTownId());
             ori.setFromName(returnOrder.getFromName());
             ori.setFromContact(returnOrder.getFromContact());
             ori.setFromZipCode(returnOrder.getFromZipCode());
-            ori.setFromDetailAddress(returnOrder.getFromDetailAddress());
-            ori.setFromKenId(returnOrder.getFromKenId());
-            ori.setFromCityId(returnOrder.getFromCityId());
-            ori.setFromTownId(returnOrder.getFromTownId());
             ori.setCarrier(returnOrder.getCarrier());
             ori.setTrackNo(returnOrder.getTrackNo());
             ori.setUpdator(UserUtils.getUserName());
@@ -228,7 +220,7 @@ public class ReturnController {
         List<Return> returnList = returnPage.getRecords();
         returnList.forEach(
                 returning -> {
-                    returning.setToDetailAddress("日本岡山仓(okayama)");
+                    returning.setToAddressLine3("日本岡山仓(okayama)");
                     returning.setToName("东岳物流");
                 });
         return Json.succ().data("page", returnPage);
@@ -243,38 +235,11 @@ public class ReturnController {
         List<Return> returnList = returnPage.getData();
         returnList.forEach(
                 returning -> {
-//          try {
-//            JpDetailAddress jpDetailAddress =
-//                japanAddressCache.getJpDetailAddress(
-//                    Integer.parseInt(returning.getFromKenId()),
-//                    Integer.parseInt(returning.getFromCityId()),
-//                    Integer.parseInt(returning.getFromTownId()));
-//            if (jpDetailAddress != null) {
-//              returning.setFromDetailAddress(
-//                  jpDetailAddress.toString() + returning.getFromDetailAddress());
-//            }
-//          } catch (Exception e) {
-//            log.error("error");
-//          }
-                    if (StringUtils.isBlank(returning.getToKenId())
-                            || StringUtils.isBlank(returning.getToCityId())
-                            || StringUtils.isBlank(returning.getToTownId())) {
-                        returning.setToDetailAddress("日本岡山仓(okayama)");
+                    if (StringUtils.isBlank(returning.getToAddressLine1())
+                            || StringUtils.isBlank(returning.getToAddressLine2())
+                            || StringUtils.isBlank(returning.getToAddressLine3())) {
+                        returning.setToAddressLine3("日本岡山仓(okayama)");
                         returning.setToName("东岳物流");
-                    } else {
-//            try {
-//              JpDetailAddress fromJpDetailAddress =
-//                  japanAddressCache.getJpDetailAddress(
-//                      Integer.parseInt(returning.getToKenId()),
-//                      Integer.parseInt(returning.getToCityId()),
-//                      Integer.parseInt(returning.getToTownId()));
-//              if (fromJpDetailAddress != null) {
-//                returning.setToDetailAddress(
-//                    fromJpDetailAddress.toString() + returning.getToDetailAddress());
-//              }
-//            } catch (Exception e) {
-//              log.error("error");
-//            }
                     }
                 });
         return Json.succ().data("page", returnPage);

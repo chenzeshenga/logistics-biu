@@ -62,26 +62,32 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="oriOrd.showFlag">
-            <el-col :span="6">订单号:{{ oriOrd.orderNo }}</el-col>
-            <el-col :span="6">订单类型:{{ oriOrd.categoryName }}</el-col>
-            <el-col :span="6">订单当前状态:{{ oriOrd.statusDesc }}</el-col>
+          <el-col :span="24" v-if="oriOrd.showFlag" style="margin-top: 1%">
+            <el-col :span="6">订单号:<span style="font-weight: bold">{{ oriOrd.orderNo }}</span></el-col>
+            <el-col :span="6">订单类型:<span style="font-weight: bold">{{ oriOrd.categoryName }}</span></el-col>
+            <el-col :span="6">订单当前状态:<span style="font-weight: bold">{{ oriOrd.statusDesc }}</span></el-col>
             <el-col :span="24">订单发货信息:</el-col>
-            <el-col :span="6">道/府/县:{{ oriOrd.fromKenName }}</el-col>
-            <el-col :span="6">城市:{{ oriOrd.fromCityName }}</el-col>
-            <el-col :span="6">乡:{{ oriOrd.fromTownName }}</el-col>
-            <el-col :span="6">邮编:{{ oriOrd.fromZipCode }}</el-col>
-            <el-col :span="6">详细地址:{{ oriOrd.fromDetailAddress }}</el-col>
-            <el-col :span="6">发货人:{{ oriOrd.fromName }}</el-col>
-            <el-col :span="6">发货人联系方式:{{ oriOrd.fromContact }}</el-col>
+            <el-row>
+              <el-col :span="6">道/府/县-城市-乡:<span style="font-weight: bold">{{ oriOrd.fromAddressLine1 }}</span></el-col>
+              <el-col :span="6">详细地址1:<span style="font-weight: bold">{{ oriOrd.fromAddressLine2 }}</span></el-col>
+              <el-col :span="6">详细地址2:<span style="font-weight: bold">{{ oriOrd.fromAddressLine3 }}</span></el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">邮编:<span style="font-weight: bold">{{ oriOrd.fromZipCode }}</span></el-col>
+              <el-col :span="6">发货人:<span style="font-weight: bold">{{ oriOrd.fromName }}</span></el-col>
+              <el-col :span="6">发货人联系方式:<span style="font-weight: bold">{{ oriOrd.fromContact }}</span></el-col>
+            </el-row>
             <el-col :span="24">订单收货信息:</el-col>
-            <el-col :span="6">道/府/县:{{ oriOrd.toKenName }}</el-col>
-            <el-col :span="6">城市:{{ oriOrd.toCityName }}</el-col>
-            <el-col :span="6">乡:{{ oriOrd.toTownName }}</el-col>
-            <el-col :span="6">邮编:{{ oriOrd.toZipCode }}</el-col>
-            <el-col :span="6">详细地址:{{ oriOrd.toDetailAddress }}</el-col>
-            <el-col :span="6">发货人:{{ oriOrd.toName }}</el-col>
-            <el-col :span="6">发货人联系方式:{{ oriOrd.toContact }}</el-col>
+            <el-row>
+              <el-col :span="6">道/府/县-城市-乡:<span style="font-weight: bold">{{ oriOrd.toKenName }}</span></el-col>
+              <el-col :span="6">详细地址1:<span style="font-weight: bold">{{ oriOrd.toCityName }}</span></el-col>
+              <el-col :span="6">详细地址2:<span style="font-weight: bold">{{ oriOrd.toTownName }}</span></el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">邮编:<span style="font-weight: bold">{{ oriOrd.toZipCode }}</span></el-col>
+              <el-col :span="6">发货人:<span style="font-weight: bold">{{ oriOrd.toName }}</span></el-col>
+              <el-col :span="6">发货人联系方式:<span style="font-weight: bold">{{ oriOrd.toContact }}</span></el-col>
+            </el-row>
             <el-col :span="24">订单内容:</el-col>
             <div v-for="content in oriOrd.contentList" v-bind:key="content.uuid">
               <h6>
@@ -337,28 +343,23 @@ export default {
         returnNo: '',
         creator: '',
         withoutOrderNoFlag: false,
+        orderNo: '',
         toName: '',
         toContact: '',
         toZipCode: '',
-        toDetailAddress: '',
+        toAddressLine1: '',
+        toAddressLine2: '',
+        toAddressLine3: '',
         fromName: '',
         fromContact: '',
         chinaCarrier: '',
         fromZipCode: '',
-        fromDetailAddress: '',
-        address: {},
-        toAddress: {},
-        selectedAddress: [],
-        selectedtoAddress: [],
+        fromAddressLine1: '',
+        fromAddressLine2: '',
+        fromAddressLine3: '',
         carrier: '',
         trackNo: '',
         contentList: [],
-        fromKenId: '',
-        fromCityId: '',
-        fromTownId: '',
-        toKenId: '',
-        toCityId: '',
-        toTownId: '',
       },
       content: {
         returnNo: '',
@@ -450,28 +451,18 @@ export default {
         method: 'get',
       }).then((ret) => {
         this.oriOrd = ret.data.data;
-        if (this.oriOrd.toKenId) {
-          this.form.fromKenId = this.oriOrd.toKenId;
-          this.form.fromCityId = this.oriOrd.toCityId;
-          if (this.oriOrd.toCityId) {
-            this.form.fromCityId = this.oriOrd.toCityId;
-            this.form.fromTownId = this.oriOrd.toTownId;
-            this.getFromTownAddress();
-            this.form.fromTownId = this.oriOrd.toTownId;
-            if (this.oriOrd.toZipCode) {
-              this.form.fromZipCode = this.oriOrd.toZipCode;
-            }
-            if (this.oriOrd.toName) {
-              this.form.fromName = this.oriOrd.toName;
-            }
-            if (this.oriOrd.toContact) {
-              this.form.fromContact = this.oriOrd.toContact;
-            }
-            if (this.oriOrd.toDetailAddress) {
-              this.form.fromDetailAddress = this.oriOrd.toDetailAddress;
-            }
-          }
-        }
+        this.form.fromZipCode = this.oriOrd.toZipCode;
+        this.form.fromContact = this.oriOrd.toContact;
+        this.form.fromName = this.oriOrd.toName;
+        this.form.fromAddressLine1 = this.oriOrd.toAddressLine1;
+        this.form.fromAddressLine2 = this.oriOrd.toAddressLine2;
+        this.form.fromAddressLine3 = this.oriOrd.toAddressLine3;
+        this.form.toZipCode = this.oriOrd.fromZipCode;
+        this.form.toContact = this.oriOrd.fromContact;
+        this.form.toName = this.oriOrd.fromName;
+        this.form.toAddressLine1 = this.oriOrd.fromAddressLine1;
+        this.form.toAddressLine2 = this.oriOrd.fromAddressLine2;
+        this.form.toAddressLine3 = this.oriOrd.fromAddressLine3;
         this.oriOrd.showFlag = true;
       });
     },
