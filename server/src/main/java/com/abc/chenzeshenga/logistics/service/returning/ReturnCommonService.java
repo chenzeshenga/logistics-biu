@@ -2,7 +2,7 @@ package com.abc.chenzeshenga.logistics.service.returning;
 
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
-import com.abc.chenzeshenga.logistics.model.common.Page;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.util.PageUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,10 +26,10 @@ public class ReturnCommonService {
     this.objectMapper = objectMapper;
   }
 
-  public Page<Return> list(String req, String type, String status) throws IOException {
+  public PageData<Return> list(String req, String type, String status) throws IOException {
     JsonNode jsonNode = objectMapper.readTree(req);
     Pagination pagination = PageUtils.getPageParam(jsonNode);
 
-    return new Page<>();
+    return new PageData<>();
   }
 }

@@ -396,12 +396,12 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tableLoading: false,
       tableData: [],
-      daterange: null,
+      daterange: [],
       dialogVisible1: false,
       dialogVisible2: false,
       dialogVisible3: false,
@@ -479,10 +479,18 @@ export default {
     },
     fetchData() {
       this.tableLoading = true;
+      this.search.status = this.msgData.status;
+      this.search.type = this.msgData.type;
+      this.search.fromDate = new Date().getTime() - 3600 * 1000 * 24 * 7;
+      this.search.endDate = new Date();
+      const postData = {
+        'pagination': this.tablePage,
+        'entity': this.search,
+      };
       request({
-        url: 'return/list?type=' + this.msgData.type + '&status=' + this.msgData.status,
+        url: 'return/listV2?type=' + this.msgData.type + '&status=' + this.msgData.status,
         method: 'post',
-        data: this.tablePage,
+        data: postData,
       }).then((res) => {
         const records = res.data.page.records;
         for (let i = 0; i < records.length; i++) {

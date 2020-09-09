@@ -3,6 +3,8 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
 import com.abc.chenzeshenga.logistics.service.returning.ReturnCommonService;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
@@ -191,6 +193,7 @@ public class ReturnController {
         return Json.succ();
     }
 
+    @Deprecated
     @PostMapping("/list")
     public Json list(
             @RequestBody String body,
@@ -226,13 +229,26 @@ public class ReturnController {
         return Json.succ().data("page", returnPage);
     }
 
+
+    /**
+     * 分页查找退货订单
+     *
+     * @param returnPageQueryEntity 分页和查询参数
+     * @return 退货订单数据
+     */
+    @PostMapping("/listV2")
+    public Json listV2(@RequestBody PageQueryEntity<Return> returnPageQueryEntity) {
+        PageData<Return> returnPageData = returnService.listV2(returnPageQueryEntity);
+        return Json.succ().data("data", returnPageData);
+    }
+
     @PostMapping("/common/list")
     public Json listReturnOrd(
             @RequestBody String req, @RequestParam String type, @RequestParam String status)
             throws IOException {
-        com.abc.chenzeshenga.logistics.model.common.Page<Return> returnPage =
+        PageData<Return> returnPageData =
                 returnCommonService.list(req, type, status);
-        List<Return> returnList = returnPage.getData();
+        List<Return> returnList = returnPageData.getData();
         returnList.forEach(
                 returning -> {
                     if (StringUtils.isBlank(returning.getToAddressLine1())
@@ -242,7 +258,7 @@ public class ReturnController {
                         returning.setToName("东岳物流");
                     }
                 });
-        return Json.succ().data("page", returnPage);
+        return Json.succ().data("page", returnPageData);
     }
 
     @GetMapping("/returnOrdDetail")

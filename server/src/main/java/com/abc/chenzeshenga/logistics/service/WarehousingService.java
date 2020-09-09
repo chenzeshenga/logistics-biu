@@ -4,6 +4,7 @@ import com.abc.chenzeshenga.logistics.mapper.WarehousingContentMapper;
 import com.abc.chenzeshenga.logistics.mapper.WarehousingMapper;
 import com.abc.chenzeshenga.logistics.model.Warehousing;
 import com.abc.chenzeshenga.logistics.model.WarehousingReq;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
@@ -50,7 +51,7 @@ public class WarehousingService extends ServiceImpl<WarehousingMapper, Warehousi
     return page.setRecords(baseMapper.listByStatus(page, status, method));
   }
 
-  public com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> listV2(
+  public PageData<Warehousing> listV2(
       PageQueryEntity<WarehousingReq> warehousingReqPageQueryEntity) {
     WarehousingReq warehousingReq = warehousingReqPageQueryEntity.getEntity();
     warehousingReq.setCategory(switchMethod(warehousingReq.getCategory()));
@@ -70,13 +71,13 @@ public class WarehousingService extends ServiceImpl<WarehousingMapper, Warehousi
       warehousing.setWarehousingContentList(
           warehousingContentMapper.listContent(warehousing.getWarehousingNo()));
     }
-    com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> warehousingPage =
-        new com.abc.chenzeshenga.logistics.model.common.Page<>();
-    warehousingPage.setData(warehousingList);
-    warehousingPage.setCurrent(pagination.getCurrent());
-    warehousingPage.setTotal(total);
-    warehousingPage.setSize(pagination.getSize());
-    return warehousingPage;
+    PageData<Warehousing> warehousingPageData =
+        new PageData<>();
+    warehousingPageData.setData(warehousingList);
+    warehousingPageData.setCurrent(pagination.getCurrent());
+    warehousingPageData.setTotal(total);
+    warehousingPageData.setSize(pagination.getSize());
+    return warehousingPageData;
   }
 
   public Page<Warehousing> listByOwnerAndStatusAndFilter(

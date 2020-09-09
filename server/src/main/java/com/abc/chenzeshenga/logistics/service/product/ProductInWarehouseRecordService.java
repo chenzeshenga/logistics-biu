@@ -1,12 +1,10 @@
 package com.abc.chenzeshenga.logistics.service.product;
 
-import com.abc.chenzeshenga.logistics.mapper.product.ProductOutWarehouseRecordMapper;
 import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductInWarehouseRecordMapper;
-import com.abc.chenzeshenga.logistics.model.common.Page;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
-import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,14 +22,14 @@ public class ProductInWarehouseRecordService {
 
   @Resource private ProductInWarehouseRecordMapper productInWarehouseRecordMapper;
 
-  public Page<ProductInWarehouse> list(
+  public PageData<ProductInWarehouse> list(
       PageQueryEntity<ProductInWarehouse> productInWarehousePageQueryEntity) {
-    Page<ProductInWarehouse> result = new Page<>();
+    PageData<ProductInWarehouse> result = new PageData<>();
     ProductInWarehouse productInWarehouse = productInWarehousePageQueryEntity.getEntity();
     Pagination pagination = productInWarehousePageQueryEntity.getPagination();
     List<ProductInWarehouse> productInWarehouseList =
         productInWarehouseRecordMapper.list(
-            productInWarehouse, SqlUtils.generateSqlLimitV2(pagination));
+            productInWarehouse, SqlUtils.generateSqlLimit(pagination));
     long total = productInWarehouseRecordMapper.count(productInWarehouse);
     result.setCurrent(productInWarehousePageQueryEntity.getPagination().getCurrent());
     result.setTotal(total);

@@ -10,17 +10,9 @@
         <result column="to_name" property="toName"/>
         <result column="to_contact" property="toContact"/>
         <result column="to_zip_code" property="toZipCode"/>
-        <result column="to_detail_address" property="toDetailAddress"/>
-        <result column="to_ken_id" property="toKenId"/>
-        <result column="to_city_id" property="toCityId"/>
-        <result column="to_town_id" property="toTownId"/>
         <result column="from_name" property="fromName"/>
         <result column="from_contact" property="fromContact"/>
         <result column="from_zip_code" property="fromZipCode"/>
-        <result column="from_detail_address" property="fromDetailAddress"/>
-        <result column="from_ken_id" property="fromKenId"/>
-        <result column="from_city_id" property="fromCityId"/>
-        <result column="from_town_id" property="fromTownId"/>
         <result column="carrier" property="carrier"/>
         <result column="track_no" property="trackNo"/>
         <result column="imgs" property="imgs"/>
@@ -35,8 +27,11 @@
         <result column="from_address_line1" property="fromAddressLine1"/>
         <result column="from_address_line2" property="fromAddressLine2"/>
         <result column="from_address_line3" property="fromAddressLine3"/>
-        <collection property="contentList" ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
-            <result column="subReturnNo" property="returnNo"/>
+        <collection property="contentList" column="contentList" fetchType="lazy"
+                    select="selectContentById"
+                    ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+            <result column="return_no" property="returnNo"/>
+            <result column="uuid" property="uuid"/>
             <result column="sku" property="sku"/>
             <result column="box_seq" property="name"/>
             <result column="total_num" property="num"/>
@@ -88,8 +83,8 @@
             to_address_line3      =#{toAddressLine3},
             from_address_line1    =#{fromAddressLine1},
             from_address_line2    =#{fromAddressLine2},
-            from_address_line3    =#{fromAddressLine3},
-            where return_no = #{returnNo}
+            from_address_line3    =#{fromAddressLine3}
+        where return_no = #{returnNo}
     </update>
 
     <insert id="insertReturnOrder" parameterType="com.abc.chenzeshenga.logistics.model.Return">
@@ -160,6 +155,58 @@
           and create_on between #{from} and #{to}
     </select>
 
+    <select id="listV2" resultMap="result">
+        select return_no,
+               without_order_no_flag,
+               to_name,
+               to_contact,
+               to_zip_code,
+               to_detail_address,
+               to_ken_id,
+               to_city_id,
+               to_town_id,
+               from_name,
+               from_contact,
+               from_zip_code,
+               from_detail_address,
+               from_ken_id,
+               from_city_id,
+               from_town_id,
+               carrier,
+               track_no,
+               imgs,
+               status,
+               create_on,
+               update_on,
+               create_by,
+               update_by,
+               order_no,
+               length,
+               width,
+               height,
+               weight,
+               from_address_line1,
+               from_address_line2,
+               from_address_line3,
+               to_address_line1,
+               to_address_line2,
+               to_address_line3,
+               return_no
+        from l_returning
+        where status = #{entity.status}
+          and create_by = #{entity.creator}
+          and create_on between #{entity.fromDate} and #{entity.endDate}
+        limit #{limit.from},#{limit.size}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*)
+        from l_returning
+        where status = #{entity.status}
+          and create_by = #{entity.creator}
+          and create_on between #{fromDate} and #{endDate}
+    </select>
+
     <select id="listAll" resultMap="result">
         select returning.*, content.return_no as subReturnNo, content.sku, content.name, content.deal_with, content.num
         from l_returning returning
@@ -183,5 +230,11 @@
             status=#{status}
         where return_no = #{returnNo}
     </update>
+
+    <select id="selectContentById" resultType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+        select return_no, sku, name, deal_with, num, uuid
+        from l_returning_content
+        where return_no = #{returnNo}
+    </select>
 
 </mapper>

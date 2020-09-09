@@ -11,23 +11,11 @@ public class SqlUtils {
 
   private SqlUtils() {}
 
-  /**
-   * wrong version
-   *
-   * @param pagination
-   * @return
-   * @deprecated
-   */
-  @Deprecated
   public static SqlLimit generateSqlLimit(Pagination pagination) {
-    int size = pagination.getSize();
-    long curr = pagination.getCurrent();
-    return new SqlLimit((curr - 1) * size, curr * size);
-  }
-
-  public static SqlLimit generateSqlLimitV2(Pagination pagination) {
     int size = pagination.getSize();
     long curr = pagination.getCurrent();
     return new SqlLimit((curr - 1) * size, size);
   }
+
+
 }

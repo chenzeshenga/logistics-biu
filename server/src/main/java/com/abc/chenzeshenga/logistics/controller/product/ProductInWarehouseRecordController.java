@@ -1,6 +1,6 @@
 package com.abc.chenzeshenga.logistics.controller.product;
 
-import com.abc.chenzeshenga.logistics.model.common.Page;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product/in")
 public class ProductInWarehouseRecordController {
 
-  private ProductInWarehouseRecordService productInWarehouseRecordService;
+  private final ProductInWarehouseRecordService productInWarehouseRecordService;
 
   @Autowired
   public ProductInWarehouseRecordController(
@@ -30,8 +30,8 @@ public class ProductInWarehouseRecordController {
   @PostMapping("/warehouse/records")
   public Json listProductInWarehouseRecords(
       @RequestBody PageQueryEntity<ProductInWarehouse> productInWarehousePageQueryEntity) {
-    Page<ProductInWarehouse> productInWarehousePage =
+    PageData<ProductInWarehouse> productInWarehousePageData =
         productInWarehouseRecordService.list(productInWarehousePageQueryEntity);
-    return Json.succ("query", "data", productInWarehousePage);
+    return Json.succ("query", "data", productInWarehousePageData);
   }
 }

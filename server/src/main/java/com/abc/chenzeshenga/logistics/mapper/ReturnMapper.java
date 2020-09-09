@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 
@@ -37,6 +38,12 @@ public interface ReturnMapper extends BaseMapper<Return> {
             @Param("from") Date from,
             @Param("to") Date to);
 
+    List<Return> listV2(@Param("entity") Return returnEntity, @Param("limit") SqlLimit sqlLimit);
+
+    long count(@Param("entity") Return returnEntity);
+
+    List<ReturnContent> selectContentById(String returnNo);
+
     List<Return> listAll(
             Pagination pagination,
             @Param("status") String status,
@@ -44,7 +51,6 @@ public interface ReturnMapper extends BaseMapper<Return> {
             @Param("to") Date to);
 
     /**
-     *
      * @param pagination
      * @param status
      * @param from

@@ -1,8 +1,7 @@
 package com.abc.chenzeshenga.logistics.service.product;
 
 import com.abc.chenzeshenga.logistics.mapper.product.ProductOutWarehouseRecordMapper;
-import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper;
-import com.abc.chenzeshenga.logistics.model.common.Page;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
@@ -23,14 +22,14 @@ public class ProductOutWarehouseRecordService {
 
   @Resource private ProductOutWarehouseRecordMapper productOutWarehouseRecordMapper;
 
-  public Page<ProductOutWarehouse> list(
+  public PageData<ProductOutWarehouse> list(
       PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
-    Page<ProductOutWarehouse> result = new Page<>();
+    PageData<ProductOutWarehouse> result = new PageData<>();
     ProductOutWarehouse productOutWarehouse = productOutWarehousePageQueryEntity.getEntity();
     Pagination pagination = productOutWarehousePageQueryEntity.getPagination();
     List<ProductOutWarehouse> productOutWarehouseList =
         productOutWarehouseRecordMapper.list(
-            productOutWarehouse, SqlUtils.generateSqlLimitV2(pagination));
+            productOutWarehouse, SqlUtils.generateSqlLimit(pagination));
     long total = productOutWarehouseRecordMapper.count(productOutWarehouse);
     result.setCurrent(productOutWarehousePageQueryEntity.getPagination().getCurrent());
     result.setTotal(total);

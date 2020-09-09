@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @TableName("l_returning")
+@JsonIgnoreProperties(value = {"handler"})
 public class Return implements Serializable {
 
     private static final long serialVersionUID = -6249013466703476021L;
@@ -73,6 +75,9 @@ public class Return implements Serializable {
 
     private Double weight;
 
-    @TableField(exist = false)
     private List<ReturnContent> contentList;
+
+    private Date fromDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+
+    private Date endDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
 }

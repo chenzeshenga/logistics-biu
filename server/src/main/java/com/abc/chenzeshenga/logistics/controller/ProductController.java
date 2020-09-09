@@ -115,7 +115,7 @@ public class ProductController {
         Product searchProduct = productPageQueryEntity.getEntity();
         searchProduct.setStatus(status);
         Pagination pagination = productPageQueryEntity.getPagination();
-        SqlLimit sqlLimit = SqlUtils.generateSqlLimitV2(pagination);
+        SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
         List<Product> productList;
         if (ADMIN.equals(username)) {
             productList = productService.listByStatus(searchProduct, sqlLimit);

@@ -5,6 +5,7 @@ import com.abc.chenzeshenga.logistics.cache.LabelCache;
 import com.abc.chenzeshenga.logistics.mapper.*;
 import com.abc.chenzeshenga.logistics.model.*;
 import com.abc.chenzeshenga.logistics.model.File;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.WarehousingService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
@@ -164,10 +165,10 @@ public class WarehousingController {
 
     @PostMapping("/v2/list")
     public Json listV2(@RequestBody PageQueryEntity<WarehousingReq> warehousingReqPageQueryEntity) {
-        com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> warehousingPage =
+        PageData<Warehousing> warehousingPageData =
                 warehousingService.listV2(warehousingReqPageQueryEntity);
-        enrichWarehousing(warehousingPage);
-        return Json.succ().data("page", warehousingPage);
+        enrichWarehousing(warehousingPageData);
+        return Json.succ().data("page", warehousingPageData);
     }
 
     @PostMapping("/listByFilter/{method}/{status}")
@@ -215,8 +216,8 @@ public class WarehousingController {
     }
 
     private void enrichWarehousing(
-            com.abc.chenzeshenga.logistics.model.common.Page<Warehousing> warehousingPage) {
-        List<Warehousing> warehousingList = warehousingPage.getData();
+            PageData<Warehousing> warehousingPageData) {
+        List<Warehousing> warehousingList = warehousingPageData.getData();
         warehousingList.forEach(
                 warehousing -> {
                     warehousing.setStatusDesc(labelCache.getLabel("warehousing_" + warehousing.getStatus()));

@@ -29,3 +29,7 @@ spring:
 logistics:
   base:
     url: "localhost:8888/api/v1/"
+mybatis:
+  configuration:
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: true
