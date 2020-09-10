@@ -157,54 +157,80 @@
 
     <select id="listV2" resultMap="result">
         select return_no,
-               without_order_no_flag,
-               to_name,
-               to_contact,
-               to_zip_code,
-               to_detail_address,
-               to_ken_id,
-               to_city_id,
-               to_town_id,
-               from_name,
-               from_contact,
-               from_zip_code,
-               from_detail_address,
-               from_ken_id,
-               from_city_id,
-               from_town_id,
-               carrier,
-               track_no,
-               imgs,
-               status,
-               create_on,
-               update_on,
-               create_by,
-               update_by,
-               order_no,
-               length,
-               width,
-               height,
-               weight,
-               from_address_line1,
-               from_address_line2,
-               from_address_line3,
-               to_address_line1,
-               to_address_line2,
-               to_address_line3,
-               return_no
+        without_order_no_flag,
+        to_name,
+        to_contact,
+        to_zip_code,
+        to_detail_address,
+        to_ken_id,
+        to_city_id,
+        to_town_id,
+        from_name,
+        from_contact,
+        from_zip_code,
+        from_detail_address,
+        from_ken_id,
+        from_city_id,
+        from_town_id,
+        carrier,
+        track_no,
+        imgs,
+        status,
+        create_on,
+        update_on,
+        create_by,
+        update_by,
+        order_no,
+        length,
+        width,
+        height,
+        weight,
+        from_address_line1,
+        from_address_line2,
+        from_address_line3,
+        to_address_line1,
+        to_address_line2,
+        to_address_line3,
+        return_no
         from l_returning
         where status = #{entity.status}
-          and create_by = #{entity.creator}
-          and create_on between #{entity.fromDate} and #{entity.endDate}
+        <if test="entity.type == 'withoutUser'">
+            and (create_by = '' or create_by is null)
+        </if>
+        <if test="entity.type == 'withUser'">
+            and (create_by is not null and create_by != '')
+        </if>
+        <if test="entity.creator != null and entity.creator != ''">
+            and create_by = #{entity.creator}
+        </if>
+        <if test="entity.returnNo != null and entity.returnNo != ''">
+            and return_no = #{entity.returnNo}
+        </if>
+        <if test="entity.fromDate != null and entity.endDate != null">
+            and create_on between #{entity.fromDate} and #{entity.endDate}
+        </if>
         limit #{limit.from},#{limit.size}
     </select>
 
     <select id="count" resultType="java.lang.Long">
-        select count(*)
+        select count(1)
         from l_returning
         where status = #{entity.status}
-          and create_by = #{entity.creator}
-          and create_on between #{fromDate} and #{endDate}
+        <if test="entity.type == 'withoutUser'">
+            and (create_by = '' or create_by is null)
+        </if>
+        <if test="entity.type == 'withUser'">
+            and (create_by is not null and create_by != '')
+        </if>
+        <if test="entity.creator != null and entity.creator != ''">
+            and create_by = #{entity.creator}
+        </if>
+        <if test="entity.returnNo != null and entity.returnNo != ''">
+            and return_no = #{entity.returnNo}
+        </if>
+        <if test="entity.fromDate != null and entity.endDate != null">
+            and create_on between #{entity.fromDate} and #{entity.endDate}
+        </if>
     </select>
 
     <select id="listAll" resultMap="result">

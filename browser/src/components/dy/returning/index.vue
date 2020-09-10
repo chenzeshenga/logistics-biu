@@ -21,6 +21,7 @@
                   end-placeholder="结束日期"
                   :picker-options="pickerOptions2"
                   value-format="yyyy-MM-dd"
+                  @change="reGenSearchData"
                   style="width: 400px"
               >
               </el-date-picker>
@@ -444,9 +445,12 @@ export default {
       users: [],
       channels: [],
       search: {
-        warehousingNo: '',
+        returnNo: '',
         creator: '',
-        channelCode: '',
+        fromDate: '',
+        endDate: '',
+        status: '',
+        type: '',
       },
       dialog: {
         carrier: '',
@@ -456,7 +460,7 @@ export default {
       print: {},
       dialogForm3: {},
       noteTxt:
-          '该页面显示过去7天的无主退货单，您可以在当前页面进行退货单认领',
+          '该页面显示过去14天的无主退货单，您可以在当前页面进行退货单认领',
       dialogVisible: false,
       formInDialog1: {
         returnNo: '',
@@ -481,18 +485,17 @@ export default {
       this.tableLoading = true;
       this.search.status = this.msgData.status;
       this.search.type = this.msgData.type;
-      this.search.fromDate = new Date().getTime() - 3600 * 1000 * 24 * 7;
-      this.search.endDate = new Date();
       const postData = {
         'pagination': this.tablePage,
         'entity': this.search,
       };
       request({
-        url: 'return/listV2?type=' + this.msgData.type + '&status=' + this.msgData.status,
+        url: 'return/listV2',
         method: 'post',
         data: postData,
       }).then((res) => {
-        const records = res.data.page.records;
+        console.log(res);
+        const records = res.data.data.data;
         for (let i = 0; i < records.length; i++) {
           const subRecords = records[i];
           if (subRecords['withoutOrderNoFlag']) {
@@ -514,11 +517,10 @@ export default {
           }
           subRecords['imgsLinks'] = imgsLinks;
         }
-        this.tableData = res.data.page.records;
-        this.tablePage.current = res.data.page.current;
-        this.tablePage.pages = res.data.page.pages;
-        this.tablePage.size = res.data.page.size;
-        this.tablePage.total = res.data.page.total;
+        this.tableData = res.data.data.data;
+        this.tablePage.current = res.data.data.current;
+        this.tablePage.size = res.data.data.size;
+        this.tablePage.total = res.data.data.total;
         this.tableLoading = false;
       });
     },
@@ -599,6 +601,12 @@ export default {
     },
     dealWithReturnContentDlgSubmit() {
 
+    },
+    reGenSearchData() {
+      if (this.daterange) {
+        this.search.fromDate = this.daterange[0];
+        this.search.endDate = this.daterange[1];
+      }
     },
   },
 };

@@ -47,6 +47,12 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
         return page.setRecords(baseMapper.list(page, status, from, to));
     }
 
+    /**
+     * 分页查询退货订单
+     *
+     * @param returnPageQueryEntity 分页查询参数
+     * @return 退货单分页
+     */
     public PageData<Return> listV2(PageQueryEntity<Return> returnPageQueryEntity) {
         PageData<Return> result = new PageData<>();
         Return returnEntity = returnPageQueryEntity.getEntity();

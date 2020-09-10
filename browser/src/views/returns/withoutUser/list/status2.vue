@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       msg: {
-        status: '1',
+        status: '历史',
         type: 'withoutUser',
         buttonVisible1: true,
       },

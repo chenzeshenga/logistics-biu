@@ -80,4 +80,6 @@ public class Return implements Serializable {
     private Date fromDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
 
     private Date endDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+
+    private String type;
 }

@@ -38,8 +38,23 @@ public interface ReturnMapper extends BaseMapper<Return> {
             @Param("from") Date from,
             @Param("to") Date to);
 
+    /**
+     * 查询退货单数据
+     *
+     * @param returnEntity 查询参数 分别为
+     *                     订单状态/创建者/创建时间区间
+     * @param sqlLimit     分页参数
+     * @return 退货单列表
+     */
     List<Return> listV2(@Param("entity") Return returnEntity, @Param("limit") SqlLimit sqlLimit);
 
+    /**
+     * count
+     *
+     * @param returnEntity 查询参数 分别为
+     *                     订单状态/创建者/创建时间区间
+     * @return total
+     */
     long count(@Param("entity") Return returnEntity);
 
     List<ReturnContent> selectContentById(String returnNo);
