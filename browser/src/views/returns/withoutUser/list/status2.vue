@@ -17,7 +17,6 @@ export default {
       msg: {
         status: '历史',
         type: 'withoutUser',
-        buttonVisible1: true,
       },
     };
   },

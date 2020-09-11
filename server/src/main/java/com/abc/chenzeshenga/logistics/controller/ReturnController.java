@@ -242,6 +242,18 @@ public class ReturnController {
         return Json.succ().data("data", returnPageData);
     }
 
+    /**
+     * 根据退货单号认领退货订单
+     *
+     * @param returnNo 退货单号
+     * @return success
+     */
+    @GetMapping("/claim")
+    public Json claimReturnOrd(@RequestParam String returnNo) {
+        returnService.claimReturnOrd(returnNo);
+        return Json.succ();
+    }
+
     @PostMapping("/common/list")
     public Json listReturnOrd(
             @RequestBody String req, @RequestParam String type, @RequestParam String status)

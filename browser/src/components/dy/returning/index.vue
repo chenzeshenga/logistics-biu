@@ -58,7 +58,7 @@
             <el-form-item label="">
               <el-button
                   icon="el-icon-search"
-                  @click="searchReturning()"
+                  @click="fetchData()"
               ></el-button>
             </el-form-item>
           </el-col>
@@ -479,8 +479,6 @@ export default {
     this.initUserList();
   },
   methods: {
-    searchReturning() {
-    },
     fetchData() {
       this.tableLoading = true;
       this.search.status = this.msgData.status;
@@ -531,15 +529,11 @@ export default {
       });
     },
     statusUpdate(index, row, statusUpdateTo) {
-      this.$confirm('您确定要提交该订单？', '提示', confirm)
+      this.$confirm('您确定要认领该订单?', '提示', confirm)
           .then(() => {
             request({
-              url: 'warehousing/status',
-              method: 'post',
-              data: {
-                to: statusUpdateTo,
-                warehousingNo: row.warehousingNo,
-              },
+              url: 'return/claim?returnNo=' + row.returnNo,
+              method: 'get',
             }).then(() => {
               this.fetchData();
               this.$message.success('提交成功');

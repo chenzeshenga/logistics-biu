@@ -57,6 +57,22 @@ public interface ReturnMapper extends BaseMapper<Return> {
      */
     long count(@Param("entity") Return returnEntity);
 
+    /**
+     * 根据退货单号认领退货单
+     *
+     * @param returnNo 退货单号
+     * @param owner    属主
+     * @return update
+     */
+    int claimReturnNo(@Param("returnNo") String returnNo, @Param("owner") String owner);
+
+    /**
+     * 将创建时间在 14天的退货单的状态更新为 历史
+     *
+     * @return update
+     */
+    int archiveReturnOrd();
+
     List<ReturnContent> selectContentById(String returnNo);
 
     List<Return> listAll(

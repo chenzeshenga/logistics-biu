@@ -209,6 +209,7 @@
         <if test="entity.fromDate != null and entity.endDate != null">
             and create_on between #{entity.fromDate} and #{entity.endDate}
         </if>
+        order by create_on desc
         limit #{limit.from},#{limit.size}
     </select>
 
@@ -232,6 +233,22 @@
             and create_on between #{entity.fromDate} and #{entity.endDate}
         </if>
     </select>
+
+    <update id="claimReturnNo">
+        update l_returning
+        set create_by=#{owner},
+            update_on=now(),
+            update_by=#{owner}
+        where return_no = #{returnNo}
+    </update>
+
+    <update id="archiveReturnOrd">
+        update l_returning
+        set status='历史',
+            update_on=now()
+        where date_add(create_on, INTERVAL 14 DAY) > now()
+          and (create_by is null or create_by = '')
+    </update>
 
     <select id="listAll" resultMap="result">
         select returning.*, content.return_no as subReturnNo, content.sku, content.name, content.deal_with, content.num
