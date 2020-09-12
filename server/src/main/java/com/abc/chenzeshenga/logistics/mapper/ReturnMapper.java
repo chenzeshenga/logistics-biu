@@ -22,6 +22,12 @@ public interface ReturnMapper extends BaseMapper<Return> {
 
     Return getReturnSeq();
 
+    /**
+     * select by pk
+     *
+     * @param returnNo pk
+     * @return 退货单
+     */
     Return selectByPk(String returnNo);
 
     int updateByPk(Return returnOrder);

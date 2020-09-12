@@ -27,11 +27,11 @@
         <result column="from_address_line1" property="fromAddressLine1"/>
         <result column="from_address_line2" property="fromAddressLine2"/>
         <result column="from_address_line3" property="fromAddressLine3"/>
-        <collection property="contentList" column="contentList" fetchType="lazy"
+        <collection property="contentList" fetchType="lazy" column="return_no"
                     select="selectContentById"
                     ofType="com.abc.chenzeshenga.logistics.model.ReturnContent">
+            <id column="uuid" property="uuid"/>
             <result column="return_no" property="returnNo"/>
-            <result column="uuid" property="uuid"/>
             <result column="sku" property="sku"/>
             <result column="box_seq" property="name"/>
             <result column="total_num" property="num"/>
@@ -47,7 +47,41 @@
     </select>
 
     <select id="selectByPk" resultMap="result">
-        select *
+        select return_no,
+               without_order_no_flag,
+               to_name,
+               to_contact,
+               to_zip_code,
+               to_detail_address,
+               to_ken_id,
+               to_city_id,
+               to_town_id,
+               from_name,
+               from_contact,
+               from_zip_code,
+               from_detail_address,
+               from_ken_id,
+               from_city_id,
+               from_town_id,
+               carrier,
+               track_no,
+               imgs,
+               status,
+               create_on,
+               update_on,
+               create_by,
+               update_by,
+               order_no,
+               length,
+               width,
+               height,
+               weight,
+               from_address_line1,
+               from_address_line2,
+               from_address_line3,
+               to_address_line1,
+               to_address_line2,
+               to_address_line3
         from l_returning
         where return_no = #{returnNo}
     </select>

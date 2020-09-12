@@ -33,3 +33,4 @@ mybatis:
   configuration:
     lazy-loading-enabled: true
     aggressive-lazy-loading: true
+    cache-enabled: true

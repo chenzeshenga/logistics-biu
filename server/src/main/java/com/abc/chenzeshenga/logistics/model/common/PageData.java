@@ -9,12 +9,12 @@ import lombok.*;
  * @author chenzeshenga
  * @since 2020-03-8 22:14
  */
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Data
 @JsonIgnoreProperties(value = {"handler"})
+@ToString
 public class PageData<T> extends Pagination {
 
     private List<T> data;

@@ -273,6 +273,12 @@ public class ReturnController {
         return Json.succ().data("page", returnPageData);
     }
 
+    /**
+     * 根据退货单号获取退货单详情
+     *
+     * @param returnNo 退货单号
+     * @return 退货单
+     */
     @GetMapping("/returnOrdDetail")
     public Json getReturnOrdDetail(@RequestParam String returnNo) {
         return Json.succ().data("returnOrd", returnService.getReturnOrdDetail(returnNo));

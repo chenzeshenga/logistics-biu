@@ -96,13 +96,14 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
         return page.setRecords(baseMapper.listAll(page, status, from, to));
     }
 
+    /**
+     * 根据退货单号获取退货单信息
+     *
+     * @param returnNo 退货单号
+     * @return 退货单
+     */
     public Return getReturnOrdDetail(String returnNo) {
-        Return returnOrd = selectById(returnNo);
-        List<ReturnContent> returnContentList = returnOrdContentService.listContent(returnNo);
-        if (!returnContentList.isEmpty()) {
-            returnOrd.setContentList(returnContentList);
-        }
-        return returnOrd;
+        return returnMapper.selectByPk(returnNo);
     }
 
     public void updatePkgInfo(Return returnOrd) {
