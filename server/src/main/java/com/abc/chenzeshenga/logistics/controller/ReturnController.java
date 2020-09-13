@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing;
 import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
@@ -298,6 +299,22 @@ public class ReturnController {
         }
         returnService.updateClaimPackage(claimPackageList);
         returnService.updateStatus(claimPackageList.get(0).getReturnNo(), "已收货");
+        return Json.succ();
+    }
+
+    /**
+     * 更新退货单处理
+     *
+     * @param claimContentDealingList 退货单货物处理
+     * @return success
+     */
+    @PostMapping("/claimContentDealing")
+    public Json updateClaimContentDealing(List<ClaimContentDealing> claimContentDealingList) {
+        if (claimContentDealingList == null || claimContentDealingList.isEmpty()) {
+            return Json.fail("请填写退货单货物处理");
+        }
+        returnService.updateClaimContentDealing(claimContentDealingList);
+        returnService.updateStatus(claimContentDealingList.get(0).getReturnNo(), "历史");
         return Json.succ();
     }
 

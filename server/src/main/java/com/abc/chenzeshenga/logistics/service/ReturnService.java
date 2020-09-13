@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.service;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing;
 import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
@@ -131,6 +132,17 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
      */
     public void updateStatus(String returnNo, String status) {
         returnMapper.updateStatus(returnNo, status);
+    }
+
+    /**
+     * 记录退货单处理内容
+     *
+     * @param claimContentDealingList 退货单处理
+     */
+    public void updateClaimContentDealing(List<ClaimContentDealing> claimContentDealingList) {
+        returnMapper.dropClaimContentDealing(claimContentDealingList.get(0).getReturnNo());
+        claimContentDealingList.forEach(claimContentDealing -> claimContentDealing.setUuid(UuidUtils.uuid()));
+        returnMapper.insertClaimContentDealing(claimContentDealingList);
     }
 
 }

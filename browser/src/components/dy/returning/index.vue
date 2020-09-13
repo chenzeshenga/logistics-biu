@@ -87,7 +87,38 @@
       ></el-table-column>
       <el-table-column type="expand">
         <template slot-scope="tableData">
-          <el-table :data="tableData.row.contentList">
+          <span style="font-weight: bold;margin-top: 1%;margin-bottom: 1%">退货单货物</span>
+          <el-table :data="tableData.row.contentList" style="margin-bottom: 1%">
+            <el-table-column
+                prop="returnNo"
+                label="退货单号"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="sku"
+                label="sku"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="name"
+                label="商品名称"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="num"
+                label="数量"
+                width="150"
+            ></el-table-column>
+            <el-table-column
+                prop="dealWith"
+                label="处理方式"
+                width="200"
+            ></el-table-column>
+          </el-table>
+          <div>
+            <span style="font-weight: bold;margin-top: 1%;margin-bottom: 1%">退货单货物处理方式</span>
+          </div>
+          <el-table :data="tableData.row.contentDealingList" style="margin-bottom: 1%">
             <el-table-column
                 prop="returnNo"
                 label="退货单号"

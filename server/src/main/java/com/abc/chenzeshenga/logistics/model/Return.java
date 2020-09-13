@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -76,6 +77,8 @@ public class Return implements Serializable {
     private Double weight;
 
     private List<ReturnContent> contentList;
+
+    private List<ClaimContentDealing> contentDealingList;
 
     private Date fromDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
 

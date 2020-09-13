@@ -334,4 +334,18 @@
         where return_no = #{returnNo}
     </update>
 
+    <update id="dropClaimContentDealing">
+        delete
+        from l_retun_dealing_content
+        where return_no = #{returnNo};
+    </update>
+
+    <insert id="insertClaimContentDealing">
+        insert into l_retun_dealing_content(uuid, return_no, sku, name, deal_with, shelf_no, comment)
+        values
+        <foreach collection="list" separator="," item="item">
+            (#{item.uuid},#{item.returnNo},#{item.sku},#{item.name},#{item.dealWith},#{item.shelfNo},#{item.comment})
+        </foreach>
+    </insert>
+
 </mapper>
