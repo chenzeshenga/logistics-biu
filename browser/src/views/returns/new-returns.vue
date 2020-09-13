@@ -399,12 +399,35 @@ export default {
       }
     },
     getReturnOrdDetail(returnNo) {
-      // todo more specific
       request({
         url: '/return/returnOrdDetail?returnNo=' + returnNo,
         method: 'get',
       }).then((ret) => {
         this.form = ret.data.returnOrd;
+        request({
+          url: '/ord/ordContent?ordNo=' + ret.data.returnOrd.orderNo,
+          method: 'get',
+        }).then((ret2) => {
+          this.oriOrd = ret2.data.data;
+          this.oriOrd.showFlag = true;
+        });
+        const contentList = this.form.contentList;
+        for (const content of contentList) {
+          const sku = content.sku;
+          if (sku === '') {
+            return;
+          }
+          let content4CurrSku;
+          if (this.contentMap.hasOwnProperty(sku)) {
+            content4CurrSku = this.contentMap[sku];
+            content4CurrSku.num += this.content.num;
+            content4CurrSku.returnNo = this.content.returnNo;
+            content4CurrSku.name = this.content.name;
+          } else {
+            content4CurrSku = this.content;
+          }
+          this.contentMap[sku] = content4CurrSku;
+        }
       });
     },
     getOrdNo() {

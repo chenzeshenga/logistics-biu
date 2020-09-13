@@ -186,26 +186,6 @@
           prop="trackNo"
           label="承认人追踪单号"
       ></el-table-column>
-      <el-table-column
-          width="200"
-          prop="length"
-          label="长(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="200"
-          prop="width"
-          label="宽(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="200"
-          prop="height"
-          label="高(cm)"
-      ></el-table-column>
-      <el-table-column
-          width="200"
-          prop="weight"
-          label="重(kg)"
-      ></el-table-column>
       <el-table-column width="200" label="图片">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -325,31 +305,74 @@
         :total="tablePage.total"
     >
     </el-pagination>
-    <el-dialog title="确认收货" :visible.sync="dialogVisible" width="20%">
+    <el-dialog title="确认收货" :visible.sync="dialogVisible" width="50%">
+      <el-alert title="可点击右侧加号按钮添加一个收到的退货包裹。当点击确定按钮时，若下方输入框均不为0，则也会当成一个包裹" type="info"></el-alert>
+      <el-row>
+        <el-col :span="2" :offset="20">
+          <el-tooltip content="添加包裹" placement="top">
+            <el-button type="primary" size="small" plain @click="addPkg">
+              <svg-icon icon-class="plus-icon"/>
+            </el-button>
+          </el-tooltip>
+        </el-col>
+      </el-row>
+      <div :style="pkgInfoStyle">
+        <el-table :data="pkgInfoTblData">
+          <el-table-column prop="length" label="长"/>
+          <el-table-column prop="width" label="宽"/>
+          <el-table-column prop="height" label="高"/>
+          <el-table-column prop="weight" label="重"/>
+          <el-table-column prop="carrier" label="承运人"/>
+          <el-table-column prop="trackNo" label="追踪单号"/>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-tooltip content="删除" placement="top">
+                <el-button @click="dropPkg(scope.$index, scope.row, 2)" size="mini" type="info" plain>
+                  <svg-icon icon-class="delete"/>
+                </el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <el-form :ref="formInDialog1" :model="formInDialog1" label-width="80px">
-        <el-col :span="24">
-          <el-form-item label="退货单号">{{ formInDialog1.returnNo }}</el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="长(cm)">
-            <el-input-number v-model="formInDialog1.length"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="宽(cm)">
-            <el-input-number v-model="formInDialog1.width"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="高(cm)">
-            <el-input-number v-model="formInDialog1.height"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="重(kg)">
-            <el-input-number v-model="formInDialog1.weight"/>
-          </el-form-item>
-        </el-col>
+        <el-form-item label="退货单号">{{ formInDialog1.returnNo }}</el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="长(cm)">
+              <el-input-number v-model="formInDialog1.length"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="宽(cm)">
+              <el-input-number v-model="formInDialog1.width"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="高(cm)">
+              <el-input-number v-model="formInDialog1.height"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="重(kg)">
+              <el-input-number v-model="formInDialog1.weight"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="承运人">
+              <el-input v-model="formInDialog1.carrier" placeholder="承运人"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="4">
+            <el-form-item label="追踪单号">
+              <el-input v-model="formInDialog1.trackNo" placeholder="追踪单号"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -358,13 +381,18 @@
     </el-dialog>
     <el-dialog title="退货品处理" :visible.sync="dealWithReturnContentDlg" width="40%">
       <span>当前退货单内容如下:</span>
-      <div v-for="returnContent in returnContentList" v-bind:key="returnContent.uuid">
-
+      <el-table :data="returnContentList">
+        <el-table-column prop="sku" label="sku"/>
+        <el-table-column prop="name" label="名称"/>
+        <el-table-column prop="num" label="数量"/>
+      </el-table>
+      <div>
+        123
       </div>
       <span slot="footer" class="dialog-footer">
-                <el-button @click="dealWithReturnContentDlg = false">取 消</el-button>
-                <el-button type="primary" @click="dealWithReturnContentDlgSubmit">确 定</el-button>
-            </span>
+          <el-button @click="dealWithReturnContentDlg = false">取 消</el-button>
+          <el-button type="primary" @click="dealWithReturnContentDlgSubmit">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -468,9 +496,15 @@ export default {
         width: '',
         length: '',
         weight: '',
+        carrier: '',
+        trackNo: '',
       },
       dealWithReturnContentDlg: false,
       returnContentList: [],
+      pkgInfoStyle: {
+        'display': 'none',
+      },
+      pkgInfoTblData: [],
     };
   },
   props: ['msg'],
@@ -574,12 +608,17 @@ export default {
     accept(index, row) {
       this.dialogVisible = true;
       this.formInDialog1.returnNo = row.returnNo;
+      this.formInDialog1.carrier = row.carrier;
+      this.formInDialog1.trackNo = row.trackNo;
     },
     returnPkgInfoUpdate() {
+      if (this.formInDialog1.length !== 0 && this.formInDialog1.width !== 0 && this.formInDialog1.height !== 0 && this.formInDialog1.weight !== 0) {
+        this.pkgInfoTblData.push(this.formInDialog1);
+      }
       request({
-        url: '/return/updatePkgInfo',
+        url: '/return/claimPkg',
         method: 'post',
-        data: this.formInDialog1,
+        data: this.pkgInfoTblData,
       }).then(() => {
         this.$message.success('退货单收货成功');
         this.dialogVisible = false;
@@ -591,7 +630,8 @@ export default {
       console.log(row);
     },
     dealWithReturnContent(index, row) {
-      console.log(index, row);
+      this.dealWithReturnContentDlg = true;
+      this.returnContentList = row.contentList;
     },
     dealWithReturnContentDlgSubmit() {
 
@@ -600,6 +640,28 @@ export default {
       if (this.daterange) {
         this.search.fromDate = this.daterange[0];
         this.search.endDate = this.daterange[1];
+      }
+    },
+    addPkg() {
+      this.pkgInfoTblData.push(this.formInDialog1);
+      const carrier = this.formInDialog1.carrier;
+      const trackNo = this.formInDialog1.trackNo;
+      const returnNo = this.formInDialog1.returnNo;
+      this.formInDialog1 = {
+        returnNo: returnNo,
+        height: '',
+        width: '',
+        length: '',
+        weight: '',
+        carrier: carrier,
+        trackNo: trackNo,
+      };
+      this.pkgInfoStyle = {'display': 'block'};
+    },
+    dropPkg(index, row) {
+      this.pkgInfoTblData.splice(index, 1);
+      if (this.pkgInfoTblData.length <= 0) {
+        this.pkgInfoStyle = {'display': 'none'};
       }
     },
   },

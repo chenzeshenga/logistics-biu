@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.service;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
@@ -10,6 +11,7 @@ import com.abc.chenzeshenga.logistics.service.returning.ReturnOrdContentService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
+import com.abc.chenzeshenga.logistics.util.UuidUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
@@ -109,4 +111,26 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
     public void updatePkgInfo(Return returnOrd) {
         baseMapper.updatePkgInfo(returnOrd);
     }
+
+    /**
+     * 记录退货单包裹体积重量
+     *
+     * @param claimPackageList 包裹列表
+     */
+    public void updateClaimPackage(List<ClaimPackage> claimPackageList) {
+        returnMapper.dropClaimPackage(claimPackageList.get(0).getReturnNo());
+        claimPackageList.forEach(claimPackage -> claimPackage.setUuid(UuidUtils.uuid()));
+        returnMapper.insertClaimPackage(claimPackageList);
+    }
+
+    /**
+     * 根据退货单号更新状态
+     *
+     * @param returnNo 退货单号
+     * @param status   状态
+     */
+    public void updateStatus(String returnNo, String status) {
+        returnMapper.updateStatus(returnNo, status);
+    }
+
 }

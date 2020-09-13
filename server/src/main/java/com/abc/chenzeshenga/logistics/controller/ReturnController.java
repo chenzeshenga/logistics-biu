@@ -3,6 +3,7 @@ package com.abc.chenzeshenga.logistics.controller;
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
@@ -283,4 +284,21 @@ public class ReturnController {
     public Json getReturnOrdDetail(@RequestParam String returnNo) {
         return Json.succ().data("returnOrd", returnService.getReturnOrdDetail(returnNo));
     }
+
+    /**
+     * 记录退货单包裹体积重量
+     *
+     * @param claimPackageList 退货单包裹列表
+     * @return success
+     */
+    @PostMapping("/claimPkg")
+    public Json updateClaimPackage(@RequestBody List<ClaimPackage> claimPackageList) {
+        if (claimPackageList == null || claimPackageList.isEmpty()) {
+            return Json.fail("请填写退货单包裹");
+        }
+        returnService.updateClaimPackage(claimPackageList);
+        returnService.updateStatus(claimPackageList.get(0).getReturnNo(), "已收货");
+        return Json.succ();
+    }
+
 }

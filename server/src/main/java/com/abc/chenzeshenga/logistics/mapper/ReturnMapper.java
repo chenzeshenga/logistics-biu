@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
+import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
@@ -101,4 +102,30 @@ public interface ReturnMapper extends BaseMapper<Return> {
             @Param("to") Date to);
 
     int updatePkgInfo(Return returnOrd);
+
+    /**
+     * 根据退货单号删除退货包裹
+     *
+     * @param returnNo 退货单号
+     * @return influence
+     */
+    int dropClaimPackage(@Param("returnNo") String returnNo);
+
+    /**
+     * 插入退货包裹列表
+     *
+     * @param claimPackageList 退货包裹列表
+     * @return influence
+     */
+    int insertClaimPackage(@Param("list") List<ClaimPackage> claimPackageList);
+
+    /**
+     * 根据退货单号修改状态
+     *
+     * @param returnNo 退货单号
+     * @param status   状态
+     * @return influence
+     */
+    int updateStatus(@Param("returnNo") String returnNo, @Param("status") String status);
+
 }

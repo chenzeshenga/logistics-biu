@@ -314,4 +314,24 @@
         where return_no = #{returnNo}
     </select>
 
+    <update id="dropClaimPackage">
+        delete
+        from l_return_package
+        where returnNo = #{returnNo};
+    </update>
+
+    <insert id="insertClaimPackage">
+        insert into l_return_package(uuid, returnNo, length, width, height, carrier, trackNo, weight)
+        values
+        <foreach collection="list" separator="," item="item">
+            (#{item.uuid},#{item.returnNo},#{item.length},#{item.width},#{item.height},#{item.carrier},#{item.trackNo},#{item.weight})
+        </foreach>
+    </insert>
+
+    <update id="updateStatus">
+        update l_returning
+        set status=#{status}
+        where return_no = #{returnNo}
+    </update>
+
 </mapper>
