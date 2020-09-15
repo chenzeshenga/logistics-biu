@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ReturnMapper;
+import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductInWarehouseRecordMapper;
 import com.abc.chenzeshenga.logistics.model.Return;
 import com.abc.chenzeshenga.logistics.model.ReturnContent;
 import com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing;
@@ -8,6 +9,7 @@ import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
+import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import com.abc.chenzeshenga.logistics.service.returning.ReturnOrdContentService;
 import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
@@ -38,6 +40,9 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
 
     @Resource
     private ReturnMapper returnMapper;
+
+    @Resource
+    private ProductInWarehouseRecordMapper productInWarehouseRecordMapper;
 
     private final ReturnOrdContentService returnOrdContentService;
 
@@ -140,8 +145,24 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
      * @param claimContentDealingList 退货单处理
      */
     public void updateClaimContentDealing(List<ClaimContentDealing> claimContentDealingList) {
-        returnMapper.dropClaimContentDealing(claimContentDealingList.get(0).getReturnNo());
-        claimContentDealingList.forEach(claimContentDealing -> claimContentDealing.setUuid(UuidUtils.uuid()));
+        String returnNo = claimContentDealingList.get(0).getReturnNo();
+        returnMapper.dropClaimContentDealing(returnNo);
+        Return returnEntity = returnMapper.selectByPk(returnNo);
+        claimContentDealingList.forEach(claimContentDealing -> {
+            claimContentDealing.setUuid(UuidUtils.uuid());
+            String dealWith = claimContentDealing.getDealWith();
+            if ("重新上架".equals(dealWith)) {
+                ProductInWarehouse productInWarehouse = new ProductInWarehouse();
+                productInWarehouse.setUuid(UuidUtils.uuid());
+                productInWarehouse.setNum(claimContentDealing.getNum());
+                productInWarehouse.setInTime(new Date());
+                productInWarehouse.setDySku(claimContentDealing.getSku());
+                productInWarehouse.setShelfNo(claimContentDealing.getShelfNo());
+                productInWarehouse.setOwner(returnEntity.getCreator());
+                productInWarehouse.setWarehousingNo("退货" + returnNo);
+                productInWarehouseRecordMapper.insert(productInWarehouse);
+            }
+        });
         returnMapper.insertClaimContentDealing(claimContentDealingList);
     }
 

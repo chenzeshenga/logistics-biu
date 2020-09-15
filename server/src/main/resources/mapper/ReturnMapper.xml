@@ -37,6 +37,18 @@
             <result column="total_num" property="num"/>
             <result column="deal_with" property="dealWith"/>
         </collection>
+        <collection property="contentDealingList" fetchType="lazy" column="return_no"
+                    select="selectContentDealingById"
+                    ofType="com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing">
+            <id column="uuid" property="uuid"/>
+            <result column="return_no" property="returnNo"/>
+            <result column="sku" property="sku"/>
+            <result column="name" property="name"/>
+            <result column="num" property="num"/>
+            <result column="deal_with" property="dealWith"/>
+            <result column="shelf_no" property="shelfNo"/>
+            <result column="comment" property="comment"/>
+        </collection>
     </resultMap>
 
     <select id="getReturnSeq" resultMap="result">
@@ -314,6 +326,12 @@
         where return_no = #{returnNo}
     </select>
 
+    <select id="selectContentDealingById" resultType="com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing">
+        select uuid, return_no, sku, name, num, deal_with, shelf_no, comment
+        from l_retun_dealing_content
+        where return_no = #{returnNo}
+    </select>
+
     <update id="dropClaimPackage">
         delete
         from l_return_package
@@ -341,10 +359,10 @@
     </update>
 
     <insert id="insertClaimContentDealing">
-        insert into l_retun_dealing_content(uuid, return_no, sku, name, deal_with, shelf_no, comment)
+        insert into l_retun_dealing_content(uuid, return_no, sku, name, num, deal_with, shelf_no, comment)
         values
         <foreach collection="list" separator="," item="item">
-            (#{item.uuid},#{item.returnNo},#{item.sku},#{item.name},#{item.dealWith},#{item.shelfNo},#{item.comment})
+            (#{item.uuid},#{item.returnNo},#{item.sku},#{item.name},#{item.num},#{item.dealWith},#{item.shelfNo},#{item.comment})
         </foreach>
     </insert>
 

@@ -411,14 +411,100 @@
             </span>
     </el-dialog>
     <el-dialog title="退货品处理" :visible.sync="dealWithReturnContentDlg" width="40%">
-      <span>当前退货单内容如下:</span>
+      <span>当前退货单待处理内容如下:</span>
       <el-table :data="returnContentList">
         <el-table-column prop="sku" label="sku"/>
         <el-table-column prop="name" label="名称"/>
         <el-table-column prop="num" label="数量"/>
       </el-table>
-      <div>
-        123
+      <div style="margin-top: 2%">
+        <span>当前退货单处理结果如下:</span>
+      </div>
+      <el-table :data="returnContentDealingList">
+        <el-table-column prop="sku" label="sku"/>
+        <el-table-column prop="name" label="名称"/>
+        <el-table-column prop="num" label="数量"/>
+        <el-table-column prop="dealWith" label="处理方式"/>
+        <el-table-column prop="shelfNo" label="货架号"/>
+        <el-table-column prop="comment" label="备注"/>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-tooltip content="删除" placement="top">
+              <el-button @click="deleteContentDealing(scope.$index, scope.row)" size="mini" type="info" plain>
+                <svg-icon icon-class="delete"/>
+              </el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 2%">
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-tooltip content="sku" placement="top">
+              <el-select v-model="contentDealing.sku" placeholder="请选择商品" @change="fillName">
+                <el-option
+                    v-for="item in skus"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip content="商品名称" placement="top">
+              <el-input v-model="contentDealing.name" placeholder="商品名称" disabled/>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="8">
+            <el-tooltip content="商品数量" placement="top">
+              <el-input-number v-model="contentDealing.num" placeholder="商品数量"/>
+            </el-tooltip>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          <el-col :span="12">
+            <el-tooltip content="处理方式" placement="top">
+              <el-select v-model="contentDealing.dealWith" placeholder="请选择处理方式">
+                <el-option
+                    v-for="item in dealWiths"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="12">
+            <el-tooltip content="货架号" placement="top">
+              <el-select v-model="contentDealing.shelfNo" placeholder="请选择货架">
+                <el-option
+                    v-for="item in shelves"
+                    :key="item.shelfNo"
+                    :label="item.shelfNo"
+                    :value="item.shelfNo"
+                >
+              <span
+              >货架号 {{ item.shelfNo }} 货架区域 {{ item.area }} 货架行数
+                {{ item.layer }} 货架层数 {{ item.rowNo }}</span
+              >
+                </el-option>
+              </el-select>
+            </el-tooltip>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 2%" :gutter="20">
+          <el-col :span="20">
+            <el-tooltip content="备注" placement="top">
+              <el-input v-model="contentDealing.comment" placeholder="备注"/>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="2" :offset="1">
+            <el-button type="primary" @click="add2ContentDealing">确定</el-button>
+          </el-col>
+        </el-row>
       </div>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dealWithReturnContentDlg = false">取 消</el-button>
@@ -532,18 +618,53 @@ export default {
       },
       dealWithReturnContentDlg: false,
       returnContentList: [],
+      returnContentDealingList: [],
       pkgInfoStyle: {
         'display': 'none',
       },
       pkgInfoTblData: [],
+      shelves: [],
+      contentDealing: {
+        sku: '',
+        name: '',
+        num: '',
+        dealWith: '',
+        shelfNo: '',
+        comment: '',
+        returnNo: '',
+      },
+      skus: [],
+      dealWiths: [
+        {
+          'value': '遗弃',
+          'label': '遗弃',
+        },
+        {
+          'value': '重新上架',
+          'label': '重新上架',
+        },
+        {
+          'value': '寄回',
+          'label': '寄回',
+        },
+      ],
     };
   },
   props: ['msg'],
   created() {
     this.fetchData();
     this.initUserList();
+    this.fetchShelves();
   },
   methods: {
+    fetchShelves() {
+      request({
+        url: '/shelf/list/enable',
+        method: 'get',
+      }).then((res) => {
+        this.shelves = res.data.data;
+      });
+    },
     fetchData() {
       this.tableLoading = true;
       this.search.status = this.msgData.status;
@@ -662,10 +783,27 @@ export default {
     },
     dealWithReturnContent(index, row) {
       this.dealWithReturnContentDlg = true;
+      this.skus = [];
       this.returnContentList = row.contentList;
+      for (const content of this.returnContentList) {
+        const tmp = {
+          'value': content.sku,
+          'label': content.name,
+        };
+        this.skus.push(tmp);
+      }
+      this.contentDealing.returnNo = row.returnNo;
     },
     dealWithReturnContentDlgSubmit() {
-
+      request({
+        url: '/return/claimContentDealing',
+        method: 'post',
+        data: this.returnContentDealingList,
+      }).then(() => {
+        this.$message.success('退货单处理成功');
+        this.dealWithReturnContentDlg = false;
+        this.fetchData();
+      });
     },
     reGenSearchData() {
       if (this.daterange) {
@@ -694,6 +832,29 @@ export default {
       if (this.pkgInfoTblData.length <= 0) {
         this.pkgInfoStyle = {'display': 'none'};
       }
+    },
+    deleteContentDealing(index, row) {
+      this.returnContentDealingList.splice(index, 1);
+    },
+    fillName(val) {
+      for (const content of this.skus) {
+        if (content.value === val) {
+          this.contentDealing.name = content.label;
+          break;
+        }
+      }
+    },
+    add2ContentDealing() {
+      this.returnContentDealingList.push(this.contentDealing);
+      this.contentDealing = {
+        sku: '',
+        name: '',
+        num: '',
+        dealWith: '',
+        shelfNo: '',
+        comment: '',
+        returnNo: this.contentDealing.returnNo,
+      };
     },
   },
 };

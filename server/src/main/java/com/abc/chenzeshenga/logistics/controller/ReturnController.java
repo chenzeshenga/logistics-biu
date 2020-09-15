@@ -309,7 +309,7 @@ public class ReturnController {
      * @return success
      */
     @PostMapping("/claimContentDealing")
-    public Json updateClaimContentDealing(List<ClaimContentDealing> claimContentDealingList) {
+    public Json updateClaimContentDealing(@RequestBody List<ClaimContentDealing> claimContentDealingList) {
         if (claimContentDealingList == null || claimContentDealingList.isEmpty()) {
             return Json.fail("请填写退货单货物处理");
         }

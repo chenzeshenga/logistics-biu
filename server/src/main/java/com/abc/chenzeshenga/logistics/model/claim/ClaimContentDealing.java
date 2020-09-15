@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * @author chenzeshenga
  * @since 2020-09-13
@@ -13,12 +15,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ClaimContentDealing {
+public class ClaimContentDealing implements Serializable {
 
     private String uuid;
     private String returnNo;
     private String sku;
     private String name;
+    private String num;
     private String dealWith;
     private String shelfNo;
     private String comment;

@@ -81,7 +81,21 @@ public interface ReturnMapper extends BaseMapper<Return> {
      */
     int archiveReturnOrd();
 
+    /**
+     * 根据退货单号获取退货单内容
+     *
+     * @param returnNo 退货单号
+     * @return 退货单内容
+     */
     List<ReturnContent> selectContentById(String returnNo);
+
+    /**
+     * 根据退货单号获取退货货物处理方式
+     *
+     * @param returnNo 退货单号
+     * @return 处理方式列表
+     */
+    List<ClaimContentDealing> selectContentDealingById(String returnNo);
 
     List<Return> listAll(
             Pagination pagination,
