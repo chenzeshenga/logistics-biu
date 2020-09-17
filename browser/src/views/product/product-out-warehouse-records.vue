@@ -14,12 +14,12 @@
         </el-col>
         <el-col :span="3">
           <el-tooltip content="请选择商品属主" placement="top">
-            <el-select filterable clearable v-model="search.owner" placeholder="请选择商品属主">
+            <el-select filterable v-model="search.owner" placeholder="请选择商品属主">
               <el-option
-                v-for="creator in options.owners"
-                :key="creator.uname"
-                :label="creator.nick"
-                :value="creator.uname"
+                  v-for="creator in options.owners"
+                  :key="creator.uname"
+                  :label="creator.nick"
+                  :value="creator.uname"
               ></el-option>
             </el-select>
           </el-tooltip>
@@ -33,14 +33,14 @@
         </el-col>
         <el-col :span="6">
           <el-date-picker
-            v-model="search.dateTimeRange"
-            type="datetimerange"
-            :picker-options="pickerOptions"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right"
-            @change="dateTimeRangeChange"
+              v-model="search.dateTimeRange"
+              type="datetimerange"
+              :picker-options="pickerOptions"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              @change="dateTimeRangeChange"
           >
           </el-date-picker>
         </el-col>
@@ -56,12 +56,12 @@
         </el-col>
       </el-row>
       <el-table
-        style="width: 100%;margin: 10px;margin-left:10px"
-        :data="tableData"
-        v-loading.body="tableLoading"
-        element-loading-text="加载中"
-        stripe
-        highlight-current-row
+          style="width: 100%;margin: 10px;margin-left:10px"
+          :data="tableData"
+          v-loading.body="tableLoading"
+          element-loading-text="加载中"
+          stripe
+          highlight-current-row
       >
         <el-table-column prop="dySku" label="东岳sku"></el-table-column>
         <el-table-column prop="sku" label="sku"></el-table-column>
@@ -71,14 +71,14 @@
         <el-table-column prop="hoursInWarehouse" label="在库时长"></el-table-column>
       </el-table>
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="tablePage.current"
-        :page-sizes="[10, 20, 30, 40, 50]"
-        :page-size="tablePage.size"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tablePage.total"
-        style="margin-left: 60%;margin-top: 10px"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="tablePage.current"
+          :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="tablePage.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tablePage.total"
+          style="margin-left: 60%;margin-top: 10px"
       ></el-pagination>
     </div>
   </div>
@@ -162,7 +162,6 @@ export default {
   },
   created() {
     this.initUserList();
-    this.searchProductOutWarehouseRecord();
     this.hasAdminRole();
   },
   methods: {
@@ -191,6 +190,10 @@ export default {
         },
       }).then((res) => {
         this.options.owners = res.data.page.records;
+        if (this.options.owners.length === 1) {
+          this.search.owner = this.options.owners[0].uname;
+        }
+        this.searchProductOutWarehouseRecord();
       });
     },
     handleSizeChange(val) {
@@ -213,9 +216,9 @@ export default {
         data: postData,
       }).then((ret) => {
         this.tableData = ret.data.data.data;
-        this.tablePage.current=ret.data.data.current;
-        this.tablePage.total=ret.data.data.total;
-        this.tablePage.size=ret.data.data.size;
+        this.tablePage.current = ret.data.data.current;
+        this.tablePage.total = ret.data.data.total;
+        this.tablePage.size = ret.data.data.size;
         this.tableLoading = false;
       });
     },

@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.39 1. 开放商品出库入库记录',
+          timestamp: '2020-09-17',
+        },
+        {
           content: 'v1.38 1. 退货功能[功能]',
           timestamp: '2020-09-15',
         },
