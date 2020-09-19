@@ -40,6 +40,17 @@
               </el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="实际到件时间">
+              <el-date-picker
+                  v-model="form.createOnLbl"
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="实际到件时间"
+                  :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-form-item>
         <el-form-item label="订单号">
           <el-col :span="12">
@@ -360,6 +371,7 @@ export default {
         carrier: '',
         trackNo: '',
         contentList: [],
+        createOnLbl: '',
       },
       content: {
         returnNo: '',
@@ -378,6 +390,31 @@ export default {
       fromTownAddress: [],
       toTownAddressMap: {},
       fromTownAddressMap: {},
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          },
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          },
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          },
+        }],
+      },
     };
   },
   created() {

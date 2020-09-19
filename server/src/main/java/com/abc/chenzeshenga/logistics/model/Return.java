@@ -38,28 +38,30 @@ public class Return implements Serializable {
     @TableField(value = "create_by")
     private String creator;
     private boolean withoutOrderNoFlag;
-    private String orderNo;
     private String toName;
+    private String orderNo;
     private String toContact;
     private String toZipCode;
+    private String fromName;
+    private String carrier;
+    private String fromContact;
+    private String fromZipCode;
+    private String trackNo;
     private String toAddressLine1;
     private String toAddressLine2;
     private String toAddressLine3;
-    private String fromName;
-    private String fromContact;
-    private String fromZipCode;
-    private String carrier;
+    private String toDetailAddressLbl;
     private String chinaCarrier;
-    private String trackNo;
     private String imgs;
     private String status;
 
     private String fromAddressLine1;
     private String fromAddressLine2;
     private String fromAddressLine3;
+    private String fromDetailAddressLbl;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createOn;
-
+    private String createOnLbl;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateOn;
 
@@ -67,14 +69,6 @@ public class Return implements Serializable {
     @TableField(value = "update_by")
     private String updator;
 
-
-    private Double length;
-
-    private Double width;
-
-    private Double height;
-
-    private Double weight;
 
     private List<ReturnContent> contentList;
 

@@ -32,6 +32,14 @@ public interface ReturnMapper extends BaseMapper<Return> {
      */
     Return selectByPk(String returnNo);
 
+    /**
+     * 创建退货订单
+     *
+     * @param returnOrd 订单内容
+     * @return influence
+     */
+    int newReturnOrd(@Param("returnOrd") Return returnOrd);
+
     int updateByPk(Return returnOrder);
 
     int insertReturnOrder(Return returnOrder);

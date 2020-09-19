@@ -9,6 +9,7 @@ import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.ReturnService;
 import com.abc.chenzeshenga.logistics.service.returning.ReturnCommonService;
+import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.util.PageUtils;
@@ -97,6 +98,12 @@ public class ReturnController {
         return Json.succ();
     }
 
+    /**
+     * 创建退货订单
+     *
+     * @param returnOrder 退货订单
+     * @return 订单
+     */
     @PostMapping("/add")
     public Json addReturnOrder(@RequestBody Return returnOrder) {
         String returnNo = returnOrder.getReturnNo();
@@ -104,9 +111,13 @@ public class ReturnController {
         if (ori == null) {
             returnOrder.setStatus("新建");
             returnOrder.setUpdateOn(new Date());
-            returnOrder.setCreateOn(new Date());
+            if (StringUtils.isEmpty(returnOrder.getCreateOnLbl())) {
+                returnOrder.setCreateOn(new Date());
+            } else {
+                returnOrder.setCreateOn(DateUtil.getCustomDateFromDateStr(returnOrder.getCreateOnLbl()));
+            }
             returnOrder.setUpdator(UserUtils.getUserName());
-            returnMapper.insert(returnOrder);
+            returnMapper.newReturnOrd(returnOrder);
             List<ReturnContent> returnContentList = returnOrder.getContentList();
             if (returnContentList != null && !returnContentList.isEmpty()) {
                 returnContentList.forEach(

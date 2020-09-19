@@ -64,17 +64,8 @@
                to_name,
                to_contact,
                to_zip_code,
-               to_detail_address,
-               to_ken_id,
-               to_city_id,
-               to_town_id,
                from_name,
                from_contact,
-               from_zip_code,
-               from_detail_address,
-               from_ken_id,
-               from_city_id,
-               from_town_id,
                carrier,
                track_no,
                imgs,
@@ -97,6 +88,25 @@
         from l_returning
         where return_no = #{returnNo}
     </select>
+
+    <insert id="newReturnOrd">
+        insert into l_returning(return_no, without_order_no_flag, to_name,
+                                to_contact, to_zip_code, from_name,
+                                from_contact, from_zip_code, carrier,
+                                track_no, imgs, status, create_on, update_on,
+                                create_by, update_by, order_no, from_address_line1, from_address_line2,
+                                from_address_line3, to_address_line1, to_address_line2,
+                                to_address_line3)
+            value
+            (#{returnOrd.returnNo}, #{returnOrd.withoutOrderNoFlag}, #{returnOrd.toName}, #{returnOrd.toContact},
+             #{returnOrd.toZipCode}, #{returnOrd.fromName}, #{returnOrd.fromContact}, #{returnOrd.fromZipCode},
+             #{returnOrd.carrier}, #{returnOrd.trackNo}, #{returnOrd.imgs}, #{returnOrd.status},
+             #{returnOrd.createOn}, #{returnOrd.updateOn}, #{returnOrd.creator}, #{returnOrd.updator},
+             #{returnOrd.orderNo}, #{returnOrd.fromAddressLine1}, #{returnOrd.fromAddressLine2},
+             #{returnOrd.fromAddressLine3},
+             #{returnOrd.toAddressLine1}, #{returnOrd.toAddressLine2}, #{returnOrd.toAddressLine3}
+                )
+    </insert>
 
     <update id="updateByPk" parameterType="com.abc.chenzeshenga.logistics.model.Return">
         update l_returning
@@ -327,7 +337,14 @@
     </select>
 
     <select id="selectContentDealingById" resultType="com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing">
-        select uuid, return_no, sku, name, num, deal_with, shelf_no, comment
+        select uuid,
+               return_no,
+               sku,
+               name,
+               num,
+               deal_with,
+               shelf_no,
+               comment
         from l_retun_dealing_content
         where return_no = #{returnNo}
     </select>

@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,10 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
         Return returnEntity = returnPageQueryEntity.getEntity();
         Pagination pagination = returnPageQueryEntity.getPagination();
         List<Return> returnList = returnMapper.listV2(returnEntity, SqlUtils.generateSqlLimit(pagination));
+        returnList.forEach(returnEle -> {
+            returnEle.setToDetailAddressLbl(StringUtils.stripToEmpty(returnEle.getToAddressLine1()) + "/" + StringUtils.stripToEmpty(returnEle.getToAddressLine2()) + "/" + StringUtils.stripToEmpty(returnEle.getToAddressLine3()));
+            returnEle.setFromDetailAddressLbl(StringUtils.stripToEmpty(returnEle.getFromAddressLine1()) + "/" + StringUtils.stripToEmpty(returnEle.getFromAddressLine2()) + "/" + StringUtils.stripToEmpty(returnEle.getFromAddressLine3()));
+        });
         long total = returnMapper.count(returnEntity);
         result.setCurrent(pagination.getCurrent());
         result.setTotal(total);

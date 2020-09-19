@@ -184,7 +184,7 @@
       ></el-table-column>
       <el-table-column
           width="200"
-          prop="toDetailAddress"
+          prop="toDetailAddressLbl"
           label="收件详细地址"
       ></el-table-column>
       <el-table-column
@@ -204,7 +204,7 @@
       ></el-table-column>
       <el-table-column
           width="200"
-          prop="fromDetailAddress"
+          prop="fromDetailAddressLbl"
           label="发件人详细地址"
       ></el-table-column>
       <el-table-column
