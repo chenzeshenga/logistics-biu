@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -327,6 +328,11 @@ public class ReturnController {
         returnService.updateClaimContentDealing(claimContentDealingList);
         returnService.updateStatus(claimContentDealingList.get(0).getReturnNo(), "历史");
         return Json.succ();
+    }
+
+    @GetMapping("/excel")
+    public void getReturnOrd(HttpServletResponse httpServletResponse, Return returnOrd) {
+
     }
 
 }
