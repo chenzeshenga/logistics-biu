@@ -160,7 +160,7 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
                 ProductInWarehouse productInWarehouse = new ProductInWarehouse();
                 productInWarehouse.setUuid(UuidUtils.uuid());
                 productInWarehouse.setNum(claimContentDealing.getNum());
-                productInWarehouse.setInTime(new Date());
+                productInWarehouse.setInTime(returnEntity.getCreateOn());
                 productInWarehouse.setDySku(claimContentDealing.getSku());
                 productInWarehouse.setShelfNo(claimContentDealing.getShelfNo());
                 productInWarehouse.setOwner(returnEntity.getCreator());
