@@ -19,6 +19,7 @@ export default {
         type: 'withUser',
         buttonVisible8: true,
         buttonVisible5: true,
+        delete: true,
       },
     };
   },

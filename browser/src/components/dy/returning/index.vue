@@ -145,6 +145,46 @@
                 width="200"
             ></el-table-column>
           </el-table>
+          <div>
+            <span style="font-weight: bold;margin-top: 1%;margin-bottom: 1%">退货单包裹信息</span>
+          </div>
+          <el-table :data="tableData.row.claimPackageList" style="margin-bottom: 1%">
+            <el-table-column
+                prop="returnNo"
+                label="退货单号"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="length"
+                label="长(cm)"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="width"
+                label="宽(cm)"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="height"
+                label="高(cm)"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="weight"
+                label="重(kg)"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="carrier"
+                label="承运人"
+                width="250"
+            ></el-table-column>
+            <el-table-column
+                prop="trackNo"
+                label="追踪单号"
+                width="250"
+            ></el-table-column>
+          </el-table>
         </template>
       </el-table-column>
       <el-table-column
@@ -319,6 +359,19 @@
                 plain
             >
               <svg-icon icon-class="dealWithReturnContent"></svg-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
+              content="删除"
+              placement="top"
+              v-if="msgData.delete"
+          >
+            <el-button
+                @click="deleteReturnOrd(scope.$index, scope.row)"
+                circle
+                plain
+            >
+              <svg-icon icon-class="delete"></svg-icon>
             </el-button>
           </el-tooltip>
         </template>
@@ -537,6 +590,7 @@ export default {
         buttonVisibleB: this.msg.buttonVisibleB === true,
         buttonVisibleC: this.msg.buttonVisibleC === true,
         dealWithReturnContent: this.msg.dealWithReturnContent === true,
+        delete: this.msg.delete === true,
       },
       // page data
       tablePage: {
@@ -855,6 +909,17 @@ export default {
         comment: '',
         returnNo: this.contentDealing.returnNo,
       };
+    },
+    deleteReturnOrd(index, row) {
+      this.$confirm('确定删除该退货单吗？', '提示', confirm).then(() => {
+        request({
+          url: '/return/drop?returnNo=' + row.returnNo,
+          method: 'get',
+        }).then(() => {
+          this.$message.success('退货单删除成功');
+          this.fetchData();
+        });
+      })
     },
   },
 };

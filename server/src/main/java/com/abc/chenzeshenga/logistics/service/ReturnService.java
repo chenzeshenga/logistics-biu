@@ -84,6 +84,18 @@ public class ReturnService extends ServiceImpl<ReturnMapper, Return> {
     }
 
     /**
+     * 根据退货单号删除退货单关联信息
+     *
+     * @param returnNo 退货单号
+     */
+    public void drop(String returnNo) {
+        returnMapper.dropReturnOrd(returnNo);
+        returnMapper.deleteContent(returnNo);
+        returnMapper.dropClaimContentDealing(returnNo);
+        returnMapper.dropClaimPackage(returnNo);
+    }
+
+    /**
      * 根据退货单号认领退货单
      *
      * @param returnNo 退货单号

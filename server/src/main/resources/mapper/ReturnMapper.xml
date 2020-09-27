@@ -49,6 +49,18 @@
             <result column="shelf_no" property="shelfNo"/>
             <result column="comment" property="comment"/>
         </collection>
+        <collection property="claimPackageList" fetchType="lazy" column="return_no"
+                    select="selectClaimPackageById"
+                    ofType="com.abc.chenzeshenga.logistics.model.claim.ClaimPackage">
+            <id column="uuid" property="uuid"/>
+            <result column="returnNo" property="returnNo"/>
+            <result column="length" property="length"/>
+            <result column="width" property="width"/>
+            <result column="height" property="height"/>
+            <result column="carrier" property="carrier"/>
+            <result column="trackNo" property="trackNo"/>
+            <result column="weight" property="weight"/>
+        </collection>
     </resultMap>
 
     <select id="getReturnSeq" resultMap="result">
@@ -322,10 +334,29 @@
         where return_no = #{returnNo}
     </update>
 
+    <delete id="dropReturnOrd">
+        delete
+        from l_returning
+        where return_no = #{returnNo}
+    </delete>
+
     <select id="selectContentById" resultType="com.abc.chenzeshenga.logistics.model.ReturnContent">
         select return_no, sku, name, deal_with, num, uuid
         from l_returning_content
         where return_no = #{returnNo}
+    </select>
+
+    <select id="selectClaimPackageById" resultType="com.abc.chenzeshenga.logistics.model.claim.ClaimPackage">
+        select uuid,
+               returnNo,
+               length,
+               width,
+               height,
+               carrier,
+               trackNo,
+               weight
+        from l_return_package
+        where returnNo = #{returnNo}
     </select>
 
     <select id="selectContentDealingById" resultType="com.abc.chenzeshenga.logistics.model.claim.ClaimContentDealing">

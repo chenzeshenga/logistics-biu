@@ -98,6 +98,14 @@ public interface ReturnMapper extends BaseMapper<Return> {
     List<ReturnContent> selectContentById(String returnNo);
 
     /**
+     * 根据退货单号获取退货单包裹信息
+     *
+     * @param returnNo 退货单号
+     * @return 退货单包裹信息
+     */
+    List<ClaimPackage> selectClaimPackageById(String returnNo);
+
+    /**
      * 根据退货单号获取退货货物处理方式
      *
      * @param returnNo 退货单号
@@ -125,6 +133,14 @@ public interface ReturnMapper extends BaseMapper<Return> {
             @Param("to") Date to);
 
     int updatePkgInfo(Return returnOrd);
+
+    /**
+     * 根据退货单号删除退货单
+     *
+     * @param returnNo 退货单号
+     * @return 删除的数量
+     */
+    int dropReturnOrd(String returnNo);
 
     /**
      * 根据退货单号删除退货包裹

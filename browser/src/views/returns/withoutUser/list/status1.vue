@@ -1,9 +1,9 @@
 <template>
-    <div class="login-container">
-        <div class="app-container">
-            <returning-table v-bind:msg="this.msg"></returning-table>
-        </div>
+  <div class="login-container">
+    <div class="app-container">
+      <returning-table v-bind:msg="this.msg"></returning-table>
     </div>
+  </div>
 </template>
 
 <script>
@@ -18,6 +18,7 @@ export default {
         status: '新建',
         type: 'withoutUser',
         buttonVisible1: true,
+        delete: true,
       },
     };
   },

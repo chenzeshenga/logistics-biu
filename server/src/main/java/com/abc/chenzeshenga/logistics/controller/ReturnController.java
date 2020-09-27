@@ -243,7 +243,6 @@ public class ReturnController {
         return Json.succ().data("page", returnPage);
     }
 
-
     /**
      * 分页查找退货订单
      *
@@ -254,6 +253,18 @@ public class ReturnController {
     public Json listV2(@RequestBody PageQueryEntity<Return> returnPageQueryEntity) {
         PageData<Return> returnPageData = returnService.listV2(returnPageQueryEntity);
         return Json.succ().data("data", returnPageData);
+    }
+
+    /**
+     * 根据退货单号删除退货单
+     *
+     * @param returnNo 退货单号
+     * @return success
+     */
+    @GetMapping("/drop")
+    public Json drop(@RequestParam String returnNo) {
+        returnService.drop(returnNo);
+        return Json.succ();
     }
 
     /**
