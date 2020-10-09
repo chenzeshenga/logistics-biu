@@ -44,8 +44,7 @@ public class ProductStatisticsService
     @Scheduled(cron = "0 0 0 * * ?")
     public void triggerStatistics() {
         log.info("statistics start at {}", DateUtil.getStrFromDate(new Date()));
-        productInWarehouseRecordService.list();
-
+        productInWarehouseRecordService.listCurrentDayProduct();
         log.info("statistics end at {}", DateUtil.getStrFromDate(new Date()));
     }
 
