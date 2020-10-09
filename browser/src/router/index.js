@@ -1135,7 +1135,7 @@ export const asyncRouterMap = [
         component: _import('product/product-statistic'),
         meta: {
           perm: 'm:product:mgt:3',
-          title: '商品统计',
+          title: '[beta]商品统计',
           icon: 'chart',
           noCache: true,
         },

@@ -5,6 +5,7 @@ import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,11 +15,14 @@ import java.util.List;
 @Mapper
 public interface ProductInWarehouseRecordMapper {
 
-  int insert(ProductInWarehouse productInWarehouse);
+    int insert(ProductInWarehouse productInWarehouse);
 
-  List<ProductInWarehouse> list(
-      @Param("productInWarehouse") ProductInWarehouse productInWarehouse,
-      @Param("sqlLimit") SqlLimit sqlLimit);
+    List<ProductInWarehouse> list(
+            @Param("productInWarehouse") ProductInWarehouse productInWarehouse,
+            @Param("sqlLimit") SqlLimit sqlLimit);
 
-  Long count(@Param("productInWarehouse") ProductInWarehouse productInWarehouse);
+    Long count(@Param("productInWarehouse") ProductInWarehouse productInWarehouse);
+
+    List<ProductInWarehouse> listCurrentDayProduct(@Param("start") Date start, @Param("end") Date end);
+
 }

@@ -54,4 +54,18 @@
             </if>
         </trim>
     </select>
+
+    <select id="listCurrentDayProduct" resultType="com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse">
+        select uuid,
+               dy_sku         as dySku,
+               sku,
+               num,
+               owner,
+               warehousing_no as warehousingNo,
+               in_time        as inTime,
+               shelf_no       as shelfNo
+        from l_product_in_warehouse_record
+        where in_time between #{start} and #{end}
+    </select>
+
 </mapper>

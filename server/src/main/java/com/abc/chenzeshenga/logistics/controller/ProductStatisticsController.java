@@ -87,6 +87,12 @@ public class ProductStatisticsController {
         return Json.succ().data("page", productStatisticsPage);
     }
 
+    @GetMapping("trigger")
+    public Json triggerStatistics() {
+        productStatisticsService.triggerStatistics();
+        return Json.succ();
+    }
+
     @PostMapping("/listBySearch")
     public Json listBySearch(@RequestBody String body) {
         String username = UserUtils.getUserName();

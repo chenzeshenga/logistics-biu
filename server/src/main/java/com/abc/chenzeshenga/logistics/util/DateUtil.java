@@ -87,4 +87,27 @@ public class DateUtil {
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));
         return simpleDateFormat.format(date);
     }
+
+    public static Date genStartDate(Date date) {
+        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(date);
+        String yyyyMMddHHmmss = yyyyMMdd + "000000";
+        try {
+            return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);
+        } catch (ParseException e) {
+            log.error("DateUtil.genStartDate error stack info ", e);
+        }
+        return null;
+    }
+
+    public static Date genEndDate(Date date) {
+        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(date);
+        String yyyyMMddHHmmss = yyyyMMdd + "235959";
+        try {
+            return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);
+        } catch (ParseException e) {
+            log.error("DateUtil.genEndDate error stack info ", e);
+        }
+        return null;
+    }
+
 }
