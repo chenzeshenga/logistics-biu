@@ -52,7 +52,7 @@
     </insert>
     <insert id="insertWithName" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file (uuid, file, name)
-        values (#{uuid,jdbcType=VARCHAR}, #{file,jdbcType=LONGVARBINARY}, #{fileName,jdbcType=VARCHAR})
+        values (#{uuid,jdbcType=VARCHAR}, #{userFile,jdbcType=LONGVARBINARY}, #{fileName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
         insert into l_file
@@ -60,7 +60,7 @@
             <if test="uuid != null">
                 uuid,
             </if>
-            <if test="file != null">
+            <if test="userFile != null">
                 userFile,
             </if>
         </trim>
@@ -68,7 +68,7 @@
             <if test="uuid != null">
                 #{uuid,jdbcType=VARCHAR},
             </if>
-            <if test="file != null">
+            <if test="userFile != null">
                 #{file,jdbcType=LONGVARBINARY},
             </if>
         </trim>
@@ -76,15 +76,15 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.File">
         update l_file
         <set>
-            <if test="file != null">
-                `file` = #{file,jdbcType=LONGVARBINARY},
+            <if test="userFile != null">
+                `file` = #{userFile,jdbcType=LONGVARBINARY},
             </if>
         </set>
         where uuid = #{uuid,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.abc.chenzeshenga.logistics.model.File">
         update l_file
-        set file = #{file,jdbcType=LONGVARBINARY}
+        set file = #{userFile,jdbcType=LONGVARBINARY}
         where uuid = #{uuid,jdbcType=VARCHAR}
     </update>
 </mapper>

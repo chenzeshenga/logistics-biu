@@ -15,7 +15,6 @@ import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct;
 import com.abc.chenzeshenga.logistics.model.shelf.UpShelfProductInFile;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouse;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
-import com.abc.chenzeshenga.logistics.util.SkuUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;

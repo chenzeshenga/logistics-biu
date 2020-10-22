@@ -89,7 +89,7 @@ public class DateUtil {
     }
 
     public static Date genStartDate(Date date) {
-        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(date);
+        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
         String yyyyMMddHHmmss = yyyyMMdd + "000000";
         try {
             return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);
@@ -100,7 +100,7 @@ public class DateUtil {
     }
 
     public static Date genEndDate(Date date) {
-        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(date);
+        String yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
         String yyyyMMddHHmmss = yyyyMMdd + "235959";
         try {
             return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);

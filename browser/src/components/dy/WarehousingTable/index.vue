@@ -6,33 +6,33 @@
           <el-col :span="6">
             <el-tooltip content="订单创建时间" placement="top">
               <el-date-picker
-                v-model="daterange"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions2"
-                value-format="yyyy-MM-dd"
-                style="width: 400px"
-                @change="reGenSearchData"
+                  v-model="daterange"
+                  type="daterange"
+                  align="right"
+                  unlink-panels
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :picker-options="pickerOptions2"
+                  value-format="yyyy-MM-dd"
+                  style="width: 400px"
+                  @change="reGenSearchData"
               ></el-date-picker>
             </el-tooltip>
           </el-col>
           <el-col :span="4">
             <el-tooltip content="入库单号" placement="top">
-              <el-input v-model="search.warehousingNo" clearable placeholder="请输入入库单号" />
+              <el-input v-model="search.warehousingNo" clearable placeholder="请输入入库单号"/>
             </el-tooltip>
           </el-col>
           <el-col :span="4">
             <el-tooltip content="创建人" placement="top">
               <el-select filterable clearable v-model="search.creator" placeholder="请选择创建人">
                 <el-option
-                  v-for="creator in users"
-                  :key="creator.uname"
-                  :label="creator.nick"
-                  :value="creator.uname"
+                    v-for="creator in users"
+                    :key="creator.uname"
+                    :label="creator.nick"
+                    :value="creator.uname"
                 />
               </el-select>
             </el-tooltip>
@@ -41,17 +41,17 @@
             <el-tooltip content="相关渠道" placement="top">
               <el-select clearable filterable v-model="search.channelCode" placeholder="对应渠道">
                 <el-option
-                  v-for="item in channels"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                    v-for="item in channels"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
                 />
               </el-select>
             </el-tooltip>
           </el-col>
           <el-col :span="1">
             <el-form-item label>
-              <el-button icon="el-icon-search" @click="fetchData()" />
+              <el-button icon="el-icon-search" @click="fetchData()"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -61,47 +61,48 @@
           </el-col>
           <el-col :span="2">
             <el-button
-              type="primary"
-              @click="exportExcel()"
-              icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang"
-            >导出excel</el-button>
+                type="primary"
+                @click="exportExcel()"
+                icon="iconfont icon-jichukongjiantubiao-gonggongxuanzekuang"
+            >导出excel
+            </el-button>
           </el-col>
         </el-row>
       </el-form-item>
     </el-form>
     <el-alert
-      title="您可点击获取报关单按钮使用系统生成的报关单进行报关，也可使用您自己制作的报关单报关。若您使用您自己制作的报关单，请使用上传报关单按钮进行报关单上传，方便我们后期追踪"
-      type="info"
-      show-icon
-      center
-      style="margin-bottom: 2%"
+        title="您可点击获取报关单按钮使用系统生成的报关单进行报关，也可使用您自己制作的报关单报关。若您使用您自己制作的报关单，请使用上传报关单按钮进行报关单上传，方便我们后期追踪"
+        type="info"
+        show-icon
+        center
+        style="margin-bottom: 2%"
     />
     <el-table
-      style="width: 100%"
-      :data="tableData"
-      v-loading.body="tableLoading"
-      element-loading-text="加载中"
-      stripe
-      highlight-current-row
+        style="width: 100%"
+        :data="tableData"
+        v-loading.body="tableLoading"
+        element-loading-text="加载中"
+        stripe
+        highlight-current-row
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" width="55"/>
       <el-table-column type="expand">
         <template slot-scope="tableData">
           <el-table :data="tableData.row.warehousingContentList">
-            <el-table-column prop="dySku" label="东岳Sku" width="250" />
-            <el-table-column prop="name" label="商品名称" width="250" />
-            <el-table-column prop="boxSeq" label="箱号" width="150" />
-            <el-table-column prop="totalNum" label="数量" width="200" />
-            <el-table-column prop="wrapType" label="包装方式" width="250" />
-            <el-table-column prop="actual" label="实际收货数量" width="250" />
+            <el-table-column prop="dySku" label="东岳Sku" width="250"/>
+            <el-table-column prop="name" label="商品名称" width="250"/>
+            <el-table-column prop="boxSeq" label="箱号" width="150"/>
+            <el-table-column prop="totalNum" label="数量" width="200"/>
+            <el-table-column prop="wrapType" label="包装方式" width="250"/>
+            <el-table-column prop="actual" label="实际收货数量" width="250"/>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column width="200" prop="warehousingNo" label="入库单号" />
-      <el-table-column width="150" prop="fromAddress" label="发货地址" />
-      <el-table-column width="150" prop="target" label="仓库地址" />
-      <el-table-column width="100" prop="statusDesc" label="状态" />
-      <el-table-column width="150" prop="method" label="头程方式" />
+      <el-table-column width="200" prop="warehousingNo" label="入库单号"/>
+      <el-table-column width="150" prop="fromAddress" label="发货地址"/>
+      <el-table-column width="150" prop="target" label="仓库地址"/>
+      <el-table-column width="100" prop="statusDesc" label="状态"/>
+      <el-table-column width="150" prop="method" label="头程方式"/>
       <el-table-column width="150" label="头程渠道">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" v-if="scope.row.channelFlag">
@@ -122,14 +123,14 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column width="100" prop="carrier" label="承运人" />
-      <el-table-column width="150" prop="trackNo" label="追踪单号" />
-      <el-table-column width="170" prop="deliverMethod" label="运输方式" />
-      <el-table-column width="200" prop="clearanceType" label="报关类型" />
-      <el-table-column width="150" prop="taxType" label="关税类型" />
-      <el-table-column width="150" prop="insurance" label="保险服务" />
-      <el-table-column width="150" prop="insuranceNum" label="保险总值(JPY)" />
-      <el-table-column width="180" prop="estimatedDate" label="预计到港时间" />
+      <el-table-column width="100" prop="carrier" label="承运人"/>
+      <el-table-column width="150" prop="trackNo" label="追踪单号"/>
+      <el-table-column width="170" prop="deliverMethod" label="运输方式"/>
+      <el-table-column width="200" prop="clearanceType" label="报关类型"/>
+      <el-table-column width="150" prop="taxType" label="关税类型"/>
+      <el-table-column width="150" prop="insurance" label="保险服务"/>
+      <el-table-column width="150" prop="insuranceNum" label="保险总值(JPY)"/>
+      <el-table-column width="180" prop="estimatedDate" label="预计到港时间"/>
       <el-table-column width="150" label="系统生成报关单下载">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -139,18 +140,19 @@
             </p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">
-                <svg-icon icon-class="doc" />
+                <svg-icon icon-class="doc"/>
               </el-tag>
             </div>
           </el-popover>
         </template>
         <el-button
-          size="mini"
-          circle
-          plain
-          @click="handleSystemFile(scope.$index, scope.row)"
-          icon="el-icon-download"
-        >下载</el-button>
+            size="mini"
+            circle
+            plain
+            @click="handleSystemFile(scope.$index, scope.row)"
+            icon="el-icon-download"
+        >下载
+        </el-button>
       </el-table-column>
       <el-table-column width="150" label="用户上传报关单下载">
         <template slot-scope="scope">
@@ -158,214 +160,216 @@
             <p>点击按钮下载文件</p>
             <p>
               <el-button
-                type="text"
-                v-on:click="handleUserWarehousingFile(scope.$index, scope.row)"
-              >下载</el-button>
+                  type="text"
+                  v-on:click="handleUserWarehousingFile(scope.$index, scope.row)"
+              >下载
+              </el-button>
             </p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">
-                <svg-icon icon-class="doc" />
+                <svg-icon icon-class="doc"/>
               </el-tag>
             </div>
           </el-popover>
         </template>
         <el-button
-          size="mini"
-          circle
-          plain
-          @click="handleSystemFile(scope.$index, scope.row)"
-          icon="el-icon-download"
-        >下载</el-button>
+            size="mini"
+            circle
+            plain
+            @click="handleSystemFile(scope.$index, scope.row)"
+            icon="el-icon-download"
+        >下载
+        </el-button>
       </el-table-column>
-      <el-table-column width="170" prop="createOn" label="创建时间" />
-      <el-table-column width="170" prop="updateOn" label="修改时间" />
-      <el-table-column width="150" prop="creator" label="创建人" />
-      <el-table-column width="150" prop="updator" label="修改人" />
+      <el-table-column width="170" prop="createOn" label="创建时间"/>
+      <el-table-column width="170" prop="updateOn" label="修改时间"/>
+      <el-table-column width="150" prop="creator" label="创建人"/>
+      <el-table-column width="150" prop="updator" label="修改人"/>
       <el-table-column label="操作" width="400" fixed="right">
         <template slot-scope="scope">
           <el-tooltip content="打印入单标签" placement="top" v-if="msgData.buttonVisible1">
             <el-button
-              @click="printWarehousingBarcode(scope.$index, scope.row, 2)"
-              size="mini"
-              type="info"
-              icon="el-icon-download"
-              circle
-              plain
+                @click="printWarehousingBarcode(scope.$index, scope.row, 2)"
+                size="mini"
+                type="info"
+                icon="el-icon-download"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="发往日本东岳" placement="top" v-if="msgData.buttonVisible11">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 2)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="statusUpdate(scope.$index, scope.row, 2)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="发往东岳国内前置海外仓" placement="top" v-if="msgData.buttonVisible2">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 2)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="statusUpdate(scope.$index, scope.row, 2)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="东岳国内前置海外仓已收货，记录整体体积重量" placement="top" v-if="msgData.buttonVisible8">
             <el-button
-              @click="toggleHeadCheckDialog(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="toggleHeadCheckDialog(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="头程校验完成，发往日本" placement="top" v-if="msgData.buttonVisible9">
             <el-button
-              @click="confirmTrackNo(scope.$index,scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="confirmTrackNo(scope.$index,scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="日本仓库已收货，发往入库清点" placement="top" v-if="msgData.buttonVisibleA">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 5)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="statusUpdate(scope.$index, scope.row, 5)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="入库清点完成，发往仓库上架" placement="top" v-if="msgData.buttonVisibleB">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 6)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="statusUpdate(scope.$index, scope.row, 6)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="上架完成，开始计仓储费" placement="top" v-if="msgData.buttonVisibleC">
             <el-button
-              @click="statusUpdate(scope.$index, scope.row, 7)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="statusUpdate(scope.$index, scope.row, 7)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="预申请单号" placement="top" v-if="msgData.buttonVisible2">
             <el-button
-              @click="applyTrackno(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-info"
-              circle
-              plain
+                @click="applyTrackno(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-info"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="获取报关单" placement="top" v-if="msgData.buttonVisible3">
             <el-button
-              @click="handlePrint(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-printer"
-              circle
-              plain
+                @click="handlePrint(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-printer"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="上传报关单" placement="top" v-if="msgData.buttonVisible4">
             <el-button
-              @click="handleUploadFile(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-upload"
-              circle
-              plain
+                @click="handleUploadFile(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-upload"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="预审入库单" placement="top" v-if="msgData.buttonVisible12">
             <el-button
-              @click="handleDialogVisible5(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="handleDialogVisible5(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="货物清点" placement="top" v-if="msgData.buttonVisible13">
             <el-button
-              @click="handleDialogVisible6(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="handleDialogVisible6(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="货物上架" placement="top" v-if="msgData.buttonVisible14">
             <el-button
-              @click="handleDialogVisible7(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-check"
-              circle
-              plain
+                @click="handleDialogVisible7(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-check"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="编辑" placement="top" v-if="msgData.buttonVisible5">
             <el-button
-              @click="handleUpdate(scope.$index, scope.row)"
-              size="mini"
-              type="info"
-              icon="el-icon-edit"
-              circle
-              plain
+                @click="handleUpdate(scope.$index, scope.row)"
+                size="mini"
+                type="info"
+                icon="el-icon-edit"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="删除" placement="top" v-if="msgData.buttonVisible6">
             <el-button
-              @click="handleDelete(scope.$index, scope.row)"
-              size="mini"
-              type="danger"
-              icon="el-icon-remove"
-              circle
-              plain
+                @click="handleDelete(scope.$index, scope.row)"
+                size="mini"
+                type="danger"
+                icon="el-icon-remove"
+                circle
+                plain
             />
           </el-tooltip>
           <el-tooltip content="废弃" placement="top" v-if="msgData.buttonVisible7">
             <el-button
-              @click="hold(scope.$index, scope.row)"
-              size="mini"
-              type="danger"
-              icon="el-icon-remove-outline"
-              circle
-              plain
+                @click="hold(scope.$index, scope.row)"
+                size="mini"
+                type="danger"
+                icon="el-icon-remove-outline"
+                circle
+                plain
             />
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      style="margin-left: 65%;margin-top: 10px"
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="tablePage.current"
-      :page-sizes="[10, 20, 30, 40, 50]"
-      :page-size="tablePage.size"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="tablePage.total"
+        style="margin-left: 65%;margin-top: 10px"
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="tablePage.current"
+        :page-sizes="[10, 20, 30, 40, 50]"
+        :page-size="tablePage.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tablePage.total"
     />
     <el-dialog title="申请单号" :visible.sync="dialogVisible1" width="30%">
       <el-form :model="dialog">
@@ -406,58 +410,58 @@
     <el-dialog title="申请报关单" :visible.sync="dialogVisible2" width="40%">
       <el-form :model="profile" label-width="135px">
         <el-alert
-          title="此页面提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写相应的报关单通过上传报关单功能进行上传.当前页面所有输入框必填"
-          type="info"
-          style="margin-bottom: 2%"
+            title="此页面提供系统生成的报关单内容，如您修改了下载的报关单，请通过上传报关单上传新版的报关单，您也可以自己编写相应的报关单通过上传报关单功能进行上传.当前页面所有输入框必填"
+            type="info"
+            style="margin-bottom: 2%"
         />
         <el-col :span="12">
           <el-form-item label="发货时间">
-            <el-date-picker v-model="profile.deliverDate" type="date" placeholder="选择日期" />
+            <el-date-picker v-model="profile.deliverDate" type="date" placeholder="选择日期"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="国际运单号">
-            <el-input v-model="profile.trackNo" />
+            <el-input v-model="profile.trackNo"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业名称（中文）" prop="chineseName">
-            <el-input v-model="profile.chineseName" />
+            <el-input v-model="profile.chineseName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业名称（英文）" prop="englishName">
-            <el-input v-model="profile.englishName" />
+            <el-input v-model="profile.englishName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业地址（中文）" prop="chineseAddr">
-            <el-input v-model="profile.chineseAddr" />
+            <el-input v-model="profile.chineseAddr"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业地址（英文）" prop="englishAddr">
-            <el-input v-model="profile.englishAddr" />
+            <el-input v-model="profile.englishAddr"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业邮编" prop="zipCode">
-            <el-input v-model="profile.zipCode" />
+            <el-input v-model="profile.zipCode"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业联系人姓名（中文）" prop="contactEnglishName">
-            <el-input v-model="profile.contactEnglishName" />
+            <el-input v-model="profile.contactEnglishName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业联系人姓名（英文）" prop="contactChineseName">
-            <el-input v-model="profile.contactChineseName" />
+            <el-input v-model="profile.contactChineseName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="企业联系方式" prop="phone">
-            <el-input v-model="profile.phone" />
+            <el-input v-model="profile.phone"/>
           </el-form-item>
         </el-col>
       </el-form>
@@ -467,26 +471,29 @@
       </span>
     </el-dialog>
     <el-dialog title="上传报关单" :visible.sync="dialogVisible3" width="20%">
+      <el-alert type="info" title="一个入库单对应一个报关单，如果当前入库单已有一个报关单时，当前文件将覆盖之前的文件" :closable="false"
+                style="margin-bottom: 1%"/>
       <el-form :model="dialogForm3">
         <el-form-item label="报关单文件">
           <el-upload
-            ref="upload"
-            :action="uploadLink"
-            :auto-upload="false"
-            with-credentials
-            :on-error="handleError"
-            :limit="1"
+              ref="upload"
+              :action="uploadLink"
+              :auto-upload="false"
+              with-credentials
+              :on-error="handleError"
+              :limit="1"
           >
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button
-              style="margin-left: 10px;"
-              size="small"
-              type="success"
-              @click="submitUpload"
-            >上传</el-button>
+                style="margin-left: 10px;"
+                size="small"
+                type="success"
+                @click="submitUpload"
+            >上传
+            </el-button>
             <div slot="tip" class="el-upload__tip">
               上传文件大小必须小于20M
-              <br />请点击上传按钮进行上传
+              <br/>请点击上传按钮进行上传
             </div>
           </el-upload>
         </el-form-item>
@@ -507,9 +514,9 @@
       <div id="pdfDom" class="a4-pdf">
         <div v-for="item in dialog4.barcodeLength8" v-bind:key="item.item">
           <div
-            v-for="item in dialog4.barcodeLength3"
-            v-bind:key="item.item"
-            style="display:inline-block;margin:1%"
+              v-for="item in dialog4.barcodeLength3"
+              v-bind:key="item.item"
+              style="display:inline-block;margin:1%"
           >
             <custom-syncfusion-barcode v-bind:barcode="barcode1"></custom-syncfusion-barcode>
           </div>
@@ -524,9 +531,9 @@
       <div id="pdfDom" class="a4-pdf-v2">
         <div v-for="item in dialog4.barcodeLength10" v-bind:key="item.item">
           <div
-            v-for="item in dialog4.barcodeLength4"
-            v-bind:key="item.item"
-            style="display:inline-block;margin:1%"
+              v-for="item in dialog4.barcodeLength4"
+              v-bind:key="item.item"
+              style="display:inline-block;margin:1%"
           >
             <custom-syncfusion-barcode v-bind:barcode="barcode2"></custom-syncfusion-barcode>
           </div>
@@ -541,9 +548,9 @@
       <div id="pdfDom" class="a4-pdf-v2">
         <div v-for="item in dialog4.barcodeLength2" v-bind:key="item.item">
           <div
-            v-for="item in dialog4.barcodeLength2"
-            v-bind:key="item.item"
-            style="display:inline-block;margin:1%"
+              v-for="item in dialog4.barcodeLength2"
+              v-bind:key="item.item"
+              style="display:inline-block;margin:1%"
           >
             <custom-syncfusion-barcode-detail v-bind:barcode="barcode2"></custom-syncfusion-barcode-detail>
           </div>
@@ -557,18 +564,18 @@
     <el-dialog title="入库单预审" :visible.sync="dialogVisible5" width="20%">
       <p>入库单号:{{ dialogForm5.warehousingNo }}</p>
       <div
-        v-for="warehousingContent in dialogForm5.warehousingContentList"
-        v-bind:key="warehousingContent.uuid"
-        style="margin:2%"
+          v-for="warehousingContent in dialogForm5.warehousingContentList"
+          v-bind:key="warehousingContent.uuid"
+          style="margin:2%"
       >
         箱号:{{ warehousingContent.boxSeq }}
         <span style="margin-left:5px">
           是否收货
           <el-switch
-            style="margin-left:5px"
-            v-model="warehousingContent.received"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
+              style="margin-left:5px"
+              v-model="warehousingContent.received"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
           ></el-switch>
         </span>
       </div>
@@ -584,16 +591,16 @@
         </el-col>
         <el-col :span="10">
           <el-input
-            v-model="dialogForm6.skuFromScanner"
-            @change="searchWarehousingContentList()"
-            placeholder="请扫描商品sku"
+              v-model="dialogForm6.skuFromScanner"
+              @change="searchWarehousingContentList()"
+              placeholder="请扫描商品sku"
           />
         </el-col>
       </el-row>
       <div
-        v-for="warehousingContent in dialogForm6.warehousingContentList"
-        v-bind:key="warehousingContent.uuid"
-        style="margin:2%"
+          v-for="warehousingContent in dialogForm6.warehousingContentList"
+          v-bind:key="warehousingContent.uuid"
+          style="margin:2%"
       >
         箱号:
         <b style="margin-left:4px">{{ warehousingContent.boxSeq }}</b>
@@ -606,9 +613,9 @@
           <b style="margin-left:4px">{{ warehousingContent.totalNum }}</b>
           收货数量:
           <el-input-number
-            style="margin-left:4px"
-            v-model="warehousingContent.actual"
-            placeholder="收货数量"
+              style="margin-left:4px"
+              v-model="warehousingContent.actual"
+              placeholder="收货数量"
           ></el-input-number>
         </el-row>
       </div>
@@ -624,16 +631,16 @@
         </el-col>
         <el-col :span="10">
           <el-input
-            v-model="dialogForm7.skuFromScanner"
-            @change="searchWarehousingContentList7()"
-            placeholder="请扫描商品sku"
+              v-model="dialogForm7.skuFromScanner"
+              @change="searchWarehousingContentList7()"
+              placeholder="请扫描商品sku"
           />
         </el-col>
       </el-row>
       <div
-        v-for="warehousingContent in dialogForm7.warehousingContentList"
-        v-bind:key="warehousingContent.uuid"
-        style="margin:2%"
+          v-for="warehousingContent in dialogForm7.warehousingContentList"
+          v-bind:key="warehousingContent.uuid"
+          style="margin:2%"
       >
         <el-row>
           箱号:
@@ -649,13 +656,14 @@
         </el-row>
         <el-row style="margin-top: 1%">
           上架数量:
-          <el-input-number v-model="upshelfNum" clearable placeholder="上架数量" />上架货架:
+          <el-input-number v-model="upshelfNum" clearable placeholder="上架数量"/>
+          上架货架:
           <el-select v-model="shelfNo" filterable placeholder="上架货架">
             <el-option
-              v-for="item in options"
-              :key="item.shelfNo"
-              :label="item.shelfNo"
-              :value="item.shelfNo"
+                v-for="item in options"
+                :key="item.shelfNo"
+                :label="item.shelfNo"
+                :value="item.shelfNo"
             >
               <span>
                 货架号 {{ item.shelfNo }} 货架区域 {{ item.area }} 货架行数
@@ -664,20 +672,20 @@
             </el-option>
           </el-select>
           <el-button
-            icon="el-icon-circle-plus-outline"
-            circle
-            @click="addUpShelf(warehousingContent)"
+              icon="el-icon-circle-plus-outline"
+              circle
+              @click="addUpShelf(warehousingContent)"
           />
         </el-row>
         <el-table
-          style="margin-top:1%;width: 100%"
-          :data="warehousingContent['upshelfData']"
-          v-loading.body="tableLoading"
-          element-loading-text="加载中"
-          stripe
-          highlight-current-row
+            style="margin-top:1%;width: 100%"
+            :data="warehousingContent['upshelfData']"
+            v-loading.body="tableLoading"
+            element-loading-text="加载中"
+            stripe
+            highlight-current-row
         >
-          <el-table-column width="200" prop="sku" label="sku" />
+          <el-table-column width="200" prop="sku" label="sku"/>
         </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -689,7 +697,7 @@
       <div v-for="box in dialogForm8.boxList" v-bind:key="box.boxSeq" style="margin:2%">
         <el-row>
           箱号:
-          <b>{{box.boxSeq}}</b>
+          <b>{{ box.boxSeq }}</b>
         </el-row>
         <el-row style="margin-top:2%">
           <el-col :span="8">
@@ -903,15 +911,15 @@ export default {
   methods: {
     fetchData() {
       this.tableLoading = true;
-      this.search.status=this.msgData.status;
-      this.search.category=this.msgData.category;
+      this.search.status = this.msgData.status;
+      this.search.category = this.msgData.category;
       const postData = {
         'entity': this.search,
         'pagination': this.tablePage,
       };
       request({
         url:
-          'warehousing/v2/list/',
+            'warehousing/v2/list/',
         method: 'post',
         data: postData,
       }).then((res) => {
@@ -931,7 +939,7 @@ export default {
     handleUpdate(index, row) {
       this.$router.push({
         path:
-          '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo,
+            '/new-warehousing/new-warehousing?warehousingNo=' + row.warehousingNo,
       });
     },
     statusUpdate(index, row, statusUpdateTo) {
@@ -1034,12 +1042,12 @@ export default {
       link.style.display = 'none';
       if (this.search.creator.length > 0) {
         link.href =
-          process.env.BASE_API +
-          '/warehousing/excel/1?method=东岳头程&creator=' +
-          this.search.creator;
+            process.env.BASE_API +
+            '/warehousing/excel/1?method=东岳头程&creator=' +
+            this.search.creator;
       } else {
         link.href =
-          process.env.BASE_API + '/warehousing/excel/1?method=东岳头程';
+            process.env.BASE_API + '/warehousing/excel/1?method=东岳头程';
       }
       link.target = '_blank';
       document.body.appendChild(link);
@@ -1260,8 +1268,8 @@ export default {
           const element = contentList[i];
           if (element['sku'] === sku) {
             if (
-              element.hasOwnProperty('actualNum') &&
-              element['actualNum'] >= 0
+                element.hasOwnProperty('actualNum') &&
+                element['actualNum'] >= 0
             ) {
               element['actualNum'] += 1;
             } else {
@@ -1350,7 +1358,8 @@ export default {
       this.search.to = val[1];
     },
   },
-  mounted() {},
+  mounted() {
+  },
 };
 </script>
 

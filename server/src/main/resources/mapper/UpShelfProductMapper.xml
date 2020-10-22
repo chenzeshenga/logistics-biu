@@ -18,4 +18,10 @@
         order by uptime desc
         limit 1
     </select>
+
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.shelf.UpShelfProduct">
+        insert into l_up_shelf_product(dy_sku, name, num, shelf_no, uptime, uuid, owner, warehousing_no) VALUE
+            (#{dySku}, #{name}, #{num}, #{shelfNo}, #{upTime}, #{uuid}, #{owner}, #{warehousingNo})
+    </insert>
+
 </mapper>

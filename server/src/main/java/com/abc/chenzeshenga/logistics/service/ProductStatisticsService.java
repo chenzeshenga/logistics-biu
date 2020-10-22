@@ -24,7 +24,7 @@ import java.util.Date;
 public class ProductStatisticsService
         extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
 
-    private ProductInWarehouseRecordService productInWarehouseRecordService;
+    private final ProductInWarehouseRecordService productInWarehouseRecordService;
 
     @Autowired
     public ProductStatisticsService(ProductInWarehouseRecordService productInWarehouseRecordService) {
@@ -44,6 +44,10 @@ public class ProductStatisticsService
     @Scheduled(cron = "0 0 0 * * ?")
     public void triggerStatistics() {
         log.info("statistics start at {}", DateUtil.getStrFromDate(new Date()));
+        
+
+
+        // 昨天入库的商品
         productInWarehouseRecordService.listCurrentDayProduct();
         log.info("statistics end at {}", DateUtil.getStrFromDate(new Date()));
     }
