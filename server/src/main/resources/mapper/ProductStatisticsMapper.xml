@@ -3,7 +3,7 @@
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper">
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         <id column="sku" jdbcType="VARCHAR" property="sku"/>
-        <result column="dySku" jdbcType="VARCHAR" property="dysku"/>
+        <result column="dySku" jdbcType="VARCHAR" property="dySku"/>
         <result column="owner" jdbcType="VARCHAR" property="owner"/>
         <result column="total_num" jdbcType="VARCHAR" property="totalNum"/>
         <result column="on_way_num" jdbcType="VARCHAR" property="onWayNum"/>
@@ -12,6 +12,15 @@
         <result column="pending_deliver_num" jdbcType="VARCHAR" property="pendingDeliverNum"/>
         <result column="defect_num" jdbcType="VARCHAR" property="defectNum"/>
         <result column="statistical_time" jdbcType="TIMESTAMP" property="statisticalTime"/>
+    </resultMap>
+
+    <resultMap id="ProductInWarehouseStatisticsResultMap"
+               type="com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics">
+        <id column="uuid" property="uuid"/>
+        <result column="dy_sku" property="dySku"/>
+        <result column="shelf_no" property="shelfNo"/>
+        <result column="total_num" property="totalNum"/>
+        <result column="statistical_time" property="statisticalTime"/>
     </resultMap>
 
     <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -175,6 +184,16 @@
             </if>
         </trim>
     </insert>
+
+    <insert id="insertProductInWarehouseBatch">
+        insert into l_product_statistic (uuid, dy_sku, owner, shelf_no, total_num, statistical_time)
+        values
+        <foreach collection="list" item="item" separator="," index="index">
+            (#{item.uuid}, #{item.dySku}, #{item.owner}, #{item.shelfNo}, #{item.totalNum},
+            #{item.statisticalTime,jdbcType=TIMESTAMP} )
+        </foreach>
+    </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         update l_product_statistic
         <set>
@@ -221,4 +240,16 @@
             statistical_time    = #{statisticalTime,jdbcType=TIMESTAMP}
         where sku = #{sku,jdbcType=VARCHAR}
     </update>
+
+    <select id="triggerCount" resultMap="ProductInWarehouseStatisticsResultMap">
+        SELECT owner,
+               dy_sku,
+               shelf_no,
+               sum(num)  as total_num,
+               sysdate() as statistical_time
+        FROM l_up_shelf_product
+        GROUP BY owner, dy_sku, shelf_no
+    </select>
+
+
 </mapper>

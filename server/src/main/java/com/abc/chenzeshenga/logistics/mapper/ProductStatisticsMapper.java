@@ -1,9 +1,12 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,30 +17,52 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
 
-  int deleteByPrimaryKey(String sku);
+    int deleteByPrimaryKey(String sku);
 
-  int deleteAll();
+    /**
+     * truncate 整张统计表
+     *
+     * @return 更新数量
+     */
+    int deleteAll();
 
-  @Override
-  Integer insert(ProductStatistics record);
+    @Override
+    Integer insert(ProductStatistics record);
 
-  int insertBatch(List<ProductStatistics> record);
+    @Deprecated
+    int insertBatch(List<ProductStatistics> record);
 
-  int insertSelective(ProductStatistics record);
+    /**
+     * 批量插入商品统计数据
+     *
+     * @param productInWarehouseStatisticsList 商品统计数据列表
+     * @return 更新数量
+     */
+    int insertProductInWarehouseBatch(@Param("list") List<ProductInWarehouseStatistics> productInWarehouseStatisticsList);
 
-  ProductStatistics selectByPrimaryKey(String sku);
+    int insertSelective(ProductStatistics record);
 
-  int updateByPrimaryKeySelective(ProductStatistics record);
+    ProductStatistics selectByPrimaryKey(String sku);
 
-  int updateByPrimaryKey(ProductStatistics record);
+    int updateByPrimaryKeySelective(ProductStatistics record);
 
-  List<ProductStatistics> selectAll(Pagination pagination);
+    int updateByPrimaryKey(ProductStatistics record);
 
-  List<ProductStatistics> selectAllBySearch(
-      Pagination pagination,
-      @Param("sku") String sku,
-      @Param("name") String name,
-      @Param("owner") String owner);
+    List<ProductStatistics> selectAll(Pagination pagination);
 
-  List<ProductStatistics> selectAllByUsername(String username);
+    List<ProductStatistics> selectAllBySearch(
+            Pagination pagination,
+            @Param("sku") String sku,
+            @Param("name") String name,
+            @Param("owner") String owner);
+
+    List<ProductStatistics> selectAllByUsername(String username);
+
+    /**
+     * 统计所有在库商品
+     *
+     * @return 数据列表
+     */
+    List<ProductInWarehouseStatistics> triggerCount();
+
 }

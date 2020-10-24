@@ -2,8 +2,10 @@ package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics;
 import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -44,11 +47,11 @@ public class ProductStatisticsService
     @Scheduled(cron = "0 0 0 * * ?")
     public void triggerStatistics() {
         log.info("statistics start at {}", DateUtil.getStrFromDate(new Date()));
-        
-
-
-        // 昨天入库的商品
-        productInWarehouseRecordService.listCurrentDayProduct();
+        baseMapper.deleteAll();
+        List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
+        productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId()));
+        baseMapper.insertProductInWarehouseBatch(productInWarehouseStatisticsList);
+        log.info(productInWarehouseStatisticsList.toString());
         log.info("statistics end at {}", DateUtil.getStrFromDate(new Date()));
     }
 
