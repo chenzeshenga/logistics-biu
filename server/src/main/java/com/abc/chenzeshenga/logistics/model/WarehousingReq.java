@@ -12,7 +12,6 @@ import lombok.*;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class WarehousingReq extends Pagination {

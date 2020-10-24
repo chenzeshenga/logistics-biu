@@ -1,7 +1,9 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics;
+import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatisticsReq;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 
@@ -64,5 +66,22 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
      * @return 数据列表
      */
     List<ProductInWarehouseStatistics> triggerCount();
+
+    /**
+     * 分页查询统计数据
+     *
+     * @param sqlLimit                        分页参数
+     * @param productInWarehouseStatisticsReq 查询参数
+     * @return 统计数据列表
+     */
+    List<ProductInWarehouseStatistics> select(@Param("sqlLimit") SqlLimit sqlLimit, @Param("req") ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq);
+
+    /**
+     * 计数
+     *
+     * @param productInWarehouseStatisticsReq 查询参数
+     * @return 总数
+     */
+    Long count(@Param("req") ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq);
 
 }

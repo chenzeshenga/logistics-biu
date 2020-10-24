@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model.v2.statistics;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +20,11 @@ public class ProductInWarehouseStatistics {
 
     private String uuid;
     private String dySku;
+    private String productName;
     private String owner;
     private String shelfNo;
     private int totalNum;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date statisticalTime;
 
 }

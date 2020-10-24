@@ -18,6 +18,7 @@
                type="com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics">
         <id column="uuid" property="uuid"/>
         <result column="dy_sku" property="dySku"/>
+        <result column="product_name" property="productName"/>
         <result column="shelf_no" property="shelfNo"/>
         <result column="total_num" property="totalNum"/>
         <result column="statistical_time" property="statisticalTime"/>
@@ -251,5 +252,41 @@
         GROUP BY owner, dy_sku, shelf_no
     </select>
 
+    <select id="select" resultMap="ProductInWarehouseStatisticsResultMap">
+        select uuid, statistic.dy_sku, product.product_name,owner, shelf_no, total_num, statistical_time
+        from l_product_statistic statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
+        <where>
+            <trim prefixOverrides="and">
+                <if test="req.dySku != null and req.dySku != ''">
+                    and statistic.dy_sku=#{req.dySku}
+                </if>
+                <if test="req.owner != null and req.owner != ''">
+                    and owner=#{req.owner}
+                </if>
+                <if test="req.shelfNo != null and req.shelfNo != ''">
+                    and shelf_no=#{req.shelfNo}
+                </if>
+            </trim>
+        </where>
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*)
+        from l_product_statistic statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
+        <where>
+            <trim prefixOverrides="and">
+                <if test="req.dySku != null and req.dySku != ''">
+                    and statistic.dy_sku=#{req.dySku}
+                </if>
+                <if test="req.owner != null and req.owner != ''">
+                    and owner=#{req.owner}
+                </if>
+                <if test="req.shelfNo != null and req.shelfNo != ''">
+                    and shelf_no=#{req.shelfNo}
+                </if>
+            </trim>
+        </where>
+    </select>
 
 </mapper>

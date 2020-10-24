@@ -7,6 +7,7 @@ import com.abc.chenzeshenga.logistics.mapper.warehouse.ProductOutWarehouseMapper
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
+import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatisticsReq;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductInWarehouseSummary;
 import com.abc.chenzeshenga.logistics.service.ProductStatisticsService;
 import com.abc.chenzeshenga.logistics.service.statistics.ProductInWarehouseService;
@@ -69,6 +70,11 @@ public class ProductStatisticsController {
         this.productStatisticsService = productStatisticsService;
         this.userCommonService = userCommonService;
         this.productInWarehouseService = productInWarehouseService;
+    }
+
+    @PostMapping("/product/list")
+    public Json listProductStatistics(@RequestBody PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
+        return Json.succ().data(productStatisticsService.listProductStatistics(productInWarehouseStatisticsReqPageQueryEntity));
     }
 
     @PostMapping

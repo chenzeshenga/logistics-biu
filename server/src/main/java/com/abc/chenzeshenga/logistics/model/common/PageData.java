@@ -14,7 +14,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @JsonIgnoreProperties(value = {"handler"})
-@ToString
 public class PageData<T> extends Pagination {
 
     private List<T> data;

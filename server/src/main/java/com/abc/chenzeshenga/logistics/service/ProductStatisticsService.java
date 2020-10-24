@@ -2,10 +2,16 @@ package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
+import com.abc.chenzeshenga.logistics.model.common.Pagination;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics;
+import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatisticsReq;
 import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
+import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -46,13 +52,22 @@ public class ProductStatisticsService
     @PostConstruct
     @Scheduled(cron = "0 0 0 * * ?")
     public void triggerStatistics() {
-        log.info("statistics start at {}", DateUtil.getStrFromDate(new Date()));
         baseMapper.deleteAll();
         List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
         productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId()));
         baseMapper.insertProductInWarehouseBatch(productInWarehouseStatisticsList);
-        log.info(productInWarehouseStatisticsList.toString());
-        log.info("statistics end at {}", DateUtil.getStrFromDate(new Date()));
+    }
+
+    public PageData<ProductInWarehouseStatistics> listProductStatistics(PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
+        Pagination pagination = productInWarehouseStatisticsReqPageQueryEntity.getPagination();
+        SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
+        ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq = productInWarehouseStatisticsReqPageQueryEntity.getEntity();
+        List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.select(sqlLimit, productInWarehouseStatisticsReq);
+        long total = baseMapper.count(productInWarehouseStatisticsReq);
+        PageData<ProductInWarehouseStatistics> productInWarehouseStatisticsPageData = new PageData<>();
+        productInWarehouseStatisticsPageData.setData(productInWarehouseStatisticsList);
+        productInWarehouseStatisticsPageData.setTotal(total);
+        return productInWarehouseStatisticsPageData;
     }
 
 }

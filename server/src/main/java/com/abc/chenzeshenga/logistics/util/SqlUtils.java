@@ -17,5 +17,4 @@ public class SqlUtils {
     return new SqlLimit((curr - 1) * size, size);
   }
 
-
 }

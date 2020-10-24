@@ -5,122 +5,86 @@
         <el-col :span="6">
           <el-tooltip content="请输入商品sku/东岳sku" placement="top">
             <el-input
-              v-model="search.sku"
-              placeholder="请输入商品sku/东岳sku"
+                v-model="search.sku"
+                placeholder="请输入商品sku/东岳sku"
             ></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="6">
           <el-tooltip content="请输入商品名称" placement="top">
             <el-input
-              v-model="search.name"
-              placeholder="请输入商品名称"
+                v-model="search.name"
+                placeholder="请输入商品名称"
             ></el-input>
           </el-tooltip>
         </el-col>
         <el-col :span="3">
           <el-tooltip content="请选择商品属主" placement="top">
             <el-select
-              filterable
-              clearable
-              v-model="search.owner"
-              placeholder="请选择商品属主"
+                filterable
+                clearable
+                v-model="search.owner"
+                placeholder="请选择商品属主"
             >
               <el-option
-                v-for="creator in options.owners"
-                :key="creator.uname"
-                :label="creator.nick"
-                :value="creator.uname"
+                  v-for="creator in options.owners"
+                  :key="creator.uname"
+                  :label="creator.nick"
+                  :value="creator.uname"
               ></el-option>
             </el-select>
           </el-tooltip>
         </el-col>
         <el-col :span="1">
           <el-button
-            icon="el-icon-search"
-            @click="searchProductStatistics()"
+              icon="el-icon-search"
+              @click="searchProductStatistics()"
           ></el-button>
         </el-col>
       </el-row>
       <el-alert
-        title="可售数量=在库总数量-待拣货数量-待出库数量-瑕疵品数量"
-        type="info"
-        show-icon
-        center
+          title="可售数量=在库总数量-待拣货数量-待出库数量-瑕疵品数量"
+          type="info"
+          show-icon
+          center
       ></el-alert>
       <el-table
-        style="width: 100%;margin: 10px"
-        :data="tableData"
-        v-loading.body="tableLoading"
-        element-loading-text="加载中"
-        stripe
-        highlight-current-row
+          style="width: 100%;margin: 10px"
+          :data="tableData"
+          v-loading.body="tableLoading"
+          element-loading-text="加载中"
+          stripe
+          highlight-current-row
       >
-        <el-table-column width="150" prop="sku" label="sku"></el-table-column>
         <el-table-column
-          width="150"
-          prop="dysku"
-          label="东岳sku"
+            prop="dySku"
+            label="东岳sku"
         ></el-table-column>
         <el-table-column
-          width="150"
-          prop="owner"
-          label="属主"
+            prop="productName"
+            label="商品名称"
         ></el-table-column>
         <el-table-column
-          width="150"
-          prop="totalNum"
-          label="可售商品总数"
+            prop="owner"
+            label="属主"
         ></el-table-column>
         <el-table-column
-          width="150"
-          prop="totalNum"
-          label="在库商品总数"
+            prop="totalNum"
+            label="当前在库总数"
         ></el-table-column>
         <el-table-column
-          prop="pendingPickupNum"
-          label="待拣货数量"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="pendingDeliverNum"
-          label="待出库出量"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="defectNum"
-          label="缺陷品数量"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          width="150"
-          prop="onWayNum"
-          label="在途入库商品数量"
-        ></el-table-column>
-        <el-table-column
-          width="150"
-          prop="uncheckNum"
-          label="未入库数量"
-        ></el-table-column>
-        <el-table-column
-          prop="doneNum"
-          label="已出库数量"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="statisticalTime"
-          label="上一次统计时间"
-          width="150"
+            prop="statisticalTime"
+            label="上一次统计时间"
         ></el-table-column>
       </el-table>
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="tablePage.current"
-        :page-sizes="[10, 20, 30, 40, 50]"
-        :page-size="tablePage.size"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tablePage.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="tablePage.current"
+          :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="tablePage.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tablePage.total"
       >
       </el-pagination>
     </div>
@@ -135,8 +99,8 @@ export default {
   data() {
     return {
       search: {
-        sku: '',
-        name: '',
+        dySku: '',
+        shelfNo: '',
         owner: '',
       },
       options: {
@@ -145,7 +109,7 @@ export default {
       tablePage: {
         current: 1,
         pages: null,
-        size: null,
+        size: 10,
         total: null,
       },
       tableLoading: false,
@@ -159,16 +123,25 @@ export default {
   methods: {
     fetchData() {
       this.tableLoading = true;
+      const requestParamJson = {
+        'entity': {
+          'dySku': this.search.dySku,
+          'owner': this.search.owner,
+          'shelfNo': this.search.shelfNo,
+        },
+        'pagination': {
+          'current': this.tablePage.current,
+          'size': this.tablePage.size,
+        },
+      };
       request({
-        url: '/statistics/list',
+        url: '/statistics/product/list',
         method: 'post',
-        data: this.tablePage,
+        data: requestParamJson,
       }).then((res) => {
-        this.tableData = res.data.page.records;
-        this.tablePage.current = res.data.page.current;
-        this.tablePage.pages = res.data.page.pages;
-        this.tablePage.size = res.data.page.size;
-        this.tablePage.total = res.data.page.total;
+        console.log(res);
+        this.tableData = res.data.data.data;
+        this.tablePage.total = res.data.data.total;
         this.tableLoading = false;
       });
     },
