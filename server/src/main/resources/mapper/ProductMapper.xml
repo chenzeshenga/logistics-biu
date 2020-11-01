@@ -567,4 +567,11 @@
         limit 1
     </select>
 
+    <select id="selectProductByDySku" resultType="com.abc.chenzeshenga.logistics.model.Product">
+        select *
+        from l_productions
+        where dy_sku = #{dySku}
+        limit 1
+    </select>
+
 </mapper>

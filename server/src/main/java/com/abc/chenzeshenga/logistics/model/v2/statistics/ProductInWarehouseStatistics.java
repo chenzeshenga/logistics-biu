@@ -27,4 +27,6 @@ public class ProductInWarehouseStatistics {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date statisticalTime;
 
+    private Double volume;
+    private Double weight;
 }

@@ -73,4 +73,6 @@ public interface ProductMapper extends BaseMapper<Product> {
     Product selectProductBySku(String sku);
 
     Product selectProductByOwnerAndDySku(String owner, String dysku);
+
+    Product selectProductByDySku(@Param("dySku") String dySku);
 }

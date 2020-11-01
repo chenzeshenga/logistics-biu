@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.41 1. 商品统计菜单增加体积重量显示',
+          timestamp: '2020-11-1',
+        },
+        {
           content: 'v1.40 1. 退货单列表增加退货单包裹信息 2. 退货单列表增加删除按钮',
           timestamp: '2020-09-27',
         },

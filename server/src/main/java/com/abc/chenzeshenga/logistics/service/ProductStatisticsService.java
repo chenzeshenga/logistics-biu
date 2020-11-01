@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.service;
 
 import com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper;
+import com.abc.chenzeshenga.logistics.model.Product;
 import com.abc.chenzeshenga.logistics.model.ProductStatistics;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
@@ -15,11 +16,13 @@ import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +38,12 @@ public class ProductStatisticsService
 
     private final ProductInWarehouseRecordService productInWarehouseRecordService;
 
+    private final ProductService productService;
+
     @Autowired
-    public ProductStatisticsService(ProductInWarehouseRecordService productInWarehouseRecordService) {
+    public ProductStatisticsService(ProductInWarehouseRecordService productInWarehouseRecordService, ProductService productService) {
         this.productInWarehouseRecordService = productInWarehouseRecordService;
+        this.productService = productService;
     }
 
     public Page<ProductStatistics> selectAll(Page page) {
@@ -54,7 +60,22 @@ public class ProductStatisticsService
     public void triggerStatistics() {
         baseMapper.deleteAll();
         List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
-        productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId()));
+        productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> {
+            productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId());
+            String dySku = productInWarehouseStatistics.getDySku();
+            if (StringUtils.isNotBlank(dySku)) {
+                Product product = productService.selectProductByDySku(dySku);
+                if (product != null) {
+                    if (StringUtils.isNotBlank(product.getLength()) && StringUtils.isNotBlank(product.getWidth()) && StringUtils.isNotBlank(product.getHeight())) {
+                        Double volume = new BigDecimal(product.getLength()).multiply(new BigDecimal(product.getWidth())).multiply(new BigDecimal(product.getHeight())).multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum())).doubleValue();
+                        productInWarehouseStatistics.setVolume(volume);
+                    }
+                    if (StringUtils.isNotBlank(product.getWeight())) {
+                        productInWarehouseStatistics.setWeight(new BigDecimal(productInWarehouseStatistics.getTotalNum()).multiply(new BigDecimal(product.getWeight())).doubleValue());
+                    }
+                }
+            }
+        });
         baseMapper.insertProductInWarehouseBatch(productInWarehouseStatisticsList);
     }
 

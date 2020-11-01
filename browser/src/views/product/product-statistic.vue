@@ -73,6 +73,14 @@
             label="当前在库总数"
         ></el-table-column>
         <el-table-column
+            prop="volume"
+            label="体积(cm^3)"
+        ></el-table-column>
+        <el-table-column
+            prop="weight"
+            label="重量(kg)"
+        ></el-table-column>
+        <el-table-column
             prop="statisticalTime"
             label="上一次统计时间"
         ></el-table-column>
