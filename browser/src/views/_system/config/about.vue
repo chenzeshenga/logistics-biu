@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.42 1. 更新登录超时时间为1天',
+          timestamp: '2020-11-4',
+        },
+        {
           content: 'v1.41 1. 商品统计菜单增加体积重量显示',
           timestamp: '2020-11-1',
         },
