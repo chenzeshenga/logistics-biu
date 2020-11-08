@@ -5,16 +5,8 @@
         <el-col :span="6">
           <el-tooltip content="请输入商品sku/东岳sku" placement="top">
             <el-input
-                v-model="search.sku"
+                v-model="search.dySku"
                 placeholder="请输入商品sku/东岳sku"
-            ></el-input>
-          </el-tooltip>
-        </el-col>
-        <el-col :span="6">
-          <el-tooltip content="请输入商品名称" placement="top">
-            <el-input
-                v-model="search.name"
-                placeholder="请输入商品名称"
             ></el-input>
           </el-tooltip>
         </el-col>
@@ -38,7 +30,7 @@
         <el-col :span="1">
           <el-button
               icon="el-icon-search"
-              @click="searchProductStatistics()"
+              @click="fetchData()"
           ></el-button>
         </el-col>
       </el-row>
@@ -67,6 +59,10 @@
         <el-table-column
             prop="owner"
             label="属主"
+        ></el-table-column>
+        <el-table-column
+            prop="shelfNo"
+            label="货架号"
         ></el-table-column>
         <el-table-column
             prop="totalNum"
