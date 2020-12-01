@@ -7,10 +7,11 @@ import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
+import com.abc.chenzeshenga.logistics.model.dict.Dict;
 import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics;
 import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatisticsReq;
+import com.abc.chenzeshenga.logistics.service.dict.IDictService;
 import com.abc.chenzeshenga.logistics.service.product.ProductInWarehouseRecordService;
-import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,10 +40,13 @@ public class ProductStatisticsService
 
     private final ProductService productService;
 
+    private IDictService dictService;
+
     @Autowired
-    public ProductStatisticsService(ProductInWarehouseRecordService productInWarehouseRecordService, ProductService productService) {
+    public ProductStatisticsService(ProductInWarehouseRecordService productInWarehouseRecordService, ProductService productService, IDictService dictService) {
         this.productInWarehouseRecordService = productInWarehouseRecordService;
         this.productService = productService;
+        this.dictService = dictService;
     }
 
     public Page<ProductStatistics> selectAll(Page page) {
@@ -69,6 +72,12 @@ public class ProductStatisticsService
                     if (StringUtils.isNotBlank(product.getLength()) && StringUtils.isNotBlank(product.getWidth()) && StringUtils.isNotBlank(product.getHeight())) {
                         Double volume = new BigDecimal(product.getLength()).multiply(new BigDecimal(product.getWidth())).multiply(new BigDecimal(product.getHeight())).multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum())).doubleValue();
                         productInWarehouseStatistics.setVolume(volume);
+                        Dict costOnVolumeDict = dictService.getByKey("COST_ON_VOLUME");
+                        if (costOnVolumeDict != null) {
+                            String value = costOnVolumeDict.getValue();
+                            Double costOnVolume = new BigDecimal(volume).divide(new BigDecimal(100 * 100 * 100), BigDecimal.ROUND_CEILING).multiply(new BigDecimal(value)).doubleValue();
+                            productInWarehouseStatistics.setCostOnVolume(costOnVolume);
+                        }
                     }
                     if (StringUtils.isNotBlank(product.getWeight())) {
                         productInWarehouseStatistics.setWeight(new BigDecimal(productInWarehouseStatistics.getTotalNum()).multiply(new BigDecimal(product.getWeight())).doubleValue());

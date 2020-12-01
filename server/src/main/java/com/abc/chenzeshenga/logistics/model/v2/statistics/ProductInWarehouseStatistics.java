@@ -29,4 +29,5 @@ public class ProductInWarehouseStatistics {
 
     private Double volume;
     private Double weight;
+    private Double costOnVolume;
 }

@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.43 1. 增加参数配置 2. 增加仓储费字段',
+          timestamp: '2020-12-1',
+        },
+        {
           content: 'v1.42 1. 更新登录超时时间为1天',
           timestamp: '2020-11-4',
         },

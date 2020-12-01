@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.dict.DictMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+
+    <select id="get" resultType="com.abc.chenzeshenga.logistics.model.dict.Dict">
+        select id, `key`, value, ctime
+        from l_dict
+    </select>
+
+    <select id="getById" resultType="com.abc.chenzeshenga.logistics.model.dict.Dict">
+        select id, `key`, value, ctime
+        from l_dict
+        where id = #{id}
+    </select>
+
+    <select id="getByKey" resultType="com.abc.chenzeshenga.logistics.model.dict.Dict">
+        select id, `key`, value, ctime
+        from l_dict
+        where `key` = #{key}
+    </select>
+
+    <insert id="insert" parameterType="com.abc.chenzeshenga.logistics.model.dict.Dict">
+        insert into l_dict(`key`, value, ctime) VALUE (#{dict.key}, #{dict.value}, #{dict.ctime})
+    </insert>
+
+    <delete id="delete">
+        delete
+        from l_dict
+        where id = #{id}
+    </delete>
+
+</mapper>

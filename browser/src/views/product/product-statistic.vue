@@ -73,6 +73,10 @@
             label="体积(cm^3)"
         ></el-table-column>
         <el-table-column
+            prop="costOnVolume"
+            label="仓储费(体积/JPY)"
+        ></el-table-column>
+        <el-table-column
             prop="weight"
             label="重量(kg)"
         ></el-table-column>

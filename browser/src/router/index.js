@@ -154,6 +154,16 @@ export const asyncRouterMap = [
         },
       },
       {
+        path: 'properties',
+        name: 'properties',
+        component: _import('_system/config/properties'),
+        meta: {
+          perm: 'm:config:list:b1',
+          title: '参数配置',
+          icon: 'chart',
+        },
+      },
+      {
         path: 'template',
         name: 'fileTemplate',
         component: _import('_system/config/template'),

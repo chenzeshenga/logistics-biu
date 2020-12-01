@@ -24,6 +24,7 @@
         <result column="statistical_time" property="statisticalTime"/>
         <result column="volume" property="volume"/>
         <result column="weight" property="weight"/>
+        <result column="cost_on_volume" property="costOnVolume"/>
     </resultMap>
 
     <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -189,11 +190,12 @@
     </insert>
 
     <insert id="insertProductInWarehouseBatch">
-        insert into l_product_statistic (uuid, dy_sku, owner, shelf_no, total_num, statistical_time,volume,weight)
+        insert into l_product_statistic (uuid, dy_sku, owner, shelf_no, total_num,
+        statistical_time,volume,weight,cost_on_volume)
         values
         <foreach collection="list" item="item" separator="," index="index">
             (#{item.uuid}, #{item.dySku}, #{item.owner}, #{item.shelfNo}, #{item.totalNum},
-            #{item.statisticalTime,jdbcType=TIMESTAMP},#{item.volume},#{item.weight} )
+            #{item.statisticalTime,jdbcType=TIMESTAMP},#{item.volume},#{item.weight},#{item.costOnVolume} )
         </foreach>
     </insert>
 
@@ -256,7 +258,7 @@
 
     <select id="select" resultMap="ProductInWarehouseStatisticsResultMap">
         select uuid, statistic.dy_sku, product.product_name,owner, shelf_no, total_num,
-        statistical_time,volume,statistic.weight
+        statistical_time,volume,statistic.weight,statistic.cost_on_volume
         from l_product_statistic statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
         <where>
             <trim prefixOverrides="and">
