@@ -164,6 +164,16 @@ export const asyncRouterMap = [
         },
       },
       {
+        path: 'costOnPerVolume',
+        name: 'costOnPerVolume',
+        component: _import('_system/config/costOnPerVolume'),
+        meta: {
+          perm: 'm:config:list:b2',
+          title: '用户单位体积费用配置',
+          icon: 'chart',
+        },
+      },
+      {
         path: 'template',
         name: 'fileTemplate',
         component: _import('_system/config/template'),
@@ -1145,7 +1155,7 @@ export const asyncRouterMap = [
         component: _import('product/product-statistic'),
         meta: {
           perm: 'm:product:mgt:3',
-          title: '[beta]商品统计',
+          title: '商品当前库存费用',
           icon: 'chart',
           noCache: true,
         },

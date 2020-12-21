@@ -12,7 +12,8 @@
                zip_code             as zipCode,
                contact_english_name as contactEnglishName,
                contact_chinese_name as contactChineseName,
-               phone
+               phone,
+               cost_on_volume       as costOnVolume
         from l_company_profile
         where user_id = #{userId}
     </select>

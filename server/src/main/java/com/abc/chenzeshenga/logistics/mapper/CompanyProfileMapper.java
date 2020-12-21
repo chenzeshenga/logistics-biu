@@ -11,6 +11,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CompanyProfileMapper {
 
+  /**
+   * 根据userId获取企业信息
+   *
+   * @param userId 用户id
+   * @return 企业信息
+   */
   CompanyProfile init(String userId);
 
   int insertSelective(CompanyProfile companyProfile);

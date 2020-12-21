@@ -1,5 +1,6 @@
 package com.abc.chenzeshenga.logistics.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class CompanyProfile {
   private String contactEnglishName;
   private String contactChineseName;
   private String phone;
+  private BigDecimal costOnVolume;
 
   private Date deliverDate;
   private String trackNo;
