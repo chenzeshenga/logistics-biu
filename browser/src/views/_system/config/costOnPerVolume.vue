@@ -10,10 +10,17 @@
           </el-tooltip>
         </el-col>
         <el-col :span="4">
-          <el-tooltip content="根据键值查询" placement="top">
-            <el-form>
-              <el-input v-model="key" placeholder="根据键值查询"></el-input>
-            </el-form>
+          <el-tooltip content="根据用户企业查询" placement="top">
+            <el-tooltip content="用户企业" placement="top">
+              <el-select filterable clearable v-model="search.userId" placeholder="请选择用户企业">
+                <el-option
+                    v-for="user in users"
+                    :key="user.uname"
+                    :label="user.nick"
+                    :value="user.uname"
+                />
+              </el-select>
+            </el-tooltip>
           </el-tooltip>
         </el-col>
         <el-col :span="2">
@@ -21,16 +28,13 @@
             <el-button
                 icon="el-icon-search"
                 circle
-                @click="search"
+                @click="fetch"
             ></el-button>
           </el-tooltip>
         </el-col>
-        <el-col :span="2" :offset="10">
-          <el-button type="primary" @click="triggerDialog">新增</el-button>
-        </el-col>
       </el-row>
       <el-table
-          style="width: 100%;margin-top: 10px"
+          style="width: 100%;margin-top: 10px;margin-left: 2%"
           :data="tableData"
           v-loading.body="tableLoading"
           element-loading-text="加载中"
@@ -68,44 +72,22 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="tablePage.current"
+          :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="tablePage.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tablePage.total"
+          style="margin-left: 2%;margin-top: 1%"
+      >
+      </el-pagination>
       <el-dialog
           title="参数新增"
           :visible.sync="dialogVisible"
           width="55%"
       >
-        <div class="app-container">
-          <el-form
-              ref="form"
-              :model="form"
-              label-width="120px"
-          >
-            <el-form-item label="参数key">
-              <el-col :span="12">
-                <el-input
-                    v-model="form.key"
-                    placeholder="参数key"
-                ></el-input>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="参数值">
-                  <el-input
-                      v-model="form.value"
-                      placeholder="参数key"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-form-item>
-            <el-form-item>
-              <el-col :offset="22">
-                <el-button
-                    type="primary"
-                    @click="submitForm()"
-                >立即创建
-                </el-button>
-              </el-col>
-            </el-form-item>
-          </el-form>
-        </div>
       </el-dialog>
     </div>
   </div>
@@ -120,26 +102,37 @@ export default {
     return {
       tableLoading: false,
       tableData: [],
-      form: {
-        key: '',
-        value: '',
+      search: {
+        userId: '',
       },
-      checkAll: false,
       dialogVisible: false,
-      key: '',
+      users: [],
+      tablePage: {
+        current: 1,
+        pages: null,
+        size: 10,
+        total: null,
+      },
     };
   },
   created() {
+    this.initUserList();
     this.fetch();
   },
   methods: {
     fetch() {
       this.tableLoading = true;
+      const postData = {
+        'pagination': this.tablePage,
+        'entity': this.search.userId,
+      };
       request({
-        url: '/dictController/get',
-        method: 'get',
+        url: '/profile/list',
+        method: 'post',
+        data: postData,
       }).then((res) => {
-        this.tableData = res.data.data;
+        this.tablePage.total = res.data.data.total;
+        this.tableData = res.data.data.data;
         this.tableLoading = false;
       });
     },
@@ -157,35 +150,25 @@ export default {
     triggerDialog() {
       this.dialogVisible = true;
     },
-    handleDelete(index, row) {
-      this.$confirm('您确定要永久删除该记录？', '提示', confirm)
-          .then(() => {
-            request({
-              url: '/channel/delete/' + row.channelCode,
-              method: 'get',
-            }).then(() => {
-              this.$message.success('删除成功');
-              this.fetch();
-            });
-          })
-          .catch(() => {
-            this.$message.info('取消删除');
-          });
-    },
-    search() {
-      this.tableLoading = true;
+    initUserList() {
       request({
-        url: '/dictController/getByKey?key=' + this.key,
-        method: 'get',
+        url: '/sys_user/query4Option',
+        method: 'post',
+        data: {
+          current: null,
+          size: 'all',
+        },
       }).then((res) => {
-        console.log(key);
-        this.tableData = res.data.page.records;
-        this.tablePage.current = res.data.page.current;
-        this.tablePage.pages = res.data.page.pages;
-        this.tablePage.size = res.data.page.size;
-        this.tablePage.total = res.data.page.total;
-        this.tableLoading = false;
+        this.users = res.data.page.records;
       });
+    },
+    handleSizeChange(val) {
+      this.tablePage.size = val;
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.current = val;
+      this.fetchData();
     },
   },
 };

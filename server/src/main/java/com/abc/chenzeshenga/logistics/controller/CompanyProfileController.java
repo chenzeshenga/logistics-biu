@@ -2,6 +2,8 @@ package com.abc.chenzeshenga.logistics.controller;
 
 import com.abc.chenzeshenga.logistics.mapper.CompanyProfileMapper;
 import com.abc.chenzeshenga.logistics.model.CompanyProfile;
+import com.abc.chenzeshenga.logistics.model.Product;
+import com.abc.chenzeshenga.logistics.model.common.PageQueryEntity;
 import com.abc.chenzeshenga.logistics.service.company.CompanyProfileService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.abc.vo.Json;
@@ -9,6 +11,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -37,6 +41,11 @@ public class CompanyProfileController {
       companyProfile = companyProfileService.init(userId);
     }
     return Json.succ().data(companyProfile);
+  }
+
+  @PostMapping("/list")
+  public Json listProfile(@RequestBody PageQueryEntity<String> userIdPageQueryEntity) {
+    return Json.succ().data(companyProfileService.listProfile(userIdPageQueryEntity));
   }
 
   @PostMapping("/update")

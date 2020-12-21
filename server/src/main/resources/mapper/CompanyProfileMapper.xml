@@ -18,6 +18,32 @@
         where user_id = #{userId}
     </select>
 
+    <select id="list" resultType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
+        select user_id as userId,
+        chinese_name as chineseName,
+        english_name as englishName,
+        chinese_addr as chineseAddr,
+        english_addr as englishAddr,
+        zip_code as zipCode,
+        contact_english_name as contactEnglishName,
+        contact_chinese_name as contactChineseName,
+        phone,
+        cost_on_volume as costOnVolume
+        from l_company_profile
+        <if test="userId != null and userId != ''">
+            where user_id = #{userId}
+        </if>
+        limit #{limit.from},#{limit.size}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*)
+        from l_company_profile
+        <if test="userId != null and userId != ''">
+            where user_id = #{userId}
+        </if>
+    </select>
+
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
         insert into l_company_profile
         <trim prefix="(" suffix=")" suffixOverrides=",">

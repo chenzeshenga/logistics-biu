@@ -1,7 +1,11 @@
 package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.CompanyProfile;
+import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -18,6 +22,17 @@ public interface CompanyProfileMapper {
    * @return 企业信息
    */
   CompanyProfile init(String userId);
+
+  /**
+   * 根据用户id分页查询企业信息
+   *
+   * @param userId 用户id
+   * @param sqlLimit 分页信息
+   * @return 符合条件的数组
+   */
+  List<CompanyProfile> list(@Param("userId") String userId, @Param("limit") SqlLimit sqlLimit);
+
+  long count(@Param("userId") String userId);
 
   int insertSelective(CompanyProfile companyProfile);
 
