@@ -42,29 +42,28 @@
           highlight-current-row
       >
         <el-table-column
-            prop="id"
-            label="id"
+            prop="userId"
+            label="用户id"
         ></el-table-column>
         <el-table-column
-            prop="key"
-            label="键值"
+            prop="userName"
+            label="用户名"
         ></el-table-column>
         <el-table-column
-            prop="value"
-            label="参数值"
+            prop="chineseName"
+            label="企业名称"
         ></el-table-column>
         <el-table-column
-            prop="ctime"
-            label="创建时间"
+            prop="costOnVolume"
+            label="单位体积仓储费(JPY/m^3)"
         ></el-table-column>
         <el-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip content="删除" placement="top">
+            <el-tooltip content="更新单位体积仓储费" placement="top">
               <el-button
-                  @click="handleDelete(scope.$index, scope.row)"
+                  @click="handleUpdate(scope.$index, scope.row)"
                   size="small"
-                  type="danger"
-                  icon="el-icon-delete"
+                  icon="el-icon-edit"
                   circle
                   plain
               ></el-button>
@@ -86,8 +85,25 @@
       <el-dialog
           title="参数新增"
           :visible.sync="dialogVisible"
-          width="55%"
+          width="25%"
       >
+        <el-row>
+          <span>用户id: <b>{{ curr.userId }}</b></span>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          <span>用户名: <b>{{ curr.userName }}</b></span>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          <span>企业名称: </span><br>
+          <el-input v-model="curr.chineseName"></el-input>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          <span>单位体积仓储费(JPY/m^3): </span>
+          <el-input-number v-model="curr.costOnVolume"></el-input-number>
+        </el-row>
+        <el-row style="margin-top: 5%">
+          <el-button @click="update()">确定</el-button>
+        </el-row>
       </el-dialog>
     </div>
   </div>
@@ -113,6 +129,7 @@ export default {
         size: 10,
         total: null,
       },
+      curr: {}
     };
   },
   created() {
@@ -164,11 +181,25 @@ export default {
     },
     handleSizeChange(val) {
       this.tablePage.size = val;
-      this.fetchData();
+      this.fetch();
     },
     handleCurrentChange(val) {
       this.tablePage.current = val;
-      this.fetchData();
+      this.fetch();
+    },
+    handleUpdate(index, row) {
+      this.dialogVisible = true;
+      this.curr = row;
+    },
+    update() {
+      request({
+        url: '/profile/mgtUpdate',
+        method: 'post',
+        data: this.curr,
+      }).then(() => {
+        this.$message.success('更新成功');
+        this.dialogVisible = false;
+      });
     },
   },
 };

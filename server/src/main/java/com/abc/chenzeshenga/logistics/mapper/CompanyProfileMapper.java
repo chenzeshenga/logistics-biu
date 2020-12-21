@@ -37,4 +37,6 @@ public interface CompanyProfileMapper {
   int insertSelective(CompanyProfile companyProfile);
 
   int updateByPrimaryKeySelective(CompanyProfile companyProfile);
+
+  int updateCostOnVolume(CompanyProfile companyProfile);
 }

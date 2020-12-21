@@ -19,7 +19,9 @@
     </select>
 
     <select id="list" resultType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
-        select user_id as userId,
+        select
+        user.uname as userId,
+        user.nick as userName,
         chinese_name as chineseName,
         english_name as englishName,
         chinese_addr as chineseAddr,
@@ -29,7 +31,7 @@
         contact_chinese_name as contactChineseName,
         phone,
         cost_on_volume as costOnVolume
-        from l_company_profile
+        from sys_user user left join l_company_profile profile on user.uname=profile.user_id
         <if test="userId != null and userId != ''">
             where user_id = #{userId}
         </if>
@@ -38,7 +40,7 @@
 
     <select id="count" resultType="java.lang.Long">
         select count(*)
-        from l_company_profile
+        from sys_user user left join l_company_profile profile on user.uname=profile.user_id
         <if test="userId != null and userId != ''">
             where user_id = #{userId}
         </if>
@@ -74,6 +76,9 @@
             <if test="phone != null">
                 phone,
             </if>
+            <if test="costOnVolume != null">
+                cost_on_volume,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">
@@ -102,6 +107,9 @@
             </if>
             <if test="phone != null">
                 #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="costOnVolume != null">
+                #{costOnVolume},
             </if>
         </trim>
     </insert>
@@ -132,6 +140,19 @@
             </if>
             <if test="phone != null">
                 phone = #{phone,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateCostOnVolume" parameterType="com.abc.chenzeshenga.logistics.model.CompanyProfile">
+        update l_company_profile
+        <set>
+            <if test="chineseName != null">
+                chinese_name = #{chineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="costOnVolume != null">
+                cost_on_volume = #{costOnVolume},
             </if>
         </set>
         where user_id = #{userId,jdbcType=VARCHAR}

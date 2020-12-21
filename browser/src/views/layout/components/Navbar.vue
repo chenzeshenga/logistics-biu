@@ -1,192 +1,195 @@
 <template>
-    <el-menu class="navbar" mode="horizontal">
-        <hamburger
-            :isActive="sidebar.opened"
-            :toggleClick="toggleSideBar"
-            class="hamburger-container"
-        ></hamburger>
+  <el-menu class="navbar" mode="horizontal">
+    <hamburger
+        :isActive="sidebar.opened"
+        :toggleClick="toggleSideBar"
+        class="hamburger-container"
+    ></hamburger>
 
-        <breadcrumb class="breadcrumb-container"></breadcrumb>
+    <breadcrumb class="breadcrumb-container"></breadcrumb>
 
-        <div class="right-menu">
-            <error-log class="errLog-container right-menu-item"></error-log>
-            <div style="display: inline-block;width: 700px">
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-input
-                            placeholder="订单号快速搜索"
-                            v-model="search"
-                            style="display: inline-block;"
-                            suffix-icon="el-icon-search"
-                            clearable
-                            @input="quickSearch"
-                        ></el-input>
-                    </el-col>
-                    <el-col :span="6">
-                        <span>帐号：</span>
-                        <el-tag>{{ name }}</el-tag>
-                    </el-col>
-                    <el-col :span="6">
-                        <span>角色：</span>
-                        <el-tag
-                            style="margin-right: 5px;"
-                            type="danger"
-                            v-if="roles.length === 0"
-                            >游客（未配置任何角色）
-                        </el-tag>
-                        <el-tag
-                            :key="r.val"
-                            type="success"
-                            v-else
-                            v-for="r in roles"
-                            >{{ r.name }}
-                        </el-tag>
-                    </el-col>
-                </el-row>
-            </div>
-            <div style="display: inline-block; width: 30px;">
-                <el-col>
-                    <el-badge :value="12" class="el-icon-message"></el-badge>
-                </el-col>
-            </div>
-            <!--      <div style="display:inline-block;width: 40px;margin-left: 5px">-->
-            <!--        <el-badge :value="12">-->
-            <!--          <span class="el-icon-bell"></span>-->
-            <!--        </el-badge>-->
-            <!--      </div>-->
-            <div style="display: inline-block">
-                <el-col>
-                    <el-row>
-                        <el-dropdown
-                            class="avatar-container right-menu-item"
-                            trigger="click"
-                            style="margin-bottom: 4px"
-                        >
-                            <div class="avatar-wrapper">
-                                <img :src="avatar" class="user-avatar" alt="" />
-                                <i class="el-icon-caret-bottom"></i>
-                            </div>
-                            <el-dropdown-menu slot="dropdown">
-                                <router-link to="/">
-                                    <el-dropdown-item>
-                                        东岳
-                                    </el-dropdown-item>
-                                </router-link>
-                                <el-dropdown-item>
+    <div class="right-menu">
+      <error-log class="errLog-container right-menu-item"></error-log>
+      <div style="display: inline-block;width: 700px">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-input
+                placeholder="订单号快速搜索"
+                v-model="search"
+                style="display: inline-block;"
+                suffix-icon="el-icon-search"
+                clearable
+                @input="quickSearch"
+            ></el-input>
+          </el-col>
+          <el-col :span="6">
+            <span>帐号：</span>
+            <el-tag>{{ name }}</el-tag>
+          </el-col>
+          <el-col :span="6">
+            <span>角色：</span>
+            <el-tag
+                style="margin-right: 5px;"
+                type="danger"
+                v-if="roles.length === 0"
+            >游客（未配置任何角色）
+            </el-tag>
+            <el-tag
+                :key="r.val"
+                type="success"
+                v-else
+                v-for="r in roles"
+            >{{ r.name }}
+            </el-tag>
+          </el-col>
+        </el-row>
+      </div>
+      <div style="display: inline-block; width: 30px;">
+        <el-col>
+          <el-badge :value="12" class="el-icon-message"></el-badge>
+        </el-col>
+      </div>
+      <!--      <div style="display:inline-block;width: 40px;margin-left: 5px">-->
+      <!--        <el-badge :value="12">-->
+      <!--          <span class="el-icon-bell"></span>-->
+      <!--        </el-badge>-->
+      <!--      </div>-->
+      <div style="display: inline-block">
+        <el-col>
+          <el-row>
+            <el-dropdown
+                class="avatar-container right-menu-item"
+                trigger="click"
+                style="margin-bottom: 4px"
+            >
+              <div class="avatar-wrapper">
+                <img :src="avatar" class="user-avatar" alt=""/>
+                <i class="el-icon-caret-bottom"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <router-link to="/">
+                  <el-dropdown-item>
+                    东岳
+                  </el-dropdown-item>
+                </router-link>
+                <el-dropdown-item>
                                     <span
                                         @click="handleUpdatePwd"
                                         style="display:block;"
-                                        >修改密码</span
+                                    >修改密码</span
                                     >
-                                </el-dropdown-item>
-                                <el-dropdown-item>
+                </el-dropdown-item>
+                <el-dropdown-item>
                                     <span
                                         @click="handlePersonalProfile"
                                         style="display:block;"
-                                        >企业信息</span
+                                    >企业信息</span
                                     >
-                                </el-dropdown-item>
-                                <el-dropdown-item divided>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
                                     <span
                                         @click="currentVersion"
                                         style="display:block;"
-                                        >关于</span
+                                    >关于</span
                                     >
-                                </el-dropdown-item>
-                                <el-dropdown-item divided>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
                                     <span @click="logout" style="display:block;"
-                                        >退出</span
+                                    >退出</span
                                     >
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </el-row>
-                </el-col>
-            </div>
-        </div>
-        <!--弹出窗口：修改密码-->
-        <el-dialog :visible.sync="dialogVisible" title="修改密码" width="20%">
-            <el-form
-                :model="temp"
-                :rules="rules"
-                label-position="left"
-                label-width="120px"
-                ref="dataForm"
-            >
-                <el-form-item label="密码" prop="pwd">
-                    <el-input type="password" v-model="temp.pwd"></el-input>
-                </el-form-item>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-row>
+        </el-col>
+      </div>
+    </div>
+    <!--弹出窗口：修改密码-->
+    <el-dialog :visible.sync="dialogVisible" title="修改密码" width="20%">
+      <el-form
+          :model="temp"
+          :rules="rules"
+          label-position="left"
+          label-width="120px"
+          ref="dataForm"
+      >
+        <el-form-item label="密码" prop="pwd">
+          <el-input type="password" v-model="temp.pwd"></el-input>
+        </el-form-item>
 
-                <el-form-item label="确认密码" prop="pwd2">
-                    <el-input type="password" v-model="temp.pwd2"></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button @click="updatePwd" type="primary">确定</el-button>
-            </div>
-        </el-dialog>
-        <el-dialog :visible.sync="dialogVisible3" title="企业信息" width="30%">
-            <el-form :model="profile" label-position="left" label-width="135px">
-                <el-col>
-                    <el-alert
-                        title="以下信息用于生成报关单"
-                        type="info"
-                        show-icon
-                        style="margin-bottom: 2%"
-                    >
-                    </el-alert>
-                </el-col>
-                <el-form-item label="企业名称（中文）" prop="chineseName">
-                    <el-input v-model="profile.chineseName"></el-input>
-                </el-form-item>
-                <el-form-item label="企业名称（英文）" prop="englishName">
-                    <el-input v-model="profile.englishName"></el-input>
-                </el-form-item>
-                <el-form-item label="企业地址（中文）" prop="chineseAddr">
-                    <el-input v-model="profile.chineseAddr"></el-input>
-                </el-form-item>
-                <el-form-item label="企业地址（英文）" prop="englishAddr">
-                    <el-input v-model="profile.englishAddr"></el-input>
-                </el-form-item>
-                <el-form-item label="企业邮编" prop="zipCode">
-                    <el-input v-model="profile.zipCode"></el-input>
-                </el-form-item>
-                <el-form-item
-                    label="企业联系人姓名（中文）"
-                    prop="contactEnglishName"
-                >
-                    <el-input v-model="profile.contactEnglishName"></el-input>
-                </el-form-item>
-                <el-form-item
-                    label="企业联系人姓名（英文）"
-                    prop="contactChineseName"
-                >
-                    <el-input v-model="profile.contactChineseName"></el-input>
-                </el-form-item>
-                <el-form-item label="企业联系方式" prop="phone">
-                    <el-input v-model="profile.phone"></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="dialogVisible3 = false">取消</el-button>
-                <el-button @click="updateProfile" type="primary"
-                    >更新
-                </el-button>
-            </div>
-        </el-dialog>
-        <el-dialog :visible.sync="dialogVisible2" title="版本信息" width="20%">
-            <div>
+        <el-form-item label="确认密码" prop="pwd2">
+          <el-input type="password" v-model="temp.pwd2"></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="updatePwd" type="primary">确定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible3" title="企业信息" width="30%">
+      <el-form :model="profile" label-position="left" label-width="135px">
+        <el-col>
+          <el-alert
+              title="以下信息用于生成报关单"
+              type="info"
+              show-icon
+              style="margin-bottom: 2%"
+          >
+          </el-alert>
+        </el-col>
+        <el-form-item label="企业名称（中文）" prop="chineseName">
+          <el-input v-model="profile.chineseName"></el-input>
+        </el-form-item>
+        <el-form-item label="企业名称（英文）" prop="englishName">
+          <el-input v-model="profile.englishName"></el-input>
+        </el-form-item>
+        <el-form-item label="企业地址（中文）" prop="chineseAddr">
+          <el-input v-model="profile.chineseAddr"></el-input>
+        </el-form-item>
+        <el-form-item label="企业地址（英文）" prop="englishAddr">
+          <el-input v-model="profile.englishAddr"></el-input>
+        </el-form-item>
+        <el-form-item label="企业邮编" prop="zipCode">
+          <el-input v-model="profile.zipCode"></el-input>
+        </el-form-item>
+        <el-form-item
+            label="企业联系人姓名（中文）"
+            prop="contactEnglishName"
+        >
+          <el-input v-model="profile.contactEnglishName"></el-input>
+        </el-form-item>
+        <el-form-item
+            label="企业联系人姓名（英文）"
+            prop="contactChineseName"
+        >
+          <el-input v-model="profile.contactChineseName"></el-input>
+        </el-form-item>
+        <el-form-item label="企业联系方式" prop="phone">
+          <el-input v-model="profile.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="单位体积仓储费(JPY/m^3)" prop="costOnVolume">
+          <el-input v-model="profile.costOnVolume" disabled></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible3 = false">取消</el-button>
+        <el-button @click="updateProfile" type="primary"
+        >更新
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible2" title="版本信息" width="20%">
+      <div>
                 <span>当前版本: </span
                 ><span
-                    ><b>{{ version }}</b></span
-                ><br />
-            </div>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="dialogVisible2 = false">取消</el-button>
-            </div>
-        </el-dialog>
-    </el-menu>
+      ><b>{{ version }}</b></span
+      ><br/>
+      </div>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible2 = false">取消</el-button>
+      </div>
+    </el-dialog>
+  </el-menu>
 </template>
 
 <script>
@@ -305,12 +308,12 @@ export default {
                   const status = ord.status;
                   this.$router.push({
                     path:
-                                        '/order-list/mgt/type' +
-                                        type +
-                                        '/status' +
-                                        status +
-                                        '?ordno=' +
-                                        orderNo,
+                        '/order-list/mgt/type' +
+                        type +
+                        '/status' +
+                        status +
+                        '?ordno=' +
+                        orderNo,
                   });
                 })
                 .catch(() => {
@@ -356,74 +359,74 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
+  height: 50px;
+  line-height: 50px;
+  border-radius: 0 !important;
+
+  .hamburger-container {
+    line-height: 58px;
     height: 50px;
-    line-height: 50px;
-    border-radius: 0 !important;
+    float: left;
+    padding: 0 10px;
+  }
 
-    .hamburger-container {
-        line-height: 58px;
-        height: 50px;
-        float: left;
-        padding: 0 10px;
+  .breadcrumb-container {
+    float: left;
+  }
+
+  .errLog-container {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .right-menu {
+    float: right;
+    height: 100%;
+
+    &:focus {
+      outline: none;
     }
 
-    .breadcrumb-container {
-        float: left;
+    .right-menu-item {
+      display: inline-block;
+      margin: 0 8px;
     }
 
-    .errLog-container {
-        display: inline-block;
-        vertical-align: top;
+    .screenfull {
+      height: 20px;
     }
 
-    .right-menu {
-        float: right;
-        height: 100%;
-
-        &:focus {
-            outline: none;
-        }
-
-        .right-menu-item {
-            display: inline-block;
-            margin: 0 8px;
-        }
-
-        .screenfull {
-            height: 20px;
-        }
-
-        .international {
-            vertical-align: top;
-        }
-
-        .theme-switch {
-            vertical-align: 15px;
-        }
-
-        .avatar-container {
-            height: 50px;
-            margin-right: 30px;
-
-            .avatar-wrapper {
-                cursor: pointer;
-                margin-top: 5px;
-                position: relative;
-
-                .user-avatar {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 10px;
-                }
-
-                .el-icon-caret-bottom {
-                    position: absolute;
-                    right: -20px;
-                    top: 25px;
-                    font-size: 12px;
-                }
-            }
-        }
+    .international {
+      vertical-align: top;
     }
+
+    .theme-switch {
+      vertical-align: 15px;
+    }
+
+    .avatar-container {
+      height: 50px;
+      margin-right: 30px;
+
+      .avatar-wrapper {
+        cursor: pointer;
+        margin-top: 5px;
+        position: relative;
+
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+
+        .el-icon-caret-bottom {
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
 }
 </style>

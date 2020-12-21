@@ -63,4 +63,17 @@ public class CompanyProfileController {
     }
     return Json.succ();
   }
+
+  @PostMapping("/mgtUpdate")
+  public Json mgtUpdateProfile(@RequestBody CompanyProfile companyProfile) {
+    String userId = companyProfile.getUserId();
+    CompanyProfile oriCompanyProfile = companyProfileMapper.init(userId);
+    if (oriCompanyProfile == null) {
+      companyProfile.setUserId(userId);
+      companyProfileMapper.insertSelective(companyProfile);
+    } else {
+      companyProfileMapper.updateCostOnVolume(companyProfile);
+    }
+    return Json.succ();
+  }
 }

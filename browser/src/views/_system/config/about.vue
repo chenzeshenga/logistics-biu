@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.44 1. 增加单位体积仓储费用',
+          timestamp: '2020-12-21',
+        },
+        {
           content: 'v1.43 1. 增加参数配置 2. 增加仓储费字段',
           timestamp: '2020-12-1',
         },

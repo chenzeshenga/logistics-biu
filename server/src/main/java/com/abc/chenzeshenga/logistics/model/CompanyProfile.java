@@ -13,6 +13,7 @@ import lombok.Data;
 public class CompanyProfile {
 
   private String userId;
+  private String userName;
   private String chineseName;
   private String englishName;
   private String chineseAddr;
