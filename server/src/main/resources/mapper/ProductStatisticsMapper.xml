@@ -199,6 +199,22 @@
         </foreach>
     </insert>
 
+    <insert id="insertProductInWarehouseSingle">
+        insert into l_product_statistic (uuid, dy_sku, owner, shelf_no, total_num,
+                                         statistical_time, volume, weight, cost_on_volume)
+            value
+            (#{uuid}, #{dySku}, #{owner}, #{shelfNo}, #{totalNum}, #{statisticalTime,jdbcType=TIMESTAMP}, #{volume},
+             #{weight}, #{costOnVolume})
+    </insert>
+
+    <insert id="insertProductInWarehouseHistorySingle">
+        insert into l_product_statistic_history (uuid, dy_sku, owner, shelf_no, total_num,
+                                                 statistical_time, volume, weight, cost_on_volume)
+            value
+            (#{uuid}, #{dySku}, #{owner}, #{shelfNo}, #{totalNum}, #{statisticalTime,jdbcType=TIMESTAMP}, #{volume},
+             #{weight}, #{costOnVolume})
+    </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         update l_product_statistic
         <set>

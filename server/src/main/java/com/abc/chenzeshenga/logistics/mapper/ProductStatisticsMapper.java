@@ -42,6 +42,10 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
      */
     int insertProductInWarehouseBatch(@Param("list") List<ProductInWarehouseStatistics> productInWarehouseStatisticsList);
 
+    int insertProductInWarehouseSingle(ProductInWarehouseStatistics productInWarehouseStatistics);
+
+    int insertProductInWarehouseHistorySingle(ProductInWarehouseStatistics productInWarehouseStatistics);
+
     int insertSelective(ProductStatistics record);
 
     ProductStatistics selectByPrimaryKey(String sku);
