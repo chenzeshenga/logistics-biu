@@ -1161,6 +1161,17 @@ export const asyncRouterMap = [
         },
       },
       {
+        path: 'product-statistic-history',
+        name: 'product-statistic-history',
+        component: _import('product/product-statistic-history'),
+        meta: {
+          perm: 'm:product:mgt:3',
+          title: '商品历史库存费用',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
+      {
         path: 'product-in-warehouse',
         name: 'product-in-warehouse',
         component: _import('product/product-in-warehouse'),

@@ -27,6 +27,22 @@
         <result column="cost_on_volume" property="costOnVolume"/>
     </resultMap>
 
+    <resultMap id="ProductInWarehouseStatisticsHistoryResultMap"
+               type="com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatistics">
+        <id column="uuid" property="uuid"/>
+        <result column="dy_sku" property="dySku"/>
+        <result column="product_name" property="productName"/>
+        <result column="shelf_no" property="shelfNo"/>
+        <result column="total_num" property="totalNum"/>
+        <result column="statistical_time" property="statisticalTime"/>
+        <result column="volume" property="volume"/>
+        <result column="weight" property="weight"/>
+        <result column="cost_on_volume" property="costOnVolume"/>
+        <result column="admin_update" property="adminUpdate"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
     <select id="selectAll" parameterType="java.lang.String" resultMap="BaseResultMap">
         select sku,
                dySku,
@@ -121,6 +137,13 @@
         truncate table l_product_statistic
     </delete>
 
+    <delete id="deleteCurrDayHistory">
+        delete
+        from l_product_statistic_history
+        where admin_update != 1
+          and date = #{date}
+    </delete>
+
     <insert id="insertSelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         insert into l_product_statistic
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -199,6 +222,54 @@
         </foreach>
     </insert>
 
+    <update id="updateHistoryProductStatistics">
+        update l_product_statistic_history
+        <set>
+            <if test="totalNum != null">
+                total_num=#{totalNum},
+            </if>
+            <if test="volume != null">
+                volume=#{volume},
+            </if>
+            <if test="weight != null">
+                weight=#{weight},
+            </if>
+            <if test="costOnVolume != null">
+                cost_on_volume=#{costOnVolume},
+            </if>
+            <if test="adminUpdate != null">
+                admin_update=#{adminUpdate},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="updateBy != null">
+                update_by=#{updateBy},
+            </if>
+        </set>
+        where uuid=#{uuid}
+    </update>
+
+    <select id="selectHistoryBySkuAndDate" resultMap="ProductInWarehouseStatisticsHistoryResultMap">
+        select uuid,
+               dy_sku,
+               owner,
+               shelf_no,
+               total_num,
+               statistical_time,
+               volume,
+               weight,
+               cost_on_volume,
+               date,
+               admin_update,
+               update_time,
+               update_by
+        from l_product_statistic_history
+        where dy_sku = #{dySku}
+          and date = #{currDate}
+        limit 1
+    </select>
+
     <insert id="insertProductInWarehouseSingle">
         insert into l_product_statistic (uuid, dy_sku, owner, shelf_no, total_num,
                                          statistical_time, volume, weight, cost_on_volume)
@@ -209,10 +280,11 @@
 
     <insert id="insertProductInWarehouseHistorySingle">
         insert into l_product_statistic_history (uuid, dy_sku, owner, shelf_no, total_num,
-                                                 statistical_time, volume, weight, cost_on_volume)
+                                                 statistical_time, volume, weight, cost_on_volume, date, admin_update,
+                                                 update_by, update_time)
             value
             (#{uuid}, #{dySku}, #{owner}, #{shelfNo}, #{totalNum}, #{statisticalTime,jdbcType=TIMESTAMP}, #{volume},
-             #{weight}, #{costOnVolume})
+             #{weight}, #{costOnVolume}, #{date}, #{adminUpdate}, #{updateBy}, #{updateTime})
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.abc.chenzeshenga.logistics.model.ProductStatistics">
@@ -292,9 +364,47 @@
         limit #{sqlLimit.from},#{sqlLimit.size}
     </select>
 
+    <select id="selectHistory" resultMap="ProductInWarehouseStatisticsResultMap">
+        select uuid, statistic.dy_sku, product.product_name,owner, shelf_no, total_num,
+        statistical_time,volume,statistic.weight,statistic.cost_on_volume,admin_update,update_time,update_by
+        from l_product_statistic_history statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
+        <where>
+            <trim prefixOverrides="and">
+                <if test="req.dySku != null and req.dySku != ''">
+                    and statistic.dy_sku=#{req.dySku}
+                </if>
+                <if test="req.owner != null and req.owner != ''">
+                    and owner=#{req.owner}
+                </if>
+                <if test="req.shelfNo != null and req.shelfNo != ''">
+                    and shelf_no=#{req.shelfNo}
+                </if>
+            </trim>
+        </where>
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
     <select id="count" resultType="java.lang.Long">
         select count(*)
         from l_product_statistic statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
+        <where>
+            <trim prefixOverrides="and">
+                <if test="req.dySku != null and req.dySku != ''">
+                    and statistic.dy_sku=#{req.dySku}
+                </if>
+                <if test="req.owner != null and req.owner != ''">
+                    and owner=#{req.owner}
+                </if>
+                <if test="req.shelfNo != null and req.shelfNo != ''">
+                    and shelf_no=#{req.shelfNo}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="countHistory" resultType="java.lang.Long">
+        select count(*)
+        from l_product_statistic_history statistic inner join l_productions product on statistic.dy_sku = product.dy_sku
         <where>
             <trim prefixOverrides="and">
                 <if test="req.dySku != null and req.dySku != ''">
