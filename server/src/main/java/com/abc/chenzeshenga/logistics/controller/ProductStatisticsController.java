@@ -23,14 +23,12 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -45,17 +43,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/statistics")
 public class ProductStatisticsController {
 
-  @Resource
-  private ProductStatisticsMapper productStatisticsMapper;
+  @Resource private ProductStatisticsMapper productStatisticsMapper;
 
-  @Resource
-  private UpShelfProductMapper upShelfProductMapper;
+  @Resource private UpShelfProductMapper upShelfProductMapper;
 
-  @Resource
-  private ProductMapper productMapper;
+  @Resource private ProductMapper productMapper;
 
-  @Resource
-  private ProductOutWarehouseMapper productOutWarehouseMapper;
+  @Resource private ProductOutWarehouseMapper productOutWarehouseMapper;
 
   private final ProductStatisticsService productStatisticsService;
 
@@ -77,7 +71,7 @@ public class ProductStatisticsController {
   public Json listProductStatistics(
       @RequestBody
           PageQueryEntity<ProductInWarehouseStatisticsReq>
-          productInWarehouseStatisticsReqPageQueryEntity) {
+              productInWarehouseStatisticsReqPageQueryEntity) {
     return Json.succ()
         .data(
             productStatisticsService.listProductStatistics(
@@ -88,7 +82,7 @@ public class ProductStatisticsController {
   public Json listHistoryProductStatistics(
       @RequestBody
           PageQueryEntity<ProductInWarehouseStatisticsReq>
-          productInWarehouseStatisticsReqPageQueryEntity) {
+              productInWarehouseStatisticsReqPageQueryEntity) {
     return Json.succ()
         .data(
             productStatisticsService.listHistoryProductStatistics(
@@ -97,12 +91,10 @@ public class ProductStatisticsController {
 
   @PostMapping("/history/product/update")
   public Json updateHistoryProductStatistics(
-      @RequestBody ProductInWarehouseStatistics productInWarehouseStatistics
-  ) {
+      @RequestBody ProductInWarehouseStatistics productInWarehouseStatistics) {
     return Json.succ()
         .data(
-            productStatisticsService.updateHistoryProductStatistics(
-                productInWarehouseStatistics));
+            productStatisticsService.updateHistoryProductStatistics(productInWarehouseStatistics));
   }
 
   @PostMapping

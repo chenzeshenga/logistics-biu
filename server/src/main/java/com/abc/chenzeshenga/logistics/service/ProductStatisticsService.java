@@ -19,12 +19,10 @@ import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +68,8 @@ public class ProductStatisticsService
     return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
   }
 
-  public int updateHistoryProductStatistics(ProductInWarehouseStatistics productInWarehouseStatistics) {
+  public int updateHistoryProductStatistics(
+      ProductInWarehouseStatistics productInWarehouseStatistics) {
     productInWarehouseStatistics.setUpdateBy(UserUtils.getUserName());
     productInWarehouseStatistics.setUpdateTime(new Date());
     productInWarehouseStatistics.setAdminUpdate(true);

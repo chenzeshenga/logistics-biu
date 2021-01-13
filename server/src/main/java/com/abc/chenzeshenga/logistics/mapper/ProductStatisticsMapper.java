@@ -6,9 +6,7 @@ import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStat
 import com.abc.chenzeshenga.logistics.model.v2.statistics.ProductInWarehouseStatisticsReq;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -62,11 +60,12 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
   /**
    * 根据东岳sku和当前日期查询历史商品统计信息
    *
-   * @param dySku    东岳sku
+   * @param dySku 东岳sku
    * @param currDate 当前日期
    * @return 历史商品统计信息
    */
-  ProductInWarehouseStatistics selectHistoryBySkuAndDate(@Param("dySku") String dySku, @Param("currDate") String currDate);
+  ProductInWarehouseStatistics selectHistoryBySkuAndDate(
+      @Param("dySku") String dySku, @Param("currDate") String currDate);
 
   /**
    * 插入当日商品统计记录到当前表
@@ -82,7 +81,8 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
    * @param productInWarehouseStatistics 商品统计信息
    * @return 1
    */
-  int insertProductInWarehouseHistorySingle(ProductInWarehouseStatistics productInWarehouseStatistics);
+  int insertProductInWarehouseHistorySingle(
+      ProductInWarehouseStatistics productInWarehouseStatistics);
 
   int insertSelective(ProductStatistics record);
 
@@ -112,7 +112,7 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
   /**
    * 分页查询统计数据
    *
-   * @param sqlLimit                        分页参数
+   * @param sqlLimit 分页参数
    * @param productInWarehouseStatisticsReq 查询参数
    * @return 统计数据列表
    */
@@ -123,7 +123,7 @@ public interface ProductStatisticsMapper extends BaseMapper<ProductStatistics> {
   /**
    * 分页查询历史统计数据
    *
-   * @param sqlLimit                        分页参数
+   * @param sqlLimit 分页参数
    * @param productInWarehouseStatisticsReq 查询参数
    * @return 统计数据列表
    */
