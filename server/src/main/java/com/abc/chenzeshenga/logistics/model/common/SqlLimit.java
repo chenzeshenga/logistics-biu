@@ -17,5 +17,4 @@ public class SqlLimit {
 
   private long from;
   private long size;
-
 }

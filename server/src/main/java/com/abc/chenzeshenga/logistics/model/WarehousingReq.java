@@ -3,7 +3,6 @@ package com.abc.chenzeshenga.logistics.model;
 import com.abc.chenzeshenga.logistics.model.common.Pagination;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-
 import lombok.*;
 
 /**

@@ -5,7 +5,6 @@ import com.abc.service.SysPermService;
 import com.abc.service.SysRoleService;
 import com.abc.service.SysUserService;
 import com.abc.vo.AuthVo;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.shiro.authc.*;

@@ -2,10 +2,9 @@ package com.abc.chenzeshenga.logistics.mapper;
 
 import com.abc.chenzeshenga.logistics.model.CompanyProfile;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * @author chenzeshenga

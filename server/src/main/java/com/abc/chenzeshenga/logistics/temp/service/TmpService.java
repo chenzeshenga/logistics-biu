@@ -2,10 +2,8 @@ package com.abc.chenzeshenga.logistics.temp.service;
 
 import com.abc.chenzeshenga.logistics.mapper.OrderMapper;
 import com.abc.chenzeshenga.logistics.temp.entity.TmpOrder;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 /**
  * @author chenzeshenga

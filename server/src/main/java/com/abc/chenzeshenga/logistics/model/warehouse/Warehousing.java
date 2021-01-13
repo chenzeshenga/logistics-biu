@@ -4,16 +4,15 @@ import com.abc.chenzeshenga.logistics.model.WarehousingContent;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.poi.ss.usermodel.CellStyle;
-
-import javax.validation.constraints.NotEmpty;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author chenzeshenga

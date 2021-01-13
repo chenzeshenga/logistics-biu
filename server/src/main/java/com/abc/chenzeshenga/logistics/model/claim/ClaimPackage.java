@@ -15,13 +15,12 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ClaimPackage {
 
-    private String uuid;
-    private String returnNo;
-    private double length;
-    private double width;
-    private double height;
-    private double weight;
-    private String carrier;
-    private String trackNo;
-
+  private String uuid;
+  private String returnNo;
+  private double length;
+  private double width;
+  private double height;
+  private double weight;
+  private String carrier;
+  private String trackNo;
 }

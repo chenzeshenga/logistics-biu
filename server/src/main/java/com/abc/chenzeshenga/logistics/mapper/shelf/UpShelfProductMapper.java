@@ -11,10 +11,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UpShelfProductMapper extends BaseMapper<UpShelfProduct> {
 
-    UpShelfProduct selectOneBySku(String sku, String owner);
+  UpShelfProduct selectOneBySku(String sku, String owner);
 
-    @Override
-    Integer insert(UpShelfProduct upShelfProduct);
+  @Override
+  Integer insert(UpShelfProduct upShelfProduct);
 
-    int removeWarehouse4PickUp(String sku, Integer num, String owner, String shelfNo);
+  int removeWarehouse4PickUp(String sku, Integer num, String owner, String shelfNo);
 }

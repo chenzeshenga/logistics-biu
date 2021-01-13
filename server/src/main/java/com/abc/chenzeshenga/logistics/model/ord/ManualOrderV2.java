@@ -3,9 +3,8 @@ package com.abc.chenzeshenga.logistics.model.ord;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-
 import java.util.Date;
+import lombok.*;
 
 /**
  * @author chenzeshenga

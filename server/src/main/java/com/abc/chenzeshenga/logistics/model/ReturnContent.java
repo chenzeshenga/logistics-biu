@@ -2,10 +2,8 @@ package com.abc.chenzeshenga.logistics.model;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,18 +21,18 @@ import lombok.ToString;
 @JsonIgnoreProperties(value = {"handler"})
 public class ReturnContent implements Serializable {
 
-    private static final long serialVersionUID = 999405990725459271L;
+  private static final long serialVersionUID = 999405990725459271L;
 
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String uuid;
+  @TableId(type = IdType.ID_WORKER_STR)
+  private String uuid;
 
-    private String returnNo;
+  private String returnNo;
 
-    private String sku;
+  private String sku;
 
-    private String name;
+  private String name;
 
-    private String num;
+  private String num;
 
-    private String dealWith;
+  private String dealWith;
 }

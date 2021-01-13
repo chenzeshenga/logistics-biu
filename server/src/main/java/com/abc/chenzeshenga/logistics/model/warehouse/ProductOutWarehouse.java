@@ -1,8 +1,7 @@
 package com.abc.chenzeshenga.logistics.model.warehouse;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -30,7 +30,8 @@ public class ProductOutWarehouseRecordController {
   @PostMapping("/warehouse/records")
   public Json listProductOutWarehouseRecords(
       @RequestBody PageQueryEntity<ProductOutWarehouse> productOutWarehousePageQueryEntity) {
-    PageData<ProductOutWarehouse> productOutWarehousePageData = productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
+    PageData<ProductOutWarehouse> productOutWarehousePageData =
+        productOutWarehouseRecordService.list(productOutWarehousePageQueryEntity);
     return Json.succ("query", "data", productOutWarehousePageData);
   }
 }

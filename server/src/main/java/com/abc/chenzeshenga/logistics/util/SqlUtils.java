@@ -16,5 +16,4 @@ public class SqlUtils {
     long curr = pagination.getCurrent();
     return new SqlLimit((curr - 1) * size, size);
   }
-
 }

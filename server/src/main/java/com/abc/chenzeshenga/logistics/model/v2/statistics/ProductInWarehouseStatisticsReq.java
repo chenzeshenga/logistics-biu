@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductInWarehouseStatisticsReq {
 
-    private String dySku;
-    private String owner;
-    private String shelfNo;
-
+  private String dySku;
+  private String owner;
+  private String shelfNo;
 }

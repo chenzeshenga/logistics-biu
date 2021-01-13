@@ -2,9 +2,8 @@ package com.abc.chenzeshenga.logistics.temp.entity;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
-import lombok.*;
-
 import java.io.Serializable;
+import lombok.*;
 
 /**
  * @author chenzeshenga

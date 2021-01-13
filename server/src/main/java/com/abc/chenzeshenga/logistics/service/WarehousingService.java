@@ -11,11 +11,10 @@ import com.abc.chenzeshenga.logistics.service.user.UserCommonService;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import java.util.List;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author chenzeshenga
@@ -71,8 +70,7 @@ public class WarehousingService extends ServiceImpl<WarehousingMapper, Warehousi
       warehousing.setWarehousingContentList(
           warehousingContentMapper.listContent(warehousing.getWarehousingNo()));
     }
-    PageData<Warehousing> warehousingPageData =
-        new PageData<>();
+    PageData<Warehousing> warehousingPageData = new PageData<>();
     warehousingPageData.setData(warehousingList);
     warehousingPageData.setCurrent(pagination.getCurrent());
     warehousingPageData.setTotal(total);

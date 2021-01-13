@@ -2,10 +2,9 @@ package com.abc.chenzeshenga.logistics.mapper.product;
 
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.warehouse.ProductOutWarehouse;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * @author chenzesheng
