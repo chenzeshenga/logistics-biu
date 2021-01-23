@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.45 1. 修复直接创建退货订单失败 2. 增加仓储体积历史页面',
+          timestamp: '2021-01-21',
+        },
+        {
           content: 'v1.44 1. 增加单位体积仓储费用',
           timestamp: '2020-12-21',
         },

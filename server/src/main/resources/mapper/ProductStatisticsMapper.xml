@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.abc.chenzeshenga.logistics.mapper.ProductStatisticsMapper">
+    <cache eviction="FIFO" flushInterval="600000" size="512"/>
+
     <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.ProductStatistics">
         <id column="sku" jdbcType="VARCHAR" property="sku"/>
         <result column="dySku" jdbcType="VARCHAR" property="dySku"/>
