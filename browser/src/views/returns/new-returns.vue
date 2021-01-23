@@ -524,6 +524,7 @@ export default {
         this.form.toAddressLine2 = this.oriOrd.fromAddressLine2;
         this.form.toAddressLine3 = this.oriOrd.fromAddressLine3;
         this.oriOrd.showFlag = true;
+        this.$message.info('请输入您需要退货的产品');
       });
     },
     add2Cart() {

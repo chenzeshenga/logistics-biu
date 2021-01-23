@@ -63,6 +63,32 @@
         </collection>
     </resultMap>
 
+    <resultMap id="baseResult" type="com.abc.chenzeshenga.logistics.model.Return">
+        <id column="return_no" property="returnNo"/>
+        <result column="without_order_no_flag" property="withoutOrderNoFlag"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="to_name" property="toName"/>
+        <result column="to_contact" property="toContact"/>
+        <result column="to_zip_code" property="toZipCode"/>
+        <result column="from_name" property="fromName"/>
+        <result column="from_contact" property="fromContact"/>
+        <result column="from_zip_code" property="fromZipCode"/>
+        <result column="carrier" property="carrier"/>
+        <result column="track_no" property="trackNo"/>
+        <result column="imgs" property="imgs"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="creator"/>
+        <result column="create_on" jdbcType="TIMESTAMP" property="createOn"/>
+        <result column="update_by" property="updator"/>
+        <result column="update_on" jdbcType="TIMESTAMP" property="updateOn"/>
+        <result column="to_address_line1" property="toAddressLine1"/>
+        <result column="to_address_line2" property="toAddressLine2"/>
+        <result column="to_address_line3" property="toAddressLine3"/>
+        <result column="from_address_line1" property="fromAddressLine1"/>
+        <result column="from_address_line2" property="fromAddressLine2"/>
+        <result column="from_address_line3" property="fromAddressLine3"/>
+    </resultMap>
+
     <select id="getReturnSeq" resultMap="result">
         select *
         from l_returning
@@ -207,43 +233,12 @@
           and create_on between #{from} and #{to}
     </select>
 
-    <select id="listV2" resultMap="result">
-        select return_no,
-        without_order_no_flag,
-        to_name,
-        to_contact,
-        to_zip_code,
-        to_detail_address,
-        to_ken_id,
-        to_city_id,
-        to_town_id,
-        from_name,
-        from_contact,
-        from_zip_code,
-        from_detail_address,
-        from_ken_id,
-        from_city_id,
-        from_town_id,
-        carrier,
-        track_no,
-        imgs,
-        status,
-        create_on,
-        update_on,
-        create_by,
-        update_by,
-        order_no,
-        length,
-        width,
-        height,
-        weight,
-        from_address_line1,
-        from_address_line2,
-        from_address_line3,
-        to_address_line1,
-        to_address_line2,
-        to_address_line3,
-        return_no
+    <select id="listV2" resultMap="baseResult">
+        select return_no, without_order_no_flag, to_name, to_contact, to_zip_code, to_detail_address, to_ken_id,
+        to_city_id, to_town_id, from_name, from_contact, from_zip_code, from_detail_address, from_ken_id, from_city_id,
+        from_town_id, carrier, track_no, imgs, status, create_on, update_on, create_by, update_by, order_no, length,
+        width, height, weight, from_address_line1, from_address_line2, from_address_line3, to_address_line1,
+        to_address_line2, to_address_line3
         from l_returning
         where status = #{entity.status}
         <if test="entity.type == 'withoutUser'">
