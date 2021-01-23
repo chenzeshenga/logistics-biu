@@ -7,10 +7,8 @@ import com.abc.chenzeshenga.logistics.model.claim.ClaimPackage;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
-
 import java.util.Date;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -64,7 +62,7 @@ public interface ReturnMapper extends BaseMapper<Return> {
    * 查询退货单数据
    *
    * @param returnEntity 查询参数 分别为 订单状态/创建者/创建时间区间
-   * @param sqlLimit     分页参数
+   * @param sqlLimit 分页参数
    * @return 退货单列表
    */
   List<Return> listV2(@Param("entity") Return returnEntity, @Param("limit") SqlLimit sqlLimit);
@@ -81,7 +79,7 @@ public interface ReturnMapper extends BaseMapper<Return> {
    * 根据退货单号认领退货单
    *
    * @param returnNo 退货单号
-   * @param owner    属主
+   * @param owner 属主
    * @return update
    */
   int claimReturnNo(@Param("returnNo") String returnNo, @Param("owner") String owner);
@@ -166,7 +164,7 @@ public interface ReturnMapper extends BaseMapper<Return> {
    * 根据退货单号修改状态
    *
    * @param returnNo 退货单号
-   * @param status   状态
+   * @param status 状态
    * @return influence
    */
   int updateStatus(@Param("returnNo") String returnNo, @Param("status") String status);
