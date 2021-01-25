@@ -1,12 +1,5 @@
 <template>
   <div>
-    <el-alert
-        :title="noteTxt"
-        type="info"
-        show-icon
-        center
-        style="margin: 1%"
-    ></el-alert>
     <el-form>
       <el-form-item>
         <el-row :gutter="20" style="margin-left: 4%">
@@ -391,7 +384,7 @@
     </el-pagination>
     <el-dialog title="确认收货" :visible.sync="dialogVisible" width="50%">
       <el-alert title="可点击右侧加号按钮添加一个收到的退货包裹。当点击确定按钮时，若下方输入框均不为0，则也会当成一个包裹" type="info"></el-alert>
-      <el-row>
+      <el-row style="margin-top: 1%">
         <el-col :span="2" :offset="20">
           <el-tooltip content="添加包裹" placement="top">
             <el-button type="primary" size="small" plain @click="addPkg">
@@ -402,12 +395,12 @@
       </el-row>
       <div :style="pkgInfoStyle">
         <el-table :data="pkgInfoTblData">
-          <el-table-column prop="length" label="长"/>
-          <el-table-column prop="width" label="宽"/>
-          <el-table-column prop="height" label="高"/>
-          <el-table-column prop="weight" label="重"/>
-          <el-table-column prop="carrier" label="承运人"/>
-          <el-table-column prop="trackNo" label="追踪单号"/>
+          <el-table-column prop="length" label="长(cm)" width="100"/>
+          <el-table-column prop="width" label="宽(cm)" width="100"/>
+          <el-table-column prop="height" label="高(cm)" width="100"/>
+          <el-table-column prop="weight" label="重(kg)" width="100"/>
+          <el-table-column prop="carrier" label="承运人" width="200"/>
+          <el-table-column prop="trackNo" label="追踪单号" width="200"/>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-tooltip content="删除" placement="top">
@@ -441,7 +434,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="重(kg)">
-              <el-input-number v-model="formInDialog1.weight"/>
+              <el-input-number v-model="formInDialog1.weight" step="0.1"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -466,21 +459,21 @@
     <el-dialog title="退货品处理" :visible.sync="dealWithReturnContentDlg" width="40%">
       <span>当前退货单待处理内容如下:</span>
       <el-table :data="returnContentList">
-        <el-table-column prop="sku" label="sku"/>
-        <el-table-column prop="name" label="名称"/>
-        <el-table-column prop="num" label="数量"/>
+        <el-table-column prop="sku" label="sku" min-width="200"/>
+        <el-table-column prop="name" label="名称" min-width="200"/>
+        <el-table-column prop="num" label="数量" min-width="100"/>
       </el-table>
       <div style="margin-top: 2%">
         <span>当前退货单处理结果如下:</span>
       </div>
       <el-table :data="returnContentDealingList">
-        <el-table-column prop="sku" label="sku"/>
-        <el-table-column prop="name" label="名称"/>
-        <el-table-column prop="num" label="数量"/>
-        <el-table-column prop="dealWith" label="处理方式"/>
-        <el-table-column prop="shelfNo" label="货架号"/>
-        <el-table-column prop="comment" label="备注"/>
-        <el-table-column label="操作">
+        <el-table-column prop="sku" label="sku" min-width="200"/>
+        <el-table-column prop="name" label="名称" min-width="200"/>
+        <el-table-column prop="num" label="数量" min-width="100"/>
+        <el-table-column prop="dealWith" label="处理方式" min-width="200"/>
+        <el-table-column prop="shelfNo" label="货架号" min-width="200"/>
+        <el-table-column prop="comment" label="备注" min-width="200"/>
+        <el-table-column label="操作" fixed="right" width="100">
           <template slot-scope="scope">
             <el-tooltip content="删除" placement="top">
               <el-button @click="deleteContentDealing(scope.$index, scope.row)" size="mini" type="info" plain>
@@ -550,12 +543,14 @@
         </el-row>
         <el-row style="margin-top: 2%" :gutter="20">
           <el-col :span="20">
-            <el-tooltip content="备注" placement="top">
+            <el-tooltip content="备注，退货处理方式为寄回时请填写寄回地址，退货处理方式为遗弃时请填写备注" placement="top">
               <el-input v-model="contentDealing.comment" placeholder="备注"/>
             </el-tooltip>
           </el-col>
           <el-col :span="2" :offset="1">
-            <el-button type="primary" @click="add2ContentDealing">确定</el-button>
+            <el-tooltip content="暂存货物处理方式" placement="top">
+              <el-button type="primary" @click="add2ContentDealing">确定</el-button>
+            </el-tooltip>
           </el-col>
         </el-row>
       </div>
@@ -658,8 +653,7 @@ export default {
       },
       print: {},
       dialogForm3: {},
-      noteTxt:
-          '该页面显示过去14天的无主退货单，您可以在当前页面进行退货单认领',
+      noteTxt: '该页面显示过去14天的无主退货单，您可以在当前页面进行退货单认领',
       dialogVisible: false,
       formInDialog1: {
         returnNo: '',
@@ -899,6 +893,25 @@ export default {
       }
     },
     add2ContentDealing() {
+      const sku = this.contentDealing.sku;
+      const num = this.contentDealing.num;
+      const dealWith = this.contentDealing.dealWith;
+      if (sku === '') {
+        this.$message.warning('请选择退货处理的商品');
+        return;
+      }
+      if (num === '' || num <= 0) {
+        this.$message.warning('商品数量需大于0');
+        return;
+      }
+      if (dealWith === '') {
+        this.$message.warning('请选择退货处理方式');
+        return;
+      }
+      if (dealWith === '重新上架' && this.contentDealing.shelfNo === '') {
+        this.$message.warning('重新上架需对应相应的货架，请选择货架');
+        return;
+      }
       this.returnContentDealingList.push(this.contentDealing);
       this.contentDealing = {
         sku: '',
@@ -919,7 +932,7 @@ export default {
           this.$message.success('退货单删除成功');
           this.fetchData();
         });
-      })
+      });
     },
   },
 };
