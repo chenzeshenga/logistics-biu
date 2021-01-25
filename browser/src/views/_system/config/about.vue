@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.47 1. 退货管理-收货处理页面微调',
+          timestamp: '2021-01-26',
+        },
+        {
           content: 'v1.46 1. 修复创建退货订单未成功保存订单内容',
           timestamp: '2021-01-24',
         },
