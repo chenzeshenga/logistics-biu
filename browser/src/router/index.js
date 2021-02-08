@@ -793,6 +793,17 @@ export const asyncRouterMap = [
             },
           },
           {
+            path: 'status4',
+            component: _import('returns/withUser/list/status4'),
+            name: 'returns-list-mgt-withUser-status4',
+            meta: {
+              perm: 'm:returns2:list:4',
+              title: '[用户]收货处理确认',
+              icon: 'chart',
+              noCache: true,
+            },
+          },
+          {
             path: 'status3',
             component: _import('returns/withUser/list/status3'),
             name: 'returns-list-mgt-withUser-status3',

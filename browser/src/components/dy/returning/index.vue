@@ -342,6 +342,19 @@
             </el-button>
           </el-tooltip>
           <el-tooltip
+              content="确认处理方式"
+              placement="top"
+              v-if="msgData.buttonVisibleD"
+          >
+            <el-button
+                @click="userConfirm(scope.$index, scope.row)"
+                circle
+                plain
+            >
+              <svg-icon icon-class="receiving"></svg-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
               content="退货品处理"
               placement="top"
               v-if="msgData.dealWithReturnContent"
@@ -584,6 +597,7 @@ export default {
         buttonVisibleA: this.msg.buttonVisibleA === true,
         buttonVisibleB: this.msg.buttonVisibleB === true,
         buttonVisibleC: this.msg.buttonVisibleC === true,
+        buttonVisibleD: this.msg.buttonVisibleD === true,
         dealWithReturnContent: this.msg.dealWithReturnContent === true,
         delete: this.msg.delete === true,
       },
@@ -803,6 +817,9 @@ export default {
         },
       }).then((res) => {
         this.users = res.data.page.records;
+        if (this.users.length === 1) {
+          this.search.creator = this.users[0].uname;
+        }
       });
     },
     accept(index, row) {
@@ -810,6 +827,45 @@ export default {
       this.formInDialog1.returnNo = row.returnNo;
       this.formInDialog1.carrier = row.carrier;
       this.formInDialog1.trackNo = row.trackNo;
+    },
+    userConfirm(index, row) {
+      this.$confirm('此操作将确认退件的处理方式, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '否定处理方式',
+        type: 'warning',
+      }).then(() => {
+        const data = {
+          'returnNo': row.returnNo,
+          'status': '历史',
+        };
+        request({
+          url: '/return/updateStatus',
+          method: 'post',
+          data: data,
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '确认成功',
+          });
+          this.fetchData();
+        });
+      }).catch(() => {
+        const data = {
+          'returnNo': row.returnNo,
+          'status': '已收货',
+        };
+        request({
+          url: '/return/updateStatus',
+          method: 'post',
+          data: data,
+        }).then(() => {
+          this.$message({
+            type: 'info',
+            message: '已否定处理方式，订单退回收货处理，请联系业务人员进行进一步沟通',
+          });
+        });
+        this.fetchData();
+      });
     },
     returnPkgInfoUpdate() {
       if (this.formInDialog1.length !== 0 && this.formInDialog1.width !== 0 && this.formInDialog1.height !== 0 && this.formInDialog1.weight !== 0) {

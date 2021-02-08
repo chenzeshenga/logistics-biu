@@ -19,10 +19,13 @@ import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +40,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class ProductStatisticsService
-    extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
+  extends ServiceImpl<ProductStatisticsMapper, ProductStatistics> {
 
   private final ProductInWarehouseRecordService productInWarehouseRecordService;
 
@@ -47,16 +50,21 @@ public class ProductStatisticsService
 
   private CompanyProfileService companyProfileService;
 
+  private ExecutorService pool;
+
   @Autowired
   public ProductStatisticsService(
-      ProductInWarehouseRecordService productInWarehouseRecordService,
-      ProductService productService,
-      IDictService dictService,
-      CompanyProfileService companyProfileService) {
+    ProductInWarehouseRecordService productInWarehouseRecordService,
+    ProductService productService,
+    IDictService dictService,
+    CompanyProfileService companyProfileService,
+    ExecutorService pool
+  ) {
     this.productInWarehouseRecordService = productInWarehouseRecordService;
     this.productService = productService;
     this.dictService = dictService;
     this.companyProfileService = companyProfileService;
+    this.pool = pool;
   }
 
   public Page<ProductStatistics> selectAll(Page page) {
@@ -64,12 +72,12 @@ public class ProductStatisticsService
   }
 
   public Page<ProductStatistics> selectAllBySearch(
-      Page page, String sku, String name, String owner) {
+    Page page, String sku, String name, String owner) {
     return page.setRecords(baseMapper.selectAllBySearch(page, sku, name, owner));
   }
 
   public int updateHistoryProductStatistics(
-      ProductInWarehouseStatistics productInWarehouseStatistics) {
+    ProductInWarehouseStatistics productInWarehouseStatistics) {
     productInWarehouseStatistics.setUpdateBy(UserUtils.getUserName());
     productInWarehouseStatistics.setUpdateTime(new Date());
     productInWarehouseStatistics.setAdminUpdate(true);
@@ -79,11 +87,12 @@ public class ProductStatisticsService
   @PostConstruct
   @Scheduled(cron = "0 0 0 * * ?")
   public void triggerStatistics() {
-    baseMapper.deleteAll();
-    int result = baseMapper.deleteCurrDayHistory(DateUtil.getOnlyDateStrFromDate(new Date()));
-    log.info("total {} history record deleted", result);
-    List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
-    productInWarehouseStatisticsList.forEach(
+    pool.execute(() -> {
+      baseMapper.deleteAll();
+      int result = baseMapper.deleteCurrDayHistory(DateUtil.getOnlyDateStrFromDate(new Date()));
+      log.info("total {} history record deleted", result);
+      List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
+      productInWarehouseStatisticsList.forEach(
         productInWarehouseStatistics -> {
           productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId());
           String dySku = productInWarehouseStatistics.getDySku();
@@ -93,32 +102,32 @@ public class ProductStatisticsService
             Product product = productService.selectProductByDySku(dySku);
             if (product != null) {
               if (StringUtils.isNotBlank(product.getLength())
-                  && StringUtils.isNotBlank(product.getWidth())
-                  && StringUtils.isNotBlank(product.getHeight())) {
+                && StringUtils.isNotBlank(product.getWidth())
+                && StringUtils.isNotBlank(product.getHeight())) {
                 double volume =
-                    new BigDecimal(product.getLength())
-                        .multiply(new BigDecimal(product.getWidth()))
-                        .multiply(new BigDecimal(product.getHeight()))
-                        .multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum()))
-                        .doubleValue();
+                  new BigDecimal(product.getLength())
+                    .multiply(new BigDecimal(product.getWidth()))
+                    .multiply(new BigDecimal(product.getHeight()))
+                    .multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum()))
+                    .doubleValue();
                 productInWarehouseStatistics.setVolume(volume);
                 CompanyProfile companyProfile =
-                    companyProfileService.init(productInWarehouseStatistics.getOwner());
+                  companyProfileService.init(productInWarehouseStatistics.getOwner());
                 if (companyProfile != null && companyProfile.getCostOnVolume() != null) {
                   BigDecimal costOnPerVolume = companyProfile.getCostOnVolume();
                   Double costOnVolume =
-                      BigDecimal.valueOf(volume)
-                          .divide(new BigDecimal(100 * 100 * 100), BigDecimal.ROUND_CEILING)
-                          .multiply(costOnPerVolume)
-                          .doubleValue();
+                    BigDecimal.valueOf(volume)
+                      .divide(new BigDecimal(100 * 100 * 100), BigDecimal.ROUND_CEILING)
+                      .multiply(costOnPerVolume)
+                      .doubleValue();
                   productInWarehouseStatistics.setCostOnVolume(costOnVolume);
                 }
               }
               if (StringUtils.isNotBlank(product.getWeight())) {
                 productInWarehouseStatistics.setWeight(
-                    new BigDecimal(productInWarehouseStatistics.getTotalNum())
-                        .multiply(new BigDecimal(product.getWeight()))
-                        .doubleValue());
+                  new BigDecimal(productInWarehouseStatistics.getTotalNum())
+                    .multiply(new BigDecimal(product.getWeight()))
+                    .doubleValue());
               }
             }
             productInWarehouseStatistics.setDate(currDate);
@@ -130,17 +139,18 @@ public class ProductStatisticsService
             }
           }
         });
+    });
   }
 
   public PageData<ProductInWarehouseStatistics> listProductStatistics(
-      PageQueryEntity<ProductInWarehouseStatisticsReq>
-          productInWarehouseStatisticsReqPageQueryEntity) {
+    PageQueryEntity<ProductInWarehouseStatisticsReq>
+      productInWarehouseStatisticsReqPageQueryEntity) {
     Pagination pagination = productInWarehouseStatisticsReqPageQueryEntity.getPagination();
     SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
     ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq =
-        productInWarehouseStatisticsReqPageQueryEntity.getEntity();
+      productInWarehouseStatisticsReqPageQueryEntity.getEntity();
     List<ProductInWarehouseStatistics> productInWarehouseStatisticsList =
-        baseMapper.select(sqlLimit, productInWarehouseStatisticsReq);
+      baseMapper.select(sqlLimit, productInWarehouseStatisticsReq);
     long total = baseMapper.count(productInWarehouseStatisticsReq);
     PageData<ProductInWarehouseStatistics> productInWarehouseStatisticsPageData = new PageData<>();
     productInWarehouseStatisticsPageData.setData(productInWarehouseStatisticsList);
@@ -149,14 +159,14 @@ public class ProductStatisticsService
   }
 
   public PageData<ProductInWarehouseStatistics> listHistoryProductStatistics(
-      PageQueryEntity<ProductInWarehouseStatisticsReq>
-          productInWarehouseStatisticsReqPageQueryEntity) {
+    PageQueryEntity<ProductInWarehouseStatisticsReq>
+      productInWarehouseStatisticsReqPageQueryEntity) {
     Pagination pagination = productInWarehouseStatisticsReqPageQueryEntity.getPagination();
     SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
     ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq =
-        productInWarehouseStatisticsReqPageQueryEntity.getEntity();
+      productInWarehouseStatisticsReqPageQueryEntity.getEntity();
     List<ProductInWarehouseStatistics> productInWarehouseStatisticsList =
-        baseMapper.selectHistory(sqlLimit, productInWarehouseStatisticsReq);
+      baseMapper.selectHistory(sqlLimit, productInWarehouseStatisticsReq);
     long total = baseMapper.countHistory(productInWarehouseStatisticsReq);
     PageData<ProductInWarehouseStatistics> productInWarehouseStatisticsPageData = new PageData<>();
     productInWarehouseStatisticsPageData.setData(productInWarehouseStatisticsList);

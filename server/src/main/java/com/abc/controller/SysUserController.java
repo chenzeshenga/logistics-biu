@@ -17,9 +17,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -33,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/** created by CaiBaoHong at 2018/4/17 16:41<br> */
+/**
+ * created by CaiBaoHong at 2018/4/17 16:41<br>
+ */
 @PermInfo(value = "系统用户模块", pval = "a:sys:接口")
 @RestController
 @RequestMapping("/sys_user")
@@ -47,9 +51,9 @@ public class SysUserController {
 
   @Autowired
   public SysUserController(
-      SysUserService sysUserService,
-      SysRoleService sysRoleService,
-      SysUserRoleService sysUserRoleService) {
+    SysUserService sysUserService,
+    SysRoleService sysRoleService,
+    SysUserRoleService sysUserRoleService) {
     this.sysUserService = sysUserService;
     this.sysRoleService = sysRoleService;
     this.sysUserRoleService = sysUserRoleService;
@@ -141,14 +145,14 @@ public class SysUserController {
 
     // 删除：原来绑定的角色
     boolean deleteSucc =
-        sysUserRoleService.delete(new EntityWrapper<SysUserRole>().eq("user_id", uid));
+      sysUserRoleService.delete(new EntityWrapper<SysUserRole>().eq("user_id", uid));
     if (!deleteSucc) {
       return Json.fail(oper, "无法解除原来的用户-角色关系");
     }
 
     // 更新：绑定新的角色
     List<SysUserRole> list =
-        rids.stream().map(roleId -> new SysUserRole(uid, roleId)).collect(Collectors.toList());
+      rids.stream().map(roleId -> new SysUserRole(uid, roleId)).collect(Collectors.toList());
 
     if (!rids.isEmpty()) {
       boolean addSucc = sysUserRoleService.insertBatch(list);
@@ -181,18 +185,25 @@ public class SysUserController {
     Set<AuthVo> authVos = user.getRoles();
     AtomicBoolean queryAll = new AtomicBoolean(false);
     authVos.forEach(
-        authVo -> {
-          if ("root".equals(authVo.getVal()) || "operator".equals(authVo.getVal())) {
-            queryAll.set(true);
-          }
-        });
+      authVo -> {
+        if ("root".equals(authVo.getVal()) || "operator".equals(authVo.getVal())) {
+          queryAll.set(true);
+        }
+      });
+    if (!queryAll.get()) {
+      Page<SysUser> sysUserPage = new Page<>();
+      List<SysUser> sysUserList = new ArrayList<>();
+      sysUserList.add(user);
+      sysUserPage.setRecords(sysUserList);
+      return Json.succ(oper).data("page", sysUserPage);
+    }
     Page<SysUser> page;
     if (queryAll.get()) {
       page = sysUserService.queryUserIncludeRoles(PageUtils.getPageParam(json), nick);
     } else {
       page =
-          sysUserService.queryUserIncludeRoles4Option(
-              PageUtils.getPageParam(json), nick, UserUtils.getUserName());
+        sysUserService.queryUserIncludeRoles4Option(
+          PageUtils.getPageParam(json), nick, UserUtils.getUserName());
     }
     List<SysUser> sysUserList = page.getRecords();
     List<SysUser> result = new ArrayList<>();
