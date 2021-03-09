@@ -1229,6 +1229,28 @@ export const asyncRouterMap = [
     ],
   },
   {
+    path: '/finance',
+    component: Layout,
+    meta: {
+      perm: 'm:finance:mgt:list',
+      title: '账单管理',
+      icon: 'chart',
+    },
+    children: [
+      {
+        path: 'mgt/list',
+        component: _import('finance/finance-list'),
+        name: 'finance-list-mgt',
+        meta: {
+          perm: 'm:finance:mgt:list',
+          title: '账单管理',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
+    ],
+  },
+  {
     path: '*',
     redirect: '/404',
     hidden: true,
