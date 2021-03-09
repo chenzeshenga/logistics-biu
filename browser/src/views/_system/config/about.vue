@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.49 1. 账单管理-新增账单管理页面-part1',
+          timestamp: '2021-03-09',
+        },
+        {
           content: 'v1.48 1. 退货管理-新增用户确认退货处理方式页面',
           timestamp: '2021-02-08',
         },
