@@ -18,44 +18,44 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChannelCache {
 
-  @Resource private ChannelMapper channelMapper;
+    @Resource private ChannelMapper channelMapper;
 
-  private Map<String, ChannelLabel> channelLabelCache = new HashMap<>();
+    private Map<String, ChannelLabel> channelLabelCache = new HashMap<>();
 
-  private String channelSeq;
+    private String channelSeq;
 
-  @Scheduled(cron = "0 0 0 * * ?")
-  @PostConstruct
-  public void init() {
-    List<ChannelLabel> channelLabelList = channelMapper.list();
-    channelLabelList.forEach(
-        channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
-    if (channelLabelList.isEmpty()) {
-      this.channelSeq = "0";
-    } else {
-      this.channelSeq =
-          String.valueOf(
-              Integer.parseInt(
-                      channelLabelList
-                          .get(channelLabelList.size() - 1)
-                          .getValue()
-                          .replace("CHANNEL_", ""))
-                  + 1);
+    @Scheduled(cron = "0 0 0 * * ?")
+    @PostConstruct
+    public void init() {
+        List<ChannelLabel> channelLabelList = channelMapper.list();
+        channelLabelList.forEach(
+                channelLabel -> channelLabelCache.put(channelLabel.getValue(), channelLabel));
+        if (channelLabelList.isEmpty()) {
+            this.channelSeq = "0";
+        } else {
+            this.channelSeq =
+                    String.valueOf(
+                            Integer.parseInt(
+                                    channelLabelList
+                                            .get(channelLabelList.size() - 1)
+                                            .getValue()
+                                            .replace("CHANNEL_", ""))
+                                    + 1);
+        }
     }
-  }
 
-  public String channelLabel(String channelValue) {
-    ChannelLabel channelLabel = channelLabelCache.get(channelValue);
-    if (ObjectUtils.allNotNull(channelLabel)) {
-      return channelLabel.getLabel();
-    } else {
-      return "";
+    public String channelLabel(String channelValue) {
+        ChannelLabel channelLabel = channelLabelCache.get(channelValue);
+        if (ObjectUtils.allNotNull(channelLabel)) {
+            return channelLabel.getLabel();
+        } else {
+            return "";
+        }
     }
-  }
 
-  public String getChannelSeq() {
-    String result = this.channelSeq;
-    this.channelSeq = String.valueOf(Integer.valueOf(this.channelSeq) + 1);
-    return result;
-  }
+    public String getChannelSeq() {
+        String result = this.channelSeq;
+        this.channelSeq = String.valueOf(Integer.valueOf(this.channelSeq) + 1);
+        return result;
+    }
 }

@@ -11,17 +11,17 @@ import java.lang.annotation.*;
 @Documented
 public @interface PermInfo {
 
-  /**
-   * 权限值
-   *
-   * @return 权限值
-   */
-  String pval() default "";
+    /**
+     * 权限值
+     *
+     * @return 权限值
+     */
+    String pval() default "";
 
-  /**
-   * 权限名称 pname的别名
-   *
-   * @return 权限名称
-   */
-  String value() default "";
+    /**
+     * 权限名称 pname的别名
+     *
+     * @return 权限名称
+     */
+    String value() default "";
 }

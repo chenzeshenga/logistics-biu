@@ -18,16 +18,16 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MyExecutorConfig {
 
-  @Bean
-  public ExecutorService getThreadPool() {
-    ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("logistics-pool-%d").build();
-    return new ThreadPoolExecutor(
-      5,
-      200,
-      0L,
-      TimeUnit.MILLISECONDS,
-      new LinkedBlockingDeque<>(1024),
-      namedThreadFactory,
-      new ThreadPoolExecutor.AbortPolicy());
-  }
+    @Bean
+    public ExecutorService getThreadPool() {
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("logistics-pool-%d").build();
+        return new ThreadPoolExecutor(
+                5,
+                200,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<>(1024),
+                namedThreadFactory,
+                new ThreadPoolExecutor.AbortPolicy());
+    }
 }
