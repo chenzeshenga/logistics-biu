@@ -1,7 +1,9 @@
 package com.abc.chenzeshenga.logistics.model.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
+
 import lombok.*;
 
 /**
@@ -15,5 +17,14 @@ import lombok.*;
 @JsonIgnoreProperties(value = {"handler"})
 public class PageData<T> extends Pagination {
 
-  private List<T> data;
+    private List<T> data;
+
+    public void setPagination(Pagination pagination) {
+        setTotal(pagination.getTotal());
+        setCurrent(pagination.getCurrent());
+        setFromIdx(pagination.getFromIdx());
+        setToIdx(pagination.getToIdx());
+        setSize(pagination.getSize());
+    }
+
 }

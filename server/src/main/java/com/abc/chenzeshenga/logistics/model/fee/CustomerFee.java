@@ -23,7 +23,7 @@ public class CustomerFee {
     /**
      * 费用期间
      */
-    private String relatedMonth;
+    private Integer relatedMonth;
     /**
      * 货币
      */

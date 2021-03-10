@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.fee.CustomerFeeMapper">
+
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.fee.CustomerFee">
+        <id column="uuid" property="uuid"/>
+        <result column="user_id" property="userId"/>
+        <result column="related_month" property="relatedMonth"/>
+        <result column="currency" property="currency"/>
+        <result column="fee1" property="fee1"/>
+        <result column="fee2" property="fee2"/>
+        <result column="fee3" property="fee3"/>
+        <result column="fee4" property="fee4"/>
+        <result column="fee5" property="fee5"/>
+        <result column="fee6" property="fee6"/>
+        <result column="fee7" property="fee7"/>
+        <result column="fee8" property="fee8"/>
+        <result column="fee9" property="fee9"/>
+        <result column="comments" property="comments"/>
+        <result column="file_uuid" property="fileUuid"/>
+    </resultMap>
+
+    <select id="selectCustomerFeeList" resultMap="BaseResultMap">
+        select uuid,
+        user_id,
+        related_month,
+        currency,
+        fee1,
+        fee2,
+        fee3,
+        fee4,
+        fee5,
+        fee6,
+        fee7,
+        fee8,
+        fee9,
+        comments,
+        file_uuid
+        from l_customer_fee
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+            <if test="startMonth != null and startMonth != 0 and endMonth != null and endMonth != 0 ">
+                and related_month between #{startMonth} and #{endMonth}
+            </if>
+        </where>
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="countCustomerFeeList" resultType="long">
+        select count(1) as result
+        from l_customer_fee
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+            <if test="startMonth != null and startMonth != 0 and endMonth != null and endMonth != 0 ">
+                and related_month between #{startMonth} and #{endMonth}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
