@@ -70,7 +70,17 @@
         <el-table-column width="200" prop="fee8" label="转运回国费用"/>
         <el-table-column width="200" prop="fee9" label="月租&客服费用"/>
         <el-table-column width="200" prop="comments" label="备注"/>
-        <el-table-column width="200" prop="fileUuid" label="账单文件"/>
+        <el-table-column width="200" prop="fileUuid" label="账单文件">
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <el-tooltip content="账单文件下载" placement="top">
+                <el-button circle @click="downloadFile(scope.row.fileUuid)">
+                  <svg-icon icon-class="doc"/>
+                </el-button>
+              </el-tooltip>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
             <el-tooltip content="删除" placement="top">
@@ -96,7 +106,7 @@
           :total="search.total"
       >
       </el-pagination>
-      <el-dialog :visible.sync="dialogVisible" width="50%" title="新增账单">
+      <el-dialog :visible.sync="dialogVisible" width="50%" title="新增账单" show-close :close-on-click-modal="false">
         <el-form ref="form" :model="form" label-width="120px">
           <el-form-item label="用户id">
             <el-tooltip content="请选择账单属主" placement="top">
@@ -155,13 +165,24 @@
           <el-form-item label="备注">
             <el-input v-model="form.comments" type="textarea"/>
           </el-form-item>
+          <el-form-item label="账单文件">
+            <el-upload :action="actionLink"
+                       with-credentials
+                       multiple
+                       ref="upload"
+                       :on-success="handleSuccess">
+              <el-button slot="trigger" size="small" type="primary"
+              >选取文件
+              </el-button>
+            </el-upload>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onsubmit">确定</el-button>
             <el-button @click="this.dialogVisible=false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
-      <el-dialog :visible.sync="dialogVisible1" width="40%" title="账单详情">
+      <el-dialog :visible.sync="dialogVisible1" width="30%" title="账单详情">
         <el-form ref="form" :model="curr" label-width="120px">
           <el-form-item label="用户id">
             <el-tooltip content="用户id" placement="top">
@@ -181,6 +202,11 @@
           <el-form-item label="货币">
             <el-tooltip content="货币" placement="top">
               <span>{{ curr.currency }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="合计金额">
+            <el-tooltip content="合计金额" placement="top">
+              <span><strong>{{ curr.sum }}</strong></span>
             </el-tooltip>
           </el-form-item>
           <el-form-item label="退货手续费">
@@ -229,7 +255,14 @@
             </el-tooltip>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="form.comments" type="textarea" disabled/>
+            <el-input v-model="curr.comments" type="textarea" disabled/>
+          </el-form-item>
+          <el-form-item label="账单文件">
+            <el-tooltip content="账单文件下载" placement="top">
+              <el-button circle @click="downloadFile(curr.fileUuid)">
+                <svg-icon icon-class="doc"/>
+              </el-button>
+            </el-tooltip>
           </el-form-item>
           <el-form-item>
             <el-button @click="this.dialogVisible1=false">关闭</el-button>
@@ -303,8 +336,10 @@ export default {
         fee8: 0,
         fee9: 0,
         comments: '',
+        fileUuid: '',
       },
       curr: {},
+      actionLink: process.env.BASE_API + '/v2/common/file/upload',
     };
   },
   created() {
@@ -389,8 +424,23 @@ export default {
         method: 'get',
       }).then((res) => {
         this.curr = res.data.data;
+        this.curr.sum = this.curr.fee1 + this.curr.fee2 + this.curr.fee3 + this.curr.fee4 + this.curr.fee5 +
+            this.curr.fee6 + this.curr.fee7 + this.curr.fee8 + this.curr.fee9;
         this.dialogVisible1 = true;
       });
+    },
+    handleSuccess(response, file, fileList) {
+      this.form.fileUuid = response.data.uuid;
+      console.log(file);
+      console.log(fileList);
+    },
+    downloadFile(uuid) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/v2/common/file/' + uuid;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
     },
   },
 };
