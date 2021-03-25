@@ -45,4 +45,9 @@ public class CustomerFeeController {
         return Json.succ().data(customerFeeService.deleteById(uuid));
     }
 
+    @GetMapping("/detail/{uuid}")
+    public Json detail(@PathVariable String uuid) {
+        return Json.succ().data(customerFeeService.selectById(uuid));
+    }
+
 }

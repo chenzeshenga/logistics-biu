@@ -21,6 +21,10 @@ public class CustomerFee {
      */
     private String userId;
     /**
+     * 用户名称
+     */
+    private String nick;
+    /**
      * 费用期间
      */
     private Integer relatedMonth;

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,4 +36,12 @@ public interface CustomerFeeMapper extends BaseMapper<CustomerFee> {
      */
     long countCustomerFeeList(@Param("startMonth") Integer startMonth, @Param("endMonth") Integer endMonth, @Param("userId") String userId);
 
+    /**
+     * 根据id获取费用详情
+     *
+     * @param id uuid
+     * @return 费用详情
+     */
+    @Override
+    CustomerFee selectById(@Param("uuid") Serializable id);
 }

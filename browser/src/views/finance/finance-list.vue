@@ -51,7 +51,13 @@
           stripe
           highlight-current-row
       >
-        <el-table-column width="100" prop="userId" label="用户id"/>
+        <el-table-column label="详情" width="150">
+          <template slot-scope="scope">
+            <el-button type="info" @click="showDetails(scope.row.uuid)">详情</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column width="250" prop="userId" label="用户id"/>
+        <el-table-column width="250" prop="nick" label="用户名称"/>
         <el-table-column width="100" prop="relatedMonth" label="费用期间"/>
         <el-table-column width="100" prop="currency" label="货币"/>
         <el-table-column width="200" prop="fee1" label="退货手续费"/>
@@ -155,6 +161,81 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <el-dialog :visible.sync="dialogVisible1" width="40%" title="账单详情">
+        <el-form ref="form" :model="curr" label-width="120px">
+          <el-form-item label="用户id">
+            <el-tooltip content="用户id" placement="top">
+              <span>{{ curr.userId }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="用户名称">
+            <el-tooltip content="用户名称" placement="top">
+              <span>{{ curr.nick }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="账单期间">
+            <el-tooltip content="账单期间" placement="top">
+              <span>{{ curr.relatedMonth }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="货币">
+            <el-tooltip content="货币" placement="top">
+              <span>{{ curr.currency }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="退货手续费">
+            <el-tooltip content="退货手续费" placement="top">
+              <span>{{ curr.fee1 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="代付到付手续费">
+            <el-tooltip content="代付到付手续费" placement="top">
+              <span>{{ curr.fee2 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="一件代发">
+            <el-tooltip content="一件代发" placement="top">
+              <span>{{ curr.fee3 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="FBA转仓">
+            <el-tooltip content="FBA转仓" placement="top">
+              <span>{{ curr.fee4 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="仓储费">
+            <el-tooltip content="仓储费" placement="top">
+              <span>{{ curr.fee5 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="检测等其他费用">
+            <el-tooltip content="检测等其他费用" placement="top">
+              <span>{{ curr.fee6 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="头程费用">
+            <el-tooltip content="头程费用" placement="top">
+              <span>{{ curr.fee7 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="转运回国费用">
+            <el-tooltip content="转运回国费用" placement="top">
+              <span>{{ curr.fee8 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="月租&客服费用">
+            <el-tooltip content="月租&客服费用" placement="top">
+              <span>{{ curr.fee9 }}</span>
+            </el-tooltip>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="form.comments" type="textarea" disabled/>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="this.dialogVisible1=false">关闭</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -206,6 +287,7 @@ export default {
       tableLoading: false,
       tableData: [],
       dialogVisible: false,
+      dialogVisible1: false,
       form: {
         userId: '',
         relatedMonth: null,
@@ -222,6 +304,7 @@ export default {
         fee9: 0,
         comments: '',
       },
+      curr: {},
     };
   },
   created() {
@@ -298,6 +381,15 @@ export default {
         this.$message.success('账单新增成功');
         this.dialogVisible = false;
         this.fetchData();
+      });
+    },
+    showDetails(uuid) {
+      request({
+        url: '/finance/fee/detail/' + uuid,
+        method: 'get',
+      }).then((res) => {
+        this.curr = res.data.data;
+        this.dialogVisible1 = true;
       });
     },
   },

@@ -9,6 +9,7 @@ import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -28,4 +29,8 @@ public class CustomerFeeService extends ServiceImpl<CustomerFeeMapper, CustomerF
         return customerFeePageData;
     }
 
+    @Override
+    public CustomerFee selectById(Serializable id) {
+        return baseMapper.selectById(id);
+    }
 }
