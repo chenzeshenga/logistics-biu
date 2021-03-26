@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
+
 /**
  * @author chenzeshenga
  */
@@ -48,6 +50,16 @@ public class CustomerFeeController {
     @GetMapping("/detail/{uuid}")
     public Json detail(@PathVariable String uuid) {
         return Json.succ().data(customerFeeService.selectById(uuid));
+    }
+
+    @PostMapping("/generateFile")
+    public Json generateFile(@RequestBody CustomerFeeReq customerFeeReq) throws FileNotFoundException {
+        return Json.succ().data("data", customerFeeService.generateFile(customerFeeReq));
+    }
+
+    @GetMapping("/generateTemplate")
+    public Json generateTemplate() throws FileNotFoundException {
+        return Json.succ().data("data", customerFeeService.generateTemplate());
     }
 
 }

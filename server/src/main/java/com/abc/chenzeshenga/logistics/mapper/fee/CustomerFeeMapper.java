@@ -27,6 +27,16 @@ public interface CustomerFeeMapper extends BaseMapper<CustomerFee> {
     List<CustomerFee> selectCustomerFeeList(@Param("sqlLimit") SqlLimit sqlLimit, @Param("startMonth") Integer startMonth, @Param("endMonth") Integer endMonth, @Param("userId") String userId);
 
     /**
+     * 查询费用列表,无分页参数
+     *
+     * @param startMonth 开始月份
+     * @param endMonth   结束月份
+     * @param userId     用户id
+     * @return 费用列表
+     */
+    List<CustomerFee> selectCustomerFeeListWithoutPagination(@Param("startMonth") Integer startMonth, @Param("endMonth") Integer endMonth, @Param("userId") String userId);
+
+    /**
      * 计数费用列表
      *
      * @param startMonth 开始月份

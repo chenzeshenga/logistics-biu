@@ -39,7 +39,15 @@
               @click="fetchData()"
           ></el-button>
         </el-col>
-        <el-col :span="2" :offset="10">
+        <el-col :span="2" :offset="2">
+          <el-tooltip content="根据当前筛选条件,导出账单列表文件">
+            <el-button type="primary" @click="exportData">导出文件</el-button>
+          </el-tooltip>
+        </el-col>
+        <el-col :span="2" :offset="1">
+          <el-button type="primary" @click="triggerImportDlg">导入账单</el-button>
+        </el-col>
+        <el-col :span="2" :offset="3">
           <el-button type="primary" @click="triggerAddDlg">新增账单</el-button>
         </el-col>
       </el-row>
@@ -269,6 +277,40 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <el-dialog :visible.sync="dialogVisible2" width="20%" title="账单批量导入">
+        <el-alert type="info" title="请下载模版文件, 按照模版文件形式填写内容" :closable="false"/>
+        <el-upload
+            ref="upload"
+            :action="actionLink1"
+            with-credentials
+            :limit="1"
+            :auto-upload="false"
+            :on-success="handleSuccess"
+        >
+          <el-button
+              slot="trigger"
+              size="small"
+              type="primary"
+          >选取文件
+          </el-button>
+          <el-button
+              style="margin-left: 10px;"
+              size="small"
+              type="success"
+              @click="upload"
+          >上传
+          </el-button>
+          <el-button
+              style="margin-left: 150px;"
+              size="small"
+              type="success"
+              @click="downloadTemplate"
+          >
+            <svg-icon icon-class="doc"></svg-icon>
+            模版文件
+          </el-button>
+        </el-upload>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -321,6 +363,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
+      dialogVisible2: false,
       form: {
         userId: '',
         relatedMonth: null,
@@ -340,6 +383,7 @@ export default {
       },
       curr: {},
       actionLink: process.env.BASE_API + '/v2/common/file/upload',
+      actionLink1: process.env.BASE_API + '/finance/fee/batch/import',
     };
   },
   created() {
@@ -348,16 +392,7 @@ export default {
   },
   methods: {
     fetchData() {
-      const month = this.search.month;
-      if (month != null && month !== '') {
-        const startMonth = moment(this.search.month[0]).format('YYYYMM');
-        const endMonth = moment(this.search.month[1]).format('YYYYMM');
-        this.search.startMonth = Number(startMonth);
-        this.search.endMonth = Number(endMonth);
-      } else {
-        this.search.startMonth = null;
-        this.search.endMonth = null;
-      }
+      this.customSearchVal();
       request({
         url: '/finance/fee/list',
         method: 'post',
@@ -406,6 +441,9 @@ export default {
     triggerAddDlg() {
       this.dialogVisible = true;
     },
+    triggerImportDlg() {
+      this.dialogVisible2 = true;
+    },
     onsubmit() {
       this.form.relatedMonth = Number(moment(this.form.relatedMonthLbl).format('yyyyMM'));
       request({
@@ -441,6 +479,39 @@ export default {
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
+    },
+    exportData() {
+      this.customSearchVal();
+      request({
+        url: '/finance/fee/generateFile',
+        method: 'post',
+        data: this.search,
+      }).then((res) => {
+        this.downloadFile(res.data.data.uuid);
+      });
+    },
+    downloadTemplate() {
+      request({
+        url: '/finance/fee/generateTemplate',
+        method: 'get',
+      }).then((res) => {
+        this.downloadFile(res.data.data.uuid);
+      });
+    },
+    customSearchVal() {
+      const month = this.search.month;
+      if (month != null && month !== '') {
+        const startMonth = moment(this.search.month[0]).format('YYYYMM');
+        const endMonth = moment(this.search.month[1]).format('YYYYMM');
+        this.search.startMonth = Number(startMonth);
+        this.search.endMonth = Number(endMonth);
+      } else {
+        this.search.startMonth = null;
+        this.search.endMonth = null;
+      }
+    },
+    upload() {
+      this.$refs.upload.submit();
     },
   },
 };

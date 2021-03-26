@@ -21,23 +21,14 @@
         <result column="file_uuid" property="fileUuid"/>
     </resultMap>
 
-    <select id="selectCustomerFeeList" resultMap="BaseResultMap">
-        select uuid,
-        user_id,
-        user.nick,
-        related_month,
-        currency,
-        fee1,
-        fee2,
-        fee3,
-        fee4,
-        fee5,
-        fee6,
-        fee7,
-        fee8,
-        fee9,
-        comments,
+    <sql id="ColumnList">
+        uuid, user_id, related_month, currency, fee1, fee2, fee3, fee4, fee5, fee6, fee7, fee8, fee9, comments,
         file_uuid
+    </sql>
+
+    <select id="selectCustomerFeeList" resultMap="BaseResultMap">
+        select
+        <include refid="ColumnList"/>, user.nick
         from l_customer_fee fee left join sys_user user on fee.user_id= user.uname
         <where>
             <if test="userId != null and userId != ''">
@@ -48,6 +39,20 @@
             </if>
         </where>
         limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="selectCustomerFeeListWithoutPagination" resultMap="BaseResultMap">
+        select
+        <include refid="ColumnList"/>, user.nick
+        from l_customer_fee fee left join sys_user user on fee.user_id= user.uname
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+            <if test="startMonth != null and startMonth != 0 and endMonth != null and endMonth != 0 ">
+                and related_month between #{startMonth} and #{endMonth}
+            </if>
+        </where>
     </select>
 
     <select id="countCustomerFeeList" resultType="long">
@@ -64,24 +69,10 @@
     </select>
 
     <select id="selectById" resultMap="BaseResultMap">
-        select uuid,
-               user_id,
-               user.nick,
-               related_month,
-               currency,
-               fee1,
-               fee2,
-               fee3,
-               fee4,
-               fee5,
-               fee6,
-               fee7,
-               fee8,
-               fee9,
-               comments,
-               file_uuid
+        select
+        <include refid="ColumnList"/>, user.nick
         from l_customer_fee fee
-                 left join sys_user user on fee.user_id = user.uname
+        left join sys_user user on fee.user_id = user.uname
         where uuid = #{uuid}
     </select>
 
