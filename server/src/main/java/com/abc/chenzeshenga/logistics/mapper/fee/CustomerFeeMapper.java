@@ -54,4 +54,13 @@ public interface CustomerFeeMapper extends BaseMapper<CustomerFee> {
      */
     @Override
     CustomerFee selectById(@Param("uuid") Serializable id);
+
+    /**
+     * 插入
+     *
+     * @param entity 费用账单
+     * @return 1
+     */
+    @Override
+    Integer insert(CustomerFee entity);
 }

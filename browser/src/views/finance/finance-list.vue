@@ -285,7 +285,7 @@
             with-credentials
             :limit="1"
             :auto-upload="false"
-            :on-success="handleSuccess"
+            :on-success="handleSuccess1"
         >
           <el-button
               slot="trigger"
@@ -392,6 +392,9 @@ export default {
   },
   methods: {
     fetchData() {
+      this.dialogVisible = false;
+      this.dialogVisible1 = false;
+      this.dialogVisible2 = false;
       this.customSearchVal();
       request({
         url: '/finance/fee/list',
@@ -469,8 +472,11 @@ export default {
     },
     handleSuccess(response, file, fileList) {
       this.form.fileUuid = response.data.uuid;
+    },
+    handleSuccess1(response, file, fileList) {
       console.log(file);
       console.log(fileList);
+      this.fetchData();
     },
     downloadFile(uuid) {
       const link = document.createElement('a');

@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author chenzeshenga
@@ -60,6 +63,12 @@ public class CustomerFeeController {
     @GetMapping("/generateTemplate")
     public Json generateTemplate() throws FileNotFoundException {
         return Json.succ().data("data", customerFeeService.generateTemplate());
+    }
+
+    @PostMapping("/batch/import")
+    public Json batchImport(@RequestBody MultipartFile file) throws IOException, InvocationTargetException, IllegalAccessException {
+        customerFeeService.batchImport(file);
+        return Json.succ();
     }
 
 }

@@ -11,24 +11,31 @@ import com.abc.chenzeshenga.logistics.model.file.FileRecord;
 import com.abc.chenzeshenga.logistics.model.ord.ManualOrderV2;
 import com.abc.chenzeshenga.logistics.model.user.CustSysUser;
 import com.abc.chenzeshenga.logistics.model.user.CustSysUserHead;
+import com.abc.chenzeshenga.logistics.service.common.FileService;
 import com.abc.chenzeshenga.logistics.service.user.UserService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.FileUtils;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.controller.SysUserController;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,10 +52,13 @@ public class CustomerFeeService extends ServiceImpl<CustomerFeeMapper, CustomerF
 
     private final UserService userService;
 
+    private final FileService fileService;
+
     @Autowired
-    public CustomerFeeService(FileRecordMapper fileRecordMapper, UserService userService) {
+    public CustomerFeeService(FileRecordMapper fileRecordMapper, UserService userService, FileService fileService) {
         this.fileRecordMapper = fileRecordMapper;
         this.userService = userService;
+        this.fileService = fileService;
     }
 
     public PageData<CustomerFee> selectCustomerFee(CustomerFeeReq customerFeeReq) {
@@ -118,4 +128,22 @@ public class CustomerFeeService extends ServiceImpl<CustomerFeeMapper, CustomerF
         return fileRecord;
     }
 
+    public void batchImport(MultipartFile multipartFile) throws IOException, InvocationTargetException, IllegalAccessException {
+        fileService.upload(multipartFile);
+        List<Object> customerFeeObjList = EasyExcelFactory.read(multipartFile.getInputStream(), new Sheet(1, 1, CustomerFeeHead.class));
+        for (Object customerFeeObj : customerFeeObjList) {
+            if (customerFeeObj instanceof CustomerFeeHead) {
+                CustomerFeeHead customerFeeHead = (CustomerFeeHead) customerFeeObj;
+                CustomerFee customerFee = new CustomerFee();
+                BeanUtils.copyProperties(customerFee, customerFeeHead);
+                customerFee.setUuid(SnowflakeIdWorker.generateStrId());
+                insert(customerFee);
+            }
+        }
+    }
+
+    @Override
+    public boolean insert(CustomerFee entity) {
+        return retBool(baseMapper.insert(entity));
+    }
 }

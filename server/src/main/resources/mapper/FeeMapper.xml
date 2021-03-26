@@ -76,4 +76,14 @@
         where uuid = #{uuid}
     </select>
 
+    <insert id="insert">
+        insert into l_customer_fee(uuid, user_id, related_month, currency, fee1, fee2, fee3, fee4, fee5, fee6, fee7,
+                                   fee8, fee9, comments, file_uuid) VALUE (
+                                                                           #{uuid}, #{userId}, #{relatedMonth},
+                                                                           #{currency}, #{fee1}, #{fee2}, #{fee3},
+                                                                           #{fee4}, #{fee5}, #{fee6}, #{fee7}, #{fee8},
+                                                                           #{fee9}, #{comments}, #{fileUuid}
+            )
+    </insert>
+
 </mapper>
