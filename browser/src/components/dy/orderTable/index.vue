@@ -117,7 +117,7 @@
               批量提交
             </el-button>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" v-if="msgData.buttonVisible13">
             <el-button type="warning" @click="batchAbandonOrds()" v-if="multiSelection"> 批量删除</el-button>
           </el-col>
           <el-col :span="2">
@@ -1035,6 +1035,7 @@ export default {
         buttonVisible10: this.msg.buttonVisible10,
         buttonVisible11: this.msg.buttonVisible11,
         buttonVisible12: this.msg.buttonVisible12,
+        buttonVisible13: this.msg.buttonVisible13,
       },
       timestamp: '',
       tablePage: {
