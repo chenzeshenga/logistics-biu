@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.chenzeshenga.logistics.mapper.fee.RechargeInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.abc.chenzeshenga.logistics.model.fee.RechargeInfo">
+        <id column="uuid" property="uuid"/>
+        <result column="user_id" property="userId"/>
+        <result column="recharge_date" property="rechargeDate"/>
+        <result column="amount_in_jpy" property="amountInJpy"/>
+        <result column="exchange_rate" property="exchangeRate"/>
+        <result column="pay_method" property="payMethod"/>
+        <result column="comments" property="comments"/>
+        <result column="create_date" property="createdDate"/>
+    </resultMap>
+
+    <sql id="ColumnList">
+
+    </sql>
+
+    <select id="selectRechargeInfo" resultMap="BaseResultMap">
+        select
+        uuid, user_id, recharge_date, amount_in_jpy, amount_in_cny, exchange_rate, pay_method, comments, create_date
+        from l_recharge_info recharge left join sys_user user on recharge.user_id= user.uname
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+        </where>
+        limit #{sqlLimit.from},#{sqlLimit.size}
+    </select>
+
+    <select id="countRechargeInfoList" resultType="long">
+        select count(1) as result
+        from l_recharge_info recharge left join sys_user user on recharge.user_id= user.uname
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+        </where>
+    </select>
+
+</mapper>
