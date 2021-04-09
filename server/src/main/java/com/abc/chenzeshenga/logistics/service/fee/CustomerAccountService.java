@@ -3,11 +3,14 @@ package com.abc.chenzeshenga.logistics.service.fee;
 import com.abc.chenzeshenga.logistics.mapper.fee.CustomerAccountMapper;
 import com.abc.chenzeshenga.logistics.mapper.fee.CustomerFeeMapper;
 import com.abc.chenzeshenga.logistics.mapper.fee.RechargeInfoMapper;
+import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerAccountInfo;
+import com.abc.chenzeshenga.logistics.model.fee.CustomerAccountReq;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerFee;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfo;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
+import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.abc.dao.SysUserMapper;
 import com.abc.entity.SysUser;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -93,5 +96,15 @@ public class CustomerAccountService extends ServiceImpl<CustomerAccountMapper, C
         });
     }
 
+    public PageData<CustomerAccountInfo> selectCustomerAccount(CustomerAccountReq customerAccountReq) {
+        SqlLimit sqlLimit = SqlUtils.generateSqlLimit(customerAccountReq);
+        List<CustomerAccountInfo> customerAccountInfoList = baseMapper.selectCustomerAccountList(sqlLimit, customerAccountReq.getUserId());
+        long total = baseMapper.countCustomerAccountList(customerAccountReq.getUserId());
+        customerAccountReq.setTotal(total);
+        PageData<CustomerAccountInfo> customerAccountInfoPageData = new PageData<>();
+        customerAccountInfoPageData.setData(customerAccountInfoList);
+        customerAccountInfoPageData.setPagination(customerAccountReq);
+        return customerAccountInfoPageData;
+    }
 
 }

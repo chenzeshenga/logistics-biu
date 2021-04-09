@@ -45,15 +45,15 @@
           stripe
           highlight-current-row
       >
-        <el-table-column label="详情" width="150">
+        <el-table-column label="充值记录" width="150">
           <template slot-scope="scope">
-            <el-button type="info" @click="showDetails(scope.row.uuid)">详情</el-button>
+            <el-button type="info" @click="showDetails(scope.row.userId)">充值记录</el-button>
           </template>
         </el-table-column>
         <el-table-column width="250" prop="userId" label="用户id"/>
         <el-table-column width="250" prop="nick" label="用户名称"/>
-        <el-table-column width="100" prop="totalInJpy" label="账户日元余额"/>
-        <el-table-column width="100" prop="totalInCny" label="账户人民币余额"/>
+        <el-table-column width="200" prop="totalInJpy" label="账户日元余额"/>
+        <el-table-column width="200" prop="totalInCny" label="账户人民币余额"/>
         <el-table-column width="200" prop="feeInJpy" label="日元合计费用"/>
         <el-table-column width="200" prop="feeInCny" label="人民币合计费用"/>
         <el-table-column width="200" prop="timestamp" label="统计时间"/>
@@ -71,15 +71,15 @@
           :total="search.total"
       >
       </el-pagination>
-      <el-dialog :visible.sync="dialogVisible" width="50%" title="新增账单" show-close :close-on-click-modal="false">
+      <el-dialog :visible.sync="dialogVisible" width="50%" title="新增充值记录" show-close :close-on-click-modal="false">
         <el-form ref="form" :model="form" label-width="120px">
           <el-form-item label="用户id">
-            <el-tooltip content="请选择账单属主" placement="top">
+            <el-tooltip content="请选择属主" placement="top">
               <el-select
                   filterable
                   clearable
                   v-model="form.userId"
-                  placeholder="请选择账单属主"
+                  placeholder="请选择属主"
               >
                 <el-option
                     v-for="creator in options.owners"
@@ -90,56 +90,23 @@
               </el-select>
             </el-tooltip>
           </el-form-item>
-          <el-form-item label="账单期间">
-            <el-date-picker
-                v-model="form.relatedMonthLbl"
-                type="month"
-                placeholder="选择月">
-            </el-date-picker>
+          <el-form-item label="充值时间">
+            <el-date-picker v-model="form.rechargeDate"/>
           </el-form-item>
-          <el-form-item label="货币">
-            <el-input v-model="form.currency"/>
+          <el-form-item label="充值日元数量">
+            <el-input-number v-model="form.amountInJpy"/>
           </el-form-item>
-          <el-form-item label="退货手续费">
-            <el-input-number v-model="form.fee1"/>
+          <el-form-item label="充值人民币数量">
+            <el-input-number v-model="form.amountInCny"/>
           </el-form-item>
-          <el-form-item label="代付到付手续费">
-            <el-input-number v-model="form.fee2"/>
+          <el-form-item label="汇率">
+            <el-input-number v-model="form.exchangeRate"/>
           </el-form-item>
-          <el-form-item label="一件代发">
-            <el-input-number v-model="form.fee3"/>
-          </el-form-item>
-          <el-form-item label="FBA转仓">
-            <el-input-number v-model="form.fee4"/>
-          </el-form-item>
-          <el-form-item label="仓储费">
-            <el-input-number v-model="form.fee5"/>
-          </el-form-item>
-          <el-form-item label="检测等其他费用">
-            <el-input-number v-model="form.fee6"/>
-          </el-form-item>
-          <el-form-item label="头程费用">
-            <el-input-number v-model="form.fee7"/>
-          </el-form-item>
-          <el-form-item label="转运回国费用">
-            <el-input-number v-model="form.fee8"/>
-          </el-form-item>
-          <el-form-item label="月租&客服费用">
-            <el-input-number v-model="form.fee9"/>
+          <el-form-item label="支付方式">
+            <el-input v-model="form.payMethod"/>
           </el-form-item>
           <el-form-item label="备注">
             <el-input v-model="form.comments" type="textarea"/>
-          </el-form-item>
-          <el-form-item label="账单文件">
-            <el-upload :action="actionLink"
-                       with-credentials
-                       multiple
-                       ref="upload"
-                       :on-success="handleSuccess">
-              <el-button slot="trigger" size="small" type="primary"
-              >选取文件
-              </el-button>
-            </el-upload>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onsubmit">确定</el-button>
@@ -147,92 +114,37 @@
           </el-form-item>
         </el-form>
       </el-dialog>
-      <el-dialog :visible.sync="dialogVisible1" width="30%" title="账单详情">
-        <el-form ref="form" :model="curr" label-width="120px">
-          <el-form-item label="用户id">
-            <el-tooltip content="用户id" placement="top">
-              <span>{{ curr.userId }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="用户名称">
-            <el-tooltip content="用户名称" placement="top">
-              <span>{{ curr.nick }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="账单期间">
-            <el-tooltip content="账单期间" placement="top">
-              <span>{{ curr.relatedMonth }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="货币">
-            <el-tooltip content="货币" placement="top">
-              <span>{{ curr.currency }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="合计金额">
-            <el-tooltip content="合计金额" placement="top">
-              <span><strong>{{ curr.sum }}</strong></span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="退货手续费">
-            <el-tooltip content="退货手续费" placement="top">
-              <span>{{ curr.fee1 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="代付到付手续费">
-            <el-tooltip content="代付到付手续费" placement="top">
-              <span>{{ curr.fee2 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="一件代发">
-            <el-tooltip content="一件代发" placement="top">
-              <span>{{ curr.fee3 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="FBA转仓">
-            <el-tooltip content="FBA转仓" placement="top">
-              <span>{{ curr.fee4 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="仓储费">
-            <el-tooltip content="仓储费" placement="top">
-              <span>{{ curr.fee5 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="检测等其他费用">
-            <el-tooltip content="检测等其他费用" placement="top">
-              <span>{{ curr.fee6 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="头程费用">
-            <el-tooltip content="头程费用" placement="top">
-              <span>{{ curr.fee7 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="转运回国费用">
-            <el-tooltip content="转运回国费用" placement="top">
-              <span>{{ curr.fee8 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="月租&客服费用">
-            <el-tooltip content="月租&客服费用" placement="top">
-              <span>{{ curr.fee9 }}</span>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="curr.comments" type="textarea" disabled/>
-          </el-form-item>
-          <el-form-item label="账单文件">
-            <el-tooltip content="账单文件下载" placement="top">
-              <el-button circle @click="downloadFile(curr.fileUuid)">
-                <svg-icon icon-class="doc"/>
-              </el-button>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="this.dialogVisible1=false">关闭</el-button>
-          </el-form-item>
-        </el-form>
+      <el-dialog :visible.sync="dialogVisible1" width="70%" title="充值记录">
+        <el-table
+            style="width: 100%;margin: 10px"
+            :data="tableData1"
+            v-loading.body="tableLoading1"
+            element-loading-text="加载中"
+            stripe
+            highlight-current-row
+        >
+          <el-table-column width="250" prop="userId" label="用户id"/>
+          <el-table-column width="250" prop="nick" label="用户名称"/>
+          <el-table-column width="200" prop="rechargeDate" label="充值时间"/>
+          <el-table-column width="200" prop="amountInJpy" label="日元充值金额"/>
+          <el-table-column width="200" prop="amountInCny" label="人民币充值金额"/>
+          <el-table-column width="200" prop="exchangeRate" label="汇率"/>
+          <el-table-column width="200" prop="payMethod" label="支付方式"/>
+          <el-table-column width="200" prop="timestamp" label="备注"/>
+          <el-table-column label="操作" width="200" fixed="right">
+            预留
+          </el-table-column>
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="search1.current"
+              :page-sizes="[10, 20, 30, 40, 50]"
+              :page-size="search1.size"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="search1.total"
+          >
+          </el-pagination>
+        </el-table>
       </el-dialog>
       <el-dialog :visible.sync="dialogVisible2" width="20%" title="账单批量导入">
         <el-alert type="info" title="请下载模版文件, 按照模版文件形式填写内容" :closable="false"/>
@@ -281,14 +193,18 @@ export default {
   data() {
     return {
       search: {
-        month: null,
         userId: '',
         current: 1,
         pages: null,
         size: 10,
         total: null,
-        startMonth: null,
-        endMonth: null,
+      },
+      search1: {
+        userId: '',
+        current: 1,
+        pages: null,
+        size: 10,
+        total: null,
       },
       options: {
         owners: [],
@@ -317,26 +233,20 @@ export default {
         }],
       },
       tableLoading: false,
+      tableLoading1: false,
       tableData: [],
+      tableData1: [],
       dialogVisible: false,
       dialogVisible1: false,
       dialogVisible2: false,
       form: {
         userId: '',
-        relatedMonth: null,
-        relatedMonthLbl: null,
-        currency: 'JPY',
-        fee1: 0,
-        fee2: 0,
-        fee3: 0,
-        fee4: 0,
-        fee5: 0,
-        fee6: 0,
-        fee7: 0,
-        fee8: 0,
-        fee9: 0,
+        rechargeDate: null,
+        amountInJpy: 0,
+        amountInCny: 0,
+        exchangeRate: 0,
+        payMethod: '',
         comments: '',
-        fileUuid: '',
       },
       curr: {},
       actionLink: process.env.BASE_API + '/v2/common/file/upload',
@@ -354,7 +264,7 @@ export default {
       this.dialogVisible2 = false;
       this.customSearchVal();
       request({
-        url: '/finance/fee/list',
+        url: '/finance/account/list',
         method: 'post',
         data: this.search,
       }).then((res) => {
@@ -405,26 +315,26 @@ export default {
       this.dialogVisible2 = true;
     },
     onsubmit() {
-      this.form.relatedMonth = Number(moment(this.form.relatedMonthLbl).format('yyyyMM'));
       request({
-        url: '/finance/fee/add',
+        url: '/finance/recharge/add',
         method: 'post',
         data: this.form,
       }).then(() => {
-        this.$message.success('账单新增成功');
+        this.$message.success('充值新增成功');
         this.dialogVisible = false;
         this.fetchData();
       });
     },
-    showDetails(uuid) {
+    showDetails(userId) {
+      this.dialogVisible1 = true;
+      this.search1.userId = userId;
       request({
-        url: '/finance/fee/detail/' + uuid,
-        method: 'get',
+        url: '/finance/recharge/list',
+        method: 'post',
+        data: this.search1,
       }).then((res) => {
-        this.curr = res.data.data;
-        this.curr.sum = this.curr.fee1 + this.curr.fee2 + this.curr.fee3 + this.curr.fee4 + this.curr.fee5 +
-            this.curr.fee6 + this.curr.fee7 + this.curr.fee8 + this.curr.fee9;
-        this.dialogVisible1 = true;
+        this.tableData1 = res.data.data.data;
+        this.tableLoading1 = false;
       });
     },
     handleSuccess(response, file, fileList) {

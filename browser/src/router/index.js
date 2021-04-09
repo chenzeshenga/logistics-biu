@@ -1254,7 +1254,7 @@ export const asyncRouterMap = [
         name: 'finance-statistics-mgt',
         meta: {
           perm: 'm:finance:mgt:list',
-          title: '账单',
+          title: '账户',
           icon: 'chart',
           noCache: true,
         },

@@ -7,6 +7,7 @@ import com.abc.chenzeshenga.logistics.model.fee.CustomerFee;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerFeeReq;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfo;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfoReq;
+import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
 import com.abc.chenzeshenga.logistics.util.SqlUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -31,4 +32,9 @@ public class RechargeInfoService extends ServiceImpl<RechargeInfoMapper, Recharg
         return rechargeInfoPageData;
     }
 
+    @Override
+    public boolean insert(RechargeInfo entity) {
+        entity.setUuid(SnowflakeIdWorker.generateStrId());
+        return super.insert(entity);
+    }
 }

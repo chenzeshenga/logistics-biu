@@ -1,6 +1,7 @@
 package com.abc.chenzeshenga.logistics.model.fee;
 
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ public class CustomerAccountInfo {
     private BigDecimal totalInCny;
     private BigDecimal feeInJpy;
     private BigDecimal feeInCny;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date timestamp;
 
 }

@@ -31,4 +31,6 @@ public interface RechargeInfoMapper extends BaseMapper<RechargeInfo> {
      */
     long countRechargeInfoList(@Param("userId") String userId);
 
+    @Override
+    Integer insert(RechargeInfo entity);
 }
