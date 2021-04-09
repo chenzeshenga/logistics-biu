@@ -118,6 +118,9 @@
             </el-button>
           </el-col>
           <el-col :span="2">
+            <el-button type="warning" @click="batchAbandonOrds()" v-if="multiSelection"> 批量删除</el-button>
+          </el-col>
+          <el-col :span="2">
             <el-button
                 type="primary"
                 @click="batchForceStatusUpdate()"
@@ -1051,9 +1054,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 7
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -1062,9 +1063,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 30
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -1073,9 +1072,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(
-                  start.getTime() - 3600 * 1000 * 24 * 90
-              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit('pick', [start, end]);
             },
           },
@@ -1223,21 +1220,30 @@ export default {
       this.$confirm('您确定要提交这些订单？', '提示', confirm)
           .then(() => {
             request({
-              url:
-                  'ord/update/' +
-                  this.msgData.category +
-                  '/' +
-                  this.msgData.statusTo,
+              url: 'ord/update/' + this.msgData.category + '/' + this.msgData.statusTo,
               method: 'post',
               data: this.ord4TrackNo,
-            }).then((res) => {
-              console.log(res);
+            }).then(() => {
               this.fetchData();
               this.$message.success('提交成功');
             });
-          })
-          .catch(() => {
-            this.$message.info('已取消提交');
+          });
+    },
+    batchAbandonOrds() {
+      if (this.ord4TrackNo.length <= 0) {
+        this.$message.warning('请勾选每一行前的勾选框');
+        return;
+      }
+      this.$confirm('您确定要废弃这些订单？', '提示', confirm)
+          .then(() => {
+            request({
+              url: 'ord/update/' + this.msgData.category + '/5',
+              method: 'post',
+              data: this.ord4TrackNo,
+            }).then(() => {
+              this.$message.success('废弃成功');
+              this.fetchData();
+            });
           });
     },
     batchForceStatusUpdate() {
@@ -1489,21 +1495,14 @@ export default {
       this.form.totalVolumeWithWeight = row.totalVolumeWithWeight;
       this.tableDataInDialog = row.orderPackageList;
     },
-
     calculateIndex() {
       this.form.totalVolumeFrontEnd =
           this.form.length * this.form.height * this.form.width;
-      this.form.totalVolumeFrontEnd = this.form.totalVolumeFrontEnd.toFixed(
-          3
-      );
-      this.form.sum =
-          this.form.length + this.form.height + this.form.width;
+      this.form.totalVolumeFrontEnd = this.form.totalVolumeFrontEnd.toFixed(3);
+      this.form.sum = this.form.length + this.form.height + this.form.width;
       this.form.sum = this.form.sum.toFixed(3);
-      this.form.totalVolumeWithWeight =
-          (this.form.length * this.form.height * this.form.width) / 6000;
-      this.form.totalVolumeWithWeight = this.form.totalVolumeWithWeight.toFixed(
-          3
-      );
+      this.form.totalVolumeWithWeight = (this.form.length * this.form.height * this.form.width) / 6000;
+      this.form.totalVolumeWithWeight = this.form.totalVolumeWithWeight.toFixed(3);
     },
     updateOrd() {
       this.form.status = this.msgData.statusTo;

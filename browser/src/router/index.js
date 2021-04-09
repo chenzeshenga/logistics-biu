@@ -1248,6 +1248,17 @@ export const asyncRouterMap = [
           noCache: true,
         },
       },
+      {
+        path: 'mgt/statistics',
+        component: _import('finance/finance-statistics'),
+        name: 'finance-statistics-mgt',
+        meta: {
+          perm: 'm:finance:mgt:list',
+          title: '账单',
+          icon: 'chart',
+          noCache: true,
+        },
+      },
     ],
   },
   {

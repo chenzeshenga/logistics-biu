@@ -588,7 +588,7 @@
 
     <update id="statusUpdateBatch" parameterType="java.util.Map">
         update l_manual_order
-        set status=#{status}
+        set status=#{status}, update_on=now()
         where ord_no in
         (
         <foreach collection="ords" item="ord" index="index" separator=",">
@@ -655,7 +655,8 @@
     <update id="updateTrackNo" parameterType="com.abc.chenzeshenga.logistics.model.ord.OrdTrackNoMapping">
         update l_manual_order
         set carrier_no=#{carrierNo},
-            track_no=#{trackNo}
+            track_no=#{trackNo},
+            update_on=now()
         where ord_no = #{ordNo}
     </update>
 
