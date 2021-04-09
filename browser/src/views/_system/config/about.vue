@@ -21,8 +21,8 @@ export default {
     return {
       activities: [
         {
-          content: '[todo]v1.51 1. 账单管理-新增账单管理页面-part3',
-          timestamp: 'TBD',
+          content: 'v1.51 1. 账单管理-新增账单管理页面-part3 2. 账单管理-新增账户页面 3. 待审核页面新增批量废弃订单按钮',
+          timestamp: '2021-04-09',
         },
         {
           content: 'v1.50 1. 账单管理-新增账单管理页面-part2,新增单个账单新增以及账单查询',
