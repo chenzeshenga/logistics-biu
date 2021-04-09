@@ -102,5 +102,16 @@
         where uid = #{uid}
     </select>
 
+    <select id="selectAll" resultType="com.abc.entity.SysUser">
+        select uid,
+               uname,
+               nick,
+               pwd,
+               salt,
+               `lock`,
+               created,
+               updated
+        from sys_user
+    </select>
 
 </mapper>

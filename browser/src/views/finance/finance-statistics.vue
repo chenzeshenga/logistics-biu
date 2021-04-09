@@ -2,27 +2,13 @@
   <div class="login-container">
     <div class="app-container">
       <el-row :gutter="20" style="margin: 1%">
-        <el-col :span="6">
-          <el-tooltip content="请选择账单月度" placement="top">
-            <el-date-picker
-                v-model="search.month"
-                type="monthrange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始"
-                end-placeholder="结束"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-tooltip>
-        </el-col>
         <el-col :span="3">
-          <el-tooltip content="请选择账单属主" placement="top">
+          <el-tooltip content="请选择账户属主" placement="top">
             <el-select
                 filterable
                 clearable
                 v-model="search.userId"
-                placeholder="请选择账单属主"
+                placeholder="请选择账户属主"
             >
               <el-option
                   v-for="creator in options.owners"
@@ -40,15 +26,15 @@
           ></el-button>
         </el-col>
         <el-col :span="2" :offset="2">
-          <el-tooltip content="根据当前筛选条件,导出账单列表文件">
+          <el-tooltip content="根据当前筛选条件,导出账户列表文件">
             <el-button type="primary" @click="exportData">导出文件</el-button>
           </el-tooltip>
         </el-col>
         <el-col :span="2" :offset="1">
-          <el-button type="primary" @click="triggerImportDlg">导入账单</el-button>
+          <el-button type="primary" @click="triggerImportDlg">导入充值记录</el-button>
         </el-col>
         <el-col :span="2" :offset="3">
-          <el-button type="primary" @click="triggerAddDlg">新增账单</el-button>
+          <el-button type="primary" @click="triggerAddDlg">新增充值记录</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -66,42 +52,13 @@
         </el-table-column>
         <el-table-column width="250" prop="userId" label="用户id"/>
         <el-table-column width="250" prop="nick" label="用户名称"/>
-        <el-table-column width="100" prop="relatedMonth" label="费用期间"/>
-        <el-table-column width="100" prop="currency" label="货币"/>
-        <el-table-column width="200" prop="fee1" label="退货手续费"/>
-        <el-table-column width="200" prop="fee2" label="代付到付手续费"/>
-        <el-table-column width="200" prop="fee3" label="一件代发"/>
-        <el-table-column width="200" prop="fee4" label="FBA转仓"/>
-        <el-table-column width="200" prop="fee5" label="仓储费"/>
-        <el-table-column width="200" prop="fee6" label="检测等其他费用"/>
-        <el-table-column width="200" prop="fee7" label="头程费用"/>
-        <el-table-column width="200" prop="fee8" label="转运回国费用"/>
-        <el-table-column width="200" prop="fee9" label="月租&客服费用"/>
-        <el-table-column width="200" prop="comments" label="备注"/>
-        <el-table-column width="200" prop="fileUuid" label="账单文件">
-          <template slot-scope="scope">
-            <div slot="reference" class="name-wrapper">
-              <el-tooltip content="账单文件下载" placement="top">
-                <el-button circle @click="downloadFile(scope.row.fileUuid)">
-                  <svg-icon icon-class="doc"/>
-                </el-button>
-              </el-tooltip>
-            </div>
-          </template>
-        </el-table-column>
+        <el-table-column width="100" prop="totalInJpy" label="账户日元余额"/>
+        <el-table-column width="100" prop="totalInCny" label="账户人民币余额"/>
+        <el-table-column width="200" prop="feeInJpy" label="日元合计费用"/>
+        <el-table-column width="200" prop="feeInCny" label="人民币合计费用"/>
+        <el-table-column width="200" prop="timestamp" label="统计时间"/>
         <el-table-column label="操作" width="200" fixed="right">
-          <template slot-scope="scope">
-            <el-tooltip content="删除" placement="top">
-              <el-button
-                  @click="handleDelete(scope.$index, scope.row)"
-                  size="mini"
-                  type="danger"
-                  icon="el-icon-remove"
-                  circle
-                  plain
-              />
-            </el-tooltip>
-          </template>
+          预留
         </el-table-column>
       </el-table>
       <el-pagination
