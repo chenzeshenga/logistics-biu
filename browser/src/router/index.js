@@ -1176,7 +1176,7 @@ export const asyncRouterMap = [
         name: 'product-statistic-history',
         component: _import('product/product-statistic-history'),
         meta: {
-          perm: 'm:product:mgt:3',
+          perm: 'm:product:mgt:3:his',
           title: '商品历史库存费用',
           icon: 'chart',
           noCache: true,
@@ -1232,7 +1232,7 @@ export const asyncRouterMap = [
     path: '/finance',
     component: Layout,
     meta: {
-      perm: 'm:finance:mgt:list',
+      perm: 'm:finance:mgt',
       title: '账单管理',
       icon: 'chart',
     },
@@ -1253,7 +1253,7 @@ export const asyncRouterMap = [
         component: _import('finance/finance-statistics'),
         name: 'finance-statistics-mgt',
         meta: {
-          perm: 'm:finance:mgt:list',
+          perm: 'm:finance:mgt:statistics',
           title: '账户',
           icon: 'chart',
           noCache: true,
