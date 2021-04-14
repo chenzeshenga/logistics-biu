@@ -34,6 +34,10 @@ export const constantRouterMap = [
     hidden: true,
   },
   {
+    path: '/intro',
+    component: _import('intro/intro'),
+  },
+  {
     path: '/order-info',
     component: _import('showPage/order-info'),
     hidden: true,
