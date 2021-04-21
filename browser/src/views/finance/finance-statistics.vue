@@ -1,6 +1,9 @@
 <template>
   <div class="login-container">
     <div class="app-container">
+      <el-row style="margin: 1%">
+        <el-alert type="warning" title="账户余额以及消费情况每2小时统计一次, 页面信息可能存在误差, 触发统计请点下统计按钮" closable/>
+      </el-row>
       <el-row :gutter="20" style="margin: 1%">
         <el-col :span="3">
           <el-tooltip content="请选择账户属主" placement="top">
@@ -35,6 +38,9 @@
         </el-col>
         <el-col :span="2" :offset="3">
           <el-button type="primary" @click="triggerAddDlg">新增充值记录</el-button>
+        </el-col>
+        <el-col :span="2" :offset="3">
+          <el-button type="primary" @click="triggerAccountStatistics">统计</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -146,7 +152,7 @@
           </el-pagination>
         </el-table>
       </el-dialog>
-      <el-dialog :visible.sync="dialogVisible2" width="20%" title="账单批量导入">
+      <el-dialog :visible.sync="dialogVisible2" width="20%" title="充值记录批量导入">
         <el-alert type="info" title="请下载模版文件, 按照模版文件形式填写内容" :closable="false"/>
         <el-upload
             ref="upload"
@@ -249,8 +255,7 @@ export default {
         comments: '',
       },
       curr: {},
-      actionLink: process.env.BASE_API + '/v2/common/file/upload',
-      actionLink1: process.env.BASE_API + '/finance/fee/batch/import',
+      actionLink1: process.env.BASE_API + '/finance/recharge/batch/import',
     };
   },
   created() {
@@ -315,10 +320,12 @@ export default {
       this.dialogVisible2 = true;
     },
     onsubmit() {
+      const postData = this.form;
+      postData.rechargeDate = moment(this.form.rechargeDate).format('yyyy-MM-DD HH:mm:ss');
       request({
         url: '/finance/recharge/add',
         method: 'post',
-        data: this.form,
+        data: postData,
       }).then(() => {
         this.$message.success('充值新增成功');
         this.dialogVisible = false;
@@ -365,10 +372,18 @@ export default {
     },
     downloadTemplate() {
       request({
-        url: '/finance/fee/generateTemplate',
+        url: '/finance/account/generateTemplate',
         method: 'get',
       }).then((res) => {
         this.downloadFile(res.data.data.uuid);
+      });
+    },
+    triggerAccountStatistics() {
+      request({
+        url: '/finance/account/triggerAccount',
+        method: 'get',
+      }).then(() => {
+        this.$message.warning('账户数据统计中, 页面数据可能不准确, 请稍等...');
       });
     },
     customSearchVal() {

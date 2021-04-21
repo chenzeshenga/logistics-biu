@@ -39,6 +39,15 @@ public class DateUtil {
         return new Date();
     }
 
+    public static Date getCustomDateFromDateStr(String dateStr, String patternStr) {
+        try {
+            return new SimpleDateFormat(patternStr).parse(dateStr);
+        } catch (ParseException e) {
+            log.error("DateUtil.getCustomDateFromDateStr error stack info ", e);
+        }
+        return new Date();
+    }
+
     /**
      * 获取日期的月份
      *
@@ -50,10 +59,10 @@ public class DateUtil {
     }
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT_TO =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static final SimpleDateFormat SIMPLE_STR_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Date getFromDateFromStr(String dateString) throws ParseException {
         return SIMPLE_DATE_FORMAT.parse(dateString);
@@ -103,7 +112,7 @@ public class DateUtil {
 
     public static Date genStartDate(Date date) {
         String yyyyMMdd =
-                new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
+            new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
         String yyyyMMddHHmmss = yyyyMMdd + "000000";
         try {
             return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);
@@ -115,7 +124,7 @@ public class DateUtil {
 
     public static Date genEndDate(Date date) {
         String yyyyMMdd =
-                new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
+            new SimpleDateFormat("yyyyMMdd").format(new Date(date.getTime() - 60 * 60 * 24 * 1000));
         String yyyyMMddHHmmss = yyyyMMdd + "235959";
         try {
             return new SimpleDateFormat("yyyyMMddHHmmss").parse(yyyyMMddHHmmss);

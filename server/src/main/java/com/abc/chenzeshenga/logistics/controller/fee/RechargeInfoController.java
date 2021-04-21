@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author chenzeshenga
@@ -28,6 +32,12 @@ public class RechargeInfoController {
     @PostMapping("/add")
     public Json add(@RequestBody RechargeInfo rechargeInfo) {
         rechargeInfoService.insert(rechargeInfo);
+        return Json.succ();
+    }
+
+    @PostMapping("/batch/import")
+    public Json batchImport(@RequestBody MultipartFile file) throws IOException {
+        rechargeInfoService.batchImport(file);
         return Json.succ();
     }
 
