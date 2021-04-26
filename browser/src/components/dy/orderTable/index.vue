@@ -108,7 +108,7 @@
               批量修改单号
             </el-button>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="margin-left: 1%">
             <el-button
                 type="primary"
                 @click="batchStatusUpdate()"
@@ -117,10 +117,10 @@
               批量提交
             </el-button>
           </el-col>
-          <el-col :span="2" v-if="msgData.buttonVisible13">
+          <el-col :span="2" v-if="msgData.buttonVisible13" style="margin-left: 1%">
             <el-button type="warning" @click="batchAbandonOrds()" v-if="multiSelection"> 批量删除</el-button>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="margin-left: 1%">
             <el-button
                 type="primary"
                 @click="batchForceStatusUpdate()"
@@ -129,13 +129,13 @@
               批量强制提交
             </el-button>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="margin-left: 1%">
             <el-button type="primary" @click="route2NewOrd()"
             >新建订单
             </el-button
             >
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="margin-left: 1%">
             <el-tooltip effect="dark" content="导出当前状态下未筛选情况下所有订单，订单内容仅提供前3项" placement="top">
               <el-button
                   type="primary"
@@ -144,12 +144,21 @@
               </el-button>
             </el-tooltip>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="2" style="margin-left: 1%">
             <el-tooltip effect="dark" content="导出当前状态所有订单" placement="top">
               <el-button
                   type="primary"
                   @click="exportExcelV2()"
               >导出excel-v2
+              </el-button>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="2" style="margin-left: 1%">
+            <el-tooltip effect="dark" content="导入订单费用" placement="top">
+              <el-button
+                  type="primary"
+                  @click="batchUpdateOrdFee()"
+              >导入订单费用
               </el-button>
             </el-tooltip>
           </el-col>
@@ -347,6 +356,11 @@
           width="80"
           prop="collectNum"
           label="总计代收费用"
+      ></el-table-column>
+      <el-table-column
+          width="80"
+          prop="ordUserFee"
+          label="订单费用"
       ></el-table-column>
       <el-table-column
           width="120"
@@ -1006,6 +1020,35 @@
                 <el-button @click="dialogVisible5 = false">取 消</el-button>
             </span>
     </el-dialog>
+    <el-dialog title="批量添加订单费用" :visible.sync="dialogVisible6" width="30%">
+      <el-col :span="18">
+        <el-upload
+            :action="actionLink3"
+            with-credentials
+            multiple
+            ref="upload2"
+            :auto-upload="false"
+            :on-success="handleSuccess"
+        >
+          <el-button slot="trigger" size="small" type="primary"
+          >选取文件
+          </el-button>
+          <el-button
+              style="margin-left: 10px;"
+              size="small"
+              type="success"
+              @click="submitUpload2"
+          >上传
+          </el-button>
+        </el-upload>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="info" @click="downloadTemplate2">下载模板</el-button>
+      </el-col>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible6 = false">取 消</el-button>
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -1084,6 +1127,7 @@ export default {
       dialogVisible3: false,
       dialogVisible4: false,
       dialogVisible5: false,
+      dialogVisible6: false,
       carrier: [],
       form: {
         orderNo: '',
@@ -1115,6 +1159,7 @@ export default {
       channels: [],
       actionLink2uploadOrderFile: process.env.BASE_API + '/file/order',
       actionLink1: process.env.BASE_API + '/ord/trackno/list',
+      actionLink3: process.env.BASE_API + '/ord/batch/import',
       dialogVisible4Barcode: false,
       barcodeSetting: {
         width: 200,
@@ -1549,14 +1594,34 @@ export default {
     submitUpload() {
       this.$refs.upload.submit();
     },
+    submitUpload2() {
+      this.$refs.upload2.submit();
+    },
     handleSuccess(response, file, fileList) {
       this.dialogVisibleList = false;
+      this.dialogVisible6 = false;
       this.fetchData();
     },
     downloadTemplate() {
       const link = document.createElement('a');
       link.style.display = 'none';
       link.href = process.env.BASE_API + '/template/file/ORD_TRACKNO_MAPPING';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+    },
+    downloadTemplate2() {
+      request({
+        url: '/ord/userFee/generateTemplate',
+        method: 'get',
+      }).then((res) => {
+        this.downloadFile(res.data.data.uuid);
+      });
+    },
+    downloadFile(uuid) {
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = process.env.BASE_API + '/v2/common/file/' + uuid;
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
@@ -1629,6 +1694,9 @@ export default {
     },
     removePackage(index, row) {
       this.tableDataInDialog.splice(index, 1);
+    },
+    batchUpdateOrdFee() {
+      this.dialogVisible6 = true;
     },
   },
 };

@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -628,4 +629,16 @@ public class OrderController {
         enrichSingleOrd(manualOrder);
         return Json.succ().data(manualOrder);
     }
+
+    @GetMapping("/userFee/generateTemplate")
+    public Json downloadOrdUseFeeTemplate() throws FileNotFoundException {
+        return Json.succ().data("data", orderService.generateTemplate());
+    }
+
+    @PostMapping("/batch/import")
+    public Json batchImport(@RequestBody MultipartFile file) throws IOException {
+        orderService.batchImport(file);
+        return Json.succ();
+    }
+
 }

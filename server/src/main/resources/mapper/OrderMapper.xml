@@ -75,6 +75,7 @@
         <result property="toZipCode" column="to_zipcode"/>
         <result property="collect" column="on_behalf"/>
         <result property="collectNum" column="collect_num"/>
+        <result property="ordUserFee" column="ord_user_fee"/>
         <result property="amount" column="amount"/>
         <result property="chinaNo" column="china_no"/>
         <result property="fromContact" column="from_contact"/>
@@ -768,5 +769,11 @@
           and ord.create_by = #{creator}
         order by ord.update_on desc
     </select>
+
+    <update id="updateOrdFee">
+        update l_manual_order
+        set ord_user_fee=#{ordUserFee}
+        where ord_no = #{orderNo}
+    </update>
 
 </mapper>
