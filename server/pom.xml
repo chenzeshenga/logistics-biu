@@ -146,11 +146,13 @@
             <groupId>com.amazonservices.mws</groupId>
             <artifactId>MWSClientJavaRuntime</artifactId>
             <version>1.0</version>
+            <systemPath>${pom.basedir}/../outer-dist/MWSClientJavaRuntime-1.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.amazonservices.mws</groupId>
             <artifactId>MWSOrders</artifactId>
             <version>1.0</version>
+            <systemPath>${pom.basedir}/../outer-dist/MWSOrders_2013-09-01_v2018-10-31.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -180,5 +182,13 @@
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ali</id>
+            <name>ali-maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

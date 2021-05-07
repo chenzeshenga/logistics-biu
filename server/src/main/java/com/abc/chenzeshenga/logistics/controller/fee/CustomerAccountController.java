@@ -42,4 +42,9 @@ public class CustomerAccountController {
         return Json.succ().data("data", customerAccountService.generateTemplate());
     }
 
+    @GetMapping("/generateAccountFile")
+    public Json generateAccountFile() throws FileNotFoundException {
+        return Json.succ().data("data", customerAccountService.generateFile());
+    }
+
 }

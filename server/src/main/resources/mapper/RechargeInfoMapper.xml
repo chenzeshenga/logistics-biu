@@ -14,6 +14,18 @@
         <result column="create_date" property="createdDate"/>
     </resultMap>
 
+    <resultMap id="BaseHeadResultMap" type="com.abc.chenzeshenga.logistics.model.fee.RechargeInfoHeadExp">
+        <id column="uuid" property="uuid"/>
+        <result column="user_id" property="userId"/>
+        <result column="nick" property="nick"/>
+        <result column="recharge_date" property="rechargeDate"/>
+        <result column="amount_in_jpy" property="amountInJpy"/>
+        <result column="amount_in_cny" property="amountInCny"/>
+        <result column="exchange_rate" property="exchangeRate"/>
+        <result column="pay_method" property="payMethod"/>
+        <result column="comments" property="comments"/>
+    </resultMap>
+
     <sql id="ColumnList">
 
     </sql>
@@ -50,5 +62,18 @@
              #{comments}, now()
                 )
     </insert>
+
+    <select id="selectRechargeInfoWithoutPagination" resultMap="BaseHeadResultMap">
+        select
+        uuid, user_id, recharge_date, amount_in_jpy, amount_in_cny, exchange_rate, pay_method, comments,
+        user.nick
+        from l_recharge_info recharge left join sys_user user on recharge.user_id= user.uname
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

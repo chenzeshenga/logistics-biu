@@ -13,6 +13,17 @@
         <result column="timestamp" property="timestamp"/>
     </resultMap>
 
+    <resultMap id="BaseHeadResultMap" type="com.abc.chenzeshenga.logistics.model.fee.CustomerAccountInfoHead">
+        <id column="uuid" property="uuid"/>
+        <result column="user_id" property="userId"/>
+        <result column="nick" property="nick"/>
+        <result column="total_in_jpy" property="totalInJpy"/>
+        <result column="total_in_cny" property="totalInCny"/>
+        <result column="fee_in_jpy" property="feeInJpy"/>
+        <result column="fee_in_cny" property="feeInCny"/>
+        <result column="timestamp" property="timestamp"/>
+    </resultMap>
+
     <delete id="truncate">
         truncate l_customer_account
     </delete>
@@ -39,5 +50,15 @@
         </where>
     </select>
 
+    <select id="selectCustomerAccountListWithoutPagination" resultMap="BaseHeadResultMap">
+        select uuid,
+               user_id,
+               total_in_jpy,
+               total_in_cny,
+               fee_in_jpy,
+               fee_in_cny, timestamp, nick
+        from l_customer_account recharge left join sys_user user
+        on recharge.user_id= user.uname
+    </select>
 
 </mapper>

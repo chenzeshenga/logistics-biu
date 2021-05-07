@@ -29,8 +29,8 @@
           ></el-button>
         </el-col>
         <el-col :span="2" :offset="2">
-          <el-tooltip content="根据当前筛选条件,导出账户列表文件">
-            <el-button type="primary" @click="exportData">导出文件</el-button>
+          <el-tooltip content="导出账户列表文件">
+            <el-button type="primary" @click="exportData">导出</el-button>
           </el-tooltip>
         </el-col>
         <el-col :span="2" :offset="1">
@@ -121,6 +121,11 @@
         </el-form>
       </el-dialog>
       <el-dialog :visible.sync="dialogVisible1" width="70%" title="充值记录">
+        <el-row>
+          <el-col offset="20">
+            <el-button @click="exportRechargeData">导出充值记录</el-button>
+          </el-col>
+        </el-row>
         <el-table
             style="width: 100%;margin: 10px"
             :data="tableData1"
@@ -140,17 +145,17 @@
           <el-table-column label="操作" width="200" fixed="right">
             预留
           </el-table-column>
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="search1.current"
-              :page-sizes="[10, 20, 30, 40, 50]"
-              :page-size="search1.size"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="search1.total"
-          >
-          </el-pagination>
         </el-table>
+        <el-pagination
+            @size-change="handleSizeChange2"
+            @current-change="handleCurrentChange2"
+            :current-page="search1.current"
+            :page-sizes="[10, 20, 30, 40, 50]"
+            :page-size="search1.size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="search1.total"
+        >
+        </el-pagination>
       </el-dialog>
       <el-dialog :visible.sync="dialogVisible2" width="20%" title="充值记录批量导入">
         <el-alert type="info" title="请下载模版文件, 按照模版文件形式填写内容" :closable="false"/>
@@ -278,6 +283,19 @@ export default {
         this.tableLoading = false;
       });
     },
+    fetchRechargeData() {
+      request({
+        url: '/finance/recharge/list',
+        method: 'post',
+        data: this.search1,
+      }).then((res) => {
+        this.tableData1 = res.data.data.data;
+        this.search1.size = res.data.data.size;
+        this.search1.total = res.data.data.total;
+        this.search1.current = res.data.data.current;
+        this.tableLoading1 = false;
+      });
+    },
     initUserList() {
       request({
         url: '/sys_user/query4Option',
@@ -293,6 +311,14 @@ export default {
     handleSizeChange(val) {
       this.search.size = val;
       this.fetchData();
+    },
+    handleSizeChange2(val) {
+      this.search1.size = val;
+      this.fetchRechargeData();
+    },
+    handleCurrentChange2(val) {
+      this.search1.current = val;
+      this.fetchRechargeData();
     },
     handleCurrentChange(val) {
       this.search.current = val;
@@ -335,14 +361,7 @@ export default {
     showDetails(userId) {
       this.dialogVisible1 = true;
       this.search1.userId = userId;
-      request({
-        url: '/finance/recharge/list',
-        method: 'post',
-        data: this.search1,
-      }).then((res) => {
-        this.tableData1 = res.data.data.data;
-        this.tableLoading1 = false;
-      });
+      this.fetchRechargeData();
     },
     handleSuccess(response, file, fileList) {
       this.form.fileUuid = response.data.uuid;
@@ -361,11 +380,17 @@ export default {
       link.click();
     },
     exportData() {
-      this.customSearchVal();
       request({
-        url: '/finance/fee/generateFile',
-        method: 'post',
-        data: this.search,
+        url: '/finance/account/generateAccountFile',
+        method: 'get',
+      }).then((res) => {
+        this.downloadFile(res.data.data.uuid);
+      });
+    },
+    exportRechargeData() {
+      request({
+        url: '/finance/recharge/generateRechargeFile?userId=' + this.search1.userId,
+        method: 'get',
       }).then((res) => {
         this.downloadFile(res.data.data.uuid);
       });

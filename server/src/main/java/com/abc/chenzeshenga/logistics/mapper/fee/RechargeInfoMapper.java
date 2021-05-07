@@ -2,6 +2,7 @@ package com.abc.chenzeshenga.logistics.mapper.fee;
 
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfo;
+import com.abc.chenzeshenga.logistics.model.fee.RechargeInfoHeadExp;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -33,4 +34,6 @@ public interface RechargeInfoMapper extends BaseMapper<RechargeInfo> {
 
     @Override
     Integer insert(RechargeInfo entity);
+
+    List<RechargeInfoHeadExp> selectRechargeInfoWithoutPagination(@Param("userId") String userId);
 }

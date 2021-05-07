@@ -7,9 +7,11 @@ import com.abc.chenzeshenga.logistics.mapper.file.FileRecordMapper;
 import com.abc.chenzeshenga.logistics.model.common.PageData;
 import com.abc.chenzeshenga.logistics.model.common.SqlLimit;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerAccountInfo;
+import com.abc.chenzeshenga.logistics.model.fee.CustomerAccountInfoHead;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerAccountReq;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerFee;
 import com.abc.chenzeshenga.logistics.model.fee.CustomerFeeHead;
+import com.abc.chenzeshenga.logistics.model.fee.CustomerFeeReq;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfo;
 import com.abc.chenzeshenga.logistics.model.fee.RechargeInfoHead;
 import com.abc.chenzeshenga.logistics.model.file.FileRecord;
@@ -91,8 +93,14 @@ public class CustomerAccountService extends ServiceImpl<CustomerAccountMapper, C
                 BigDecimal amountInJpy = new BigDecimal("0");
                 BigDecimal amountInCny = new BigDecimal("0");
                 for (RechargeInfo rechargeInfo : rechargeInfoList) {
-                    amountInCny = amountInCny.add(rechargeInfo.getAmountInCny());
-                    amountInJpy = amountInJpy.add(rechargeInfo.getAmountInJpy());
+                    BigDecimal tmpAmountInCny = rechargeInfo.getAmountInCny();
+                    if (tmpAmountInCny != null) {
+                        amountInCny = amountInCny.add(tmpAmountInCny);
+                    }
+                    BigDecimal tmpAmountInJpy = rechargeInfo.getAmountInJpy();
+                    if (tmpAmountInJpy != null) {
+                        amountInJpy = amountInJpy.add(rechargeInfo.getAmountInJpy());
+                    }
                 }
                 customerAccountInfo.setTotalInJpy(amountInJpy);
                 customerAccountInfo.setTotalInCny(amountInCny);
@@ -155,6 +163,28 @@ public class CustomerAccountService extends ServiceImpl<CustomerAccountMapper, C
         FileRecord fileRecord = new FileRecord();
         fileRecord.setUuid(uuid);
         fileRecord.setFileName(uuid + ".xlsx");
+        fileRecord.setAbsolutePath(tempPath + File.separator + currMonth + File.separator + uuid + ".xlsx");
+        fileRecord.setUploadUser("sys");
+        fileRecord.setUploadDate(new Date());
+        fileRecordMapper.insert(fileRecord);
+        return fileRecord;
+    }
+
+    public FileRecord generateFile() throws FileNotFoundException {
+        List<CustomerAccountInfoHead> customerAccountInfoHeads = baseMapper.selectCustomerAccountListWithoutPagination();
+        String uuid = SnowflakeIdWorker.generateStrId();
+        String currMonth = DateUtil.getMonthFromDate(new Date());
+        FileUtils.createDirectory(tempPath + File.separator + currMonth);
+        File tmpFile = new File(tempPath + File.separator + currMonth + File.separator + uuid + ".xlsx");
+        FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
+        ExcelWriter excelWriter = new ExcelWriter(fileOutputStream, ExcelTypeEnum.XLSX);
+        Sheet sheet1 = new Sheet(1, 0, CustomerAccountInfoHead.class);
+        excelWriter.write(customerAccountInfoHeads, sheet1);
+        excelWriter.finish();
+
+        FileRecord fileRecord = new FileRecord();
+        fileRecord.setUuid(uuid);
+        fileRecord.setFileName(uuid + "-客户账户列表-" + DateUtil.getOnlyDateStrFromDate(new Date()) + ".xlsx");
         fileRecord.setAbsolutePath(tempPath + File.separator + currMonth + File.separator + uuid + ".xlsx");
         fileRecord.setUploadUser("sys");
         fileRecord.setUploadDate(new Date());
