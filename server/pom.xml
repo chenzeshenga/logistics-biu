@@ -146,13 +146,11 @@
             <groupId>com.amazonservices.mws</groupId>
             <artifactId>MWSClientJavaRuntime</artifactId>
             <version>1.0</version>
-            <systemPath>${pom.basedir}/../outer-dist/MWSClientJavaRuntime-1.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.amazonservices.mws</groupId>
             <artifactId>MWSOrders</artifactId>
             <version>1.0</version>
-            <systemPath>${pom.basedir}/../outer-dist/MWSOrders_2013-09-01_v2018-10-31.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
