@@ -3,6 +3,8 @@ package com.abc.chenzeshenga.logistics.model;
 import com.abc.chenzeshenga.logistics.model.ord.OrderPackage;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("l_manual_order")
 public class ManualOrder extends BaseRowModel implements Serializable {
 
     private static final long serialVersionUID = 6816237345363318514L;
@@ -35,6 +38,7 @@ public class ManualOrder extends BaseRowModel implements Serializable {
     @NotEmpty(message = "订单号必填，且长度大于3个字符")
     @Size(min = 3, max = 255)
     @ExcelProperty(index = 0, value = "订单号")
+    @TableId
     private String orderNo;
 
     @ExcelProperty(index = 1, value = "用户定义订单号")
@@ -171,7 +175,22 @@ public class ManualOrder extends BaseRowModel implements Serializable {
     private Map<String, String> address;
     private Map<String, String> toAddress;
     private String abnormalReason;
+
+    /**
+     * 订单费用
+     */
     private String ordFee;
+
+    /**
+     * 用户已确认
+     */
+    private boolean confirmed = false;
+
+    /**
+     * 确认用户用户名
+     */
+    private String confirmUser;
+
     private boolean satisfied = true;
 
     private double length;

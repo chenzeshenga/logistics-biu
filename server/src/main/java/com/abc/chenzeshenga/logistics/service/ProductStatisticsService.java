@@ -29,6 +29,7 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,9 @@ public class ProductStatisticsService extends ServiceImpl<ProductStatisticsMappe
     private final JobHisService jobHisService;
 
     private final ExecutorService pool;
+
+    @Value("${spring.profiles.active}")
+    private String env;
 
     @Autowired
     public ProductStatisticsService(ProductService productService, CompanyProfileService companyProfileService, JobHisService jobHisService,
@@ -77,52 +81,56 @@ public class ProductStatisticsService extends ServiceImpl<ProductStatisticsMappe
     @Scheduled(cron = "0 0 0 * * ?")
     public void triggerStatistics() {
         pool.execute(() -> {
-            JobHis currJobHis = recordJobStartTime();
-            baseMapper.deleteAll();
-            int result = baseMapper.deleteCurrDayHistory(DateUtil.getOnlyDateStrFromDate(new Date()));
-            log.info("total {} history record deleted", result);
-            List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
-            productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> {
-                productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId());
-                String dySku = productInWarehouseStatistics.getDySku();
-                String currDate = DateUtil.getOnlyDateStrFromDate(new Date());
-                ProductInWarehouseStatistics ori = baseMapper.selectHistoryBySkuAndDate(dySku, currDate);
-                if (StringUtils.isNotBlank(dySku)) {
-                    Product product = productService.selectProductByDySku(dySku);
-                    if (product != null) {
-                        if (StringUtils.isNotBlank(product.getLength()) && StringUtils.isNotBlank(product.getWidth())
+            if (!"dev".equals(env)) {
+                JobHis currJobHis = recordJobStartTime();
+                baseMapper.deleteAll();
+                int result = baseMapper.deleteCurrDayHistory(DateUtil.getOnlyDateStrFromDate(new Date()));
+                log.info("total {} history record deleted", result);
+                List<ProductInWarehouseStatistics> productInWarehouseStatisticsList = baseMapper.triggerCount();
+                productInWarehouseStatisticsList.forEach(productInWarehouseStatistics -> {
+                    productInWarehouseStatistics.setUuid(SnowflakeIdWorker.generateStrId());
+                    String dySku = productInWarehouseStatistics.getDySku();
+                    String currDate = DateUtil.getOnlyDateStrFromDate(new Date());
+                    ProductInWarehouseStatistics ori = baseMapper.selectHistoryBySkuAndDate(dySku, currDate);
+                    if (StringUtils.isNotBlank(dySku)) {
+                        Product product = productService.selectProductByDySku(dySku);
+                        if (product != null) {
+                            if (StringUtils.isNotBlank(product.getLength()) && StringUtils.isNotBlank(product.getWidth())
                                 && StringUtils.isNotBlank(product.getHeight())) {
-                            double volume =
+                                double volume =
                                     new BigDecimal(product.getLength()).multiply(new BigDecimal(product.getWidth()))
-                                            .multiply(new BigDecimal(product.getHeight()))
-                                            .multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum())).doubleValue();
-                            productInWarehouseStatistics.setVolume(volume);
-                            CompanyProfile companyProfile =
+                                        .multiply(new BigDecimal(product.getHeight()))
+                                        .multiply(new BigDecimal(productInWarehouseStatistics.getTotalNum())).doubleValue();
+                                productInWarehouseStatistics.setVolume(volume);
+                                CompanyProfile companyProfile =
                                     companyProfileService.init(productInWarehouseStatistics.getOwner());
-                            if (companyProfile != null && companyProfile.getCostOnVolume() != null) {
-                                BigDecimal costOnPerVolume = companyProfile.getCostOnVolume();
-                                Double costOnVolume = BigDecimal.valueOf(volume)
+                                if (companyProfile != null && companyProfile.getCostOnVolume() != null) {
+                                    BigDecimal costOnPerVolume = companyProfile.getCostOnVolume();
+                                    Double costOnVolume = BigDecimal.valueOf(volume)
                                         .divide(new BigDecimal(100 * 100 * 100), BigDecimal.ROUND_CEILING)
                                         .multiply(costOnPerVolume).doubleValue();
-                                productInWarehouseStatistics.setCostOnVolume(costOnVolume);
+                                    productInWarehouseStatistics.setCostOnVolume(costOnVolume);
+                                }
+                            }
+                            if (StringUtils.isNotBlank(product.getWeight())) {
+                                productInWarehouseStatistics.setWeight(
+                                    new BigDecimal(productInWarehouseStatistics.getTotalNum())
+                                        .multiply(new BigDecimal(product.getWeight())).doubleValue());
                             }
                         }
-                        if (StringUtils.isNotBlank(product.getWeight())) {
-                            productInWarehouseStatistics.setWeight(
-                                    new BigDecimal(productInWarehouseStatistics.getTotalNum())
-                                            .multiply(new BigDecimal(product.getWeight())).doubleValue());
+                        productInWarehouseStatistics.setDate(currDate);
+                        productInWarehouseStatistics.setUpdateBy("system");
+                        productInWarehouseStatistics.setUpdateTime(new Date());
+                        baseMapper.insertProductInWarehouseSingle(productInWarehouseStatistics);
+                        if (ori == null) {
+                            baseMapper.insertProductInWarehouseHistorySingle(productInWarehouseStatistics);
                         }
                     }
-                    productInWarehouseStatistics.setDate(currDate);
-                    productInWarehouseStatistics.setUpdateBy("system");
-                    productInWarehouseStatistics.setUpdateTime(new Date());
-                    baseMapper.insertProductInWarehouseSingle(productInWarehouseStatistics);
-                    if (ori == null) {
-                        baseMapper.insertProductInWarehouseHistorySingle(productInWarehouseStatistics);
-                    }
-                }
-            });
-            recordJobEndTime(currJobHis);
+                });
+                recordJobEndTime(currJobHis);
+            } else {
+                log.info("env {} job ignore", env);
+            }
         });
     }
 
@@ -143,13 +151,13 @@ public class ProductStatisticsService extends ServiceImpl<ProductStatisticsMappe
     }
 
     public PageData<ProductInWarehouseStatistics> listProductStatistics(
-            PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
+        PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
         Pagination pagination = productInWarehouseStatisticsReqPageQueryEntity.getPagination();
         SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
         ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq =
-                productInWarehouseStatisticsReqPageQueryEntity.getEntity();
+            productInWarehouseStatisticsReqPageQueryEntity.getEntity();
         List<ProductInWarehouseStatistics> productInWarehouseStatisticsList =
-                baseMapper.select(sqlLimit, productInWarehouseStatisticsReq);
+            baseMapper.select(sqlLimit, productInWarehouseStatisticsReq);
         long total = baseMapper.count(productInWarehouseStatisticsReq);
         PageData<ProductInWarehouseStatistics> productInWarehouseStatisticsPageData = new PageData<>();
         productInWarehouseStatisticsPageData.setData(productInWarehouseStatisticsList);
@@ -158,13 +166,13 @@ public class ProductStatisticsService extends ServiceImpl<ProductStatisticsMappe
     }
 
     public PageData<ProductInWarehouseStatistics> listHistoryProductStatistics(
-            PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
+        PageQueryEntity<ProductInWarehouseStatisticsReq> productInWarehouseStatisticsReqPageQueryEntity) {
         Pagination pagination = productInWarehouseStatisticsReqPageQueryEntity.getPagination();
         SqlLimit sqlLimit = SqlUtils.generateSqlLimit(pagination);
         ProductInWarehouseStatisticsReq productInWarehouseStatisticsReq =
-                productInWarehouseStatisticsReqPageQueryEntity.getEntity();
+            productInWarehouseStatisticsReqPageQueryEntity.getEntity();
         List<ProductInWarehouseStatistics> productInWarehouseStatisticsList =
-                baseMapper.selectHistory(sqlLimit, productInWarehouseStatisticsReq);
+            baseMapper.selectHistory(sqlLimit, productInWarehouseStatisticsReq);
         long total = baseMapper.countHistory(productInWarehouseStatisticsReq);
         PageData<ProductInWarehouseStatistics> productInWarehouseStatisticsPageData = new PageData<>();
         productInWarehouseStatisticsPageData.setData(productInWarehouseStatisticsList);

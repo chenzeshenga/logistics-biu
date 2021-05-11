@@ -15,6 +15,7 @@ import com.abc.chenzeshenga.logistics.service.common.FileService;
 import com.abc.chenzeshenga.logistics.util.DateUtil;
 import com.abc.chenzeshenga.logistics.util.FileUtils;
 import com.abc.chenzeshenga.logistics.util.SnowflakeIdWorker;
+import com.abc.chenzeshenga.logistics.util.UserUtils;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
@@ -165,6 +166,13 @@ public class OrderService extends ServiceImpl<OrderMapper, ManualOrder> {
                 }
             }
         }
+    }
+
+    public void feeConfirm(String orderNo) {
+        ManualOrder manualOrder = baseMapper.selectById(orderNo);
+        manualOrder.setConfirmed(true);
+        manualOrder.setConfirmUser(UserUtils.getUserName());
+        baseMapper.update(manualOrder);
     }
 
 }

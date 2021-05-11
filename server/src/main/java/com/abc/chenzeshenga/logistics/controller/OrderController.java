@@ -641,4 +641,10 @@ public class OrderController {
         return Json.succ();
     }
 
+    @GetMapping("/userFee/confirm/{orderNo}")
+    public Json confirm(@PathVariable String orderNo) {
+        orderService.feeConfirm(orderNo);
+        return Json.succ();
+    }
+
 }

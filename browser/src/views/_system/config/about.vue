@@ -21,6 +21,10 @@ export default {
     return {
       activities: [
         {
+          content: 'v1.53 [订单管理-海外仓代发]1.新增费用确认按钮',
+          timestamp: '2021-05-12',
+        },
+        {
           content: 'v1.52 [账单管理-账户页面]1.新增账户信息导出 2. 充值记录弹窗分页修复 3. 新增充值记录导出',
           timestamp: '2021-05-07',
         },

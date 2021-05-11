@@ -549,6 +549,19 @@
             ></el-button>
           </el-tooltip>
           <el-tooltip
+              content="费用确认"
+              placement="top"
+              v-if="msgData.buttonVisible7"
+          >
+            <el-button
+                @click="triggerDialog7(scope.$index, scope.row)"
+                size="small"
+                circle
+            >
+              <svg-icon icon-class="fee"/>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
               content="查询物流进度"
               placement="top"
               v-if="msgData.buttonVisible8"
@@ -1049,6 +1062,22 @@
                 <el-button @click="dialogVisible6 = false">取 消</el-button>
             </span>
     </el-dialog>
+    <el-dialog title="费用确认" :visible.sync="dialogVisible7" width="20%">
+      <el-row slot="default">
+        <el-row>
+          订单号:
+          <el-tag>{{ currOrd.orderNo }}</el-tag>
+        </el-row>
+        <el-row style="margin-top: 2%">
+          订单费用:
+          <el-tag>{{ currOrd.orderFee }}</el-tag>
+        </el-row>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="orderFeeConfirm">确 认</el-button>
+        <el-button @click="dialogVisible7 = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -1128,6 +1157,7 @@ export default {
       dialogVisible4: false,
       dialogVisible5: false,
       dialogVisible6: false,
+      dialogVisible7: false,
       carrier: [],
       form: {
         orderNo: '',
@@ -1175,6 +1205,7 @@ export default {
       tmpOrderNo: '',
       tableData4File: [],
       tableDataInDialog: [],
+      currOrd: {},
     };
   },
   props: ['msg'],
@@ -1675,6 +1706,10 @@ export default {
       });
       this.dialogVisible5 = true;
     },
+    triggerDialog7(index, row) {
+      this.currOrd = row;
+      this.dialogVisible7 = true;
+    },
     addPackage() {
       this.tableDataInDialog.push(this.form);
       this.form = {
@@ -1697,6 +1732,16 @@ export default {
     },
     batchUpdateOrdFee() {
       this.dialogVisible6 = true;
+    },
+    orderFeeConfirm() {
+      request({
+        url: '/ord/userFee/confirm/' + this.currOrd.orderNo,
+        method: 'get',
+      }).then(() => {
+        this.$message.success('确认成功');
+        this.dialogVisible7 = false;
+        this.fetchData();
+      });
     },
   },
 };

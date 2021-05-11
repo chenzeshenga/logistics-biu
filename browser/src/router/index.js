@@ -1,18 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-/* Layout */
 import Layout from '../views/layout/Layout';
 
 const _import = require('./_import_' + process.env.NODE_ENV);
-// in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
-// detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router);
-
-/** note: submenu only appear when children.length>=1
- *   detail see https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
- **/
-
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -77,7 +69,6 @@ export const constantRouterMap = [
 ];
 
 export default new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({
     y: 0,
   }),
@@ -368,7 +359,7 @@ export const asyncRouterMap = [
             name: 'status3',
             meta: {
               perm: 'm:order1:list:4',
-              title: '已发货',
+              title: '[管理]费用确认',
               icon: 'chart',
               noCache: true,
             },
@@ -379,7 +370,7 @@ export const asyncRouterMap = [
             name: 'user-status3',
             meta: {
               perm: 'm:order1:list:user:status3',
-              title: '已发货',
+              title: '费用确认',
               icon: 'chart',
               noCache: true,
             },

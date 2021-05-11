@@ -195,6 +195,15 @@
             <if test="pickup != 2">
                 pickup=#{pickup},
             </if>
+            <if test="ordFee != null">
+                ord_user_fee=#{ordFee},
+            </if>
+            <if test="confirmed != null">
+                confirmed=#{confirmed},
+            </if>
+            <if test="confirmUser != null and confirmUser != ''">
+                confirm_user=#{confirmUser},
+            </if>
         </trim>
         where ord_no=#{orderNo}
     </update>
