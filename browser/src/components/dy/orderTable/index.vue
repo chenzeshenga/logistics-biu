@@ -259,22 +259,22 @@
       </el-table-column>
       <el-table-column
           width="180"
-          prop="orderNo"
           label="订单号"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <el-tag type="primary" @click="showOrdDetail(scope.$index, scope.row)">
+            {{ scope.row.orderNo }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
-          width="180"
+          width="220"
           prop="userCustomOrderNo"
           label="用户定义订单号"
       ></el-table-column>
-      <el-table-column
-          width="150"
-          prop="categoryName"
-          label="订单类型"
-      ></el-table-column>
       <el-table-column width="200" label="运送渠道">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
+          <el-popover trigger="hover" placement="top" v-if="scope.row['channelDesc']">
             <p>渠道名称: {{ scope.row['channelDesc'] }}</p>
             <p>渠道编码: {{ scope.row['channel'] }}</p>
             <p>
@@ -287,6 +287,22 @@
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium"
               >{{ scope.row.channelDesc }}
+              </el-tag>
+            </div>
+          </el-popover>
+          <el-popover v-else>
+            <p>渠道名称: {{ scope.row['channel'] }}</p>
+            <p>渠道编码: {{ scope.row['channel'] }}</p>
+            <p>
+              <el-button
+                  type="text"
+                  v-on:click="route2ChannelPage(scope.$index, scope.row)"
+              >查看详情
+              </el-button>
+            </p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium"
+              >{{ scope.row.channel }}
               </el-tag>
             </div>
           </el-popover>
@@ -400,6 +416,11 @@
           width="150"
           prop="updator"
           label="修改人"
+      ></el-table-column>
+      <el-table-column
+          width="150"
+          prop="categoryName"
+          label="订单类型"
       ></el-table-column>
       <el-table-column label="操作" width="350" fixed="right">
         <template slot-scope="scope">
@@ -1078,6 +1099,44 @@
         <el-button @click="dialogVisible7 = false">取 消</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="订单详情" :visible.sync="dlg.ordDetailDlg" width="50%">
+      <el-container>
+        <el-main>
+          <el-row>
+            <el-tag effect="plain">订单系统信息</el-tag>
+          </el-row>
+          <el-divider/>
+          <el-row>
+            <el-col span="12">
+              订单号: <strong>{{ currOrd.orderNo }}</strong>
+            </el-col>
+            <el-col span="12">
+              订单所属用户: <strong>{{ currOrd.creator }}</strong>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col span="12">
+              当前状态: <strong>{{ currOrd.statusDesc }}</strong>
+            </el-col>
+          </el-row>
+          <el-divider/>
+          <el-row>
+            <el-tag effect="plain">用户输入信息</el-tag>
+          </el-row>
+          <el-divider/>
+          <el-row>
+            <el-col span="12">
+              <strong>用户自定义订单号: {{ currOrd.userCustomOrderNo }}</strong>
+            </el-col>
+          </el-row>
+          <el-divider/>
+
+        </el-main>
+        <el-footer>
+          脚注
+        </el-footer>
+      </el-container>
+    </el-dialog>
   </div>
 </template>
 
@@ -1150,6 +1209,9 @@ export default {
             },
           },
         ],
+      },
+      dlg: {
+        ordDetailDlg: false,
       },
       dialogVisible: false,
       dialogVisible2: false,
@@ -1237,11 +1299,7 @@ export default {
     fetchData() {
       this.tableLoading = true;
       request({
-        url:
-            'ord/v2/list/' +
-            this.msgData.category +
-            '/' +
-            this.msgData.status + '?' + this.generateUrlParam(),
+        url: 'ord/v2/list/' + this.msgData.category + '/' + this.msgData.status + '?' + this.generateUrlParam(),
         method: 'post',
         data: this.tablePage,
       }).then((res) => {
@@ -1743,11 +1801,19 @@ export default {
         this.fetchData();
       });
     },
+    showOrdDetail(index, row) {
+      this.currOrd = row;
+      this.dlg.ordDetailDlg = true;
+    },
   },
 };
 </script>
 
 <style>
+.el-row {
+  margin: 1%;
+}
+
 .el-table .success-row {
   background: rgba(103, 194, 58, 0.1);
 }
