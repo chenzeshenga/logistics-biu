@@ -1099,54 +1099,18 @@
         <el-button @click="dialogVisible7 = false">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="订单详情" :visible.sync="dlg.ordDetailDlg" width="50%">
-      <el-container>
-        <el-main>
-          <el-row>
-            <el-tag effect="plain">订单系统信息</el-tag>
-          </el-row>
-          <el-divider/>
-          <el-row>
-            <el-col span="12">
-              订单号: <strong>{{ currOrd.orderNo }}</strong>
-            </el-col>
-            <el-col span="12">
-              订单所属用户: <strong>{{ currOrd.creator }}</strong>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col span="12">
-              当前状态: <strong>{{ currOrd.statusDesc }}</strong>
-            </el-col>
-          </el-row>
-          <el-divider/>
-          <el-row>
-            <el-tag effect="plain">用户输入信息</el-tag>
-          </el-row>
-          <el-divider/>
-          <el-row>
-            <el-col span="12">
-              <strong>用户自定义订单号: {{ currOrd.userCustomOrderNo }}</strong>
-            </el-col>
-          </el-row>
-          <el-divider/>
-
-        </el-main>
-        <el-footer>
-          脚注
-        </el-footer>
-      </el-container>
-    </el-dialog>
+    <ord-detail-dlg v-bind:ord="currOrd" v-bind:ordDetailDlgSys="ordDetailDlgSys" :key="timestamp"/>
   </div>
 </template>
 
 <script>
 import request from '../../../utils/service';
 import CustomBarcode4Order from '../../@syncfusion/order/customBarcode4Order';
+import OrdDetailDlg from './dlg/OrdDetailDlg';
 
 export default {
   name: 'orderTable',
-  components: {CustomBarcode4Order},
+  components: {CustomBarcode4Order, OrdDetailDlg},
   data() {
     return {
       msgData: {
@@ -1268,6 +1232,11 @@ export default {
       tableData4File: [],
       tableDataInDialog: [],
       currOrd: {},
+      ordDetailDlgSys: {
+        dlg: {
+          ordDetailDlg: false,
+        },
+      },
     };
   },
   props: ['msg'],
@@ -1803,7 +1772,7 @@ export default {
     },
     showOrdDetail(index, row) {
       this.currOrd = row;
-      this.dlg.ordDetailDlg = true;
+      this.ordDetailDlgSys.dlg.ordDetailDlg = true;
     },
   },
 };
